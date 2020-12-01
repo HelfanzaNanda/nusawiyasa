@@ -42,7 +42,7 @@
           @foreach($customer_terms as $customer_term)
             <div class="col-md-6">
               <label>{{$customer_term['key_name']}}</label><br>
-              <img src="{{$customer_term['filepath'].'/'.$customer_term['filename']}}" width="350px">
+              <img src="{{env('APP_URL').$customer_term['filepath'].'/'.$customer_term['filename']}}" width="350px">
             </div>
           @endforeach
         </div>
