@@ -28,11 +28,17 @@ Route::group([
 	Route::post('/customers', 'Customer\CustomerController@insertData');
 	Route::post('/customer-datatables', 'Customer\CustomerController@datatables');
 
-	Route::get('/customer-terms', 'Customer\CustomerTermController@index');
+	Route::get('/customer-terms', function () {
+	    return abort(404);
+	});
+	// Route::get('/customer-terms', 'Customer\CustomerTermController@index');
 	Route::post('/customer-terms', 'Customer\CustomerTermController@insertData');
 	Route::post('/customer-term-datatables', 'Customer\CustomerTermController@datatables');
 
-	Route::get('/customer-costs', 'Customer\CustomerCostController@index');
+	Route::get('/customer-costs', function () {
+	    return abort(404);
+	});
+	// Route::get('/customer-costs', 'Customer\CustomerCostController@index');
 	Route::post('/customer-costs', 'Customer\CustomerCostController@insertData');
 	Route::post('/customer-cost-datatables', 'Customer\CustomerCostController@datatables');
 
