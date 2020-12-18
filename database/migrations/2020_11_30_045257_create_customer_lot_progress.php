@@ -20,7 +20,7 @@ class CreateCustomerLotProgress extends Migration
             $table->string('filepath');
             $table->string('filetype');
             $table->integer('progress_percentage');
-            $table->string('status')->nullable();
+            $table->integer('status')->nullable();
             $table->boolean('is_active')->default(1);
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();

@@ -33,6 +33,11 @@ class CustomerLot extends Model
         "\$in" => "in"
     ];
 
+    public function customer()
+    {
+        return $this->hasOne('App\Http\Models\Customer\Customer', 'id', 'customer_id');
+    }
+
     public static function mapSchema($params = [], $user = [])
     {
         $model = new self;
@@ -176,7 +181,7 @@ class CustomerLot extends Model
 
         $customer_lot['customer_id'] = $params['customer_id'];
         $customer_lot['lot_id'] = $params['lot_id'];
-        $customer_lot['status'] = 'submission';
+        $customer_lot['status'] = 1;
         $customer_lot['booking_date'] = $params['booking_date'];
         $customer_lot['payment_type'] = $params['payment_type'];
 
@@ -189,7 +194,7 @@ class CustomerLot extends Model
                         'customer_id' => $params['customer_id'],
                         'ref_term_purchasing_customer_id' => $key,
                         'value' => $customer_cost,
-                        'status' => 'done',
+                        'status' => 1,
                         'lot_id' => $params['lot_id']
                     ]);
                 }
@@ -200,7 +205,7 @@ class CustomerLot extends Model
                 $files = $request->file('customer_terms');
 
                 $month_year_pfx = date('mY');
-                $path_pfx = 'public/media/activities/'.$month_year_pfx;
+                $path_pfx = 'public/media/customer_terms/'.$month_year_pfx;
                 $path = '/storage/'.$path_pfx;
 
                 File::makeDirectory($path, 0777, true, true);
@@ -218,9 +223,9 @@ class CustomerLot extends Model
                             'customer_id' => $params['customer_id'],
                             'ref_term_purchasing_customer_id' => $keyFile,
                             'filename' => $filename,
-                            'filepath' => '/storage/media/activities/'.$month_year_pfx,
+                            'filepath' => '/storage/media/customer_terms/'.$month_year_pfx,
                             'filetype' => $extension,
-                            'status' => 'done',
+                            'status' => 1,
                             'lot_id' => $params['lot_id']
                         ]);
 

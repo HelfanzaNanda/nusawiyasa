@@ -31,6 +31,8 @@
     <link rel="stylesheet" href="{{ asset('template/assets/css/select2.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('template/assets/css/bootstrap-datetimepicker.min.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('template/assets/css/dropify.min.css') }}">
     
     <!-- Main CSS -->
     <link rel="stylesheet" href="{{ asset('template/assets/css/style.css') }}">
@@ -50,7 +52,7 @@
           @include('layouts.header')
         </div>
 
-        <div class="sidebar" id="sidebar">
+        <div class="sidebar" id="sidebar" style="width: 250px !important;">
           <div class="sidebar-inner slimscroll">
             <div id="sidebar-menu" class="sidebar-menu">
               @include('layouts.menu.web')
@@ -75,8 +77,8 @@
       <script src="{{ asset('template/assets/js/jquery.slimscroll.min.js') }}"></script>
 
       <!-- Chart JS -->
-      <script src="{{ asset('template/assets/plugins/morris/morris.min.js') }}"></script>
-      <script src="{{ asset('template/assets/plugins/raphael/raphael.min.js') }}"></script>
+      {{-- <script src="{{ asset('template/assets/plugins/morris/morris.min.js') }}"></script> --}}
+      {{-- <script src="{{ asset('template/assets/plugins/raphael/raphael.min.js') }}"></script> --}}
       {{-- <script src="{{ asset('template/assets/js/chart.js') }}"></script> --}}
 
       <script src="{{ asset('template/assets/js/jquery.dataTables.min.js') }}"></script>
@@ -89,12 +91,18 @@
       <script src="{{ asset('template/assets/js/moment.min.js') }}"></script>
       <script src="{{ asset('template/assets/js/bootstrap-datetimepicker.min.js') }}"></script>
 
+      <script src="{{ asset('template/assets/js/dropify.min.js') }}"></script>
+
+      <script src="{{ asset('template/assets/js/accounting.min.js') }}"></script>
+
       <!-- Custom JS -->
       <script src="{{ asset('template/assets/js/app.js') }}"></script>
 
       @yield('additionalFileJS')
 
       <script type="text/javascript">
+        $('.dropify').dropify();
+        
         if ($("#datepicker-popup").length) {
           $('#datepicker-popup').datepicker({
             enableOnReadonly: true,

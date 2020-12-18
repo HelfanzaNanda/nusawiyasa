@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRefPurchasingCustomerTerms extends Migration
+class CreateTableTemplates extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,11 @@ class CreateRefPurchasingCustomerTerms extends Migration
      */
     public function up()
     {
-        Schema::create('ref_term_purchasing_customers', function (Blueprint $table) {
+        Schema::create('templates', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('payment_type');
-            $table->string('terms_type');
+            $table->string('title');
+            $table->text('contents');
             $table->string('type');
-            $table->boolean('is_active')->default(1);
-            $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ class CreateRefPurchasingCustomerTerms extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ref_purchasing_customer_terms');
+        Schema::dropIfExists('templates');
     }
 }

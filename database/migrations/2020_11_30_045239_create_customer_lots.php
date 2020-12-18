@@ -17,7 +17,7 @@ class CreateCustomerLots extends Migration
             $table->id();
             $table->integer('customer_id');
             $table->integer('lot_id');
-            $table->string('status')->nullable();
+            $table->integer('status')->nullable();
             $table->boolean('is_active')->default(1);
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();

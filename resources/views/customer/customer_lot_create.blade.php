@@ -9,8 +9,8 @@
       <div class="card-header">
         <h4 class="card-title mb-0">Form Booking</h4>
       </div>
-      <div class="card-body">
-        <form id="add-form" method="POST" action="#">
+      <form id="add-form" method="POST" action="#">
+        <div class="card-body">
           {!! csrf_field() !!}
           <div class="form-group row">
             <label class="col-form-label col-md-2">Konsumen</label>
@@ -61,12 +61,13 @@
           <div class="row" id="term"> 
 
           </div>
-
-          <div class="col-auto float-right ml-auto">
+        </div>
+        <div class="card-footer">
+          <div class="col-auto float-right ml-auto pb-2">
             <button class="btn btn-primary" type="submit">Submit</button>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>

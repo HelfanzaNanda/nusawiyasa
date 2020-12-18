@@ -35,6 +35,11 @@ class Customer extends Model
         "\$in" => "in"
     ];
 
+    public function user()
+    {
+        return $this->hasOne('App\Http\Models\Users', 'id', 'user_id');
+    }
+
     public static function mapSchema($params = [], $user = [])
     {
         $model = new self;

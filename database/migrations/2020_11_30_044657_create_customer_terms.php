@@ -19,7 +19,7 @@ class CreateCustomerTerms extends Migration
             $table->string('filename');
             $table->string('filepath');
             $table->string('filetype');
-            $table->string('status');
+            $table->integer('status');
             $table->boolean('is_active')->default(1);
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();

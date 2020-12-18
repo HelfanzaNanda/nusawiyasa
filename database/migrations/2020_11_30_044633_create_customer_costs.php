@@ -17,7 +17,7 @@ class CreateCustomerCosts extends Migration
             $table->id();
             $table->integer('ref_term_purchasing_customer_id');
             $table->decimal('value', 20, 5);
-            $table->string('status')->nullable();
+            $table->integer('status')->nullable();
             $table->boolean('is_active')->default(1);
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();
