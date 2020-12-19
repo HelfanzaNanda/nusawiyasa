@@ -115,11 +115,11 @@ Route::group([
 	Route::post('/supplier', 'Inventory\SupplierController@insertData');
 	Route::post('/supplier-datatables', 'Inventory\SupplierController@datatables');
 
-
 	Route::get('/purchase-order', 'Purchasing\PurchaseOrderController@index');
 	Route::get('/create-purchase-order', 'Purchasing\PurchaseOrderController@create');
 	Route::post('/purchase-order', 'Purchasing\PurchaseOrderController@insertData');
 	Route::post('/purchase-order-datatables', 'Purchasing\PurchaseOrderController@datatables');
+	Route::get('/purchase_orders/{id?}', 'Purchasing\PurchaseOrderController@get');
 
 	Route::get('/receipt-of-goods', 'Inventory\ReceiptOfGoodsController@index');
 	Route::get('/create-receipt-of-goods', 'Inventory\ReceiptOfGoodsController@create');

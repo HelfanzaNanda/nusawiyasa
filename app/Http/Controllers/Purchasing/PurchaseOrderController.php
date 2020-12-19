@@ -111,4 +111,44 @@ class PurchaseOrderController extends Controller
     {
 
     }
+
+    public function get($id=null, Request $request)
+    {
+        $request = $request->all();
+
+        if ($id != null) {
+            $res = PurchaseOrders::getById($id, $request);
+        } else if (isset($request['all']) && $request['all']) {
+            $res = PurchaseOrders::getAllResult($request);
+        } else {
+            $res = PurchaseOrders::getPaginatedResult($request);
+        }
+
+        return $res;
+    }
+
+    public function post(Request $request)
+    {
+        $params = $request->all();
+        return PurchaseOrders::createOrUpdate($params, $request->method(), $request);
+    }
+
+    public function put($id, Request $request)
+    {
+        $params = $request->all();
+        $params['id'] = $id;
+        return PurchaseOrders::createOrUpdate($params, $request->method(), $request);
+    }
+
+    public function patch($id, Request $request)
+    {
+        $params = $request->all();
+        $params['id'] = $id;
+        return PurchaseOrders::createOrUpdate($params, $request->method(), $request);
+    }
+
+    public function delete($id, Request $request)
+    {
+
+    }
 }

@@ -2,6 +2,10 @@
 
 namespace App\Http\Models\Purchase;
 
+use App\Http\Models\Purchase\PurchaseOrderDeliveryItems;
+use App\Http\Models\Purchase\PurchaseOrderItems;
+use App\Http\Models\Purchase\PurchaseOrders;
+use DB;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -171,37 +175,34 @@ class PurchaseOrderDeliveries extends Model
             ]);
         }
 
-        $purchase_order['number'] = $params['number'];
-        $purchase_order['supplier_id'] = $params['supplier_id'];
-        $purchase_order['date'] = $params['date'];
-        $purchase_order['status'] = 1;
-        $purchase_order['fpp_number'] = $params['fpp_number'];
-        $purchase_order['type'] = $params['type'];
-        $purchase_order['note'] = $params['note'];
-        $purchase_order['subtotal'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['subtotal']));
-        $purchase_order['tax'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['tax']));
-        $purchase_order['delivery'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['delivery']));
-        $purchase_order['other'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['other']));
-        $purchase_order['total'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['total']));
-        $purchase_order['approved_user_id'] = 0;
-        $purchase_order['known_user_id'] = 0;
-        $purchase_order['created_user_id'] = session()->get('_id');
+        $receipt_of_goods['date'] = $params['date'];
+        $receipt_of_goods['purchase_order_id'] = $params['purchase_order_id'];
+        $receipt_of_goods['bpb_number'] = $params['bpb_number'];
+        $receipt_of_goods['invoice_number'] = $params['invoice_number'];
 
-        $insert = self::create($purchase_order);
+        $insert = self::create($receipt_of_goods);
 
         if ($insert) {
-            foreach ($params['item_inventory_id'] as $key => $val) {
-                PurchaseOrderItems::create([
-                    'purchase_order_id' => $insert->id,
-                    'inventory_id' => $params['item_inventory_id'][$key],
-                    'qty' => $params['item_qty'][$key],
-                    'delivered_qty' => 0,
-                    'price' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_price'][$key])),
-                    'tax' => 0,
-                    'discount' => 0,
-                    'total' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_total'][$key]))
+            foreach ($params['inventory_id'] as $key => $val) {
+                PurchaseOrderDeliveryItems::create([
+                    'purchase_order_delivery_id' => $insert->id,
+                    'inventory_id' => $val,
+                    'delivered_qty' => $params['delivered_qty'][$key],
+                    'note' => $params['note'][$key],
                 ]);
+
+                $adjust['inventory_id'] = $val;
+                $adjust['delivered_qty'] = $params['delivered_qty'][$key];
+                $adjust['purchase_order_id'] = $params['purchase_order_id'];
+                $adjust_qty = PurchaseOrderItems::adjustPurchaseOrderDeliveredItems($adjust);
+
+                if ($adjust_qty['status'] == 'error') {
+                    DB::rollBack();
+                    return response()->json($adjust_qty);
+                }
             }
+            
+            PurchaseOrders::adjustPOStatus($params['purchase_order_id']);
         }
 
         DB::commit();

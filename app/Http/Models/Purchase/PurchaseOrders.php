@@ -69,7 +69,7 @@ class PurchaseOrders extends Model
 
     public function items()
     {
-        return $this->hasMany('App\Http\Models\Purchase\PurchaseOrderItems', 'id', 'purchase_order_id');
+        return $this->hasMany('App\Http\Models\Purchase\PurchaseOrderItems', 'purchase_order_id', 'id');
     }
 
     /**
@@ -190,7 +190,7 @@ class PurchaseOrders extends Model
         $purchase_order['number'] = $params['number'];
         $purchase_order['supplier_id'] = $params['supplier_id'];
         $purchase_order['date'] = $params['date'];
-        $purchase_order['status'] = 1;
+        $purchase_order['status'] = 4;
         $purchase_order['fpp_number'] = $params['fpp_number'];
         $purchase_order['type'] = $params['type'];
         $purchase_order['note'] = $params['note'];
@@ -292,7 +292,7 @@ class PurchaseOrders extends Model
 
     public static function getById($id, $params = null)
     {
-        $data = self::where('id', $id)
+        $data = self::where('id', $id)->with('items.inventory.unit')
                     ->first();
 
         return response()->json($data);
@@ -329,5 +329,32 @@ class PurchaseOrders extends Model
         return response()->json([
             'data' => $db->get()
         ]);
+    }
+
+    public static function adjustPOStatus($po_id)
+    {
+        $po_items = PurchaseOrderItems::where('purchase_order_id', $po_id);
+        $count_items = $po_items->count();
+        $res_po_items = $po_items->where('qty', '<=', DB::raw('delivered_qty'))->get()->toArray();
+
+        if (count($res_po_items) < 1) {
+            self::where('id', $po_id)->update(['status' => 6]);
+        } else if (count($res_po_items) < $count_items) {
+            self::where('id', $po_id)->update(['status' => 5]);
+        } else {
+            $delivered_qty = 0;
+            foreach($res_po_items as $row) {
+                if ($row['delivered_qty'] > 0) {
+                    $delivered_qty = $row['delivered_qty'];
+                    break;
+                }
+            }
+
+            if ($delivered_qty > 0) {
+                self::where('id', $po_id)->update(['status' => 5]);
+            }
+        }
+
+        return;
     }
 }

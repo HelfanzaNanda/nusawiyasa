@@ -1,52 +1,80 @@
 @extends('layouts.main')
 
-@section('title', 'Purchase Order')
+@section('title', 'Penerimaan Barang')
 
 @section('content')
-<!-- Page Header -->
-<div class="page-header">
-  <div class="row align-items-center">
-    <div class="col">
-      <h3 class="page-title">Data Purchase Order</h3>
-      <ul class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index-2.html">Purchase Order</a></li>
-        <li class="breadcrumb-item active">Data Purchase Order</li>
-      </ul>
-    </div>
-    <div class="col-auto float-right ml-auto">
-      <a href="{{url('/create-purchase-order')}}" class="btn add-btn" id="show-add-modal"><i class="fa fa-plus"></i> Tambah Purchase Order</a>
-    </div>
-  </div>
-</div>
-<!-- /Page Header -->
-
 <div class="row">
-  <div class="col-md-12 d-flex">
-    <div class="card card-table flex-fill">
+  <div class="col-lg-12">
+    <div class="card">
       <div class="card-header">
-        <h3 class="card-title mb-0">Barang</h3>
+        <h4 class="card-title mb-0">Tambah Penerimaan Barang</h4>
       </div>
-      <div class="card-body ml-3 mt-3 mr-3 mb-3">
-        <div class="table-responsive">
-          <table id="main-table" class="table table-striped table-nowrap custom-table mb-0 datatable">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th width="10%">No. PO</th>
-                <th width="10%">No. FPP</th>
-                <th>Nama Supplier</th>
-                <th>Jenis Permintaan</th>
-                <th>Tanggal</th>
-                <th>Total</th>
-                <th class="text-right" width="10%">Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-     
-            </tbody>
-          </table>
+      <form id="add-form" method="POST" action="#">
+        <div class="card-body">
+          {!! csrf_field() !!}
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">No. PO</label>
+            <div class="col-md-10">
+              <select id="input-po" name="purchase_order_id"> 
+                <option value="0"> - Pilih PO - </option>
+                @foreach($purchase_orders as $purchase_order)
+                  <option value="{{$purchase_order['id']}}">{{$purchase_order['number']}}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">No. BPB</label>
+            <div class="col-md-10">
+              <input class="form-control floating" type="text" id="input-bpb-number" name="bpb_number">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">Invoice Number</label>
+            <div class="col-md-10">
+              <input class="form-control floating" type="text" id="input-invoice-number" name="invoice_number">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">Tanggal</label>
+            <div class="col-md-10">
+              <input class="form-control floating" type="text" id="input-date" name="date">
+            </div>
+          </div>
+          <section class="review-section">
+            <div class="review-header text-center">
+              <h3 class="review-title">Item Penerimaan Barang</h3>
+              <p class="text-muted">Silahkan masukkan poin - poin penerimaan barang</p>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-bordered table-review review-table mb-0" id="general_comments">
+                    <thead>
+                      <tr>
+                        <th style="width:40px;">#</th>
+                        <th>Kode Barang</th>
+                        <th>Item</th>
+                        <th>Jumlah Diterima</th>
+                        <th>Satuan</th>
+                        <th>Keterangan</th>
+                      </tr>
+                    </thead>
+                    <tbody id="general_comments_tbody">
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
-      </div>
+        <div class="card-footer">
+          <div class="col-auto float-right ml-auto pb-2">
+            <button class="btn btn-primary" type="submit">Submit</button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -54,28 +82,90 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
-  $("#main-table").DataTable({
-      "pageLength": 10,
-      "processing": true,
-      "serverSide": true,
-      "ajax":{
-          "url": BASE_URL+"/purchase-order-datatables",
-          "dataType": "json",
-          "type": "POST",
-          "data":function(d) { 
-            d._token = "{{csrf_token()}}"
-          },
+  $('#input-po').select2({
+    width: '100%'
+  });
+
+  if($('#input-date').length > 0) {
+    $('#input-date').datetimepicker({
+      format: 'YYYY-MM-DD',
+      icons: {
+        up: "fa fa-angle-up",
+        down: "fa fa-angle-down",
+        next: 'fa fa-angle-right',
+        previous: 'fa fa-angle-left'
+      }
+    });
+  }
+
+  $("#input-po").on('change', function(e) {
+    e.preventDefault();
+    let id = $(this).val();
+    $.ajax({
+      url: BASE_URL+'/purchase_orders/'+id,
+      type: "GET",
+      dataType: "json",
+      beforeSend: function() {
+        $("tbody#general_comments_tbody").empty();
       },
-      "columns": [
-          {data: 'id', name: 'id', width: '5%', "visible": false},
-          {data: 'number', name: 'number'},
-          {data: 'fpp_number', name: 'fpp_number'},
-          {data: 'supplier_name', name: 'supplier_name'},
-          {data: 'type', name: 'type'},
-          {data: 'date', name: 'date'},
-          {data: 'total', name: 'total'},
-          {data: 'action', name: 'action', className: 'text-right'},
-      ],
+      success: function(res) {
+        let cols = '';
+        $.each(res.items, function(key, value) {
+          cols += '<tr>';
+          cols += '<td>'+(key + 1)+'</td>';
+          cols += '<td>'+value.inventory.code+'<input type="hidden" name="inventory_id[]" value='+ value.inventory_id +'></td>';
+          cols += '<td>'+value.inventory.name+'</td>';
+          cols += '<td><input type="text" class="form-control" name="delivered_qty[]" value="0"></td>';
+          cols += '<td>'+value.inventory.unit.name+'</td>';
+          cols += '<td><textarea class="form-control" name="note[]"></textarea></td>';
+          cols += '</tr>';
+        });
+
+        $("tbody#general_comments_tbody").append(cols);
+      }
+    });
+  });
+
+  $('form#add-form').submit( function( e ) {
+    e.preventDefault();
+    var form_data = new FormData( this );
+
+    $.ajax({
+      type: 'post',
+      url: BASE_URL+'/receipt-of-goods',
+      data: form_data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      dataType: 'json',
+      beforeSend: function() {
+        
+      },
+      success: function(msg) {
+        if(msg.status == 'success'){
+          setTimeout(function() {
+            swal({
+              title: "Sukses",
+              text: msg.message,
+              type:"success",
+              html: true
+            }, function() {
+              $('#add-modal').modal('hide');
+              window.location.replace("{{url('/receipt-of-goods')}}");
+            });
+          }, 500);
+        } else {
+          swal({
+            title: "Gagal",
+            text: msg.message,
+            showConfirmButton: true,
+            confirmButtonColor: '#0760ef',
+            type:"error",
+            html: true
+          });
+        }
+      }
+    });
   });
 </script>
 @endsection

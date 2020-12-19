@@ -10,18 +10,18 @@ use App\Http\Models\Ref\Province;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ReceiptOfGoodsController extends Controller
+class DeliveryOrderController extends Controller
 {
     public function index()
     {
-        return view('inventory.receipt_of_goods');
+        return view('inventory.delivery_order');
     }
 
     public function create()
     {
         $purchase_orders = PurchaseOrders::whereIn('status', [4, 5])->get();
 
-        return view('inventory.receipt_of_goods_create', compact('purchase_orders'));
+        return view('inventory.delivery_order_create', compact('purchase_orders'));
     }
 
     public function insertData(Request $request)

@@ -64,6 +64,11 @@ class PurchaseOrderItems extends Model
         'created_at', 'updated_at'
     ];
 
+    public function inventory()
+    {
+        return $this->hasOne('App\Http\Models\Inventory\Inventories', 'id', 'inventory_id');
+    }
+
     /**
      * Indicates if the model should be timestamped.
      *
@@ -76,4 +81,22 @@ class PurchaseOrderItems extends Model
     // Functions ...
 
     // Relations ...
+
+    public static function adjustPurchaseOrderDeliveredItems($params)
+    {
+        $purchase_order_item = self::where('purchase_order_id', $params['purchase_order_id'])->where('inventory_id', $params['inventory_id'])->first();
+
+        $order_total = $purchase_order_item['qty'];
+        $current_delivered_total = $purchase_order_item['delivered_qty'];
+
+        if (($current_delivered_total + $params['delivered_qty']) > $order_total) {
+            return [
+                'status' => 'error',
+                'message' => 'Jumlah diterima lebih besar daripada jumlah order'
+            ];
+        }
+
+        $purchase_order_item->delivered_qty = $current_delivered_total + $params['delivered_qty'];
+        $purchase_order_item->save();
+    }
 }

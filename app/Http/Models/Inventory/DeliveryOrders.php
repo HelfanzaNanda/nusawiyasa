@@ -15,14 +15,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property int        $created_at
  * @property int        $updated_at
  */
-class Inventories extends Model
+class DeliveryOrders extends Model
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'inventories';
+    protected $table = 'delivery_orders';
 
     /**
      * The primary key for the model.
