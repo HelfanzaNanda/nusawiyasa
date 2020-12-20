@@ -1,34 +1,29 @@
 <?php
 
-namespace App\Http\Controllers\Purchasing;
+namespace App\Http\Controllers\Inventory;
 
 use App\Http\Controllers\Controller;
-use App\Http\Models\Inventory\Suppliers;
-use App\Http\Models\Purchase\PurchaseOrders;
-use App\Http\Models\Ref\Province;
-use App\Http\Models\Ref\RefGeneralStatuses;
+use App\Http\Models\Inventory\InventoryHistories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class PurchaseOrderController extends Controller
+class InventoryHistoryController extends Controller
 {
     public function index()
     {
-        return view('purchasing.purchase_order');
+        return view('inventory.inventory_history');
     }
 
     public function create()
     {
-        $suppliers = Suppliers::get();
 
-        return view('purchasing.purchase_order_create', compact('suppliers'));
     }
 
     public function insertData(Request $request)
     {
         $params = $request->all();
 
-        return PurchaseOrders::createOrUpdate($params, $request->method(), $request);
+        return InventoryHistories::createOrUpdate($params, $request->method(), $request);
     }
 
     public function edit($id)
@@ -48,7 +43,7 @@ class PurchaseOrderController extends Controller
         $_role_name = session()->get('_role_name');
 
         $columns = [
-            0 => 'purchase_orders.id'
+            0 => 'inventory_histories.id'
         ];
 
         $dataOrder = [];
@@ -72,23 +67,20 @@ class PurchaseOrderController extends Controller
 
         $filter = $request->only(['sDate', 'eDate']);
 
-        $res = PurchaseOrders::datatables($start, $limit, $order, $dir, $search, $filter);
+        $res = InventoryHistories::datatables($start, $limit, $order, $dir, $search, $filter);
 
         $data = [];
-        
-        $status_collection = RefGeneralStatuses::get();
-
 
         if (!empty($res['data'])) {
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
-                $nestedData['number'] = $row['number'];
-                $nestedData['fpp_number'] = $row['fpp_number'];
-                $nestedData['supplier_name'] = $row['supplier_name'];
-                $nestedData['type'] = $row['type'];
+                $nestedData['ref_number'] = $row['ref_number'];
+                $nestedData['qty'] = $row['qty'];
+                $nestedData['models'] = $row['models'];
                 $nestedData['date'] = $row['date'];
-                $nestedData['status'] = $status_collection->where('id', $row['status'])->values()[0]['name'];
-                $nestedData['total'] = number_format(floatval($row['total']));
+                $nestedData['type'] = $row['type'];
+                $nestedData['inventory_name'] = $row['inventory_name'];
+                $nestedData['unit_name'] = $row['unit_name'];
                 $nestedData['action'] = '';
                 $nestedData['action'] .='        <div class="dropdown dropdown-action">';
                 $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';
@@ -122,11 +114,11 @@ class PurchaseOrderController extends Controller
         $request = $request->all();
 
         if ($id != null) {
-            $res = PurchaseOrders::getById($id, $request);
+            $res = InventoryHistories::getById($id, $request);
         } else if (isset($request['all']) && $request['all']) {
-            $res = PurchaseOrders::getAllResult($request);
+            $res = InventoryHistories::getAllResult($request);
         } else {
-            $res = PurchaseOrders::getPaginatedResult($request);
+            $res = InventoryHistories::getPaginatedResult($request);
         }
 
         return $res;
@@ -135,21 +127,21 @@ class PurchaseOrderController extends Controller
     public function post(Request $request)
     {
         $params = $request->all();
-        return PurchaseOrders::createOrUpdate($params, $request->method(), $request);
+        return InventoryHistories::createOrUpdate($params, $request->method(), $request);
     }
 
     public function put($id, Request $request)
     {
         $params = $request->all();
         $params['id'] = $id;
-        return PurchaseOrders::createOrUpdate($params, $request->method(), $request);
+        return InventoryHistories::createOrUpdate($params, $request->method(), $request);
     }
 
     public function patch($id, Request $request)
     {
         $params = $request->all();
         $params['id'] = $id;
-        return PurchaseOrders::createOrUpdate($params, $request->method(), $request);
+        return InventoryHistories::createOrUpdate($params, $request->method(), $request);
     }
 
     public function delete($id, Request $request)

@@ -38,6 +38,11 @@ class CustomerLot extends Model
         return $this->hasOne('App\Http\Models\Customer\Customer', 'id', 'customer_id');
     }
 
+    public function lot()
+    {
+        return $this->hasOne('App\Http\Models\Cluster\Lot', 'id', 'lot_id');
+    }
+
     public static function mapSchema($params = [], $user = [])
     {
         $model = new self;

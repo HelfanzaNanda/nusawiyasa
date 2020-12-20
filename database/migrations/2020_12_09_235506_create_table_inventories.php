@@ -17,9 +17,9 @@ class CreateTableInventories extends Migration
             $table->id();
             $table->string('name');
             $table->decimal('stock', 20, 4);
-            $table->integer('category_id');
-            $table->integer('unit_id');
-            $table->decimal('purchase_price', 20, 4);
+            $table->integer('category_id')->nullable();
+            $table->integer('unit_id')->nullable();
+            $table->decimal('purchase_price', 20, 4)->nullable();
             $table->string('type');
             $table->boolean('is_active')->default(1);
             $table->boolean('is_deleted')->default(0);

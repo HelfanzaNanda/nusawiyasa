@@ -2,6 +2,8 @@
 
 namespace App\Http\Models\Purchase;
 
+use App\Http\Models\Inventory\Inventories;
+use App\Http\Models\Inventory\InventoryHistories;
 use App\Http\Models\Purchase\PurchaseOrderDeliveryItems;
 use App\Http\Models\Purchase\PurchaseOrderItems;
 use App\Http\Models\Purchase\PurchaseOrders;
@@ -200,6 +202,18 @@ class PurchaseOrderDeliveries extends Model
                     DB::rollBack();
                     return response()->json($adjust_qty);
                 }
+
+                $adjust['qty'] = $adjust['delivered_qty'];
+                Inventories::stockMovement($adjust, 'in');
+
+                InventoryHistories::create([
+                    'ref_number' => $params['bpb_number'],
+                    'inventory_id' => $val,
+                    'qty' => $params['delivered_qty'][$key],
+                    'date' => $params['date'],
+                    'type' => 'in',
+                    'models' => __CLASS__
+                ]);
             }
             
             PurchaseOrders::adjustPOStatus($params['purchase_order_id']);

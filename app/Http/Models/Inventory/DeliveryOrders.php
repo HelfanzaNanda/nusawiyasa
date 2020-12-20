@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Inventory;
 
+use App\Http\Models\Inventory\DeliveryOrderItems;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 
@@ -37,7 +38,10 @@ class DeliveryOrders extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'stock', 'category_id', 'unit_id', 'purchase_price', 'type', 'is_active', 'is_deleted', 'created_at', 'updated_at', 'brand', 'code'
+        'dest_name',
+        'dest_address',
+        'number',
+        'date',
     ];
 
     /**
@@ -55,7 +59,9 @@ class DeliveryOrders extends Model
      * @var array
      */
     protected $casts = [
-        'name' => 'string', 'category_id' => 'int', 'unit_id' => 'int', 'purchase_price' => 'double', 'type' => 'string', 'is_active' => 'boolean', 'is_deleted' => 'boolean', 'created_at' => 'timestamp', 'updated_at' => 'timestamp', 'brand' => 'string', 'code' => 'string'
+        'dest_name' => 'string',
+        'dest_address' => 'string',
+        'number' => 'string'
     ];
 
     /**
@@ -64,12 +70,12 @@ class DeliveryOrders extends Model
      * @var array
      */
     protected $dates = [
-        'created_at', 'updated_at'
+        'created_at', 'updated_at', 'date'
     ];
 
-    public function unit()
+    public function items()
     {
-        return $this->hasOne('App\Http\Models\Inventory\InventoryUnits', 'id', 'unit_id');
+        return $this->hasMany('App\Http\Models\Inventory\DeliveryOrderItems', 'id', 'delivery_order_item');
     }
 
     /**
@@ -86,18 +92,12 @@ class DeliveryOrders extends Model
 
         return [
             'id' => ['alias' => $model->table.'.id', 'type' => 'int'],
-            'name' => ['alias' => $model->table.'.name', 'type' => 'string'],
-            'stock' => ['alias' => $model->table.'.stock', 'type' => 'string'],
-            'category_id' => ['alias' => $model->table.'.category_id', 'type' => 'int'],
-            'unit_id' => ['alias' => $model->table.'.unit_id', 'type' => 'int'],
-            'purchase_price' => ['alias' => $model->table.'.purchase_price', 'type' => 'string'],
-            'type' => ['alias' => $model->table.'.type', 'type' => 'string'],
-            'is_active' => ['alias' => $model->table.'.is_active', 'type' => 'int'],
-            'is_deleted' => ['alias' => $model->table.'.is_deleted', 'type' => 'int'],
+            'dest_name' => ['alias' => $model->table.'.dest_name', 'type' => 'string'],
+            'dest_address' => ['alias' => $model->table.'.dest_address', 'type' => 'string'],
+            'number' => ['alias' => $model->table.'.number', 'type' => 'string'],
+            'date' => ['alias' => $model->table.'.date', 'type' => 'string'],
             'created_at' => ['alias' => $model->table.'.created_at', 'type' => 'string'],
-            'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string'],
-            'brand' => ['alias' => $model->table.'.brand', 'type' => 'string'],
-            'code' => ['alias' => $model->table.'.code', 'type' => 'string']
+            'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string']
         ];
     }
     // Scopes...
@@ -115,9 +115,7 @@ class DeliveryOrders extends Model
             $_select[] = $select['alias'];
         }
 
-        $qry = self::select($_select)->addSelect('inventory_units.name as unit_name')->addSelect('inventory_categories.name as category_name')
-                    ->join('inventory_units', 'inventory_units.id', '=', 'inventories.unit_id')
-                    ->join('inventory_categories', 'inventory_categories.id', '=', 'inventories.category_id');
+        $qry = self::select($_select);
         
         $totalFiltered = $qry->count();
         
@@ -185,6 +183,17 @@ class DeliveryOrders extends Model
 
         $insert = self::create($params);
 
+        if ($insert) {
+            foreach($params['inventory_id'] as $key => $val) {
+                DeliveryOrderItems::create([
+                    'delivery_order_id' => $insert->id,
+                    'inventory_id' => $val,
+                    'qty' => $params['qty'][$key],
+                    'note' => $params['note'][$key]
+                ]);
+            }
+        }
+
         DB::commit();
         return response()->json([
             'status' => 'success',
@@ -203,9 +212,7 @@ class DeliveryOrders extends Model
             $_select[] = $select['alias'];
         }
 
-        $db = self::select($_select)
-                ->addSelect('inventory_units.name as unit_name')
-                ->join('inventory_units', 'inventory_units.id', '=', 'inventories.unit_id');
+        $db = self::select($_select);
 
         if ($params) {
             foreach (array($params) as $k => $v) {

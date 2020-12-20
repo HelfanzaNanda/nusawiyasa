@@ -1,20 +1,17 @@
 @extends('layouts.main')
 
-@section('title', 'Purchase Order')
+@section('title', 'Riwayat Barang')
 
 @section('content')
 <!-- Page Header -->
 <div class="page-header">
   <div class="row align-items-center">
     <div class="col">
-      <h3 class="page-title">Data Purchase Order</h3>
+      <h3 class="page-title">Data Riwayat Barang</h3>
       <ul class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index-2.html">Purchase Order</a></li>
-        <li class="breadcrumb-item active">Data Purchase Order</li>
+        <li class="breadcrumb-item"><a href="index-2.html">Riwayat Barang</a></li>
+        <li class="breadcrumb-item active">Data Riwayat Barang</li>
       </ul>
-    </div>
-    <div class="col-auto float-right ml-auto">
-      <a href="{{url('/create-purchase-order')}}" class="btn add-btn" id="show-add-modal"><i class="fa fa-plus"></i> Tambah Purchase Order</a>
     </div>
   </div>
 </div>
@@ -24,7 +21,7 @@
   <div class="col-md-12 d-flex">
     <div class="card card-table flex-fill">
       <div class="card-header">
-        <h3 class="card-title mb-0">Barang</h3>
+        <h3 class="card-title mb-0">Riwayat Barang</h3>
       </div>
       <div class="card-body ml-3 mt-3 mr-3 mb-3">
         <div class="table-responsive">
@@ -32,13 +29,12 @@
             <thead>
               <tr>
                 <th>#</th>
-                <th width="10%">No. PO</th>
-                <th width="10%">No. FPP</th>
-                <th>Nama Supplier</th>
-                <th>Jenis Permintaan</th>
+                <th width="10%">No. Referensi</th>
+                <th>Nama Barang</th>
+                <th>Unit</th>
+                <th>Jumlah</th>
                 <th>Tanggal</th>
-                <th>Total</th>
-                <th>Status</th>
+                <th>Tipe</th>
                 <th class="text-right" width="10%">Aksi</th>
               </tr>
             </thead>
@@ -55,12 +51,13 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+
   $("#main-table").DataTable({
       "pageLength": 10,
       "processing": true,
       "serverSide": true,
       "ajax":{
-          "url": BASE_URL+"/purchase-order-datatables",
+          "url": BASE_URL+"/inventory-history-datatables",
           "dataType": "json",
           "type": "POST",
           "data":function(d) { 
@@ -69,13 +66,12 @@
       },
       "columns": [
           {data: 'id', name: 'id', width: '5%', "visible": false},
-          {data: 'number', name: 'number'},
-          {data: 'fpp_number', name: 'fpp_number'},
-          {data: 'supplier_name', name: 'supplier_name'},
-          {data: 'type', name: 'type'},
+          {data: 'ref_number', name: 'ref_number'},
+          {data: 'inventory_name', name: 'inventory_name'},
+          {data: 'unit_name', name: 'unit_name'},
+          {data: 'qty', name: 'qty'},
           {data: 'date', name: 'date'},
-          {data: 'total', name: 'total'},
-          {data: 'status', name: 'status'},
+          {data: 'type', name: 'type'},
           {data: 'action', name: 'action', className: 'text-right'},
       ],
   });

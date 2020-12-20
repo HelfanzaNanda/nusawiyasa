@@ -15,12 +15,16 @@ class CreateTableSpkProjects extends Migration
     {
         Schema::create('spk_projects', function (Blueprint $table) {
             $table->id();
-            $table->string('number');
-            $table->integer('template_id');
             $table->string('title');
-            $table->string('subject');
+            $table->string('number');
+            $table->string('dest_name');
             $table->date('date');
-            $table->text('params');
+            $table->string('subject');
+            $table->integer('customer_lot_id');
+            $table->string('note')->nullable();
+            $table->integer('created_by_user_id');
+            $table->integer('approved_by_user_id');
+            $table->integer('received_by_user_id');
             $table->timestamps();
         });
     }

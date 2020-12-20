@@ -97,15 +97,22 @@ Route::group([
 	Route::post('/development-progress', 'Project\DevelopmentProgressController@insertData');
 	Route::post('/development-progress-datatables', 'Project\DevelopmentProgressController@datatables');
 
-
 	Route::get('/inventory', 'Inventory\InventoryController@index');
 	Route::post('/inventory', 'Inventory\InventoryController@insertData');
 	Route::post('/inventory-datatables', 'Inventory\InventoryController@datatables');
 	Route::get('/inventories/{id?}', 'Inventory\InventoryController@get');
 
+	Route::get('/inventory-history', 'Inventory\InventoryHistoryController@index');
+	Route::post('/inventory-history-datatables', 'Inventory\InventoryHistoryController@datatables');
+
 	Route::get('/inventory-category', 'Inventory\InventoryCategoryController@index');
 	Route::post('/inventory-category', 'Inventory\InventoryCategoryController@insertData');
 	Route::post('/inventory-category-datatables', 'Inventory\InventoryCategoryController@datatables');
+
+	Route::get('/delivery-order', 'Inventory\DeliveryOrderController@index');
+	Route::get('/create-delivery-order', 'Inventory\DeliveryOrderController@create');
+	Route::post('/delivery-order', 'Inventory\DeliveryOrderController@insertData');
+	Route::post('/delivery-order-datatables', 'Inventory\DeliveryOrderController@datatables');
 
 	Route::get('/unit', 'Inventory\UnitController@index');
 	Route::post('/unit', 'Inventory\UnitController@insertData');
@@ -126,6 +133,11 @@ Route::group([
 	Route::post('/receipt-of-goods', 'Inventory\ReceiptOfGoodsController@insertData');
 	Route::post('/receipt-of-goods-datatables', 'Inventory\ReceiptOfGoodsController@datatables');
 
+	Route::get('/receipt-of-goods-request', 'Inventory\ReceiptOfGoodsRequestController@index');
+	Route::get('/create-receipt-of-goods-request', 'Inventory\ReceiptOfGoodsRequestController@create');
+	Route::post('/receipt-of-goods-request', 'Inventory\ReceiptOfGoodsRequestController@insertData');
+	Route::post('/receipt-of-goods-request-datatables', 'Inventory\ReceiptOfGoodsRequestController@datatables');
+
 	Route::get('/report-inventory-purchase', 'Report\InventoryPurchaseController@index');
 	Route::post('/report-inventory-purchase', 'Report\InventoryPurchaseController@insertData');
 	Route::post('/report-inventory-purchase-datatables', 'Report\InventoryPurchaseController@datatables');
@@ -133,5 +145,4 @@ Route::group([
 	Route::get('/report-outstanding-po', 'Report\OutstandingPOController@index');
 	Route::post('/report-outstanding-po', 'Report\OutstandingPOController@insertData');
 	Route::post('/report-outstanding-po-datatables', 'Report\OutstandingPOController@datatables');
-
 });

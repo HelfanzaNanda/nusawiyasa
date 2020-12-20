@@ -37,7 +37,7 @@ class Inventories extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'stock', 'category_id', 'unit_id', 'purchase_price', 'type', 'is_active', 'is_deleted', 'created_at', 'updated_at', 'brand', 'code'
+        'name', 'stock', 'category_id', 'unit_id', 'purchase_price', 'type', 'is_active', 'is_deleted', 'created_at', 'updated_at', 'brand', 'code', 'cluster_id'
     ];
 
     /**
@@ -55,7 +55,7 @@ class Inventories extends Model
      * @var array
      */
     protected $casts = [
-        'name' => 'string', 'category_id' => 'int', 'unit_id' => 'int', 'purchase_price' => 'double', 'type' => 'string', 'is_active' => 'boolean', 'is_deleted' => 'boolean', 'created_at' => 'timestamp', 'updated_at' => 'timestamp', 'brand' => 'string', 'code' => 'string'
+        'name' => 'string', 'category_id' => 'int', 'unit_id' => 'int', 'purchase_price' => 'double', 'type' => 'string', 'is_active' => 'boolean', 'is_deleted' => 'boolean', 'created_at' => 'timestamp', 'updated_at' => 'timestamp', 'brand' => 'string', 'code' => 'string', 'cluster_id' => 'int'
     ];
 
     /**
@@ -97,7 +97,8 @@ class Inventories extends Model
             'created_at' => ['alias' => $model->table.'.created_at', 'type' => 'string'],
             'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string'],
             'brand' => ['alias' => $model->table.'.brand', 'type' => 'string'],
-            'code' => ['alias' => $model->table.'.code', 'type' => 'string']
+            'code' => ['alias' => $model->table.'.code', 'type' => 'string'],
+            'cluster_id' => ['alias' => $model->table.'.cluster_id', 'type' => 'int'],
         ];
     }
     // Scopes...
@@ -115,9 +116,11 @@ class Inventories extends Model
             $_select[] = $select['alias'];
         }
 
-        $qry = self::select($_select)->addSelect('inventory_units.name as unit_name')->addSelect('inventory_categories.name as category_name')
+        $qry = self::select($_select)->addSelect('inventory_units.name as unit_name')->addSelect('clusters.name as cluster_name')
+                    // ->addSelect('inventory_categories.name as category_name')
                     ->join('inventory_units', 'inventory_units.id', '=', 'inventories.unit_id')
-                    ->join('inventory_categories', 'inventory_categories.id', '=', 'inventories.category_id');
+                    ->join('clusters', 'clusters.id', 'inventories.cluster_id');
+                    // ->join('inventory_categories', 'inventory_categories.id', '=', 'inventories.category_id');
         
         $totalFiltered = $qry->count();
         
@@ -294,5 +297,16 @@ class Inventories extends Model
         return response()->json([
             'data' => $db->get()
         ]);
+    }
+
+    public static function stockMovement($params, $type)
+    {
+        $data = self::where('id', $params['inventory_id']);
+
+        if ($type == 'out') {
+            $data->decrement('stock', $params['qty']);
+        } else if ($type == 'in') {
+            $data->increment('stock', $params['qty']);
+        }
     }
 }

@@ -8,9 +8,9 @@
     <li class="menu-title"> 
         <span>Marketing</span>
     </li>
-    <li {{ (request()->segment(1) == 'dashboard') ? 'class=active' : '' }}> 
+{{--     <li {{ (request()->segment(1) == 'dashboard') ? 'class=active' : '' }}> 
         <a href="{{url('/dashboard/marketing')}}"><i class="la la-dashboard"></i> <span>Beranda Marketing</span></a>
-    </li>
+    </li> --}}
     <li class="submenu">
         <a href="#"><i class="la la-users"></i> <span> Konsumen</span> <span class="menu-arrow"></span></a>
         <ul style="display: none;">
@@ -32,9 +32,9 @@
     <li class="menu-title"> 
         <span>Project </span>
     </li>
-    <li> 
+{{--     <li> 
         <a {{ (request()->segment(1) == 'dashboard') ? 'class=active' : '' }} href="{{url('/dashboard/project')}}"><i class="la la-dashboard"></i> <span>Beranda Project</span></a>
-    </li>
+    </li> --}}
     <li class="submenu">
         <a href="#"><i class="la la-broadcast-tower"></i> <span> Konfirmasi Pembangunan</span> <span class="menu-arrow"></span></a>
         <ul style="display: none;">
@@ -61,7 +61,7 @@
         <a href="#"><i class="la la-box"></i> <span> Inventory</span> <span class="menu-arrow"></span></a>
         <ul style="display: none;">
             <li><a {{ (request()->segment(1) == 'inventory') ? 'class=active' : '' }} href="{{url('/inventory')}}">Data Barang</a></li>
-            <li><a {{ (request()->segment(1) == 'inventory-category') ? 'class=active' : '' }} href="{{url('/inventory-category')}}">Kategori Barang</a></li>
+            {{-- <li><a {{ (request()->segment(1) == 'inventory-category') ? 'class=active' : '' }} href="{{url('/inventory-category')}}">Kategori Barang</a></li> --}}
             <li><a {{ (request()->segment(1) == 'unit') ? 'class=active' : '' }} href="{{url('/unit')}}">Unit</a></li>
         </ul>
     </li>
@@ -71,11 +71,14 @@
     <li {{ (request()->segment(1) == 'inventory-history') ? 'class=active' : '' }}> 
         <a href="{{url('/inventory-history')}}"><i class="la la-boxes"></i> <span>Riwayat Stok</span></a>
     </li>
+    <li {{ (request()->segment(1) == 'receipt-of-goods-request') ? 'class=active' : '' }}> 
+        <a href="{{url('/receipt-of-goods-request')}}"><i class="la la-hand-holding"></i> <span>Bon Permintaan Barang</span></a>
+    </li>
     <li {{ (request()->segment(1) == 'receipt-of-goods') ? 'class=active' : '' }}> 
         <a href="{{url('/receipt-of-goods')}}"><i class="la la-hand-holding"></i> <span>Bukti Penerimaan Barang</span></a>
     </li>
-    <li {{ (request()->segment(1) == 'exit-letters') ? 'class=active' : '' }}> 
-        <a href="{{url('/exit-letters')}}"><i class="la la-truck"></i> <span>Surat Jalan Keluar</span></a>
+    <li {{ (request()->segment(1) == 'delivery-order') ? 'class=active' : '' }}> 
+        <a href="{{url('/delivery-order')}}"><i class="la la-truck"></i> <span>Surat Jalan Keluar</span></a>
     </li>
     <li {{ (request()->segment(1) == 'report-used-inventory') ? 'class=active' : '' }}> 
         <a href="{{url('/report-used-inventory')}}"><i class="la la-pallet"></i> <span>Lap. Pemakaian Bahan</span></a>

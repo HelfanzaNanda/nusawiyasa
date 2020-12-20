@@ -7544,7 +7544,7 @@ ul.comment-list li ul.children {
 		width: 60px;
 	}
 	.mini-sidebar .sidebar {
-		width: 60px;
+		width: 60px !important;
 	}
 	.mini-sidebar.expand-menu .sidebar {
 		width: 230px;

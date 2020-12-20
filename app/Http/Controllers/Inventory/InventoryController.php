@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Inventory;
 
 use App\Http\Controllers\Controller;
+use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Inventory\Inventories;
 use App\Http\Models\Inventory\InventoryCategories;
 use App\Http\Models\Inventory\InventoryUnits;
@@ -16,8 +17,9 @@ class InventoryController extends Controller
     {
         $units = InventoryUnits::where('is_deleted', 0)->get();
         $categories = InventoryCategories::where('is_deleted', 0)->get();
+        $clusters = Cluster::where('is_deleted', 0)->get();
 
-        return view('inventory.inventory', compact('units', 'categories'));
+        return view('inventory.inventory', compact('units', 'categories', 'clusters'));
     }
 
     public function create()
@@ -81,8 +83,9 @@ class InventoryController extends Controller
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
                 $nestedData['name'] = $row['name'];
-                $nestedData['stock'] = $row['stock'];
-                $nestedData['category_name'] = $row['category_name'];
+                $nestedData['stock'] = floatval($row['stock']);
+                // $nestedData['category_name'] = $row['category_name'];
+                $nestedData['cluster_name'] = $row['cluster_name'];
                 $nestedData['unit_name'] = $row['unit_name'];
                 $nestedData['purchase_price'] = $row['purchase_price'];
                 $nestedData['type'] = $row['type'];

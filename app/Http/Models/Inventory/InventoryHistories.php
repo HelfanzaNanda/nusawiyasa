@@ -15,14 +15,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property int        $created_at
  * @property int        $updated_at
  */
-class DeliveryOrderItems extends Model
+class InventoryHistories extends Model
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'delivery_order_items';
+    protected $table = 'inventory_histories';
 
     /**
      * The primary key for the model.
@@ -37,10 +37,13 @@ class DeliveryOrderItems extends Model
      * @var array
      */
     protected $fillable = [
-        'delivery_order_id',
+        'ref_number',
         'inventory_id',
         'qty',
-        'note'
+        'table_name',
+        'date',
+        'models',
+        'type'
     ];
 
     /**
@@ -53,30 +56,13 @@ class DeliveryOrderItems extends Model
     ];
 
     /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'delivery_order_id' => 'int',
-        'inventory_id' => 'int',
-        'qty' => 'int',
-        'note' => 'string'
-    ];
-
-    /**
      * The attributes that should be mutated to dates.
      *
      * @var array
      */
     protected $dates = [
-        'created_at', 'updated_at'
+        'date', 'created_at', 'updated_at'
     ];
-
-    public function inventory()
-    {
-        return $this->hasOne('App\Http\Models\Inventory\Inventory', 'id', 'inventory_id');
-    }
 
     /**
      * Indicates if the model should be timestamped.
@@ -92,10 +78,13 @@ class DeliveryOrderItems extends Model
 
         return [
             'id' => ['alias' => $model->table.'.id', 'type' => 'int'],
-            'delivery_order_id' => ['alias' => $model->table.'.delivery_order_id', 'type' => 'int'],
+            'ref_number' => ['alias' => $model->table.'.ref_number', 'type' => 'string'],
             'inventory_id' => ['alias' => $model->table.'.inventory_id', 'type' => 'int'],
             'qty' => ['alias' => $model->table.'.qty', 'type' => 'int'],
-            'note' => ['alias' => $model->table.'.note', 'type' => 'string'],
+            'models' => ['alias' => $model->table.'.models', 'type' => 'string'],
+            'date' => ['alias' => $model->table.'.date', 'type' => 'string'],
+            'type' => ['alias' => $model->table.'.type', 'type' => 'string'],
+            'models' => ['alias' => $model->table.'.models', 'type' => 'string'],
             'created_at' => ['alias' => $model->table.'.created_at', 'type' => 'string'],
             'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string']
         ];
@@ -115,7 +104,9 @@ class DeliveryOrderItems extends Model
             $_select[] = $select['alias'];
         }
 
-        $qry = self::select($_select);
+        $qry = self::select($_select)->addSelect('inventories.name as inventory_name')->addSelect('inventory_units.name as unit_name')
+                    ->join('inventories', 'inventories.id', '=', 'inventory_histories.inventory_id')
+                    ->join('inventory_units', 'inventory_units.id', '=', 'inventories.unit_id');
         
         $totalFiltered = $qry->count();
         
@@ -201,7 +192,9 @@ class DeliveryOrderItems extends Model
             $_select[] = $select['alias'];
         }
 
-        $db = self::select($_select);
+        $db = self::select($_select)
+                ->addSelect('inventory_units.name as unit_name')
+                ->join('inventory_units', 'inventory_units.id', '=', 'inventories.unit_id');
 
         if ($params) {
             foreach (array($params) as $k => $v) {

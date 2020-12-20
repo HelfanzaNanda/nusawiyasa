@@ -34,7 +34,8 @@
                 <th>#</th>
                 <th width="15%">Nama Barang</th>
                 <th>Stok</th>
-                <th>Kategori</th>
+                {{-- <th>Kategori</th> --}}
+                <th>Perumahan/Cluster</th>
                 <th>Unit</th>
                 <th>Harga Beli</th>
                 <th>Tipe</th>
@@ -75,7 +76,7 @@
                 <label>Stok</label>
                 <input class="form-control" type="text" name="stock">
               </div>
-              <div class="form-group">
+{{--               <div class="form-group">
                 <label>Kategori</label>
                 <select id="input-category" name="category_id"> 
                   <option> - Pilih Kategori - </option>
@@ -83,13 +84,22 @@
                     <option value="{{$category['id']}}">{{$category['name']}}</option>
                   @endforeach
                 </select>
-              </div>
+              </div> --}}
               <div class="form-group">
                 <label>Unit</label>
                 <select id="input-unit" name="unit_id"> 
                   <option> - Pilih Unit - </option>
                   @foreach($units as $unit)
                     <option value="{{$unit['id']}}">{{$unit['name']}}</option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Cluster/Perumahan</label>
+                <select id="input-cluster" name="cluster_id"> 
+                  <option> - Pilih Cluster - </option>
+                  @foreach($clusters as $cluster)
+                    <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
                   @endforeach
                 </select>
               </div>
@@ -140,6 +150,10 @@
     width: '100%'
   });
 
+  $('#input-cluster').select2({
+    width: '100%'
+  });
+
   $("#main-table").DataTable({
       "pageLength": 10,
       "processing": true,
@@ -156,7 +170,8 @@
           {data: 'id', name: 'id', width: '5%', "visible": false},
           {data: 'name', name: 'name'},
           {data: 'stock', name: 'stock'},
-          {data: 'category_name', name: 'category_name'},
+          // {data: 'category_name', name: 'category_name'},
+          {data: 'cluster_name', name: 'cluster_name'},
           {data: 'unit_name', name: 'unit_name'},
           {data: 'purchase_price', name: 'purchase_price'},
           {data: 'type', name: 'type'},

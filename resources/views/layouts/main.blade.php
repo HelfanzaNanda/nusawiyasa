@@ -52,7 +52,7 @@
           @include('layouts.header')
         </div>
 
-        <div class="sidebar" id="sidebar" style="width: 250px !important;">
+        <div class="sidebar" id="sidebar" style="width: 250px;">
           <div class="sidebar-inner slimscroll">
             <div id="sidebar-menu" class="sidebar-menu">
               @include('layouts.menu.web')

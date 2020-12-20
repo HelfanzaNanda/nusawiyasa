@@ -2,27 +2,30 @@
 
 namespace App\Http\Models\Inventory;
 
+use App\Http\Models\Cluster\Lot;
+use App\Http\Models\Inventory\Inventories;
+use App\Http\Models\Inventory\ReceiptOfGoodsRequestItems;
+use App\Http\Models\Purchase\PurchaseOrderDeliveryItems;
+use App\Http\Models\Purchase\PurchaseOrderItems;
+use App\Http\Models\Purchase\PurchaseOrders;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property string     $name
- * @property int        $category_id
- * @property int        $unit_id
- * @property string     $type
- * @property boolean    $is_active
- * @property boolean    $is_deleted
+ * @property Date       $date
+ * @property int        $purchase_order_item_id
+ * @property int        $delivered_qty
  * @property int        $created_at
  * @property int        $updated_at
  */
-class DeliveryOrderItems extends Model
+class ReceiptOfGoodsRequest extends Model
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'delivery_order_items';
+    protected $table = 'receipt_of_goods_request';
 
     /**
      * The primary key for the model.
@@ -37,10 +40,13 @@ class DeliveryOrderItems extends Model
      * @var array
      */
     protected $fillable = [
-        'delivery_order_id',
-        'inventory_id',
-        'qty',
-        'note'
+        'number',
+        'date',
+        'cluster_id',
+        'lot_id',
+        'approved_user_id',
+        'known_user_id',
+        'created_user_id'
     ];
 
     /**
@@ -53,29 +59,17 @@ class DeliveryOrderItems extends Model
     ];
 
     /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'delivery_order_id' => 'int',
-        'inventory_id' => 'int',
-        'qty' => 'int',
-        'note' => 'string'
-    ];
-
-    /**
      * The attributes that should be mutated to dates.
      *
      * @var array
      */
     protected $dates = [
-        'created_at', 'updated_at'
+        'date', 'created_at', 'updated_at'
     ];
 
-    public function inventory()
+    public function items()
     {
-        return $this->hasOne('App\Http\Models\Inventory\Inventory', 'id', 'inventory_id');
+        return $this->hasMany('App\Http\Models\Purchase\ReceiptOfGoodsRequestItems', 'id', 'receipt_of_goods_request_id');
     }
 
     /**
@@ -92,12 +86,13 @@ class DeliveryOrderItems extends Model
 
         return [
             'id' => ['alias' => $model->table.'.id', 'type' => 'int'],
-            'delivery_order_id' => ['alias' => $model->table.'.delivery_order_id', 'type' => 'int'],
-            'inventory_id' => ['alias' => $model->table.'.inventory_id', 'type' => 'int'],
-            'qty' => ['alias' => $model->table.'.qty', 'type' => 'int'],
-            'note' => ['alias' => $model->table.'.note', 'type' => 'string'],
-            'created_at' => ['alias' => $model->table.'.created_at', 'type' => 'string'],
-            'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string']
+            'number' => ['alias' => $model->table.'.number', 'type' => 'string'],
+            'date' => ['alias' => $model->table.'.date', 'type' => 'string'],
+            'cluster_id' => ['alias' => $model->table.'.cluster_id', 'type' => 'int'],
+            'lot_id' => ['alias' => $model->table.'.lot_id', 'type' => 'int'],
+            'approved_user_id' => ['alias' => $model->table.'.approved_user_id', 'type' => 'int'],
+            'known_user_id' => ['alias' => $model->table.'.known_user_id', 'type' => 'int'],
+            'created_user_id' => ['alias' => $model->table.'.created_user_id', 'type' => 'int']
         ];
     }
     // Scopes...
@@ -115,7 +110,14 @@ class DeliveryOrderItems extends Model
             $_select[] = $select['alias'];
         }
 
-        $qry = self::select($_select);
+        $qry = self::select($_select)
+                ->addSelect('clusters.name as cluster_name')
+                ->addSelect('lots.block')
+                ->addSelect('lots.unit_number')
+                ->addSelect('lots.surface_area')
+                ->addSelect('lots.building_area')
+                ->leftJoin('lots', 'lots.id', '=', 'receipt_of_goods_request.lot_id')
+                ->leftJoin('clusters', 'clusters.id', '=', 'lots.cluster_id');
         
         $totalFiltered = $qry->count();
         
@@ -181,7 +183,40 @@ class DeliveryOrderItems extends Model
             ]);
         }
 
-        $insert = self::create($params);
+        $request_of_goods_request['number'] = $params['number'];
+        $request_of_goods_request['date'] = $params['date'];
+        $request_of_goods_request['lot_id'] = $params['lot_id'];
+        $request_of_goods_request['cluster_id'] = Lot::where('id', $params['lot_id'])->value('cluster_id');
+        $request_of_goods_request['approved_user_id'] = 0;
+        $request_of_goods_request['known_user_id'] = 0;
+        $request_of_goods_request['created_user_id'] = session()->get('_id');
+
+        $insert = self::create($request_of_goods_request);
+
+        if ($insert) {
+            foreach ($params['inventory_id'] as $key => $val) {
+                ReceiptOfGoodsRequestItems::create([
+                    'receipt_of_goods_request_id' => $insert->id,
+                    'inventory_id' => $val,
+                    'qty' => $params['qty'][$key],
+                    'note' => $params['note'][$key],
+                ]);
+
+                $adjust['inventory_id'] = $val;
+                $adjust['qty'] = $params['qty'][$key];
+
+                Inventories::stockMovement($adjust, 'out');
+
+                InventoryHistories::create([
+                    'ref_number' => $params['number'],
+                    'inventory_id' => $val,
+                    'qty' => $params['qty'][$key],
+                    'date' => $params['date'],
+                    'type' => 'out',
+                    'models' => __CLASS__
+                ]); 
+            }
+        }
 
         DB::commit();
         return response()->json([

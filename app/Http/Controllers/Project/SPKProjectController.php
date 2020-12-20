@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Project;
 
 use App\Http\Controllers\Controller;
-use App\Http\Models\Customer\Customer;
-use App\Http\Models\Ref\Province;
+use App\Http\Models\Customer\CustomerLot;
+use App\Http\Models\Project\SpkProjects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -12,7 +12,20 @@ class SPKProjectController extends Controller
 {
     public function index()
     {
-        return view('project.spk_project');
+        $lots = CustomerLot::select([
+                        'customer_lots.id',
+                        'clusters.name as cluster_name',
+                        'lots.unit_number as unit_number',
+                        'lots.block as unit_block',
+                        'users.name as customer_name'
+                    ])
+                    ->join('customers', 'customers.id', '=', 'customer_lots.customer_id')
+                    ->join('users', 'users.id', '=', 'customers.user_id')
+                    ->join('lots', 'lots.id', '=', 'customer_lots.lot_id')
+                    ->join('clusters', 'clusters.id', '=', 'lots.cluster_id')
+                    ->get();
+
+        return view('project.spk_project', compact('lots'));
     }
 
     public function create()
@@ -24,7 +37,7 @@ class SPKProjectController extends Controller
     {
         $params = $request->all();
 
-        return Customer::createOrUpdate($params, $request->method(), $request);
+        return SpkProjects::createOrUpdate($params, $request->method(), $request);
     }
 
     public function edit($id)
@@ -44,7 +57,7 @@ class SPKProjectController extends Controller
         $_role_name = session()->get('_role_name');
 
         $columns = [
-            0 => 'customers.id'
+            0 => 'spk_projects.id'
         ];
 
         $dataOrder = [];
@@ -68,18 +81,19 @@ class SPKProjectController extends Controller
 
         $filter = $request->only(['sDate', 'eDate']);
 
-        $res = Customer::datatables($start, $limit, $order, $dir, $search, $filter);
+        $res = SpkProjects::datatables($start, $limit, $order, $dir, $search, $filter);
 
         $data = [];
 
         if (!empty($res['data'])) {
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
-                $nestedData['name'] = $row['name'];
-                $nestedData['email'] = $row['email'];
-                $nestedData['phone'] = $row['phone'];
-                $nestedData['province'] = $row['province'];
-                $nestedData['city'] = $row['city'];
+                $nestedData['number'] = $row['number'];
+                $nestedData['date'] = $row['date'];
+                $nestedData['cluster_name'] = $row['cluster_name'];
+                $nestedData['unit_number'] = $row['unit_number'];
+                $nestedData['unit_block'] = $row['unit_block'];
+                $nestedData['customer_name'] = $row['customer_name'];
                 $nestedData['action'] = '';
                 $nestedData['action'] .='        <div class="dropdown dropdown-action">';
                 $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';

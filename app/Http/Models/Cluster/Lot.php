@@ -32,6 +32,11 @@ class Lot extends Model
         "\$in" => "in"
     ];
 
+    public function lot()
+    {
+        return $this->hasOne('App\Http\Models\Cluster\Cluster', 'id', 'cluster_id');
+    }
+
     public static function mapSchema($params = [], $user = [])
     {
         $model = new self;

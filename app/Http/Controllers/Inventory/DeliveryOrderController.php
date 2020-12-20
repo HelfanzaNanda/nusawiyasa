@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\Inventory;
 
 use App\Http\Controllers\Controller;
-use App\Http\Models\Inventory\Suppliers;
-use App\Http\Models\Purchase\PurchaseOrderDeliveries;
-use App\Http\Models\Purchase\PurchaseOrders;
-use App\Http\Models\Ref\Province;
+use App\Http\Models\Inventory\DeliveryOrders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -19,8 +16,6 @@ class DeliveryOrderController extends Controller
 
     public function create()
     {
-        $purchase_orders = PurchaseOrders::whereIn('status', [4, 5])->get();
-
         return view('inventory.delivery_order_create', compact('purchase_orders'));
     }
 
@@ -28,7 +23,7 @@ class DeliveryOrderController extends Controller
     {
         $params = $request->all();
 
-        return PurchaseOrderDeliveries::createOrUpdate($params, $request->method(), $request);
+        return DeliveryOrders::createOrUpdate($params, $request->method(), $request);
     }
 
     public function edit($id)
@@ -48,7 +43,7 @@ class DeliveryOrderController extends Controller
         $_role_name = session()->get('_role_name');
 
         $columns = [
-            0 => 'purchase_order_deliveries.id'
+            0 => 'delivery_orders.id'
         ];
 
         $dataOrder = [];
@@ -72,18 +67,17 @@ class DeliveryOrderController extends Controller
 
         $filter = $request->only(['sDate', 'eDate']);
 
-        $res = PurchaseOrderDeliveries::datatables($start, $limit, $order, $dir, $search, $filter);
+        $res = DeliveryOrders::datatables($start, $limit, $order, $dir, $search, $filter);
 
         $data = [];
 
         if (!empty($res['data'])) {
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
+                $nestedData['number'] = $row['number'];
                 $nestedData['date'] = $row['date'];
-                $nestedData['bpb_number'] = $row['bpb_number'];
-                $nestedData['invoice_number'] = $row['invoice_number'];
-                $nestedData['supplier_name'] = $row['supplier_name'];
-                $nestedData['po_number'] = $row['po_number'];
+                $nestedData['dest_name'] = $row['dest_name'];
+                $nestedData['dest_address'] = $row['dest_address'];
                 $nestedData['action'] = '';
                 $nestedData['action'] .='        <div class="dropdown dropdown-action">';
                 $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';

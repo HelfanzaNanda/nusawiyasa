@@ -19,6 +19,94 @@
   </div>
 </div>
 <!-- /Page Header -->
+<div class="row">
+  <div class="col-md-12 d-flex">
+    <div class="card card-table flex-fill">
+      <div class="card-header">
+        <h3 class="card-title mb-0">SPK Project</h3>
+      </div>
+      <div class="card-body ml-3 mt-3 mr-3 mb-3">
+        <div class="table-responsive">
+          <table id="main-table" class="table table-striped table-nowrap custom-table mb-0 datatable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th width="10%">No. SPK</th>
+                <th>Tanggal</th>
+                <th>Cluster</th>
+                <th>No. Unit</th>
+                <th>Blok</th>
+                <th>Customer</th>
+                <th class="text-right" width="10%">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+     
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="add-modal" class="modal custom-modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Tambah SPK Project</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="add-form" method="POST" action="#">
+          {!! csrf_field() !!}
+          <div class="row"> 
+            <div class="col-md-12"> 
+              <div class="form-group">
+                <label>Judul</label>
+                <input class="form-control" type="text" name="title">
+              </div>
+              <div class="form-group">
+                <label>No. SPK</label>
+                <input class="form-control" type="text" name="number">
+              </div>
+              <div class="form-group">
+                <label>Kepada</label>
+                <input class="form-control" type="text" name="dest_name">
+              </div>
+              <div class="form-group">
+                <label>Tanggal</label>
+                <input class="form-control" type="text" name="date" id="input-date">
+              </div>
+              <div class="form-group">
+                <label>Perihal</label>
+                <input class="form-control" type="text" name="subject">
+              </div>
+              <div class="form-group">
+                <label>Kapling</label>
+                <select id="input-customer-lot-id" name="customer_lot_id"> 
+                  <option> - Pilih Kapling - </option>
+                    @foreach($lots as $lot)
+                      <option value="{{$lot['id']}}">{{$lot['cluster_name']}} - {{$lot['unit_block']}} / {{$lot['unit_number']}} ({{$lot['customer_name']}})</option>
+                    @endforeach
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Catatan</label>
+                <textarea class="form-control" name="note" rows="3"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="submit-section">
+            <button class="btn btn-primary submit-btn">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('additionalScriptJS')
@@ -28,7 +116,7 @@
       "processing": true,
       "serverSide": true,
       "ajax":{
-          "url": BASE_URL+"/customer-datatables",
+          "url": BASE_URL+"/spk-project-datatables",
           "dataType": "json",
           "type": "POST",
           "data":function(d) { 
@@ -37,12 +125,13 @@
       },
       "columns": [
           {data: 'id', name: 'id', width: '5%', "visible": false},
-          {data: 'name', name: 'name', className: 'td-limit'},
-          {data: 'email', name:'email', className: 'td-limit'},
-          {data: 'phone', name: 'phone', className: 'td-limit', orderable: false},
-          {data: 'province', name: 'province', className: 'td-limit'},
-          {data: 'city', name: 'city', className: 'td-limit'},
-          {data: 'action', name: 'action', className: 'text-right'},
+          {data: 'number', name: 'number'},
+          {data: 'date', name: 'date'},
+          {data: 'cluster_name', name: 'cluster_name'},
+          {data: 'unit_number', name: 'unit_number'},
+          {data: 'unit_block', name: 'unit_block'},
+          {data: 'customer_name', name: 'customer_name'},
+          {data: 'action', name: 'action', className: 'text-right'}
       ],
   });
 
@@ -50,34 +139,21 @@
       $('#add-modal').modal('show');
   });
 
-  $('#input-province').select2({
+  $('#input-customer-lot-id').select2({
     width: '100%'
   });
 
-  $('#input-city').select2({
-    width: '100%'
-  });
-
-  $('#input-province').on('change', function() {
-    var province_id = $("option:selected", this).data('province-code');
-    if(province_id) {
-      $.ajax({
-        url: BASE_URL+'/city_by_province/'+province_id,
-        type: "GET",
-        dataType: "json",
-        beforeSend: function() {
-            $('#input-city').empty();
-        },
-        success: function(data) {
-          $.each(data, function(key, value) {
-              $('#input-city').append('<option value="'+ value.name +'" data-city="'+ value.code+'">' + value.name + '</option>');
-          });
-        }
-      });
-    } else {
-
-    }
-  });
+  if($('#input-date').length > 0) {
+    $('#input-date').datetimepicker({
+      format: 'YYYY-MM-DD',
+      icons: {
+        up: "fa fa-angle-up",
+        down: "fa fa-angle-down",
+        next: 'fa fa-angle-right',
+        previous: 'fa fa-angle-left'
+      }
+    });
+  }
 
   $('form#add-form').submit( function( e ) {
     e.preventDefault();
@@ -85,7 +161,7 @@
 
     $.ajax({
       type: 'post',
-      url: BASE_URL+'/customers',
+      url: BASE_URL+'/spk-project',
       data: form_data,
       cache: false,
       contentType: false,
@@ -105,7 +181,6 @@
             }, function() {
                 $('#main-table').DataTable().ajax.reload(null, false);
                 $('#add-modal').modal('hide');
-                // window.location.replace(URL_LIST_PURCHASES);
             });
           }, 500);
         } else {
