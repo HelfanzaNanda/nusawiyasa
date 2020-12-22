@@ -36,6 +36,17 @@
             </div>
           </div>
           <div class="form-group row">
+            <label class="col-form-label col-md-2">Perumahan Yang Mengajukan</label>
+            <div class="col-md-10">
+              <select id="input-lot" name="lot_id"> 
+                <option value="0"> - Pilih Kapling - </option>
+                @foreach($lots as $lot)
+                  <option value="{{$lot['id']}}">{{$lot['name']}} - {{$lot['block']}} / {{$lot['unit_number']}}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
             <label class="col-form-label col-md-2">Tanggal</label>
             <div class="col-md-10">
               <input class="form-control floating" type="text" id="input-date" name="date">
@@ -144,6 +155,10 @@
 @section('additionalScriptJS')
 <script type="text/javascript">
   $('#input-supplier').select2({
+    width: '100%'
+  });
+
+  $('#input-lot').select2({
     width: '100%'
   });
 

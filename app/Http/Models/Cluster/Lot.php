@@ -19,7 +19,8 @@ class Lot extends Model
 		'surface_area',
 		'price',
 		'is_active',
-		'is_deleted'
+		'is_deleted',
+        'lot_status'
     ];
 
     private $operators = [
@@ -50,6 +51,7 @@ class Lot extends Model
 			'building_area' => ['alias' => $model->table.'.building_area', 'type' => 'string'],
 			'surface_area' => ['alias' => $model->table.'.surface_area', 'type' => 'string'],
 			'price' => ['alias' => $model->table.'.price', 'type' => 'string'],
+            'lot_status' => ['alias' => $model->table.'.lot_status', 'type' => 'int'],
 			'is_active' => ['alias' => $model->table.'.is_active', 'type' => 'string'],
 			'is_deleted' => ['alias' => $model->table.'.is_deleted', 'type' => 'string'],
 			'created_at' => ['alias' => $model->table.'.created_at', 'type' => 'string'],
@@ -197,7 +199,9 @@ class Lot extends Model
 
         $qry = self::select($_select)
                 ->addSelect('clusters.name as cluster_name')
-                ->join('clusters', 'clusters.id', '=', 'lots.cluster_id');
+                ->addSelect('customer_lots.id as booking_id')
+                ->join('clusters', 'clusters.id', '=', 'lots.cluster_id')
+                ->leftJoin('customer_lots', 'customer_lots.lot_id', '=', 'lots.id');
         
         $totalFiltered = $qry->count();
         

@@ -38,6 +38,7 @@
                 <th>Jumlah Lantai</th>
                 <th>LT (m2)</th>
                 <th>LB (m2)</th>
+                <th>Status</th>
                 <th class="text-right" width="10%">Aksi</th>
               </tr>
             </thead>
@@ -138,6 +139,7 @@
           {data: 'total_floor', name: 'total_floor'},
           {data: 'building_area', name: 'building_area'},
           {data: 'surface_area', name: 'surface_area'},
+          {data: 'status', name: 'status'},
           {data: 'action', name: 'action', className: 'text-right'},
       ],
   });

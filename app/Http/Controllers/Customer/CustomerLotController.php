@@ -21,7 +21,7 @@ class CustomerLotController extends Controller
     public function create($lot_id = 0)
     {
         $customers = Customer::select(['customers.id as id', 'users.name as name'])->join('users', 'users.id', '=', 'customers.user_id')->get();
-        $lots = Lot::select(['lots.id', 'clusters.name', 'lots.block', 'lots.unit_number'])->join('clusters', 'clusters.id', '=', 'lots.cluster_id')->get();
+        $lots = Lot::select(['lots.id', 'clusters.name', 'lots.block', 'lots.unit_number', 'customer_lots.id as booking_id'])->join('clusters', 'clusters.id', '=', 'lots.cluster_id')->leftJoin('customer_lots', 'customer_lots.lot_id', '=', 'lots.id')->get();
         return view('customer.customer_lot_create', compact('customers', 'lots', 'lot_id'));
     }
 
@@ -91,6 +91,9 @@ class CustomerLotController extends Controller
                 $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';
                 $nestedData['action'] .='            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(159px, 32px, 0px);">';
                 $nestedData['action'] .='                <a class="dropdown-item" href="'.url('/bookings/detail/'.$row['id']).'"><i class="fa fa-info m-r-5"></i> Detail</a>';
+                if ($row['payment_type'] == 'cash_in_stages') {
+                    $nestedData['action'] .='                <button class="dropdown-item" id="booking-installment" data-id="'.$row['id'].'"><i class="fa fa-info m-r-5"></i> Cicilan Cash</button>';
+                }
                 $nestedData['action'] .='            </div>';
                 $nestedData['action'] .='        </div>';
                 $data[] = $nestedData;

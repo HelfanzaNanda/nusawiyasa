@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Purchasing;
 
 use App\Http\Controllers\Controller;
+use App\Http\Models\Cluster\Lot;
 use App\Http\Models\Inventory\Suppliers;
 use App\Http\Models\Purchase\PurchaseOrders;
 use App\Http\Models\Ref\Province;
@@ -20,8 +21,9 @@ class PurchaseOrderController extends Controller
     public function create()
     {
         $suppliers = Suppliers::get();
+        $lots = Lot::select(['lots.id', 'clusters.name', 'lots.block', 'lots.unit_number'])->join('clusters', 'clusters.id', '=', 'lots.cluster_id')->get();
 
-        return view('purchasing.purchase_order_create', compact('suppliers'));
+        return view('purchasing.purchase_order_create', compact('suppliers', 'lots'));
     }
 
     public function insertData(Request $request)

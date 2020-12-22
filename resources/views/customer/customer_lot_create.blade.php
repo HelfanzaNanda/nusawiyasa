@@ -29,7 +29,9 @@
               <select id="input-lot" name="lot_id"> 
                 <option value="0"> - Pilih Kapling - </option>
                 @foreach($lots as $lot)
+                  @if(!$lot['booking_id'])
                   <option value="{{$lot['id']}}">{{$lot['name']}} - {{$lot['block']}} / {{$lot['unit_number']}}</option>
+                  @endif
                 @endforeach
               </select>
             </div>
@@ -51,12 +53,12 @@
               </select>
             </div>
           </div>
-
+          <hr>
           <h4 class="text-primary">Biaya</h4>
           <div class="row" id="cost"> 
 
           </div>
-
+          <hr>
           <h4 class="text-primary">Persyatan Dokumen</h4>
           <div class="row" id="term"> 
 
@@ -107,7 +109,7 @@
     console.log(payment_type);
     if(payment_type) {
       $.ajax({
-        url: BASE_URL+'/ref/term_purchasing_customers?all=true&payment_type='+payment_type,
+        url: BASE_URL+'/ref/term_purchasing_customers?all=true&payment_type='+payment_type+'&is_deleted=0',
         type: "GET",
         dataType: "json",
         beforeSend: function() {
@@ -119,12 +121,12 @@
           let term = '';
           $.each(res.data, function(key, value) {
             if (value.terms_type == 'cost') {
-              cost += '<div class="col-md-6">';
+              cost += '<div class="col-md-6 mt-2">';
               cost += '<label>'+value.name+'</label>';
               cost += '<input class="form-control" type="number" name="customer_costs['+value.id+']">';
               cost += '</div>';
             } else {
-              term += '<div class="col-md-6">';
+              term += '<div class="col-md-6 mt-2">';
               term += '<label>'+value.name+'</label>';
               term += '<input class="form-control" type="file" name="customer_terms['+value.id+']">';
               term += '</div>';

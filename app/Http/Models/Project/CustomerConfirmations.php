@@ -144,13 +144,6 @@ class CustomerConfirmations extends Model
                     'message' => 'Only upload jpg, png, and pdf'
                 ]);
             }
-
-            DB::commit();
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data Berhasil Disimpan'
-            ]);
         }
 
         DB::commit();

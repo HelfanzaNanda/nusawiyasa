@@ -51,10 +51,75 @@
     </div>
   </div>
 </div>
+
+<div id="installment-modal" class="modal custom-modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cicilan Cash</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="add-form" method="POST" action="#">
+          {!! csrf_field() !!}
+          <div class="row"> 
+            <div class="col-sm-12" id="installment-row">  
+              <div class="form-group">
+                <label>Cicilan 1</label>
+                <input class="form-control" type="text" name="installment[]">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12">  
+              <center><button type="button" class="btn btn-primary btn-add-row"><i class="fa fa-plus"></i></button></center>
+            </div>
+          </div>
+          <div class="submit-section">
+            <button class="btn btn-primary submit-btn">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+
+  $("#main-table").on('click', '#booking-installment', function() {
+      let id = $(this).data('id');
+      $('#installment-modal').modal('show');
+  });
+
+  $(document).on("click", '.btn-add-row', function () {
+    var group = $('input[name="installment[]"]');
+
+    if (group.length + 1 > 8) {
+      swal({
+          title: "Gagal",
+          text: "Maksimal Cicilan Cash Adalah 8 kali",
+          showConfirmButton: true,
+          confirmButtonColor: '#0760ef',
+          type:"error",
+          html: true
+      });
+      return false;
+    }
+
+    let cols = '';
+
+    cols += '<div class="form-group">';
+    cols += '  <label>Cicilan '+(group.length + 1)+'</label>';
+    cols += '  <input class="form-control" type="text" name="installment[]">';
+    cols += '</div>';
+
+    $("#installment-row").append(cols);
+  });
+
   $("#main-table").DataTable({
       "pageLength": 10,
       "processing": true,

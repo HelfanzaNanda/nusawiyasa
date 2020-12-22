@@ -2,8 +2,9 @@
 
 namespace App\Http\Models\Purchase;
 
-use DB;
+use App\Http\Models\Cluster\Lot;
 use App\Http\Models\Purchase\PurchaseOrderItems;
+use DB;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -37,7 +38,7 @@ class PurchaseOrders extends Model
      * @var array
      */
     protected $fillable = [
-        'number', 'supplier_id', 'date', 'status', 'created_at', 'updated_at', 'fpp_number', 'type', 'note', 'subtotal', 'tax', 'delivery', 'other', 'total', 'approved_user_id', 'known_user_id', 'created_user_id'
+        'number', 'supplier_id', 'date', 'status', 'created_at', 'updated_at', 'fpp_number', 'type', 'note', 'subtotal', 'tax', 'delivery', 'other', 'total', 'approved_user_id', 'known_user_id', 'created_user_id', 'cluster_id', 'lot_id'
     ];
 
     /**
@@ -100,6 +101,8 @@ class PurchaseOrders extends Model
             'delivery' => ['alias' => $model->table.'.delivery', 'type' => 'string'],
             'other' => ['alias' => $model->table.'.other', 'type' => 'string'],
             'total' => ['alias' => $model->table.'.total', 'type' => 'string'],
+            'cluster_id' => ['alias' => $model->table.'.cluster_id', 'type' => 'string'],
+            'lot_id' => ['alias' => $model->table.'.lot_id', 'type' => 'string'],
             'approved_user_id' => ['alias' => $model->table.'.approved_user_id', 'type' => 'int'],
             'known_user_id' => ['alias' => $model->table.'.known_user_id', 'type' => 'int'],
             'created_user_id' => ['alias' => $model->table.'.created_user_id', 'type' => 'int']
@@ -199,6 +202,8 @@ class PurchaseOrders extends Model
         $purchase_order['delivery'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['delivery']));
         $purchase_order['other'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['other']));
         $purchase_order['total'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['total']));
+        $purchase_order['lot_id'] = $params['lot_id'];
+        $purchase_order['cluster_id'] = Lot::where('id', $params['lot_id'])->value('cluster_id');
         $purchase_order['approved_user_id'] = 0;
         $purchase_order['known_user_id'] = 0;
         $purchase_order['created_user_id'] = session()->get('_id');

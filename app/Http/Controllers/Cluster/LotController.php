@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Cluster\Lot;
 use App\Http\Models\Ref\Province;
+use App\Http\Models\Ref\RefLotStatuses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -74,6 +75,8 @@ class LotController extends Controller
 
         $data = [];
 
+        $status_collection = RefLotStatuses::get();
+
         if (!empty($res['data'])) {
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
@@ -83,12 +86,14 @@ class LotController extends Controller
                 $nestedData['total_floor'] = $row['total_floor'];
                 $nestedData['building_area'] = $row['building_area'];
                 $nestedData['surface_area'] = $row['surface_area'];
+                $nestedData['status'] = $status_collection->where('id', $row['lot_status'])->values()[0]['name'];
                 $nestedData['action'] = '';
                 $nestedData['action'] .='<div class="dropdown dropdown-action">';
                 $nestedData['action'] .='<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';
                 $nestedData['action'] .='<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(159px, 32px, 0px);">';
-
-                $nestedData['action'] .='<a href="'.url('/bookings/'.$row['id']).'" class="dropdown-item"><i class="fa fa-home m-r-5"></i> Booking</a>';
+                if (!$row['booking_id']) {
+                    $nestedData['action'] .='<a href="'.url('/bookings/'.$row['id']).'" class="dropdown-item"><i class="fa fa-home m-r-5"></i> Booking</a>';
+                }
                 $nestedData['action'] .='<a href="#" class="dropdown-item" id="edit-data" data-id="'.$row['id'].'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
                 $nestedData['action'] .='<a href="#" class="dropdown-item" id="delete-data" data-id="'.$row['id'].'"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
 
