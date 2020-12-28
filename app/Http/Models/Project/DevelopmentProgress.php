@@ -162,6 +162,10 @@ class DevelopmentProgress extends Model
                 ->leftJoin('lots', 'lots.id', '=', 'development_progress.lot_id')
                 ->leftJoin('clusters', 'clusters.id', '=', 'lots.cluster_id');
 
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+            $qry->where('development_progress.cluster_id', $session['_cluster_id']);
+        }
+
         $totalFiltered = $qry->count();
         
         if (empty($search)) {

@@ -1,13 +1,13 @@
 @extends('layouts.main')
 
-@section('title', 'Tambah Pengajuan Material')
+@section('title', 'Tambah Pengajuan Bahan')
 
 @section('content')
 <div class="row">
   <div class="col-lg-12">
     <div class="card">
       <div class="card-header">
-        <h4 class="card-title mb-0">Tambah Pengajuan Material</h4>
+        <h4 class="card-title mb-0">Tambah Pengajuan Bahan</h4>
       </div>
       <form id="add-form" method="POST" action="#">
         <div class="card-body">
@@ -42,6 +42,40 @@
             </div>
           </div>
           <div class="form-group row">
+            <label class="col-form-label col-md-2">Perumahan/Cluster</label>
+            <div class="col-md-10">
+              <select id="input-cluster" name="cluster_id"> 
+                <option value="0"> - Pilih Perumahan/Cluster - </option>
+                @foreach($clusters as $cluster)
+                  <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">Tipe Permintaan</label>
+            <div class="col-md-10">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="type" id="rap" value="rap" checked="">
+                <label class="form-check-label" for="rap">
+                RAP
+                </label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="type" id="non-rap" value="non_rap">
+                <label class="form-check-label" for="non-rap">
+                Non RAP
+                </label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="type" id="disposition" value="disposition">
+                <label class="form-check-label" for="disposition">
+                Disposisi
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
             <label class="col-form-label col-md-2">Tanggal</label>
             <div class="col-md-10">
               <input class="form-control floating" type="text" id="input-date" name="date">
@@ -49,8 +83,8 @@
           </div>
           <section class="review-section">
             <div class="review-header text-center">
-              <h3 class="review-title">Item Pengajuan Material</h3>
-              <p class="text-muted">Silahkan masukkan poin - poin Pengajuan Material</p>
+              <h3 class="review-title">Item Pengajuan Bahan</h3>
+              <p class="text-muted">Silahkan masukkan poin - poin Pengajuan Bahan</p>
             </div>
             <div class="row">
               <div class="col-md-12">
@@ -73,7 +107,7 @@
                           </select>
                         </th>
                         <th><input type="text" class="form-control add-item" id="input-item-qty" placeholder="qty"></th>
-                        <th><input type="text" class="form-control add-item" id="input-item-unit" placeholder="Satuan"></th>
+                        <th><input type="text" class="form-control add-item" id="input-item-unit" placeholder="Satuan" readonly></th>
                         <th><input type="text" class="form-control add-item" id="input-item-brand" placeholder="Merk"></th>
                         <th style="width: 64px;"><button type="button" class="btn btn-primary btn-add-row"><i class="fa fa-plus"></i></button></th>
                       </tr>
@@ -104,6 +138,10 @@
     width: '100%'
   });
 
+  $('#input-cluster').select2({
+    width: '100%'
+  });
+
   if($('#input-date').length > 0) {
     $('#input-date').datetimepicker({
       format: 'YYYY-MM-DD',
@@ -117,7 +155,7 @@
   }
 
   $("#item").select2({
-    tags: true,
+    // tags: true,
     width: '100%',
     minimumInputLength: 2,
     minimumResultsForSearch: '',
@@ -144,26 +182,26 @@
         }
       }
     },
-    createTag: function (params) {
-      return {
-        id: params.term,
-        text: params.term,
-        brand: "Isikan Merk...",
-        unit: "Isikan Unit...",
-        newOption: true
-      }
-    },
-    templateResult: function (data) {
-      var $result = $("<span></span>");
+    // createTag: function (params) {
+    //   return {
+    //     id: params.term,
+    //     text: params.term,
+    //     brand: "Isikan Merk...",
+    //     unit: "Isikan Unit...",
+    //     newOption: true
+    //   }
+    // },
+    // templateResult: function (data) {
+    //   var $result = $("<span></span>");
 
-      $result.text(data.text);
+    //   $result.text(data.text);
 
-      if (data.newOption) {
-        $result.append(" <em>(new)</em>");
-      }
+    //   if (data.newOption) {
+    //     $result.append(" <em>(new)</em>");
+    //   }
 
-      return $result;
-    }
+    //   return $result;
+    // }
   });
 
   $("#item").on('change', function(e) {
@@ -174,10 +212,33 @@
   });
 
   $(document).on("click", '.btn-add-row', function () {
+    var inventoryId = $('#item :selected').val();
+    var inventoryName = $('#item :selected').text();
+    var inventoryQty = $('#input-item-qty').val();
+    var inventoryUnit = $('#input-item-unit').val();
+    var inventoryBrand = $('#input-item-brand').val();
+
+    if (inventoryId == '' || 
+        inventoryQty == '' ||
+        inventoryUnit == '') {
+      swal({
+          title: "Gagal",
+          text: 'Harap Pilih Item',
+          showConfirmButton: true,
+          confirmButtonColor: '#0760ef',
+          type:"error",
+          html: true
+      });
+
+      return;
+    }
     var id = $(this).closest("table.table-review").attr('id');  // Id of particular table
     var div = $("<tr />");
     div.html(GetDynamicTextBox(id));
     $("#"+id+"_tbody").append(div);
+
+    $("select#item").select2("open");
+
   });
 
   $(document).on("click", "#comments_remove", function () {
@@ -208,11 +269,31 @@
 
   $('.add-item').keypress(function (e) {
     if (e.which == 13) {
+      var inventoryId = $('#item :selected').val();
+      var inventoryName = $('#item :selected').text();
+      var inventoryQty = $('#input-item-qty').val();
+      var inventoryUnit = $('#input-item-unit').val();
+      var inventoryBrand = $('#input-item-brand').val();
+
+      if (inventoryId == '' || 
+          inventoryQty == '' ||
+          inventoryUnit == '') {
+        swal({
+            title: "Gagal",
+            text: 'Harap Pilih Item',
+            showConfirmButton: true,
+            confirmButtonColor: '#0760ef',
+            type:"error",
+            html: true
+        });
+
+        return;
+      }
+
       var id = $(this).closest("table.table-review").attr('id');  // Id of particular table
       var div = $("<tr />");
       div.html(GetDynamicTextBox(id));
       $("#"+id+"_tbody").append(div);
-
 
       $("select#item").select2("open");
 
@@ -223,7 +304,19 @@
   $('form#add-form').submit( function( e ) {
     e.preventDefault();
     var form_data = new FormData( this );
+    var rowsLength = document.getElementById("general_comments").getElementsByTagName("tbody")[0].getElementsByTagName("tr").length+1;
+    if (rowsLength < 2) {
+      swal({
+          title: "Gagal",
+          text: 'Harap Isikan Item',
+          showConfirmButton: true,
+          confirmButtonColor: '#0760ef',
+          type:"error",
+          html: true
+      });
 
+      return;
+    }
     $.ajax({
       type: 'post',
       url: BASE_URL+'/request-material',

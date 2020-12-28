@@ -1,40 +1,33 @@
 <?php
 
-namespace App\Http\Controllers\Purchasing;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Models\Cluster\Lot;
+use App\Http\Models\Role;
+use App\Http\Models\Users;
 use App\Http\Models\Cluster\Cluster;
-use App\Http\Models\Inventory\Suppliers;
-use App\Http\Models\Purchase\PurchaseOrders;
-use App\Http\Models\Project\RequestMaterials;
-use App\Http\Models\Ref\Province;
-use App\Http\Models\Ref\RefGeneralStatuses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class PurchaseOrderController extends Controller
+class UserController extends Controller
 {
     public function index()
     {
-        return view('purchasing.purchase_order');
+        $roles = Role::get();
+        $clusters = Cluster::get();
+        return view('setting.user.'.__FUNCTION__, compact('roles', 'clusters'));
     }
 
     public function create()
     {
-        $suppliers = Suppliers::get();
-        $lots = Lot::selectClusterBySession();
-        $clusters = Cluster::selectClusterBySession();
-        $request_materials = RequestMaterials::selectClusterBySession();
-
-        return view('purchasing.purchase_order_create', compact('suppliers', 'lots', 'clusters', 'request_materials'));
+        return view('setting.user.'.__FUNCTION__);
     }
 
     public function insertData(Request $request)
     {
         $params = $request->all();
 
-        return PurchaseOrders::createOrUpdate($params, $request->method(), $request);
+        return Users::createOrUpdate($params, $request->method(), $request);
     }
 
     public function edit($id)
@@ -44,20 +37,17 @@ class PurchaseOrderController extends Controller
 
     public function datatables(Request $request)
     {
-        $session = [
-            '_login' => session()->get('_login'),
-            '_id' => session()->get('_id'),
-            '_name' => session()->get('_name'),
-            '_email' => session()->get('_email'),
-            '_username' => session()->get('_username'),
-            '_phone' => session()->get('_phone'),
-            '_role_id' => session()->get('_role_id'),
-            '_role_name' => session()->get('_role_name'),
-            '_cluster_id' => session()->get('_cluster_id')
-        ];
+        $_login = session()->get('_login');
+        $_id = session()->get('_id');
+        $_name = session()->get('_name');
+        $_email = session()->get('_email');
+        $_username = session()->get('_username');
+        $_phone = session()->get('_phone');
+        $_role_id = session()->get('_role_id');
+        $_role_name = session()->get('_role_name');
 
         $columns = [
-            0 => 'purchase_orders.id'
+            0 => 'users.id'
         ];
 
         $dataOrder = [];
@@ -81,23 +71,16 @@ class PurchaseOrderController extends Controller
 
         $filter = $request->only(['sDate', 'eDate']);
 
-        $res = PurchaseOrders::datatables($start, $limit, $order, $dir, $search, $filter, $session);
+        $res = Users::datatables($start, $limit, $order, $dir, $search, $filter);
 
         $data = [];
-        
-        $status_collection = RefGeneralStatuses::get();
-
 
         if (!empty($res['data'])) {
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
-                $nestedData['number'] = $row['number'];
-                $nestedData['fpp_number'] = $row['fpp_number'];
-                $nestedData['supplier_name'] = $row['supplier_name'];
-                $nestedData['type'] = $row['type'];
-                $nestedData['date'] = $row['date'];
-                $nestedData['status'] = $status_collection->where('id', $row['status'])->values()[0]['name'];
-                $nestedData['total'] = number_format(floatval($row['total']));
+                $nestedData['name'] = $row['name'];
+                $nestedData['cluster_name'] = $row['cluster_name'];
+                $nestedData['role_name'] = $row['role_name'];
                 $nestedData['action'] = '';
                 $nestedData['action'] .='        <div class="dropdown dropdown-action">';
                 $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';
@@ -131,11 +114,11 @@ class PurchaseOrderController extends Controller
         $request = $request->all();
 
         if ($id != null) {
-            $res = PurchaseOrders::getById($id, $request);
+            $res = Users::getById($id, $request);
         } else if (isset($request['all']) && $request['all']) {
-            $res = PurchaseOrders::getAllResult($request);
+            $res = Users::getAllResult($request);
         } else {
-            $res = PurchaseOrders::getPaginatedResult($request);
+            $res = Users::getPaginatedResult($request);
         }
 
         return $res;
@@ -144,21 +127,21 @@ class PurchaseOrderController extends Controller
     public function post(Request $request)
     {
         $params = $request->all();
-        return PurchaseOrders::createOrUpdate($params, $request->method(), $request);
+        return Users::createOrUpdate($params, $request->method(), $request);
     }
 
     public function put($id, Request $request)
     {
         $params = $request->all();
         $params['id'] = $id;
-        return PurchaseOrders::createOrUpdate($params, $request->method(), $request);
+        return Users::createOrUpdate($params, $request->method(), $request);
     }
 
     public function patch($id, Request $request)
     {
         $params = $request->all();
         $params['id'] = $id;
-        return PurchaseOrders::createOrUpdate($params, $request->method(), $request);
+        return Users::createOrUpdate($params, $request->method(), $request);
     }
 
     public function delete($id, Request $request)

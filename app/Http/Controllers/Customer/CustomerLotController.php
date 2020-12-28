@@ -38,14 +38,17 @@ class CustomerLotController extends Controller
 
     public function datatables(Request $request)
     {
-        $_login = session()->get('_login');
-        $_id = session()->get('_id');
-        $_name = session()->get('_name');
-        $_email = session()->get('_email');
-        $_username = session()->get('_username');
-        $_phone = session()->get('_phone');
-        $_role_id = session()->get('_role_id');
-        $_role_name = session()->get('_role_name');
+        $session = [
+            '_login' => session()->get('_login'),
+            '_id' => session()->get('_id'),
+            '_name' => session()->get('_name'),
+            '_email' => session()->get('_email'),
+            '_username' => session()->get('_username'),
+            '_phone' => session()->get('_phone'),
+            '_role_id' => session()->get('_role_id'),
+            '_role_name' => session()->get('_role_name'),
+            '_cluster_id' => session()->get('_cluster_id')
+        ];
 
         $columns = [
             0 => 'customer_lots.id'
@@ -72,7 +75,7 @@ class CustomerLotController extends Controller
 
         $filter = $request->only(['sDate', 'eDate']);
 
-        $res = CustomerLot::datatables($start, $limit, $order, $dir, $search, $filter);
+        $res = CustomerLot::datatables($start, $limit, $order, $dir, $search, $filter, $session);
 
         $data = [];
 
@@ -128,9 +131,9 @@ class CustomerLotController extends Controller
                     ->leftJoin('clusters', 'clusters.id', '=', 'lots.cluster_id')
                     ->first();
 
-        $customer_terms = CustomerTerm::select('customer_terms.*')->addSelect('ref_term_purchasing_customers.name as key_name')->where('customer_id', $data['customer_id'])->join('ref_term_purchasing_customers', 'ref_term_purchasing_customers.id', '=', 'customer_terms.ref_term_purchasing_customer_id')->get();
+        $customer_terms = CustomerTerm::select('customer_terms.*')->addSelect('ref_term_purchasing_customers.name as key_name')->where('customer_id', $data['customer_id'])->where('lot_id', $data['lot_id'])->join('ref_term_purchasing_customers', 'ref_term_purchasing_customers.id', '=', 'customer_terms.ref_term_purchasing_customer_id')->get();
 
-        $customer_costs = CustomerCost::select('customer_costs.*')->addSelect('ref_term_purchasing_customers.name as key_name')->where('customer_id', $data['customer_id'])->join('ref_term_purchasing_customers', 'ref_term_purchasing_customers.id', '=', 'customer_costs.ref_term_purchasing_customer_id')->get();
+        $customer_costs = CustomerCost::select('customer_costs.*')->addSelect('ref_term_purchasing_customers.name as key_name')->where('customer_id', $data['customer_id'])->where('lot_id', $data['lot_id'])->join('ref_term_purchasing_customers', 'ref_term_purchasing_customers.id', '=', 'customer_costs.ref_term_purchasing_customer_id')->get();
 
         return view('customer.customer_lot_detail', compact('data', 'customer_terms', 'customer_costs'));
     }

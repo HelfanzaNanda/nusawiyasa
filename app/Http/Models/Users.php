@@ -27,6 +27,7 @@ class Users extends Model
         'is_active',
         'is_deleted',
         'remember_token',
+        'cluster_id',
         'created_at',
         'updated_at'
     ];
@@ -40,6 +41,29 @@ class Users extends Model
         "\$not" => "<>",
         "\$in" => "in"
     ];
+
+    public static function mapSchema($params = [], $user = [])
+    {
+        $model = new self;
+
+        return [
+            'id' => ['alias' => $model->table.'.id', 'type' => 'int'],
+            'name' => ['alias' => $model->table.'.name', 'type' => 'string'],
+            'email' => ['alias' => $model->table.'.email', 'type' => 'string'],
+            'username' => ['alias' => $model->table.'.username', 'type' => 'string'],
+            'phone' => ['alias' => $model->table.'.phone', 'type' => 'string'],
+            'email_verified_at' => ['alias' => $model->table.'.email_verified_at', 'type' => 'string'],
+            'password' => ['alias' => $model->table.'.password', 'type' => 'string'],
+            'role_id' => ['alias' => $model->table.'.role_id', 'type' => 'int'],
+            'is_suspend' => ['alias' => $model->table.'.is_suspend', 'type' => 'int'],
+            'is_active' => ['alias' => $model->table.'.is_active', 'type' => 'int'],
+            'is_deleted' => ['alias' => $model->table.'.is_deleted', 'type' => 'int'],
+            'remember_token' => ['alias' => $model->table.'.remember_token', 'type' => 'string'],
+            'cluster_id' => ['alias' => $model->table.'.cluster_id', 'type' => 'string'],
+            'created_at' => ['alias' => $model->table.'.created_at', 'type' => 'string'],
+            'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string']
+        ];
+    }
 
     public static function createOrUpdate($params, $method, $request)
     {
@@ -90,10 +114,6 @@ class Users extends Model
                 unset($params['old_password']);
             }
 
-            // $validatedData = $request->validate([
-            //     'email' => 'email|unique:users,email,'.$params['id']
-            // ]);
-
             $update = self::where('employee_code', $employee_code)->update($params);
 
             return response()->json([
@@ -112,16 +132,13 @@ class Users extends Model
         }
 
         $users = self::create([
+            'password' => bcrypt($params['password']),
             'name' => $params['name'],
             'email' => $params['email'],
-            'password' => bcrypt($params['password']),
+            'username' => $params['username'],
             'phone' => $params['phone'],
             'role_id' => $params['role_id'],
-            'balai_id' => $params['balai_id'],
-            'satker_id' => $params['satker_id'],
-            'ppk_id' => $params['ppk_id'],
-            'package_id' => $params['package_id'],
-            'avatar' => $filename,
+            'cluster_id' => $params['cluster_id']
         ]);
 
         return response()->json([
@@ -171,6 +188,7 @@ class Users extends Model
             $request->session()->put('_phone', $user['phone']);
             $request->session()->put('_role_id', $user['role_id']);
             $request->session()->put('_role_name', $user['role_name']);
+            $request->session()->put('_cluster_id', $user['cluster_id']);
 
             return response()->json([
                 'status' => 'success',
@@ -273,5 +291,62 @@ class Users extends Model
         } else {
             return \Redirect::route('master.user')->withMessage('ERROR DATABASE: Failed to update password!');
         }
+    }
+
+    public static function datatables($start, $length, $order, $dir, $search, $filter = '')
+    {
+        $totalData = self::count();
+
+        $_select = [];
+        foreach(array_values(self::mapSchema()) as $select) {
+            $_select[] = $select['alias'];
+        }
+
+        $qry = self::select($_select)->addSelect('roles.name as role_name')->addSelect('clusters.name as cluster_name')
+                    ->where('role_id', '<', 99)
+                    ->join('roles', 'roles.id', '=', 'users.role_id')
+                    ->leftJoin('clusters', 'clusters.id', 'users.cluster_id');
+        
+        $totalFiltered = $qry->count();
+        
+        if (empty($search)) {
+            
+            if ($length > 0) {
+                $qry->skip($start)
+                    ->take($length);
+            }
+
+            foreach ($order as $row) {
+                $qry->orderBy($row['column'], $row['dir']);
+            }
+
+        } else {
+            foreach (array_values(self::mapSchema()) as $key => $val) {
+                if ($key < 1) {
+                    $qry->whereRaw('('.$val['alias'].' LIKE \'%'.$search.'%\'');
+                } else if (count(array_values(self::mapSchema())) == ($key + 1)) {
+                    $qry->orWhereRaw($val['alias'].' LIKE \'%'.$search.'%\')');
+                } else {
+                    $qry->orWhereRaw($val['alias'].' LIKE \'%'.$search.'%\'');
+                }
+            }
+
+            $totalFiltered = $qry->count();
+
+            if ($length > 0) {
+                $qry->skip($start)
+                    ->take($length);
+            }
+
+            foreach ($order as $row) {
+                $qry->orderBy($row['column'], $row['dir']);
+            }
+        }
+
+        return [
+            'data' => $qry->get(),
+            'totalData' => $totalData,
+            'totalFiltered' => $totalFiltered
+        ];
     }
 }

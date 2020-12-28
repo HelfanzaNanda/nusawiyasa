@@ -17,7 +17,7 @@ class InventoryController extends Controller
     {
         $units = InventoryUnits::where('is_deleted', 0)->get();
         $categories = InventoryCategories::where('is_deleted', 0)->get();
-        $clusters = Cluster::where('is_deleted', 0)->get();
+        $clusters = Cluster::selectClusterBySession();
 
         return view('inventory.inventory', compact('units', 'categories', 'clusters'));
     }
@@ -41,14 +41,17 @@ class InventoryController extends Controller
 
     public function datatables(Request $request)
     {
-        $_login = session()->get('_login');
-        $_id = session()->get('_id');
-        $_name = session()->get('_name');
-        $_email = session()->get('_email');
-        $_username = session()->get('_username');
-        $_phone = session()->get('_phone');
-        $_role_id = session()->get('_role_id');
-        $_role_name = session()->get('_role_name');
+        $session = [
+            '_login' => session()->get('_login'),
+            '_id' => session()->get('_id'),
+            '_name' => session()->get('_name'),
+            '_email' => session()->get('_email'),
+            '_username' => session()->get('_username'),
+            '_phone' => session()->get('_phone'),
+            '_role_id' => session()->get('_role_id'),
+            '_role_name' => session()->get('_role_name'),
+            '_cluster_id' => session()->get('_cluster_id')
+        ];
 
         $columns = [
             0 => 'inventories.id'
@@ -75,7 +78,7 @@ class InventoryController extends Controller
 
         $filter = $request->only(['sDate', 'eDate']);
 
-        $res = Inventories::datatables($start, $limit, $order, $dir, $search, $filter);
+        $res = Inventories::datatables($start, $limit, $order, $dir, $search, $filter, $session);
 
         $data = [];
 

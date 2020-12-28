@@ -5,6 +5,7 @@
     <li {{ (request()->segment(1) == '') ? 'class=active' : '' }}> 
         <a href="{{url('/')}}"><i class="la la-dashboard"></i> <span>Beranda</span></a>
     </li>
+    @if(Session::get('_role_id') == 1 || Session::get('_role_id') == 2)
     <li class="menu-title"> 
         <span>Marketing</span>
     </li>
@@ -15,20 +16,28 @@
         <a href="#"><i class="la la-users"></i> <span> Konsumen</span> <span class="menu-arrow"></span></a>
         <ul style="display: none;">
             <li><a {{ (request()->segment(1) == 'customers') ? 'class=active' : '' }} href="{{url('/customers')}}">Data Konsumen</a></li>
-            <li><a {{ (request()->segment(1) == 'customer-terms') ? 'class=active' : '' }} href="{{url('/customer-terms')}}">Dokumen</a></li>
-            <li><a {{ (request()->segment(1) == 'customer-costs') ? 'class=active' : '' }} href="{{url('/customer-costs')}}">Pembayaran</a></li>
+{{--             <li><a {{ (request()->segment(1) == 'customer-terms') ? 'class=active' : '' }} href="{{url('/customer-terms')}}">Dokumen</a></li>
+            <li><a {{ (request()->segment(1) == 'customer-costs') ? 'class=active' : '' }} href="{{url('/customer-costs')}}">Pembayaran</a></li> --}}
         </ul>
     </li>
     <li class="submenu">
         <a href="#"><i class="la la-home"></i> <span> Perumahan</span> <span class="menu-arrow"></span></a>
         <ul style="display: none;">
+            @if(Session::get('_role_id') == 1)
             <li><a {{ (request()->segment(1) == 'clusters') ? 'class=active' : '' }} href="{{url('/clusters')}}">Data Kluster</a></li>
+            @endif
             <li><a {{ (request()->segment(1) == 'lots') ? 'class=active' : '' }} href="{{url('/lots')}}">Data Kavling</a></li>
         </ul>
     </li>
     <li {{ (request()->segment(1) == 'booking-page') ? 'class=active' : '' }}> 
-        <a href="{{url('/booking-page')}}"><i class="la la-hand-o-up"></i> <span>Booking</span></a>
+        <a href="{{url('/booking-page')}}"><i class="la la-hand-o-up"></i> <span>Customer Booking</span></a>
     </li>
+    <li {{ (request()->segment(1) == 'spk-project') ? 'class=active' : '' }}> 
+        <a href="{{url('/spk-project')}}"><i class="la la-briefcase"></i> <span>SPK Project</span></a>
+    </li>
+    @endif
+
+    @if(Session::get('_role_id') == 1 || Session::get('_role_id') == 3)
     <li class="menu-title"> 
         <span>Project </span>
     </li>
@@ -38,7 +47,6 @@
     <li class="submenu">
         <a href="#"><i class="la la-broadcast-tower"></i> <span> Konfirmasi Pembangunan</span> <span class="menu-arrow"></span></a>
         <ul style="display: none;">
-            <li><a {{ (request()->segment(1) == 'spk-project') ? 'class=active' : '' }} href="{{url('/spk-project')}}">SPK Project</a></li>
             <li><a {{ (request()->segment(1) == 'customer-confirmation') ? 'class=active' : '' }} href="{{url('/customer-confirmation')}}">Konfirmasi Konsumen</a></li>
         </ul>
     </li>
@@ -52,8 +60,12 @@
         <a href="{{url('/request-material')}}"><i class="la la-dolly-flatbed"></i> <span>Pengajuan Bahan</span></a>
     </li>
     <li {{ (request()->segment(1) == 'development-progress') ? 'class=active' : '' }}> 
-        <a href="{{url('/development-progress')}}"><i class="la la-paint-roller"></i> <span>Progress Pembangunan</span></a>
+        {{-- <a href="{{url('/development-progress')}}"><i class="la la-paint-roller"></i> <span>Progress Pembangunan</span></a> --}}
+        <a href="{{url('/development-progress')}}"><i class="la la-paint-roller"></i> <span>Laporan Harian</span></a>
     </li>
+    @endif
+
+    @if(Session::get('_role_id') == 1 || Session::get('_role_id') == 5)
     <li class="menu-title"> 
         <span>Gudang </span>
     </li>
@@ -86,6 +98,9 @@
     <li {{ (request()->segment(1) == 'report-stock-opname') ? 'class=active' : '' }}> 
         <a href="{{url('/report-stock-opname')}}"><i class="la la-clipboard-check"></i> <span>Lap. Stock Opname</span></a>
     </li>
+    @endif
+
+    @if(Session::get('_role_id') == 1 || Session::get('_role_id') == 6)
     <li class="menu-title"> 
         <span>Purchasing </span>
     </li>
@@ -98,7 +113,14 @@
     <li {{ (request()->segment(1) == 'report-outstanding-po') ? 'class=active' : '' }}> 
         <a href="{{url('/report-outstanding-po')}}"><i class="la la-file-alt"></i> <span>Lap. Outstanding PO</span></a>
     </li>
+    @endif
+
+    @if(Session::get('_role_id') == 1)
     <li class="menu-title"> 
         <span>Pengaturan </span>
     </li>
+    <li {{ (request()->segment(1) == 'user') ? 'class=active' : '' }}> 
+        <a href="{{url('/user')}}"><i class="la la-file-alt"></i> <span>Pengguna</span></a>
+    </li>
+    @endif
 </ul>

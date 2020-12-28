@@ -16,7 +16,7 @@ class DeliveryOrderController extends Controller
 
     public function create()
     {
-        return view('inventory.delivery_order_create', compact('purchase_orders'));
+        return view('inventory.delivery_order_create');
     }
 
     public function insertData(Request $request)

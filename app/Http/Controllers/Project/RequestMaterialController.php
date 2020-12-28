@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Project;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Project\RequestMaterials;
 use App\Http\Models\Project\SpkProjects;
+use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Ref\Province;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +20,8 @@ class RequestMaterialController extends Controller
     public function create()
     {
         $spk = SpkProjects::get();
-        return view('project.request_material_create', compact('spk'));
+        $clusters = Cluster::selectClusterBySession();
+        return view('project.request_material_create', compact('spk', 'clusters'));
     }
 
     public function insertData(Request $request)
@@ -36,14 +38,17 @@ class RequestMaterialController extends Controller
 
     public function datatables(Request $request)
     {
-        $_login = session()->get('_login');
-        $_id = session()->get('_id');
-        $_name = session()->get('_name');
-        $_email = session()->get('_email');
-        $_username = session()->get('_username');
-        $_phone = session()->get('_phone');
-        $_role_id = session()->get('_role_id');
-        $_role_name = session()->get('_role_name');
+        $session = [
+            '_login' => session()->get('_login'),
+            '_id' => session()->get('_id'),
+            '_name' => session()->get('_name'),
+            '_email' => session()->get('_email'),
+            '_username' => session()->get('_username'),
+            '_phone' => session()->get('_phone'),
+            '_role_id' => session()->get('_role_id'),
+            '_role_name' => session()->get('_role_name'),
+            '_cluster_id' => session()->get('_cluster_id')
+        ];
 
         $columns = [
             0 => 'request_materials.id'
@@ -70,10 +75,10 @@ class RequestMaterialController extends Controller
 
         $filter = $request->only(['sDate', 'eDate']);
 
-        $res = RequestMaterials::datatables($start, $limit, $order, $dir, $search, $filter);
+        $res = RequestMaterials::datatables($start, $limit, $order, $dir, $search, $filter, $session);
 
         $data = [];
-
+        $type = '';
         if (!empty($res['data'])) {
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
@@ -82,6 +87,14 @@ class RequestMaterialController extends Controller
                 $nestedData['subject'] = $row['subject'];
                 $nestedData['date'] = $row['date'];
                 $nestedData['spk_number'] = $row['spk_number'];
+                if ($row['type'] == 'rap') {
+                    $type = 'RAP';
+                } else if ($row['type'] == 'non_rap') {
+                    $type = 'NON RAP';
+                } else if ($row['type'] == 'disposition') {
+                    $type = 'DISPOSISI';
+                }
+                $nestedData['type'] = $type;
                 $nestedData['action'] = '';
                 $nestedData['action'] .='        <div class="dropdown dropdown-action">';
                 $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';

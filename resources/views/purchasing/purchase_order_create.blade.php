@@ -19,29 +19,34 @@
             </div>
           </div>
           <div class="form-group row">
-            <label class="col-form-label col-md-2">No. FPP</label>
+            <label class="col-form-label col-md-2">No. Pengajuan</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-fpp-number" name="fpp_number">
-            </div>
-          </div>
-          <div class="form-group row">
-            <label class="col-form-label col-md-2">Supplier</label>
-            <div class="col-md-10">
-              <select id="input-supplier" name="supplier_id"> 
-                <option value="0"> - Pilih Supplier - </option>
-                @foreach($suppliers as $supplier)
-                  <option value="{{$supplier['id']}}">{{$supplier['name']}}</option>
+              <select id="input-fpp" name="fpp_number"> 
+                <option value="0"> - Pilih No FPP - </option>
+                @foreach($request_materials as $request_material)
+                  <option value="{{$request_material['id']}}">{{$request_material['number']}}</option>
                 @endforeach
               </select>
             </div>
           </div>
-          <div class="form-group row">
+{{--           <div class="form-group row">
             <label class="col-form-label col-md-2">Perumahan Yang Mengajukan</label>
             <div class="col-md-10">
               <select id="input-lot" name="lot_id"> 
                 <option value="0"> - Pilih Kapling - </option>
                 @foreach($lots as $lot)
                   <option value="{{$lot['id']}}">{{$lot['name']}} - {{$lot['block']}} / {{$lot['unit_number']}}</option>
+                @endforeach
+              </select>
+            </div>
+          </div> --}}
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">Yang Mengajukan</label>
+            <div class="col-md-10">
+              <select id="input-cluster" name="cluster_id"> 
+                <option value="0"> - Pilih Perumahan/Cluster - </option>
+                @foreach($clusters as $cluster)
+                  <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
                 @endforeach
               </select>
             </div>
@@ -68,6 +73,12 @@
                 Non RAP
                 </label>
               </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="type" id="disposition" value="disposition">
+                <label class="form-check-label" for="disposition">
+                Disposisi
+                </label>
+              </div>
             </div>
           </div>
 
@@ -90,6 +101,7 @@
                       <tr>
                         <th style="width:40px;">#</th>
                         <th>Item</th>
+                        <th>Supplier</th>
                         <th>Qty</th>
                         <th>Satuan</th>
                         <th>Harga</th>
@@ -101,6 +113,14 @@
                         <th>
                           <select id="item" class="form-control" style="z-index: 9999;">
                             <option value=""> Pilih </option>
+                          </select>
+                        </th>
+                        <th>
+                          <select id="input-supplier"> 
+                            <option value="0"> - Pilih Supplier - </option>
+                            @foreach($suppliers as $supplier)
+                              <option value="{{$supplier['id']}}">{{$supplier['name']}}</option>
+                            @endforeach
                           </select>
                         </th>
                         <th><input type="text" class="form-control add-item" id="input-item-qty" placeholder="qty" onkeyup="addItemCalc()"></th>
@@ -115,23 +135,23 @@
                     </tbody>
                     <tfoot>
                       <tr>
-                        <td colspan="5" style="text-align: right;">Subtotal</td>
+                        <td colspan="6" style="text-align: right;">Subtotal</td>
                         <td><input type="text" name="subtotal" id="input-subtotal" class="form-control"></td>
                       </tr>
                       <tr>
-                        <td colspan="5" style="text-align: right;">Pajak</td>
+                        <td colspan="6" style="text-align: right;">Pajak</td>
                         <td><input type="text" name="tax" id="input-tax" class="form-control" onkeyup="totalCalc()"></td>
                       </tr>
                       <tr>
-                        <td colspan="5" style="text-align: right;">Pengiriman</td>
+                        <td colspan="6" style="text-align: right;">Pengiriman</td>
                         <td><input type="text" name="delivery" id="input-delivery" class="form-control" onkeyup="totalCalc()"></td>
                       </tr>
                       <tr>
-                        <td colspan="5" style="text-align: right;">Lain - Lain</td>
+                        <td colspan="6" style="text-align: right;">Lain - Lain</td>
                         <td><input type="text" name="other" id="input-other" class="form-control" onkeyup="totalCalc()"></td>
                       </tr>
                       <tr>
-                        <td colspan="5" style="text-align: right;">Total</td>
+                        <td colspan="6" style="text-align: right;">Total</td>
                         <td><input type="text" name="total" id="input-total" class="form-control"></td>
                       </tr>
                     </tfoot>
@@ -158,7 +178,11 @@
     width: '100%'
   });
 
-  $('#input-lot').select2({
+  $('#input-cluster').select2({
+    width: '100%'
+  });
+
+  $('#input-fpp').select2({
     width: '100%'
   });
 
@@ -191,6 +215,7 @@
       processResults: function (data) {
         return {
           results: $.map(data.data, function (item) {
+            item.purchase_price = item.purchase_price ? item.purchase_price : 0;
             return {
               text: item.name,
               id: item.id,
@@ -231,6 +256,8 @@
 
     var inventoryId = $('#item :selected').val();
     var inventoryName = $('#item :selected').text();
+    var inventorySupplierId = $('#input-supplier :selected').val();
+    var inventorySupplierName = $('#input-supplier :selected').text();
     var inventoryQty = $('#input-item-qty').val();
     var inventoryUnit = $('#input-item-unit').val();
     var inventoryPrice = addSeparator($('#input-item-price').val(), '.', '.', ',');
@@ -238,6 +265,7 @@
 
     cols += '<td>'+rowsLength+'</td>';
     cols += '<td>'+inventoryName+'<input type="hidden" name="item_inventory_id[]" value='+ inventoryId +'></td>';
+    cols += '<td>'+inventorySupplierName+'<input type="hidden" name="item_supplier_id[]" value='+ inventorySupplierId +'></td>';
     cols += '<td>'+inventoryQty+'<input type="hidden" name="item_qty[]" value='+ inventoryQty +'></td>';
     cols += '<td>'+inventoryUnit+'</td>';
     cols += '<td>'+inventoryPrice+'<input type="hidden" name="item_price[]" value='+ inventoryPrice +'></td>';
@@ -302,7 +330,7 @@
       $("select#item").select2("open");
 
       $("#input-item-qty").val(0);
-      $("#input-item-unit").val(0);
+      $("#input-item-unit").val('');
       $("#input-item-price").val(0);
       $("#input-item-total").val(0);
 

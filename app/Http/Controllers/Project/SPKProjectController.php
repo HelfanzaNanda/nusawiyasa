@@ -12,6 +12,18 @@ class SPKProjectController extends Controller
 {
     public function index()
     {
+        $session = [
+            '_login' => session()->get('_login'),
+            '_id' => session()->get('_id'),
+            '_name' => session()->get('_name'),
+            '_email' => session()->get('_email'),
+            '_username' => session()->get('_username'),
+            '_phone' => session()->get('_phone'),
+            '_role_id' => session()->get('_role_id'),
+            '_role_name' => session()->get('_role_name'),
+            '_cluster_id' => session()->get('_cluster_id')
+        ];
+
         $lots = CustomerLot::select([
                         'customer_lots.id',
                         'clusters.name as cluster_name',
@@ -22,8 +34,13 @@ class SPKProjectController extends Controller
                     ->join('customers', 'customers.id', '=', 'customer_lots.customer_id')
                     ->join('users', 'users.id', '=', 'customers.user_id')
                     ->join('lots', 'lots.id', '=', 'customer_lots.lot_id')
-                    ->join('clusters', 'clusters.id', '=', 'lots.cluster_id')
-                    ->get();
+                    ->join('clusters', 'clusters.id', '=', 'lots.cluster_id');
+        
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+            $lots->where('lots.cluster_id', $session['_cluster_id']);
+        }
+
+        $lots = $lots->get();
 
         return view('project.spk_project', compact('lots'));
     }
@@ -47,14 +64,17 @@ class SPKProjectController extends Controller
 
     public function datatables(Request $request)
     {
-        $_login = session()->get('_login');
-        $_id = session()->get('_id');
-        $_name = session()->get('_name');
-        $_email = session()->get('_email');
-        $_username = session()->get('_username');
-        $_phone = session()->get('_phone');
-        $_role_id = session()->get('_role_id');
-        $_role_name = session()->get('_role_name');
+        $session = [
+            '_login' => session()->get('_login'),
+            '_id' => session()->get('_id'),
+            '_name' => session()->get('_name'),
+            '_email' => session()->get('_email'),
+            '_username' => session()->get('_username'),
+            '_phone' => session()->get('_phone'),
+            '_role_id' => session()->get('_role_id'),
+            '_role_name' => session()->get('_role_name'),
+            '_cluster_id' => session()->get('_cluster_id')
+        ];
 
         $columns = [
             0 => 'spk_projects.id'
@@ -81,7 +101,7 @@ class SPKProjectController extends Controller
 
         $filter = $request->only(['sDate', 'eDate']);
 
-        $res = SpkProjects::datatables($start, $limit, $order, $dir, $search, $filter);
+        $res = SpkProjects::datatables($start, $limit, $order, $dir, $search, $filter, $session);
 
         $data = [];
 

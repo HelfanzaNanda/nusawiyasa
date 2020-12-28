@@ -95,7 +95,7 @@ class Rap extends Model
 
     // Relations ...
 
-    public static function datatables($start, $length, $order, $dir, $search, $filter = '')
+    public static function datatables($start, $length, $order, $dir, $search, $filter = '', $session = [])
     {
         $totalData = self::count();
 
@@ -106,6 +106,10 @@ class Rap extends Model
 
         $qry = self::select($_select);
         
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+            $qry->where('cluster_id', $session['_cluster_id']);
+        }
+
         $totalFiltered = $qry->count();
         
         if (empty($search)) {
@@ -172,8 +176,9 @@ class Rap extends Model
 
         $rap_params['title'] = $params['title'];
         $rap_params['date'] = date('Y-m-d');
-        $rap_params['cluster_id'] = isset($params['lot_id']) && $params['lot_id'] > 0 ? Lot::where('id', $params['lot_id'])->value('cluster_id') : 0;
-        $rap_params['lot_id'] = $params['lot_id'];
+        // $rap_params['cluster_id'] = isset($params['lot_id']) && $params['lot_id'] > 0 ? Lot::where('id', $params['lot_id'])->value('cluster_id') : 0;
+        $rap_params['cluster_id'] = $params['cluster_id'];
+        // $rap_params['lot_id'] = $params['lot_id'];
         $rap_params['total'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['total']));
 
         $insert = self::create($rap_params);

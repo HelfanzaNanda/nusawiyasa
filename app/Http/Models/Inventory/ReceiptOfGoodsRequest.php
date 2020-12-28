@@ -101,7 +101,7 @@ class ReceiptOfGoodsRequest extends Model
 
     // Relations ...
 
-    public static function datatables($start, $length, $order, $dir, $search, $filter = '')
+    public static function datatables($start, $length, $order, $dir, $search, $filter = '', $session = [])
     {
         $totalData = self::count();
 
@@ -119,6 +119,10 @@ class ReceiptOfGoodsRequest extends Model
                 ->leftJoin('lots', 'lots.id', '=', 'receipt_of_goods_request.lot_id')
                 ->leftJoin('clusters', 'clusters.id', '=', 'lots.cluster_id');
         
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+            $qry->where('lots.cluster_id', $session['_cluster_id']);
+        }
+
         $totalFiltered = $qry->count();
         
         if (empty($search)) {

@@ -34,7 +34,7 @@ class PurchaseOrderItems extends Model
      * @var array
      */
     protected $fillable = [
-        'purchase_order_id', 'inventory_id', 'qty', 'delivered_qty', 'price', 'tax', 'discount', 'total', 'created_at', 'updated_at'
+        'purchase_order_id', 'inventory_id', 'qty', 'delivered_qty', 'price', 'tax', 'discount', 'total', 'created_at', 'updated_at', 'supplier_id'
     ];
 
     /**

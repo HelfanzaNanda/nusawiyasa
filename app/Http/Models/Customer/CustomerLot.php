@@ -5,6 +5,7 @@ namespace App\Http\Models\Customer;
 use File;
 use App\Http\Models\Customer\CustomerCost;
 use App\Http\Models\Customer\CustomerTerm;
+use App\Http\Models\Customer\CustomerLot;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 use Redirect;
@@ -261,7 +262,7 @@ class CustomerLot extends Model
         ]);
     }
 
-    public static function datatables($start, $length, $order, $dir, $search, $filter = '')
+    public static function datatables($start, $length, $order, $dir, $search, $filter = '', $session = [])
     {
         $totalData = self::count();
 
@@ -283,6 +284,10 @@ class CustomerLot extends Model
                 ->leftJoin('lots', 'lots.id', '=', 'customer_lots.lot_id')
                 ->leftJoin('clusters', 'clusters.id', '=', 'lots.cluster_id');
 
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+            $qry->where('lots.cluster_id', $session['_cluster_id']);
+        }
+        
         $totalFiltered = $qry->count();
         
         if (empty($search)) {
@@ -324,5 +329,32 @@ class CustomerLot extends Model
             'totalData' => $totalData,
             'totalFiltered' => $totalFiltered
         ];
+    }
+
+    public static function bookingLotBySession()
+    {
+        $session = [
+            '_login' => session()->get('_login'),
+            '_id' => session()->get('_id'),
+            '_name' => session()->get('_name'),
+            '_email' => session()->get('_email'),
+            '_username' => session()->get('_username'),
+            '_phone' => session()->get('_phone'),
+            '_role_id' => session()->get('_role_id'),
+            '_role_name' => session()->get('_role_name'),
+            '_cluster_id' => session()->get('_cluster_id')
+        ];
+
+        $qry = self::select(['lots.id', 'clusters.id as cluster_id', 'customers.id as customer_id', 'clusters.name', 'lots.block', 'lots.unit_number', 'users.name as fullname'])
+                ->join('lots', 'customer_lots.lot_id', '=', 'lots.id')
+                ->join('clusters', 'clusters.id', '=', 'lots.cluster_id')
+                ->join('customers', 'customers.id', '=', 'customer_lots.customer_id')
+                ->join('users', 'users.id', '=', 'customers.user_id');
+
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+            $qry->where('lots.cluster_id', $session['_cluster_id']);
+        }
+
+        return $qry->get();
     }
 }

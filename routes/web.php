@@ -145,4 +145,8 @@ Route::group([
 	Route::get('/report-outstanding-po', 'Report\OutstandingPOController@index');
 	Route::post('/report-outstanding-po', 'Report\OutstandingPOController@insertData');
 	Route::post('/report-outstanding-po-datatables', 'Report\OutstandingPOController@datatables');
+
+	Route::get('/user', 'User\UserController@index');
+	Route::post('/user', 'User\UserController@insertData');
+	Route::post('/user-datatables', 'User\UserController@datatables');
 });

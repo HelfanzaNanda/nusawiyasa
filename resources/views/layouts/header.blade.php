@@ -16,7 +16,7 @@
 
 <!-- Header Title -->
 <div class="page-title-box">
-    <h3>Nusawiyasa Propertindo</h3>
+    <h3>Nusa Wiyasa Propertindo</h3>
 </div>
 <!-- /Header Title -->
 
@@ -256,12 +256,12 @@
       <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
         <span class="user-img"><img src="{{ asset('template/assets/img/profiles/avatar-21.jpg') }}" alt="">
         <span class="status online"></span></span>
-        <span>Admin</span>
+        <span>{{Session::get('_name')}}</span>
       </a>
       <div class="dropdown-menu">
         <a class="dropdown-item" href="profile.html">My Profile</a>
         <a class="dropdown-item" href="settings.html">Settings</a>
-        <a class="dropdown-item" href="login.html">Logout</a>
+        <a class="dropdown-item" href="{{url('/logout')}}">Logout</a>
       </div>
     </li>
 </ul>
@@ -273,7 +273,7 @@
     <div class="dropdown-menu dropdown-menu-right">
         <a class="dropdown-item" href="profile.html">My Profile</a>
         <a class="dropdown-item" href="settings.html">Settings</a>
-        <a class="dropdown-item" href="login.html">Logout</a>
+        <a class="dropdown-item" href="{{url('/logout')}}">Logout</a>
     </div>
 </div>
 <!-- /Mobile Menu -->

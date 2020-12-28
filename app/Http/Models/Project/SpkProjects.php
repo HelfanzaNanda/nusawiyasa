@@ -101,7 +101,7 @@ class SpkProjects extends Model
 
     // Relations ...
 
-    public static function datatables($start, $length, $order, $dir, $search, $filter = '')
+    public static function datatables($start, $length, $order, $dir, $search, $filter = '', $session = [])
     {
         $totalData = self::count();
 
@@ -117,6 +117,10 @@ class SpkProjects extends Model
                     ->join('lots', 'lots.id', '=', 'customer_lots.lot_id')
                     ->join('clusters', 'clusters.id', '=', 'lots.cluster_id');
         
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+            $qry->where('lots.cluster_id', $session['_cluster_id']);
+        }
+
         $totalFiltered = $qry->count();
         
         if (empty($search)) {

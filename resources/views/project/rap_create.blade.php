@@ -18,7 +18,7 @@
               <input class="form-control floating" type="text" id="input-title" name="title">
             </div>
           </div>
-          <div class="form-group row">
+{{--           <div class="form-group row">
             <label class="col-form-label col-md-2">Kapling</label>
             <div class="col-md-10">
               <select id="input-lot" name="lot_id"> 
@@ -28,11 +28,22 @@
                 @endforeach
               </select>
             </div>
+          </div> --}}
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">Perumahan/Cluster</label>
+            <div class="col-md-10">
+              <select id="input-cluster" name="cluster_id">
+                <option value="0"> - Pilih Perumahan/Cluster - </option>
+                @foreach($clusters as $cluster)
+                  <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
+                @endforeach
+              </select>
+            </div>
           </div>
           <div class="form-group row">
             <label class="col-form-label col-md-2">Total</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-total" name="total">
+              <input class="form-control floating" type="text" id="input-total" name="total" readonly="" value="0">
             </div>
           </div>
           <section class="review-section">
@@ -90,7 +101,7 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
-  $('#input-lot').select2({
+  $('#input-cluster').select2({
     width: '100%'
   });
 

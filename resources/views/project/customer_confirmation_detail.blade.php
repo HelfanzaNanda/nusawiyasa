@@ -15,51 +15,6 @@
     </div>
   </div>
 </div>
-<!-- /Page Header -->
-{{-- array:11 [▼
-  "id" => 2
-  "customer_id" => 1
-  "lot_id" => 1
-  "status" => 1
-  "is_active" => 1
-  "is_deleted" => 0
-  "created_at" => "2020-12-11T06:13:20.000000Z"
-  "updated_at" => "2020-12-11T06:13:20.000000Z"
-  "booking_date" => "2020-12-11"
-  "payment_type" => "cash"
-  "customer" => array:15 [▼
-    "id" => 1
-    "user_id" => 2
-    "place_of_birth" => "Tasikmalaya"
-    "date_of_birth" => "1993-06-17"
-    "province" => "JAWA BARAT"
-    "city" => "Tasikmalaya"
-    "district" => "Rajapolah"
-    "subdistrict" => null
-    "address" => "Jalan Surangga no 9"
-    "occupation" => "Wiraswasta"
-    "is_active" => 1
-    "is_deleted" => 0
-    "created_at" => "2020-12-11T06:10:08.000000Z"
-    "updated_at" => "2020-12-11T06:10:08.000000Z"
-    "user" => array:14 [▼
-      "id" => 2
-      "name" => "Customer 1"
-      "email" => "customer1@gmail.com"
-      "username" => "customer1@gmail.com"
-      "phone" => "08211111111"
-      "email_verified_at" => null
-      "password" => "123456"
-      "role_id" => 99
-      "is_suspend" => 0
-      "is_active" => 1
-      "is_deleted" => 0
-      "remember_token" => null
-      "created_at" => "2020-12-11T06:10:08.000000Z"
-      "updated_at" => "2020-12-11T06:10:08.000000Z"
-    ]
-  ]
-] --}}
 <div class="row">
   <div class="col-md-12 d-flex">
     <div class="card card-table flex-fill">
@@ -73,7 +28,7 @@
             {{-- @foreach($customer_costs as $customer_cost) --}}
               <div class="col-md-6">
                 <label>Konfirmasi Konsumen</label>
-                <input type="file" class="dropify" data-max-file-size="10M" data-default-file="{{url('/').$records[0]['filepath'].'/'.$records[0]['filename']}}" name="file" />
+                <input type="file" class="dropify" data-max-file-size="10M" data-default-file="{{(is_array($records) && count($records) > 0) ? url('/').$records[0]['filepath'].'/'.$records[0]['filename'] : ''}}" name="file" />
               </div>
             {{-- @endforeach --}}
           </div>

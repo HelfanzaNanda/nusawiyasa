@@ -37,7 +37,7 @@ class RequestMaterials extends Model
      * @var array
      */
     protected $fillable = [
-        'number', 'title', 'subject', 'spk_id', 'date', 'created_at', 'updated_at'
+        'number', 'title', 'subject', 'spk_id', 'date', 'created_at', 'updated_at', 'type', 'cluster_id'
     ];
 
     /**
@@ -86,6 +86,8 @@ class RequestMaterials extends Model
             'subject' => ['alias' => $model->table.'.subject', 'type' => 'string'],
             'spk_id' => ['alias' => $model->table.'.spk_id', 'type' => 'string'],
             'date' => ['alias' => $model->table.'.date', 'type' => 'string'],
+            'type' => ['alias' => $model->table.'.type', 'type' => 'string'],
+            'cluster_id' => ['alias' => $model->table.'.cluster_id', 'type' => 'string'],
             'created_at' => ['alias' => $model->table.'.created_at', 'type' => 'string'],
             'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string']
         ];
@@ -96,7 +98,7 @@ class RequestMaterials extends Model
 
     // Relations ...
 
-    public static function datatables($start, $length, $order, $dir, $search, $filter = '')
+    public static function datatables($start, $length, $order, $dir, $search, $filter = '', $session = [])
     {
         $totalData = self::count();
 
@@ -106,8 +108,12 @@ class RequestMaterials extends Model
         }
 
         $qry = self::select($_select)->addSelect('spk_projects.number as spk_number')
-                    ->join('spk_projects', 'spk_projects.id', '=', 'request_materials.spk_id');
+                    ->leftJoin('spk_projects', 'spk_projects.id', '=', 'request_materials.spk_id');
         
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+            $qry->where('cluster_id', $session['_cluster_id']);
+        }
+
         $totalFiltered = $qry->count();
         
         if (empty($search)) {
@@ -177,6 +183,8 @@ class RequestMaterials extends Model
         $request_material['subject'] = $params['subject'];
         $request_material['spk_id'] = $params['spk_id'];
         $request_material['date'] = $params['date'];
+        $request_material['type'] = $params['type'];
+        $request_material['cluster_id'] = $params['cluster_id'];
 
         $insert = self::create($request_material);
 
@@ -311,5 +319,28 @@ class RequestMaterials extends Model
         return response()->json([
             'data' => $db->get()
         ]);
+    }
+
+    public static function selectClusterBySession()
+    {
+        $session = [
+            '_login' => session()->get('_login'),
+            '_id' => session()->get('_id'),
+            '_name' => session()->get('_name'),
+            '_email' => session()->get('_email'),
+            '_username' => session()->get('_username'),
+            '_phone' => session()->get('_phone'),
+            '_role_id' => session()->get('_role_id'),
+            '_role_name' => session()->get('_role_name'),
+            '_cluster_id' => session()->get('_cluster_id')
+        ];
+
+        $qry = self::select('*');
+
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+            $qry->where('cluster_id', $session['_cluster_id']);
+        }
+
+        return $qry->get();
     }
 }

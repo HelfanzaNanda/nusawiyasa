@@ -24,7 +24,7 @@
   <div class="col-md-12 d-flex">
     <div class="card card-table flex-fill">
       <div class="card-header">
-        <h3 class="card-title mb-0">Barang</h3>
+        <h3 class="card-title mb-0">Data Purchase Order</h3>
       </div>
       <div class="card-body ml-3 mt-3 mr-3 mb-3">
         <div class="table-responsive">

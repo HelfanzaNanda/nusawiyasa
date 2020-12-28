@@ -114,7 +114,7 @@ class PurchaseOrders extends Model
 
     // Relations ...
 
-    public static function datatables($start, $length, $order, $dir, $search, $filter = '')
+    public static function datatables($start, $length, $order, $dir, $search, $filter = '', $session = [])
     {
         $totalData = self::count();
 
@@ -126,6 +126,10 @@ class PurchaseOrders extends Model
         $qry = self::select($_select)->addSelect('suppliers.name as supplier_name')
                         ->join('suppliers', 'suppliers.id', '=', 'purchase_orders.supplier_id');
         
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+            $qry->where('cluster_id', $session['_cluster_id']);
+        }
+
         $totalFiltered = $qry->count();
         
         if (empty($search)) {
@@ -191,7 +195,6 @@ class PurchaseOrders extends Model
         }
 
         $purchase_order['number'] = $params['number'];
-        $purchase_order['supplier_id'] = $params['supplier_id'];
         $purchase_order['date'] = $params['date'];
         $purchase_order['status'] = 4;
         $purchase_order['fpp_number'] = $params['fpp_number'];
@@ -202,8 +205,9 @@ class PurchaseOrders extends Model
         $purchase_order['delivery'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['delivery']));
         $purchase_order['other'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['other']));
         $purchase_order['total'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['total']));
-        $purchase_order['lot_id'] = $params['lot_id'];
-        $purchase_order['cluster_id'] = Lot::where('id', $params['lot_id'])->value('cluster_id');
+        // $purchase_order['lot_id'] = $params['lot_id'];
+        // $purchase_order['cluster_id'] = Lot::where('id', $params['lot_id'])->value('cluster_id');
+        $purchase_order['cluster_id'] = $params['cluster_id'];
         $purchase_order['approved_user_id'] = 0;
         $purchase_order['known_user_id'] = 0;
         $purchase_order['created_user_id'] = session()->get('_id');
@@ -220,7 +224,8 @@ class PurchaseOrders extends Model
                     'price' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_price'][$key])),
                     'tax' => 0,
                     'discount' => 0,
-                    'total' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_total'][$key]))
+                    'total' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_total'][$key])),
+                    'supplier_id' => $params['item_supplier_id'][$key]
                 ]);
             }
         }

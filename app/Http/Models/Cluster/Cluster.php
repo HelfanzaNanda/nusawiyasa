@@ -185,7 +185,7 @@ class Cluster extends Model
         ]);
     }
 
-    public static function datatables($start, $length, $order, $dir, $search, $filter = '')
+    public static function datatables($start, $length, $order, $dir, $search, $filter = '', $session = [])
     {
         $totalData = self::count();
 
@@ -195,6 +195,10 @@ class Cluster extends Model
         }
 
         $qry = self::select($_select);
+
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+            $qry->where('id', $session['_cluster_id']);
+        }
         
         $totalFiltered = $qry->count();
         
@@ -237,5 +241,28 @@ class Cluster extends Model
             'totalData' => $totalData,
             'totalFiltered' => $totalFiltered
         ];
+    }
+
+    public static function selectClusterBySession()
+    {
+        $session = [
+            '_login' => session()->get('_login'),
+            '_id' => session()->get('_id'),
+            '_name' => session()->get('_name'),
+            '_email' => session()->get('_email'),
+            '_username' => session()->get('_username'),
+            '_phone' => session()->get('_phone'),
+            '_role_id' => session()->get('_role_id'),
+            '_role_name' => session()->get('_role_name'),
+            '_cluster_id' => session()->get('_cluster_id')
+        ];
+
+        $qry = self::select('*');
+
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+            $qry->where('id', $session['_cluster_id']);
+        }
+
+        return $qry->get();
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Project;
 
 use App\Http\Controllers\Controller;
 use App\Http\Models\Cluster\Lot;
+use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Project\Rap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,9 +18,10 @@ class RAPController extends Controller
 
     public function create()
     {
-        $lots = Lot::select(['lots.id', 'clusters.name', 'lots.block', 'lots.unit_number'])->join('clusters', 'clusters.id', '=', 'lots.cluster_id')->get();
+        $lots = Lot::selectClusterBySession();
+        $clusters = Cluster::selectClusterBySession();
 
-        return view('project.rap_create', compact('lots'));
+        return view('project.rap_create', compact('lots', 'clusters'));
     }
 
     public function insertData(Request $request)
@@ -36,14 +38,17 @@ class RAPController extends Controller
 
     public function datatables(Request $request)
     {
-        $_login = session()->get('_login');
-        $_id = session()->get('_id');
-        $_name = session()->get('_name');
-        $_email = session()->get('_email');
-        $_username = session()->get('_username');
-        $_phone = session()->get('_phone');
-        $_role_id = session()->get('_role_id');
-        $_role_name = session()->get('_role_name');
+        $session = [
+            '_login' => session()->get('_login'),
+            '_id' => session()->get('_id'),
+            '_name' => session()->get('_name'),
+            '_email' => session()->get('_email'),
+            '_username' => session()->get('_username'),
+            '_phone' => session()->get('_phone'),
+            '_role_id' => session()->get('_role_id'),
+            '_role_name' => session()->get('_role_name'),
+            '_cluster_id' => session()->get('_cluster_id')
+        ];
 
         $columns = [
             0 => 'rap.id'
@@ -70,7 +75,7 @@ class RAPController extends Controller
 
         $filter = $request->only(['sDate', 'eDate']);
 
-        $res = Rap::datatables($start, $limit, $order, $dir, $search, $filter);
+        $res = Rap::datatables($start, $limit, $order, $dir, $search, $filter, $session);
 
         $data = [];
 

@@ -35,14 +35,17 @@ class ClusterController extends Controller
 
     public function datatables(Request $request)
     {
-        $_login = session()->get('_login');
-        $_id = session()->get('_id');
-        $_name = session()->get('_name');
-        $_email = session()->get('_email');
-        $_username = session()->get('_username');
-        $_phone = session()->get('_phone');
-        $_role_id = session()->get('_role_id');
-        $_role_name = session()->get('_role_name');
+        $session = [
+            '_login' => session()->get('_login'),
+            '_id' => session()->get('_id'),
+            '_name' => session()->get('_name'),
+            '_email' => session()->get('_email'),
+            '_username' => session()->get('_username'),
+            '_phone' => session()->get('_phone'),
+            '_role_id' => session()->get('_role_id'),
+            '_role_name' => session()->get('_role_name'),
+            '_cluster_id' => session()->get('_cluster_id')
+        ];
 
         $columns = [
             0 => 'clusters.id'
@@ -69,7 +72,7 @@ class ClusterController extends Controller
 
         $filter = $request->only(['sDate', 'eDate']);
 
-        $res = Cluster::datatables($start, $limit, $order, $dir, $search, $filter);
+        $res = Cluster::datatables($start, $limit, $order, $dir, $search, $filter, $session);
 
         $data = [];
 

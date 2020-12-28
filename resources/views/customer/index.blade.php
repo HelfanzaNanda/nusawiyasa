@@ -83,7 +83,7 @@
               </div>
               <div class="form-group">
                 <label>Tanggal Lahir</label>
-                <input class="form-control" type="text" name="date_of_birth">
+                <input class="form-control" type="text" name="date_of_birth" id="input-dob">
               </div>
               <div class="form-group">
                 <label>Pekerjaan</label>
@@ -133,6 +133,18 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+  if($('#input-dob').length > 0) {
+    $('#input-dob').datetimepicker({
+      format: 'YYYY-MM-DD',
+      icons: {
+        up: "fa fa-angle-up",
+        down: "fa fa-angle-down",
+        next: 'fa fa-angle-right',
+        previous: 'fa fa-angle-left'
+      }
+    });
+  }
+
   $("#main-table").DataTable({
       "pageLength": 10,
       "processing": true,
