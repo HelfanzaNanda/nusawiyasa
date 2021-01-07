@@ -57,6 +57,7 @@ Route::group([
 	Route::get('/lots', 'Cluster\LotController@index');
 	Route::post('/lots', 'Cluster\LotController@insertData');
 	Route::post('/lot-datatables', 'Cluster\LotController@datatables');
+	Route::get('/get_lots', 'Cluster\LotController@get');
 
 	Route::get('/booking-page', 'Customer\CustomerLotController@index');
 	Route::get('/bookings/{lot_id?}', 'Customer\CustomerLotController@create');
@@ -90,6 +91,7 @@ Route::group([
 	Route::get('/create-request-material', 'Project\RequestMaterialController@create');
 	Route::post('/request-material', 'Project\RequestMaterialController@insertData');
 	Route::post('/request-material-datatables', 'Project\RequestMaterialController@datatables');
+	Route::get('/request_materials/{id?}', 'Project\RequestMaterialController@get');
 
 	Route::get('/development-progress', 'Project\DevelopmentProgressController@index');
 	Route::get('/development-progress/detail/{id}', 'Project\DevelopmentProgressController@detail');

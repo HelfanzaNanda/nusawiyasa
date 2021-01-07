@@ -122,4 +122,44 @@ class RequestMaterialController extends Controller
     {
 
     }
+
+    public function get($id=null, Request $request)
+    {
+        $request = $request->all();
+
+        if ($id != null) {
+            $res = RequestMaterials::getById($id, $request);
+        } else if (isset($request['all']) && $request['all']) {
+            $res = RequestMaterials::getAllResult($request);
+        } else {
+            $res = RequestMaterials::getPaginatedResult($request);
+        }
+
+        return $res;
+    }
+
+    public function post(Request $request)
+    {
+        $params = $request->all();
+        return RequestMaterials::createOrUpdate($params, $request->method(), $request);
+    }
+
+    public function put($id, Request $request)
+    {
+        $params = $request->all();
+        $params['id'] = $id;
+        return RequestMaterials::createOrUpdate($params, $request->method(), $request);
+    }
+
+    public function patch($id, Request $request)
+    {
+        $params = $request->all();
+        $params['id'] = $id;
+        return RequestMaterials::createOrUpdate($params, $request->method(), $request);
+    }
+
+    public function delete($id, Request $request)
+    {
+
+    }
 }

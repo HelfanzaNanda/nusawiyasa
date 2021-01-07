@@ -292,6 +292,33 @@
           $('#fail-modal').modal('show');
           $('#err-msg').text(msg);
         }
+
+        function addLoadSpiner(el) {
+            if (el.length > 0) {
+                if ($("#img_" + el[0].id).length > 0) {
+                    $("#img_" + el[0].id).css('display', 'block');
+                }               
+                else {
+                    var img = $('<img class="ddloading">');
+                    img.attr('id', "img_" + el[0].id);
+                    img.attr('src', '{{ asset('template/assets/img/ajax_loader_gray_512.gif') }}');
+                    img.css({ 'display': 'block', 'width': '25px', 'height': '25px', 'z-index': '100', 'float': 'left', 'margin-top': '10px', 'margin-left': '10px' });
+                    img.prependTo(el[0].nextElementSibling);
+                }
+                el.prop("disabled", true);               
+            }
+        }
+
+        function hideLoadSpinner(el) {
+            if (el.length > 0) {
+                if ($("#img_" + el[0].id).length > 0) {
+                     setTimeout(function () {
+                         $("#img_" + el[0].id).css('display', 'none');
+                         el.prop("disabled", false);
+                    }, 500);                    
+                }
+            }
+        }
       </script>
       @yield('additionalScriptJS')
     </body>

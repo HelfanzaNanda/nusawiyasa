@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Cluster;
 
+use Illuminate\Http\Request;
+use App\Http\Models\Ref\Province;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Cluster\Cluster;
-use App\Http\Models\Ref\Province;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ClusterController extends Controller
 {

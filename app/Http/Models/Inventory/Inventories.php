@@ -122,7 +122,7 @@ class Inventories extends Model
                     ->join('clusters', 'clusters.id', 'inventories.cluster_id');
                     // ->join('inventory_categories', 'inventory_categories.id', '=', 'inventories.category_id');
         
-        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
             $qry->where('inventories.cluster_id', $session['_cluster_id']);
         }
 

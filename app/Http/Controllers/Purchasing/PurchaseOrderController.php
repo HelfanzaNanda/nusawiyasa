@@ -87,14 +87,22 @@ class PurchaseOrderController extends Controller
         
         $status_collection = RefGeneralStatuses::get();
 
+        $type = '';
 
         if (!empty($res['data'])) {
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
                 $nestedData['number'] = $row['number'];
-                $nestedData['fpp_number'] = $row['fpp_number'];
-                $nestedData['supplier_name'] = $row['supplier_name'];
-                $nestedData['type'] = $row['type'];
+                $nestedData['fpp_number'] = $row['request_number'];
+                if ($row['type'] == 'non_rap') {
+                    $type = 'NON RAP';
+                } else if ($row['type'] == 'rap') {
+                    $type = 'RAP';
+                } else if ($row['type'] == 'disposition') {
+                    $type = 'DISPOSISI';
+                }
+
+                $nestedData['type'] = $type;
                 $nestedData['date'] = $row['date'];
                 $nestedData['status'] = $status_collection->where('id', $row['status'])->values()[0]['name'];
                 $nestedData['total'] = number_format(floatval($row['total']));

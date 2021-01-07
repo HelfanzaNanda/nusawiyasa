@@ -34,7 +34,6 @@
                 <th>#</th>
                 <th width="10%">No. PO</th>
                 <th width="10%">No. FPP</th>
-                <th>Nama Supplier</th>
                 <th>Jenis Permintaan</th>
                 <th>Tanggal</th>
                 <th>Total</th>
@@ -71,7 +70,6 @@
           {data: 'id', name: 'id', width: '5%', "visible": false},
           {data: 'number', name: 'number'},
           {data: 'fpp_number', name: 'fpp_number'},
-          {data: 'supplier_name', name: 'supplier_name'},
           {data: 'type', name: 'type'},
           {data: 'date', name: 'date'},
           {data: 'total', name: 'total'},

@@ -53,6 +53,14 @@
             </div>
           </div>
           <div class="form-group row">
+            <label class="col-form-label col-md-2">Kavling</label>
+            <div class="col-md-10">
+              <select id="input-lot" name="lot_id"> 
+                <option value="0"> - Pilih Kavling - </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
             <label class="col-form-label col-md-2">Tipe Permintaan</label>
             <div class="col-md-10">
               <div class="form-check form-check-inline">
@@ -142,6 +150,10 @@
     width: '100%'
   });
 
+  $('#input-lot').select2({
+    width: '100%'
+  });
+
   if($('#input-date').length > 0) {
     $('#input-date').datetimepicker({
       format: 'YYYY-MM-DD',
@@ -153,6 +165,28 @@
       }
     });
   }
+
+  $("#input-cluster").on('change', function(e) {
+    e.preventDefault();
+    let id = $(this).val();
+    $.ajax({
+      url: BASE_URL+'/get_lots?all=true&cluster_id='+id,
+      type: "GET",
+      dataType: "json",
+      beforeSend: function() {
+        $("select#input-lot").empty();
+        $("select#input-lot").append('<option value="0"> - Pilih Kavling - </option>');
+      },
+      success: function(res) {
+        let cols = '';
+        $.each(res.data, function(key, value) {
+          cols += '<option value="'+value.id+'">'+value.block+' - '+value.unit_number+'</option>';
+        });
+
+        $("select#input-lot").append(cols);
+      }
+    });
+  });
 
   $("#item").select2({
     // tags: true,

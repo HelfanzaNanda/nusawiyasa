@@ -72,6 +72,10 @@ class RequestMaterialItems extends Model
      */
     public $timestamps = true;
 
+    public function inventory()
+    {
+        return $this->hasOne('App\Http\Models\Inventory\Inventories', 'id', 'inventory_id');
+    }
     // Scopes...
 
     // Functions ...

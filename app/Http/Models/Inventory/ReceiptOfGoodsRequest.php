@@ -119,7 +119,7 @@ class ReceiptOfGoodsRequest extends Model
                 ->leftJoin('lots', 'lots.id', '=', 'receipt_of_goods_request.lot_id')
                 ->leftJoin('clusters', 'clusters.id', '=', 'lots.cluster_id');
         
-        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
             $qry->where('lots.cluster_id', $session['_cluster_id']);
         }
 

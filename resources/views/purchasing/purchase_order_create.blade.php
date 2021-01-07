@@ -29,25 +29,22 @@
               </select>
             </div>
           </div>
-{{--           <div class="form-group row">
-            <label class="col-form-label col-md-2">Perumahan Yang Mengajukan</label>
-            <div class="col-md-10">
-              <select id="input-lot" name="lot_id"> 
-                <option value="0"> - Pilih Kapling - </option>
-                @foreach($lots as $lot)
-                  <option value="{{$lot['id']}}">{{$lot['name']}} - {{$lot['block']}} / {{$lot['unit_number']}}</option>
-                @endforeach
-              </select>
-            </div>
-          </div> --}}
           <div class="form-group row">
-            <label class="col-form-label col-md-2">Yang Mengajukan</label>
+            <label class="col-form-label col-md-2">Perumahan/Cluster</label>
             <div class="col-md-10">
               <select id="input-cluster" name="cluster_id"> 
                 <option value="0"> - Pilih Perumahan/Cluster - </option>
                 @foreach($clusters as $cluster)
                   <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
                 @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">Kavling</label>
+            <div class="col-md-10">
+              <select id="input-lot" name="lot_id"> 
+                <option value="0"> - Pilih Kavling - </option>
               </select>
             </div>
           </div>
@@ -179,6 +176,10 @@
   });
 
   $('#input-cluster').select2({
+    width: '100%'
+  });
+
+  $('#input-lot').select2({
     width: '100%'
   });
 
@@ -391,6 +392,94 @@
                 html: true
             });
         }
+      }
+    });
+  });
+
+  $("#input-cluster").on('change', function(e) {
+    e.preventDefault();
+    let id = $(this).val();
+    $.ajax({
+      url: BASE_URL+'/get_lots?all=true&cluster_id='+id,
+      type: "GET",
+      dataType: "json",
+      beforeSend: function() {
+        $("select#input-lot").empty();
+        $("select#input-lot").append('<option value="0"> - Pilih Kavling - </option>');
+      },
+      success: function(res) {
+        let cols = '';
+        $.each(res.data, function(key, value) {
+          cols += '<option value="'+value.id+'">'+value.block+' - '+value.unit_number+'</option>';
+        });
+
+        $("select#input-lot").append(cols);
+      }
+    });
+  });
+
+  $(document).on('keyup', '.item-calc', function(e) {
+    e.preventDefault();
+    let val = $(this).val();
+    let id = $(this).data('id');
+    let qty = $("#qty-"+id).text();
+
+    $(".total-"+id).text(addSeparator((val * qty).toFixed(2), '.', '.', ','));
+    $("#input-total-"+id).val(val * qty);
+
+    calculateTotal();
+  });
+
+  $("#input-fpp").on('change', function(e) {
+    e.preventDefault();
+    let id = $(this).val();
+    $.ajax({
+      url: BASE_URL+'/request_materials/'+id,
+      type: "GET",
+      dataType: "json",
+      beforeSend: function() {
+        addLoadSpiner($('#input-lot')); 
+        // $("select#input-lot").empty();
+        // $("select#input-lot").append('<option value="0"> - Pilih Kavling - </option>');
+      },
+      success: function(res) {
+        console.log(res);
+        $('#input-cluster').val(res.cluster_id).trigger('change');
+
+        setTimeout(function(){ 
+          $('#input-lot').val(res.lot_id).trigger('change');
+          hideLoadSpinner($('#input-lot'));
+        }, 1000);
+
+        $("input[name=type][value=" + res.type + "]").prop('checked', true);
+
+
+        let cols = '';
+
+        $.each(res.items, function(key, value) {
+          cols += '<tr>';
+          cols += '<td>'+(key + 1)+'</td>';
+          cols += '<td>'+value.inventory_name+'<input type="hidden" name="item_inventory_id[]" value='+ value.inventory_id +'></td>';
+          cols += '<td><select class="select-supplier" name="item_supplier_id[]"> ';
+          cols += '  <option value="0"> - Pilih Supplier - </option>';
+          @foreach($suppliers as $supplier)
+          cols += '    <option value="{{$supplier['id']}}">{{$supplier['name']}}</option>';
+          @endforeach
+          cols += '</select></td>';
+          cols += '<td id="qty-'+(key+1)+'">'+value.qty+'<input type="hidden" name="item_qty[]" value='+ value.qty +'></td>';
+          cols += '<td>'+value.inventory.unit.name+'<input type="hidden" name="item_total[]" id="input-total-'+(key+1)+'" value='+ (value.qty * value.inventory.purchase_price) +' class="form-control"></td>';
+          cols += '<td><input type="text" class="form-control item-calc" name="item_price[]" value='+ (value.inventory.purchase_price ? value.inventory.purchase_price : 0 ) +' data-id="'+(key+1)+'"></td>';
+          cols += '<td id="total" class="total-'+(key+1)+'">'+(value.qty * value.inventory.purchase_price)+'</td>';
+          // cols += '<td><button type="button" class="btn btn-danger" id="comments_remove"><i class="fa fa-trash-o"></i></button></td>';
+          cols += '<td></td>';
+          cols += '</tr>';
+        });
+
+        $("#general_comments_tbody").append(cols);
+
+        $('.select-supplier').select2({
+          width: '100%'
+        });
       }
     });
   });

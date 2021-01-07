@@ -37,7 +37,7 @@ class RequestMaterials extends Model
      * @var array
      */
     protected $fillable = [
-        'number', 'title', 'subject', 'spk_id', 'date', 'created_at', 'updated_at', 'type', 'cluster_id'
+        'number', 'title', 'subject', 'spk_id', 'date', 'created_at', 'updated_at', 'type', 'cluster_id', 'lot_id'
     ];
 
     /**
@@ -67,6 +67,11 @@ class RequestMaterials extends Model
         'date', 'created_at', 'updated_at'
     ];
 
+    public function items()
+    {
+        return $this->hasMany('App\Http\Models\Project\RequestMaterialItems', 'request_material_id', 'id');
+    }
+
     /**
      * Indicates if the model should be timestamped.
      *
@@ -88,6 +93,7 @@ class RequestMaterials extends Model
             'date' => ['alias' => $model->table.'.date', 'type' => 'string'],
             'type' => ['alias' => $model->table.'.type', 'type' => 'string'],
             'cluster_id' => ['alias' => $model->table.'.cluster_id', 'type' => 'string'],
+            'lot_id' => ['alias' => $model->table.'.lot_id', 'type' => 'string'],
             'created_at' => ['alias' => $model->table.'.created_at', 'type' => 'string'],
             'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string']
         ];
@@ -110,7 +116,7 @@ class RequestMaterials extends Model
         $qry = self::select($_select)->addSelect('spk_projects.number as spk_number')
                     ->leftJoin('spk_projects', 'spk_projects.id', '=', 'request_materials.spk_id');
         
-        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
             $qry->where('cluster_id', $session['_cluster_id']);
         }
 
@@ -185,6 +191,7 @@ class RequestMaterials extends Model
         $request_material['date'] = $params['date'];
         $request_material['type'] = $params['type'];
         $request_material['cluster_id'] = $params['cluster_id'];
+        $request_material['lot_id'] = $params['lot_id'];
 
         $insert = self::create($request_material);
 
@@ -277,6 +284,7 @@ class RequestMaterials extends Model
     public static function getById($id, $params = null)
     {
         $data = self::where('id', $id)
+                    ->with('items.inventory.unit')
                     ->first();
 
         return response()->json($data);
@@ -337,7 +345,7 @@ class RequestMaterials extends Model
 
         $qry = self::select('*');
 
-        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
             $qry->where('cluster_id', $session['_cluster_id']);
         }
 

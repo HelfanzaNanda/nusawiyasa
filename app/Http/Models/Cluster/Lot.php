@@ -80,20 +80,20 @@ class Lot extends Model
                 foreach (array_keys($v) as $key => $row) {
                     if (isset(self::mapSchema()[$row])) {
                         if (is_array(array_values($v)[$key])) {
-                            if ($this->operators[array_keys(array_values($v)[$key])[$key]] != 'ilike') {
+                            if ($this->operators[array_keys(array_values($v)[$key])[$key]] != 'like') {
                                 $db->where(self::mapSchema()[$row]['alias'], $this->operators[array_keys(array_values($v)[$key])[$key]], array_values(array_values($v)[$key])[$key]);
                             } else {
                                 if (self::mapSchema()[$row]['type'] === 'int') {
                                     $db->where(self::mapSchema()[$row]['alias'], array_values($v)[$key]);
                                 } else {
-                                    $db->where(self::mapSchema()[$row]['alias'], 'ilike', '%'.array_values($v)[$key].'%');
+                                    $db->where(self::mapSchema()[$row]['alias'], 'like', '%'.array_values($v)[$key].'%');
                                 }
                             }
                         } else {
                             if (self::mapSchema()[$row]['type'] === 'int') {
                                 $db->where(self::mapSchema()[$row]['alias'], array_values($v)[$key]);
                             } else {
-                                $db->where(self::mapSchema()[$row]['alias'], 'ilike', '%'.array_values($v)[$key].'%');
+                                $db->where(self::mapSchema()[$row]['alias'], 'like', '%'.array_values($v)[$key].'%');
                             }
                         }
                     }
@@ -134,20 +134,20 @@ class Lot extends Model
                 foreach (array_keys($v) as $key => $row) {
                     if (isset(self::mapSchema()[$row])) {
                         if (is_array(array_values($v)[$key])) {
-                            if ($this->operators[array_keys(array_values($v)[$key])[$key]] != 'ilike') {
+                            if ($this->operators[array_keys(array_values($v)[$key])[$key]] != 'like') {
                                 $db->where(self::mapSchema()[$row]['alias'], $this->operators[array_keys(array_values($v)[$key])[$key]], array_values(array_values($v)[$key])[$key]);
                             } else {
                                 if (self::mapSchema()[$row]['type'] === 'int') {
                                     $db->where(self::mapSchema()[$row]['alias'], array_values($v)[$key]);
                                 } else {
-                                    $db->where(self::mapSchema()[$row]['alias'], 'ilike', '%'.array_values($v)[$key].'%');
+                                    $db->where(self::mapSchema()[$row]['alias'], 'like', '%'.array_values($v)[$key].'%');
                                 }
                             }
                         } else {
                             if (self::mapSchema()[$row]['type'] === 'int') {
                                 $db->where(self::mapSchema()[$row]['alias'], array_values($v)[$key]);
                             } else {
-                                $db->where(self::mapSchema()[$row]['alias'], 'ilike', '%'.array_values($v)[$key].'%');
+                                $db->where(self::mapSchema()[$row]['alias'], 'like', '%'.array_values($v)[$key].'%');
                             }
                         }
                     }
@@ -203,7 +203,7 @@ class Lot extends Model
                 ->join('clusters', 'clusters.id', '=', 'lots.cluster_id')
                 ->leftJoin('customer_lots', 'customer_lots.lot_id', '=', 'lots.id');
 
-        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
             $qry->where('lots.cluster_id', $session['_cluster_id']);
         }
 
@@ -267,7 +267,7 @@ class Lot extends Model
        $qry = self::select(['lots.id', 'clusters.name', 'lots.block', 'lots.unit_number'])
                 ->join('clusters', 'clusters.id', '=', 'lots.cluster_id');
 
-        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
             $qry->where('lots.cluster_id', $session['_cluster_id']);
         }
         

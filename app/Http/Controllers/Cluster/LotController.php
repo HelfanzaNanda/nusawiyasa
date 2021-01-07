@@ -121,4 +121,44 @@ class LotController extends Controller
     {
 
     }
+
+    public function get($id=null, Request $request)
+    {
+        $request = $request->all();
+
+        if ($id != null) {
+            $res = Lot::getById($id, $request);
+        } else if (isset($request['all']) && $request['all']) {
+            $res = Lot::getAllResult($request);
+        } else {
+            $res = Lot::getPaginatedResult($request);
+        }
+
+        return $res;
+    }
+
+    public function post(Request $request)
+    {
+        $params = $request->all();
+        return Lot::createOrUpdate($params, $request->method(), $request);
+    }
+
+    public function put($id, Request $request)
+    {
+        $params = $request->all();
+        $params['id'] = $id;
+        return Lot::createOrUpdate($params, $request->method(), $request);
+    }
+
+    public function patch($id, Request $request)
+    {
+        $params = $request->all();
+        $params['id'] = $id;
+        return Lot::createOrUpdate($params, $request->method(), $request);
+    }
+
+    public function delete($id, Request $request)
+    {
+
+    }
 }
