@@ -112,11 +112,92 @@
               </div>
               <div class="form-group">
                 <label>Kelurahan</label>
-                <input class="form-control" type="text" name="sub_district">
+                <input class="form-control" type="text" name="subdistrict">
               </div>
               <div class="form-group">
                 <label>Alamat</label>
                 <textarea class="form-control" name="address" rows="5"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="submit-section">
+            <button class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Add Salary Modal -->
+
+<!-- Customer Update Modal -->
+<div id="update-modal" class="modal custom-modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update Konsumen</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="update-form" method="POST" action="#">
+          {!! csrf_field() !!}
+          <div class="row"> 
+            <div class="col-sm-6"> 
+              <div class="form-group">
+                <label>Nama</label>
+                <input class="form-control" type="text" name="name" id="name-update">
+                <input class="form-control" type="hidden" name="id" id="id-update">
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input class="form-control" type="text" name="email" id="email-update">
+              </div>
+              <div class="form-group">
+                <label>No. HP</label>
+                <input class="form-control" type="text" name="phone" id="phone-update">
+              </div>
+              <div class="form-group">
+                <label>Tempat Lahir</label>
+                <input class="form-control" type="text" name="place_of_birth" id="place-of-birth-update">
+              </div>
+              <div class="form-group">
+                <label>Tanggal Lahir</label>
+                <input class="form-control" type="text" name="date_of_birth" id="input-dob-update">
+              </div>
+              <div class="form-group">
+                <label>Pekerjaan</label>
+                <input class="form-control" type="text" name="occupation" id="occupation-update">
+              </div>
+            </div>
+            <div class="col-sm-6">  
+              <div class="form-group">
+                <label>Provinsi</label>
+                <select id="input-province-update" name="province"> 
+                  <option> - Pilih Provinsi - </option>
+                  @foreach($provinces as $province)
+                    <option value="{{$province['name']}}" data-province-code="{{$province['code']}}">{{$province['name']}}</option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Kota</label>
+                <select id="input-city-update" name="city" id="city-update"> 
+                  <option> - Pilih Kota - </option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Kecamatan</label>
+                <input class="form-control" type="text" name="district" id="ditrict-update">
+              </div>
+              <div class="form-group">
+                <label>Kelurahan</label>
+                <input class="form-control" type="text" name="subdistrict" id="sub-district-update" value="babi">
+              </div>
+              <div class="form-group">
+                <label>Alamat</label>
+                <textarea class="form-control" name="address" rows="5" id="address-update"></textarea>
               </div>
             </div>
           </div>
@@ -128,13 +209,25 @@
     </div>
   </div>
 </div>
-<!-- /Add Salary Modal -->
+<!-- /Update Customer Modal -->
 @endsection
 
 @section('additionalScriptJS')
 <script type="text/javascript">
   if($('#input-dob').length > 0) {
     $('#input-dob').datetimepicker({
+      format: 'YYYY-MM-DD',
+      icons: {
+        up: "fa fa-angle-up",
+        down: "fa fa-angle-down",
+        next: 'fa fa-angle-right',
+        previous: 'fa fa-angle-left'
+      }
+    });
+  }
+
+  if($('#input-dob-update').length > 0) {
+    $('#input-dob-update').datetimepicker({
       format: 'YYYY-MM-DD',
       icons: {
         up: "fa fa-angle-up",
@@ -170,6 +263,51 @@
       ],
   });
 
+  $('document').ready(function(){
+      $("body").on('click', '#edit',function(event){
+          event.preventDefault();
+          var id = $(this).data("id")
+
+          $('#update-modal').modal('show')
+          console.log('show data')
+          $.ajax({
+            url : BASE_URL+'/customers/'+id,
+            type : 'GET',
+            dataType: "json",
+            beforeSend: function() {
+            
+            },
+            success: function(data) {
+              $('#id-update').val(data.id)
+              $('#name-update').val(data.user.name)
+              $('#email-update').val(data.user.email)
+              $('#phone-update').val(data.user.phone)
+              $('#place-of-birth-update').val(data.place_of_birth)
+              $('#input-dob-update').val(data.date_of_birth)
+              $('#occupation-update').val(data.occupation)
+              $('#ditrict-update').val(data.district)
+              $('#sub-district-update').val(data.subdistrict)
+              $('#address-update').val(data.address)
+
+              $('#input-province-update').select2()
+              $('#input-province-update').val(data.province)
+              $('#input-province-update').select2().trigger('change');
+              $('#input-province-update').select2({
+                width: '100%'
+              });
+
+              $('#input-city-update').select2()
+              $('#input-city-update').val(data.province)
+              $('#input-city-update').select2().trigger('change');
+              $('#input-city-update').select2({
+                width: '100%'
+              });
+              
+            }
+          })
+      })
+  })
+
   $("#show-add-modal").on('click',function() {
       $('#add-modal').modal('show');
   });
@@ -179,6 +317,14 @@
   });
 
   $('#input-city').select2({
+    width: '100%'
+  });
+
+  $('#input-province-update').select2({
+    width: '100%'
+  });
+
+  $('#input-city-update').select2({
     width: '100%'
   });
 
@@ -203,10 +349,32 @@
     }
   });
 
-  $('form#add-form').submit( function( e ) {
+  $('#input-province-update').on('change', function() {
+    var province_id = $("option:selected", this).data('province-code');
+    if(province_id) {
+      $.ajax({
+        url: BASE_URL+'/city_by_province/'+province_id,
+        type: "GET",
+        dataType: "json",
+        beforeSend: function() {
+            $('#input-city-update').empty();
+        },
+        success: function(data) {
+          $.each(data, function(key, value) {
+              $('#input-city-update').append('<option value="'+ value.name +'" data-city="'+ value.code+'">' + value.name + '</option>');
+          });
+        }
+      });
+    } else {
+        // $('#city').empty();
+    }
+  });
+
+  
+  $('form#update-form').submit(function(e){
     e.preventDefault();
     var form_data = new FormData( this );
-
+    
     $.ajax({
       type: 'post',
       url: BASE_URL+'/customers',
@@ -221,6 +389,7 @@
       success: function(msg) {
         if(msg.status == 'success'){
             setTimeout(function() {
+              
                 swal({
                     title: "Sukses",
                     text: msg.message,
@@ -228,8 +397,7 @@
                     html: true
                 }, function() {
                     $('#main-table').DataTable().ajax.reload(null, false);
-                    $('#add-modal').modal('hide');
-                    // window.location.replace(URL_LIST_PURCHASES);
+                    $('#update-modal').modal('hide');
                 });
             }, 500);
         } else {
@@ -243,7 +411,7 @@
             });
         }
       }
-    })
-  });
+    })  
+  })
 </script>
 @endsection

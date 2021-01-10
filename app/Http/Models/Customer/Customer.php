@@ -175,9 +175,12 @@ class Customer extends Model
         if (isset($params['id']) && $params['id']) {
             $id = $params['id'];
             unset($params['id']);
-
-            $update = self::where('id', $id)->update($params);
-
+            unset($params['name']);
+            unset($params['phone']);
+            unset($params['email']);
+            //dd($params);
+            $update = self::where('id', $id)->first()->update($params);
+            
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data Berhasil Diubah!'
