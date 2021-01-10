@@ -465,5 +465,48 @@
       }
     })  
   })
+
+  $('form#add-form').submit(function(e){
+    e.preventDefault();
+    var form_data = new FormData( this );
+    
+    $.ajax({
+      type: 'post',
+      url: BASE_URL+'/customers',
+      data: form_data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      dataType: 'json',
+      beforeSend: function() {
+        
+      },
+      success: function(msg) {
+        if(msg.status == 'success'){
+            setTimeout(function() {
+              
+                swal({
+                    title: "Sukses",
+                    text: msg.message,
+                    type:"success",
+                    html: true
+                }, function() {
+                    $('#main-table').DataTable().ajax.reload(null, false);
+                    $('#update-modal').modal('hide');
+                });
+            }, 500);
+        } else {
+            swal({
+                title: "Gagal",
+                text: msg.message,
+                showConfirmButton: true,
+                confirmButtonColor: '#0760ef',
+                type:"error",
+                html: true
+            });
+        }
+      }
+    })  
+  })
 </script>
 @endsection
