@@ -121,6 +121,78 @@
   </div>
 </div>
 <!-- /Add Salary Modal -->
+
+<!-- Update Salary Modal -->
+<div id="add-modal" class="modal custom-modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Tambah Cluster</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="update-form" method="POST" action="#">
+          {!! csrf_field() !!}
+          <div class="row"> 
+            <div class="col-sm-6"> 
+              <div class="form-group">
+                <label>Nama</label>
+                <input class="form-control" type="text" name="name" id="name-update">
+              </div>
+              <div class="form-group">
+                <label>No. HP</label>
+                <input class="form-control" type="text" name="phone" id="phone-update">
+              </div>
+              <div class="form-group">
+                <label>Luas Tanah Total</label>
+                <input class="form-control" type="number" name="surface_area_total" id="number-update">
+              </div>
+              <div class="form-group">
+                <label>Total Unit</label>
+                <input class="form-control" type="number" name="total_unit" id="total-unit-update">
+              </div>
+            </div>
+            <div class="col-sm-6">  
+              <div class="form-group">
+                <label>Provinsi</label>
+                <select id="input-province-update" name="province"> 
+                  <option> - Pilih Provinsi - </option>
+                  @foreach($provinces as $province)
+                    <option value="{{$province['name']}}" data-province-code="{{$province['code']}}">{{$province['name']}}</option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Kota</label>
+                <select id="input-city-update" name="city"> 
+                  <option> - Pilih Kota - </option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Kecamatan</label>
+                <input class="form-control" type="text" name="district" id="district-update">
+              </div>
+              <div class="form-group">
+                <label>Kelurahan</label>
+                <input class="form-control" type="text" name="subdistrict" id="sub-district-update">
+              </div>
+              <div class="form-group">
+                <label>Alamat</label>
+                <textarea class="form-control" name="address" rows="5" id="address-update"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="submit-section">
+            <button class="btn btn-primary submit-btn">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /update Salary Modal -->
 @endsection
 
 @section('additionalScriptJS')
