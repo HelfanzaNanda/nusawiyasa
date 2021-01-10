@@ -73,5 +73,56 @@
           {data: 'action', name: 'action', className: 'text-right'},
       ],
   });
+
+  $(document).on('click', '#delete', function(e){
+    event.preventDefault()
+    var id = $(this).data("id")
+    swal({
+            title: 'Apakah kamu yakin untuk menghapus?',
+            text: "Data ini tidak bisa dikebalikan lagi",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Batal',
+            confirmButtonText: 'Hapus'
+        }, function(){
+          $.ajax({
+            type: 'get',
+            url: BASE_URL+'/delivery-order/'+id+'/delete',
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            beforeSend: function() {
+              
+            },
+            success: function(msg) {
+              if(msg.status == 'success'){
+                  setTimeout(function() {
+                    
+                      swal({
+                          title: "sukses",
+                          text: msg.message,
+                          type:"success",
+                          html: true
+                      }, function() {
+                          $('#main-table').DataTable().ajax.reload(null, false);
+                      });
+                  }, 500);
+              } else {
+                  swal({
+                      title: "Gagal",
+                      text: msg.message,
+                      showConfirmButton: true,
+                      confirmButtonColor: '#0760ef',
+                      type:"error",
+                      html: true
+                  });
+              }
+            }
+          })
+        })
+  });
 </script>
 @endsection

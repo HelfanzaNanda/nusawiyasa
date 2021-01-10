@@ -75,7 +75,7 @@ class DeliveryOrderItems extends Model
 
     public function inventory()
     {
-        return $this->hasOne('App\Http\Models\Inventory\Inventory', 'id', 'inventory_id');
+        return $this->belongsTo('App\Http\Models\Inventory\Inventories', 'inventory_id');
     }
 
     /**

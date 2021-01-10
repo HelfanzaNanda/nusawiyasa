@@ -125,8 +125,10 @@ Route::group([
 
 	Route::get('/delivery-order', 'Inventory\DeliveryOrderController@index');
 	Route::get('/create-delivery-order', 'Inventory\DeliveryOrderController@create');
+	Route::get('/update-delivery-order/{id:}', 'Inventory\DeliveryOrderController@edit')->name('delivery.edit');
 	Route::post('/delivery-order', 'Inventory\DeliveryOrderController@insertData');
 	Route::post('/delivery-order-datatables', 'Inventory\DeliveryOrderController@datatables');
+	Route::get('/delivery-order/{id}/delete', 'Inventory\DeliveryOrderController@delete');
 
 	Route::get('/unit', 'Inventory\UnitController@index');
 	Route::post('/unit', 'Inventory\UnitController@insertData');

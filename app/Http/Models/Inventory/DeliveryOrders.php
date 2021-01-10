@@ -75,7 +75,7 @@ class DeliveryOrders extends Model
 
     public function items()
     {
-        return $this->hasMany('App\Http\Models\Inventory\DeliveryOrderItems', 'id', 'delivery_order_item');
+        return $this->hasMany('App\Http\Models\Inventory\DeliveryOrderItems', 'delivery_order_id');
     }
 
     /**
@@ -173,8 +173,24 @@ class DeliveryOrders extends Model
             $id = $params['id'];
             unset($params['id']);
 
-            $update = self::where('id', $id)->update($params);
+            $order['dest_name'] = $params['dest_name'];
+            $order['dest_address'] = $params['dest_address'];
+            $order['number'] = $params['number'];
+            $order['date'] = $params['date'];
 
+            $update = self::where('id', $id)->update($order);
+
+            DeliveryOrderItems::whereDeliveryOrderId($id)->delete();
+            foreach($params['inventory_id'] as $key => $val) {
+                DeliveryOrderItems::create([
+                    'delivery_order_id' => $id,
+                    'inventory_id' => $val,
+                    'qty' => $params['qty'][$key],
+                    'note' => $params['note'][$key]
+                ]);
+            }
+
+            DB::commit();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data Berhasil Diubah!'
