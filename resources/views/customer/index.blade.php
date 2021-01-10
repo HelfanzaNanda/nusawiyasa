@@ -263,50 +263,102 @@
       ],
   });
 
-  $('document').ready(function(){
-      $("body").on('click', '#edit',function(event){
-          event.preventDefault();
-          var id = $(this).data("id")
+  $(document).on('click', '#delete', function(e){
+    event.preventDefault()
+    var id = $(this).data("id")
 
-          $('#update-modal').modal('show')
-          console.log('show data')
+    swal({
+            title: 'Apakah kamu yakin untuk menghapus?',
+            text: "Data ini tidak bisa dikebalikan lagi",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Batal',
+            confirmButtonText: 'Hapus'
+        }, function(){
+          console.log('ddd');
           $.ajax({
-            url : BASE_URL+'/customers/'+id,
-            type : 'GET',
-            dataType: "json",
+            type: 'get',
+            url: BASE_URL+'/customers/'+id+'/delete',
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
             beforeSend: function() {
-            
-            },
-            success: function(data) {
-              $('#id-update').val(data.id)
-              $('#name-update').val(data.user.name)
-              $('#email-update').val(data.user.email)
-              $('#phone-update').val(data.user.phone)
-              $('#place-of-birth-update').val(data.place_of_birth)
-              $('#input-dob-update').val(data.date_of_birth)
-              $('#occupation-update').val(data.occupation)
-              $('#ditrict-update').val(data.district)
-              $('#sub-district-update').val(data.subdistrict)
-              $('#address-update').val(data.address)
-
-              $('#input-province-update').select2()
-              $('#input-province-update').val(data.province)
-              $('#input-province-update').select2().trigger('change');
-              $('#input-province-update').select2({
-                width: '100%'
-              });
-
-              $('#input-city-update').select2()
-              $('#input-city-update').val(data.province)
-              $('#input-city-update').select2().trigger('change');
-              $('#input-city-update').select2({
-                width: '100%'
-              });
               
+            },
+            success: function(msg) {
+              if(msg.status == 'success'){
+                  setTimeout(function() {
+                    
+                      swal({
+                          title: "sukses",
+                          text: msg.message,
+                          type:"success",
+                          html: true
+                      }, function() {
+                          $('#main-table').DataTable().ajax.reload(null, false);
+                      });
+                  }, 500);
+              } else {
+                  swal({
+                      title: "Gagal",
+                      text: msg.message,
+                      showConfirmButton: true,
+                      confirmButtonColor: '#0760ef',
+                      type:"error",
+                      html: true
+                  });
+              }
             }
           })
-      })
+        })
+
   })
+
+  $(document).on('click', '#edit', function(){
+    event.preventDefault();
+      var id = $(this).data("id")
+
+      $('#update-modal').modal('show')
+      
+      $.ajax({
+        url : BASE_URL+'/customers/'+id,
+        type : 'GET',
+        dataType: "json",
+        beforeSend: function() {
+        
+        },
+        success: function(data) {
+          $('#id-update').val(data.id)
+          $('#name-update').val(data.user.name)
+          $('#email-update').val(data.user.email)
+          $('#phone-update').val(data.user.phone)
+          $('#place-of-birth-update').val(data.place_of_birth)
+          $('#input-dob-update').val(data.date_of_birth)
+          $('#occupation-update').val(data.occupation)
+          $('#ditrict-update').val(data.district)
+          $('#sub-district-update').val(data.subdistrict)
+          $('#address-update').val(data.address)
+
+          $('#input-province-update').select2()
+          $('#input-province-update').val(data.province)
+          $('#input-province-update').select2().trigger('change');
+          $('#input-province-update').select2({
+            width: '100%'
+          });
+
+          $('#input-city-update').select2()
+          $('#input-city-update').val(data.province)
+          $('#input-city-update').select2().trigger('change');
+          $('#input-city-update').select2({
+            width: '100%'
+          });
+        }
+      })
+    })
+  
 
   $("#show-add-modal").on('click',function() {
       $('#add-modal').modal('show');
