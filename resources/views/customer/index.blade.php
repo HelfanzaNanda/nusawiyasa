@@ -492,7 +492,7 @@
                     html: true
                 }, function() {
                     $('#main-table').DataTable().ajax.reload(null, false);
-                    $('#update-modal').modal('hide');
+                    $('#add-modal').modal('hide');
                 });
             }, 500);
         } else {

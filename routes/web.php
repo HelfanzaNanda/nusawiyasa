@@ -55,6 +55,8 @@ Route::group([
 	Route::get('/clusters', 'Cluster\ClusterController@index');
 	Route::post('/clusters', 'Cluster\ClusterController@insertData');
 	Route::post('/cluster-datatables', 'Cluster\ClusterController@datatables');
+	Route::get('/clusters/{id}', 'Cluster\ClusterController@detail')->name('cluster.detail');
+	Route::get('/clusters/{id}/delete', 'Cluster\ClusterController@delete')->name('cluster.delete');
 
 	Route::get('/lots', 'Cluster\LotController@index');
 	Route::post('/lots', 'Cluster\LotController@insertData');
