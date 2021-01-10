@@ -113,6 +113,69 @@
   </div>
 </div>
 <!-- /Add Salary Modal -->
+
+<!-- update Salary Modal -->
+<div id="update-modal" class="modal custom-modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Tambah Kapling</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="update-form" method="POST" action="#">
+          {!! csrf_field() !!}
+          <div class="row"> 
+            <div class="col-sm-6"> 
+              <div class="form-group">
+                <label>Cluster</label>
+                <input type="hidden" name="id" id="id-update">
+                <select id="input-cluster-update" name="cluster_id"> 
+                  <option> - Pilih Cluster - </option>
+                  @foreach($clusters as $cluster)
+                    <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Blok</label>
+                <input class="form-control" type="text" name="block" id="block-update">
+              </div>
+              <div class="form-group">
+                <label>Nomor Unit</label>
+                <input class="form-control" type="text" name="unit_number" id="unit-update">
+              </div>
+              <div class="form-group">
+                <label>Jumlah Lantai</label>
+                <input class="form-control" type="number" name="total_floor" id="total-floor-update">
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Luas Tanah (m2)</label>
+                <input class="form-control" type="number" name="surface_area" id="surface-area-update">
+              </div>
+              <div class="form-group">
+                <label>Luas Bangunan (m2)</label>
+                <input class="form-control" type="number" name="building_area" id="building-area-update">
+              </div>
+              <div class="form-group">
+                <label>Harga</label>
+                <input class="form-control" type="number" name="price" id="price-update">
+              </div>
+            </div>
+          </div>
+          <div class="submit-section">
+            <button class="btn btn-primary submit-btn">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /update Salary Modal -->
 @endsection
 
 @section('additionalScriptJS')
@@ -150,27 +213,6 @@
 
   $('#input-cluster').select2({
     width: '100%'
-  });
-
-  $('#input-province').on('change', function() {
-    var province_id = $("option:selected", this).data('province-code');
-    if(province_id) {
-      $.ajax({
-        url: BASE_URL+'/city_by_province/'+province_id,
-        type: "GET",
-        dataType: "json",
-        beforeSend: function() {
-            $('#input-city').empty();
-        },
-        success: function(data) {
-          $.each(data, function(key, value) {
-              $('#input-city').append('<option value="'+ value.name +'" data-city="'+ value.code+'">' + value.name + '</option>');
-          });
-        }
-      });
-    } else {
-        // $('#city').empty();
-    }
   });
 
   $('form#add-form').submit( function( e ) {
@@ -214,6 +256,133 @@
         }
       }
     })
+  });
+
+  $(document).on('click','#edit',function() {
+    var id = $(this).data("id")
+      $('#update-modal').modal('show');
+
+      $.ajax({
+        url : BASE_URL+'/lots/'+id,
+        type : 'GET',
+        dataType: "json",
+        beforeSend: function() {
+        
+        },
+        success: function(data) {
+          $('#id-update').val(data.id)
+
+          $('#input-cluster-update').select2()
+          $('#input-cluster-update').val(data.cluster_id)
+          $('#input-cluster-update').select2().trigger('change');
+          $('#input-cluster-update').select2({
+            width: '100%'
+          });
+
+          $('#block-update').val(data.block)
+          $('#unit-update').val(data.unit_number)
+          $('#total-floor-update').val(data.total_floor)
+          $('#surface-area-update').val(data.surface_area)
+          $('#building-area-update').val(data.building_area)
+          $('#price-update').val(data.price)
+        }
+      })
+  });
+
+  $('form#update-form').submit(function( e ) {
+    e.preventDefault();
+    console.log('da');
+    var form_data = new FormData( this );
+
+    $.ajax({
+      type: 'post',
+      url: BASE_URL+'/lots',
+      data: form_data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      dataType: 'json',
+      beforeSend: function() {
+        
+      },
+      success: function(msg) {
+        if(msg.status == 'success'){
+            setTimeout(function() {
+                swal({
+                    title: "Sukses",
+                    text: msg.message,
+                    type:"success",
+                    html: true
+                }, function() {
+                    $('#main-table').DataTable().ajax.reload(null, false);
+                    $('#update-modal').modal('hide');
+                    // window.location.replace(URL_LIST_PURCHASES);
+                });
+            }, 500);
+        } else {
+            swal({
+                title: "Gagal",
+                text: msg.message,
+                showConfirmButton: true,
+                confirmButtonColor: '#0760ef',
+                type:"error",
+                html: true
+            });
+        }
+      }
+    })
+  });
+
+  $(document).on('click', '#delete', function(e){
+    event.preventDefault()
+    var id = $(this).data("id")
+
+    swal({
+            title: 'Apakah kamu yakin untuk menghapus?',
+            text: "Data ini tidak bisa dikebalikan lagi",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Batal',
+            confirmButtonText: 'Hapus'
+        }, function(){
+          $.ajax({
+            type: 'get',
+            url: BASE_URL+'/lots/'+id+'/delete',
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            beforeSend: function() {
+              
+            },
+            success: function(msg) {
+              if(msg.status == 'success'){
+                  setTimeout(function() {
+                    
+                      swal({
+                          title: "sukses",
+                          text: msg.message,
+                          type:"success",
+                          html: true
+                      }, function() {
+                          $('#main-table').DataTable().ajax.reload(null, false);
+                      });
+                  }, 500);
+              } else {
+                  swal({
+                      title: "Gagal",
+                      text: msg.message,
+                      showConfirmButton: true,
+                      confirmButtonColor: '#0760ef',
+                      type:"error",
+                      html: true
+                  });
+              }
+            }
+          })
+        })
   });
 </script>
 @endsection

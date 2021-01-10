@@ -97,8 +97,8 @@ class LotController extends Controller
                 if (!$row['booking_id']) {
                     $nestedData['action'] .='<a href="'.url('/bookings/'.$row['id']).'" class="dropdown-item"><i class="fa fa-home m-r-5"></i> Booking</a>';
                 }
-                $nestedData['action'] .='<a href="#" class="dropdown-item" id="edit-data" data-id="'.$row['id'].'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
-                $nestedData['action'] .='<a href="#" class="dropdown-item" id="delete-data" data-id="'.$row['id'].'"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
+                $nestedData['action'] .='<a href="#" class="dropdown-item" id="edit" data-id="'.$row['id'].'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
+                $nestedData['action'] .='<a href="#" class="dropdown-item" id="delete" data-id="'.$row['id'].'"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
 
                 $nestedData['action'] .='</div>';
                 $nestedData['action'] .='</div>';
@@ -119,7 +119,8 @@ class LotController extends Controller
 
     public function detail($id)
     {
-
+        $lot = Lot::whereId($id)->first();
+        return response()->json($lot);
     }
 
     public function get($id=null, Request $request)
@@ -157,8 +158,12 @@ class LotController extends Controller
         return Lot::createOrUpdate($params, $request->method(), $request);
     }
 
-    public function delete($id, Request $request)
+    public function delete($id)
     {
-
+        Lot::destroy($id);
+        return response()->json([
+            'message' => 'data berhasil dihapus',
+            'status' => 'success'
+        ]);
     }
 }
