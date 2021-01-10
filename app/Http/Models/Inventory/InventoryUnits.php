@@ -160,6 +160,7 @@ class InventoryUnits extends Model
 
             $update = self::where('id', $id)->update($params);
 
+            DB::commit();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data Berhasil Diubah!'

@@ -129,6 +129,8 @@ Route::group([
 	Route::get('/unit', 'Inventory\UnitController@index');
 	Route::post('/unit', 'Inventory\UnitController@insertData');
 	Route::post('/unit-datatables', 'Inventory\UnitController@datatables');
+	Route::get('/unit/{id}', 'Inventory\UnitController@detail');
+	Route::get('/unit/{id}/delete', 'Inventory\UnitController@delete');
 
 	Route::get('/supplier', 'Inventory\SupplierController@index');
 	Route::post('/supplier', 'Inventory\SupplierController@insertData');
