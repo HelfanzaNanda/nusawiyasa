@@ -69,7 +69,7 @@ class RequestMaterials extends Model
 
     public function items()
     {
-        return $this->hasMany('App\Http\Models\Project\RequestMaterialItems', 'request_material_id', 'id');
+        return $this->hasMany('App\Http\Models\Project\RequestMaterialItems', 'request_material_id');
     }
 
     /**
@@ -172,18 +172,6 @@ class RequestMaterials extends Model
             unset($params['_token']);
         }
 
-        if (isset($params['id']) && $params['id']) {
-            $id = $params['id'];
-            unset($params['id']);
-
-            $update = self::where('id', $id)->update($params);
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data Berhasil Diubah!'
-            ]);
-        }
-
         $request_material['number'] = $params['number'];
         $request_material['title'] = $params['title'];
         $request_material['subject'] = $params['subject'];
@@ -192,6 +180,35 @@ class RequestMaterials extends Model
         $request_material['type'] = $params['type'];
         $request_material['cluster_id'] = $params['cluster_id'];
         $request_material['lot_id'] = $params['lot_id'];
+
+        if (isset($params['id']) && $params['id']) {
+            $id = $params['id'];
+            unset($params['id']);
+
+            $update = self::where('id', $id)->update($request_material);
+
+            RequestMaterialItems::whereRequestMaterialId($id)->delete();
+
+            foreach($params['item_inventory_id'] as $key => $val) {
+                $request_material_item['inventory_id'] = $val;
+                if (!is_numeric($val)) {
+                    $request_material_item['inventory_id'] = 0;
+                }
+                $request_material_item['request_material_id'] = $id;
+                $request_material_item['inventory_name'] = $params['item_name'][$key];
+                $request_material_item['brand'] = $params['item_brand'][$key];
+                $request_material_item['qty'] = $params['item_qty'][$key];
+
+                RequestMaterialItems::create($request_material_item);
+            }
+
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data Berhasil Diubah!'
+            ]);
+        }
+
 
         $insert = self::create($request_material);
 

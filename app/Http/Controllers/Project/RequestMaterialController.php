@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Models\Project\RequestMaterials;
 use App\Http\Models\Project\SpkProjects;
 use App\Http\Models\Cluster\Cluster;
+use App\Http\Models\Cluster\Lot;
 use App\Http\Models\Ref\Province;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +34,14 @@ class RequestMaterialController extends Controller
 
     public function edit($id)
     {
+        $spk = SpkProjects::all();
+        $clusters = Cluster::selectClusterBySession();
+        $lots = Lot::all();
 
+        $material = RequestMaterials::whereId($id)->first();
+        $no = 1;
+
+        return view('project.request_material_update', compact('spk', 'clusters', 'material', 'lots', 'no'));
     }
 
     public function datatables(Request $request)
@@ -99,8 +107,8 @@ class RequestMaterialController extends Controller
                 $nestedData['action'] .='        <div class="dropdown dropdown-action">';
                 $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';
                 $nestedData['action'] .='            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(159px, 32px, 0px);">';
-                $nestedData['action'] .='                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#edit_leave"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
-                $nestedData['action'] .='                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
+                $nestedData['action'] .='                <a class="dropdown-item" href="'.route('request_material.edit', $row['id']).'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
+                $nestedData['action'] .='                <a class="dropdown-item" id="delete" href="#" data-toggle="modal" data-target="#delete_approve" data-id="'.$row['id'].'"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
                 $nestedData['action'] .='            </div>';
                 $nestedData['action'] .='        </div>';
                 $data[] = $nestedData;
@@ -158,8 +166,13 @@ class RequestMaterialController extends Controller
         return RequestMaterials::createOrUpdate($params, $request->method(), $request);
     }
 
-    public function delete($id, Request $request)
+    public function delete($id)
     {
+        RequestMaterials::destroy($id);
 
+        return response()->json([
+            'message' => 'data berhasil dihapus',
+            'status' => 'success'
+        ]);
     }
 }

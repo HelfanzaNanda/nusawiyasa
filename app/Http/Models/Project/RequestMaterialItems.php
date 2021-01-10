@@ -74,7 +74,7 @@ class RequestMaterialItems extends Model
 
     public function inventory()
     {
-        return $this->hasOne('App\Http\Models\Inventory\Inventories', 'id', 'inventory_id');
+        return $this->belongsTo('App\Http\Models\Inventory\Inventories', 'inventory_id');
     }
     // Scopes...
 

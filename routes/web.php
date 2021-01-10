@@ -103,6 +103,8 @@ Route::group([
 	Route::post('/request-material', 'Project\RequestMaterialController@insertData');
 	Route::post('/request-material-datatables', 'Project\RequestMaterialController@datatables');
 	Route::get('/request_materials/{id?}', 'Project\RequestMaterialController@get');
+	Route::get('/update-request-material/{id}', 'Project\RequestMaterialController@edit')->name('request_material.edit');
+	Route::get('/request-material/{id}/delete', 'Project\RequestMaterialController@delete');
 
 	Route::get('/development-progress', 'Project\DevelopmentProgressController@index');
 	Route::get('/development-progress/detail/{id}', 'Project\DevelopmentProgressController@detail');
