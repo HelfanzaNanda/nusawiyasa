@@ -178,7 +178,7 @@ class SpkProjects extends Model
             unset($params['id']);
 
             $update = self::where('id', $id)->update($params);
-
+            DB::commit();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data Berhasil Diubah!'

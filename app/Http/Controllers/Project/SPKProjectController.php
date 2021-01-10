@@ -35,6 +35,7 @@ class SPKProjectController extends Controller
                     ->join('users', 'users.id', '=', 'customers.user_id')
                     ->join('lots', 'lots.id', '=', 'customer_lots.lot_id')
                     ->join('clusters', 'clusters.id', '=', 'lots.cluster_id');
+                    
         
         if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
             $lots->where('lots.cluster_id', $session['_cluster_id']);
@@ -118,8 +119,8 @@ class SPKProjectController extends Controller
                 $nestedData['action'] .='        <div class="dropdown dropdown-action">';
                 $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';
                 $nestedData['action'] .='            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(159px, 32px, 0px);">';
-                $nestedData['action'] .='                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#edit_leave"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
-                $nestedData['action'] .='                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
+                $nestedData['action'] .='                <a class="dropdown-item" id="edit" href="#" data-toggle="modal" data-target="#edit_leave" data-id="'.$row['id'].'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
+                $nestedData['action'] .='                <a class="dropdown-item" id="delete" href="#" data-toggle="modal" data-target="#delete_approve"  data-id="'.$row['id'].'"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
                 $nestedData['action'] .='            </div>';
                 $nestedData['action'] .='        </div>';
                 $data[] = $nestedData;
@@ -139,6 +140,17 @@ class SPKProjectController extends Controller
 
     public function detail($id)
     {
+        $spk = SpkProjects::where('id', $id)->first();
+        $spk->date = date('Y-m-d', strtotime($spk->date));
+        return response()->json($spk);
+    }
 
+    public function delete($id){
+        SpkProjects::destroy($id);
+
+        return response()->json([
+            'message' => 'data berhasil dihapus',
+            'status' => 'success'
+        ]);
     }
 }

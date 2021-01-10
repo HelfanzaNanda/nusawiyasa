@@ -107,6 +107,65 @@
     </div>
   </div>
 </div>
+
+<div id="update-modal" class="modal custom-modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update SPK Project</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="update-form" method="POST" action="#">
+          {!! csrf_field() !!}
+          <div class="row"> 
+            <div class="col-md-12"> 
+              <div class="form-group">
+                <label>Judul</label>
+                <input class="form-control" type="text" name="title" id="title">
+                <input type="hidden" name="id" id="id-update">
+              </div>
+              <div class="form-group">
+                <label>No. SPK</label>
+                <input class="form-control" type="text" name="number" id="number">
+              </div>
+              <div class="form-group">
+                <label>Kepada</label>
+                <input class="form-control" type="text" name="dest_name" id="dest_name">
+              </div>
+              <div class="form-group">
+                <label>Tanggal</label>
+                <input class="form-control" type="text" name="date" id="input-date-update" id="date">
+              </div>
+              <div class="form-group">
+                <label>Perihal</label>
+                <input class="form-control" type="text" name="subject" id="subject">
+              </div>
+              <div class="form-group">
+                <label>Kapling</label>
+                <select id="input-customer-lot-id-update" name="customer_lot_id"> 
+                  <option> - Pilih Kapling - </option>
+                    @foreach($lots as $lot)
+                      <option value="{{$lot['id']}}">{{$lot['cluster_name']}} - {{$lot['unit_block']}} / {{$lot['unit_number']}} ({{$lot['customer_name']}})</option>
+                    @endforeach
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Catatan</label>
+                <textarea class="form-control" name="note" rows="3" id="note"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="submit-section">
+            <button class="btn btn-primary submit-btn">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('additionalScriptJS')
@@ -195,6 +254,132 @@
         }
       }
     })
+  });
+
+  $(document).on('click', '#edit', function(){
+      var id = $(this).data("id")
+      $('#update-modal').modal('show');
+
+      $.ajax({
+        url : BASE_URL+'/spk-project/'+id,
+        type : 'GET',
+        dataType: "json",
+        beforeSend: function() {
+        
+        },
+        success: function(data) {
+          var res = data.date.substring(0, 10);
+          $('#id-update').val(data.id)
+          $('#title').val(data.title)
+          $('#number').val(data.number)
+          $('#dest_name').val(data.dest_name)
+          $('#input-date-update').val(res)
+          $('#subject').val(data.subject)
+          $('#note').val(data.note)
+
+          $('#input-customer-lot-id-update').select2()
+          $('#input-customer-lot-id-update').val(data.customer_lot_id)
+          $('#input-customer-lot-id-update').select2().trigger('change');
+          $('#input-customer-lot-id-update').select2({
+            width: '100%'
+          });
+
+        }
+      })
+  })
+
+  $('form#update-form').submit( function( e ) {
+    e.preventDefault();
+    var form_data = new FormData( this );
+
+    $.ajax({
+      type: 'post',
+      url: BASE_URL+'/spk-project',
+      data: form_data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      dataType: 'json',
+      beforeSend: function() {
+        
+      },
+      success: function(msg) {
+        if(msg.status == 'success'){
+          setTimeout(function() {
+            swal({
+                title: "Sukses",
+                text: msg.message,
+                type:"success",
+                html: true
+            }, function() {
+                $('#main-table').DataTable().ajax.reload(null, false);
+                $('#update-modal').modal('hide');
+            });
+          }, 500);
+        } else {
+          swal({
+            title: "Gagal",
+            text: msg.message,
+            showConfirmButton: true,
+            confirmButtonColor: '#0760ef',
+            type:"error",
+            html: true
+          });
+        }
+      }
+    })
+  });
+
+  $(document).on('click', '#delete', function(e){
+    event.preventDefault()
+    var id = $(this).data("id")
+
+    swal({
+            title: 'Apakah kamu yakin untuk menghapus?',
+            text: "Data ini tidak bisa dikebalikan lagi",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Batal',
+            confirmButtonText: 'Hapus'
+        }, function(){
+          $.ajax({
+            type: 'get',
+            url: BASE_URL+'/spk-project/'+id+'/delete',
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            beforeSend: function() {
+              
+            },
+            success: function(msg) {
+              if(msg.status == 'success'){
+                  setTimeout(function() {
+                    
+                      swal({
+                          title: "sukses",
+                          text: msg.message,
+                          type:"success",
+                          html: true
+                      }, function() {
+                          $('#main-table').DataTable().ajax.reload(null, false);
+                      });
+                  }, 500);
+              } else {
+                  swal({
+                      title: "Gagal",
+                      text: msg.message,
+                      showConfirmButton: true,
+                      confirmButtonColor: '#0760ef',
+                      type:"error",
+                      html: true
+                  });
+              }
+            }
+          })
+        })
   });
 </script>
 @endsection
