@@ -27,6 +27,8 @@ Route::group([
 	Route::get('/customers', 'Customer\CustomerController@index');
 	Route::post('/customers', 'Customer\CustomerController@insertData');
 	Route::post('/customer-datatables', 'Customer\CustomerController@datatables');
+	Route::get('/customers/{id}', 'Customer\CustomerController@detail')->name('customer.detail');
+	Route::get('/customers/{id}/delete', 'Customer\CustomerController@delete')->name('customer.delete');
 
 	Route::get('/customer-terms', function () {
 	    return abort(404);
