@@ -130,6 +130,8 @@ Route::group([
 	Route::get('/supplier', 'Inventory\SupplierController@index');
 	Route::post('/supplier', 'Inventory\SupplierController@insertData');
 	Route::post('/supplier-datatables', 'Inventory\SupplierController@datatables');
+	Route::get('/supplier/{id}', 'Inventory\SupplierController@detail');
+	Route::get('/supplier/{id}/delete', 'Inventory\SupplierController@delete');
 
 	Route::get('/purchase-order', 'Purchasing\PurchaseOrderController@index');
 	Route::get('/create-purchase-order', 'Purchasing\PurchaseOrderController@create');

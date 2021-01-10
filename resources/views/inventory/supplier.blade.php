@@ -126,6 +126,82 @@
     </div>
   </div>
 </div>
+
+<!-- Update Salary Modal -->
+<div id="update-modal" class="modal custom-modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update Supplier</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="update-form" method="POST" action="#">
+          {!! csrf_field() !!}
+          <div class="row"> 
+            <div class="col-sm-6"> 
+              <div class="form-group">
+                <label>Nama Supplier</label>
+                <input class="form-control" type="text" name="name" id="name">
+                <input class="form-control" type="hidden" name="id" id="id-update">
+              </div>
+              <div class="form-group">
+                <label>Email Supplier</label>
+                <input class="form-control" type="text" name="email" id="email">
+              </div>
+              <div class="form-group">
+                <label>No. HP Supplier</label>
+                <input class="form-control" type="text" name="phone" id="phone">
+              </div>
+              <div class="form-group">
+                <label>Nama Penanggung Jawab (PIC)</label>
+                <input class="form-control" type="text" name="pic_name" id="pic_name">
+              </div>
+              <div class="form-group">
+                <label>No. Telp Penanggung Jawab</label>
+                <input class="form-control" type="text" name="pic_phone" id="pic_phone">
+              </div>
+            </div>
+            <div class="col-sm-6">  
+              <div class="form-group">
+                <label>Provinsi</label>
+                <select id="input-province-update" name="province"> 
+                  <option> - Pilih Provinsi - </option>
+                  @foreach($provinces as $province)
+                    <option value="{{$province['name']}}" data-province-code="{{$province['code']}}">{{$province['name']}}</option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Kota</label>
+                <select id="input-city-update" name="city"> 
+                  <option> - Pilih Kota - </option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Kecamatan</label>
+                <input class="form-control" type="text" name="district" id="district">
+              </div>
+              <div class="form-group">
+                <label>Kelurahan</label>
+                <input class="form-control" type="text" name="subdistrict" id="subdistrict">
+              </div>
+              <div class="form-group">
+                <label>Alamat</label>
+                <textarea class="form-control" name="address" rows="5" id="address"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="submit-section">
+            <button class="btn btn-primary submit-btn">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('additionalScriptJS')
@@ -229,6 +305,170 @@
         }
       }
     })
+  });
+
+  $('#input-province-update').select2({
+    width: '100%'
+  });
+
+  $('#input-city-update').select2({
+    width: '100%'
+  });
+
+  $('#input-province-update').on('change', function() {
+    var province_id = $("option:selected", this).data('province-code');
+    if(province_id) {
+      $.ajax({
+        url: BASE_URL+'/city_by_province/'+province_id,
+        type: "GET",
+        dataType: "json",
+        beforeSend: function() {
+            $('#input-city-update').empty();
+        },
+        success: function(data) {
+          $.each(data, function(key, value) {
+              $('#input-city-update').append('<option value="'+ value.name +'" data-city="'+ value.code+'">' + value.name + '</option>');
+          });
+        }
+      });
+    } else {
+        // $('#city').empty();
+    }
+  });
+
+  $(document).on('click', '#edit', function(){
+      var id = $(this).data("id")
+      $('#update-modal').modal('show');
+
+      $.ajax({
+        url : BASE_URL+'/supplier/'+id,
+        type : 'GET',
+        dataType: "json",
+        beforeSend: function() {
+        
+        },
+        success: function(data) {
+          $('#id-update').val(data.id)
+          $('#name').val(data.name)
+          $('#email').val(data.email)
+          $('#phone').val(data.phone)
+          $('#pic_name').val(data.pic_name)
+          $('#pic_phone').val(data.pic_phone)
+          $('#district').val(data.district)
+          $('#subdistrict').val(data.subdistrict)
+          $('#address').val(data.address)
+
+          $('#input-province-update').select2()
+          $('#input-province-update').val(data.province)
+          $('#input-province-update').select2().trigger('change');
+          $('#input-province-update').select2({
+            width: '100%'
+          });
+
+          $('#input-city-update').select2()
+          $('#input-city-update').val(data.province)
+          $('#input-city-update').select2().trigger('change');
+          $('#input-city-update').select2({
+            width: '100%'
+          });
+
+        }
+      })
+  })
+
+  $('form#update-form').submit( function( e ) {
+    e.preventDefault();
+    var form_data = new FormData( this );
+
+    $.ajax({
+      type: 'post',
+      url: BASE_URL+'/supplier',
+      data: form_data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      dataType: 'json',
+      beforeSend: function() {
+        
+      },
+      success: function(msg) {
+        if(msg.status == 'success'){
+          setTimeout(function() {
+            swal({
+                title: "Sukses",
+                text: msg.message,
+                type:"success",
+                html: true
+            }, function() {
+                $('#main-table').DataTable().ajax.reload(null, false);
+                $('#update-modal').modal('hide');
+                // window.location.replace(URL_LIST_PURCHASES);
+            });
+          }, 500);
+        } else {
+          swal({
+            title: "Gagal",
+            text: msg.message,
+            showConfirmButton: true,
+            confirmButtonColor: '#0760ef',
+            type:"error",
+            html: true
+          });
+        }
+      }
+    })
+  });
+
+  $(document).on('click', '#delete', function(e){
+    event.preventDefault()
+    var id = $(this).data("id")
+
+    swal({
+            title: 'Apakah kamu yakin untuk menghapus?',
+            text: "Data ini tidak bisa dikebalikan lagi",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Batal',
+            confirmButtonText: 'Hapus'
+        }, function(){
+          $.ajax({
+            type: 'get',
+            url: BASE_URL+'/supplier/'+id+'/delete',
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            beforeSend: function() {
+              
+            },
+            success: function(msg) {
+              if(msg.status == 'success'){
+                  setTimeout(function() {
+                    
+                      swal({
+                          title: "sukses",
+                          text: msg.message,
+                          type:"success",
+                          html: true
+                      }, function() {
+                          $('#main-table').DataTable().ajax.reload(null, false);
+                      });
+                  }, 500);
+              } else {
+                  swal({
+                      title: "Gagal",
+                      text: msg.message,
+                      showConfirmButton: true,
+                      confirmButtonColor: '#0760ef',
+                      type:"error",
+                      html: true
+                  });
+              }
+            }
+          })
+        })
   });
 </script>
 @endsection
