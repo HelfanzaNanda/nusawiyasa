@@ -3,6 +3,7 @@
 namespace App\Http\Models\Project;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\Inventory\Inventories;
 
 /**
  * @property int        $rap_id
@@ -75,4 +76,7 @@ class RapItems extends Model
     // Functions ...
 
     // Relations ...
+    public function inventory(){
+        return $this->belongsTo(Inventories::class);
+    }
 }

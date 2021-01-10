@@ -4,6 +4,7 @@ namespace App\Http\Models\Inventory;
 
 use DB;
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\Inventory\InventoryUnits;
 
 /**
  * @property string     $name

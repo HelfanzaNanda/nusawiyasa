@@ -166,8 +166,26 @@ class Rap extends Model
             $id = $params['id'];
             unset($params['id']);
 
-            $update = self::where('id', $id)->update($params);
+            $rap_params['title'] = $params['title'];
+            $rap_params['date'] = date('Y-m-d');
+            $rap_params['cluster_id'] = $params['cluster_id'];
+            // $rap_params['lot_id'] = $params['lot_id'];
+            $rap_params['total'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['total']));
 
+            RapItems::whereRapId($id)->delete();
+            
+            $update = self::where('id', $id)->update($rap_params);
+
+            foreach ($params['item_inventory_id'] as $key => $val) {
+                RapItems::create([
+                    'rap_id' => $id,
+                    'inventory_id' => $params['item_inventory_id'][$key],
+                    'qty' => $params['item_qty'][$key],
+                    'price' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_price'][$key])),
+                    'total' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_total'][$key]))
+                ]);
+            }
+            DB::commit();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data Berhasil Diubah!'
@@ -200,5 +218,9 @@ class Rap extends Model
             'status' => 'success',
             'message' => 'Data Berhasil Disimpan'
         ]);
+    }
+
+    public function rapItem(){
+        return $this->hasMany(RapItems::class, 'rap_id');
     }
 }

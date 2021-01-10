@@ -93,8 +93,10 @@ Route::group([
 
 	Route::get('/rap', 'Project\RAPController@index');
 	Route::get('/create-rap', 'Project\RAPController@create');
+	Route::get('/update-rap/{id?}', 'Project\RAPController@update');
 	Route::post('/rap', 'Project\RAPController@insertData');
 	Route::post('/rap-datatables', 'Project\RAPController@datatables');
+	Route::get('/rap/{id}/delete', 'Project\RAPController@delete');
 
 	Route::get('/request-material', 'Project\RequestMaterialController@index');
 	Route::get('/create-request-material', 'Project\RequestMaterialController@create');
