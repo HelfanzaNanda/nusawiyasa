@@ -37,7 +37,7 @@
               <select id="input-spk" name="spk_id"> 
                 <option value="0"> - Pilih SPK - </option>
                 @foreach($spk as $row)
-                  <option value="{{$row['id']}}" {{ ($material->spk_id == $row->id) }}>{{$row['number']}}</option>
+                  <option value="{{$row['id']}}" {{ ($material->spk_id == $row['id']) ? 'selected' : ''}}>{{$row['number']}}</option>
                 @endforeach
               </select>
             </div>
