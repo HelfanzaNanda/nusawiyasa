@@ -36,7 +36,7 @@ class RAPController extends Controller
         $rap = Rap::whereId($id)->first();
         $lots = Lot::selectClusterBySession();
         $clusters = Cluster::selectClusterBySession();
-
+        $rap->total = explode('.', $rap->total)[0];
         return view('project.rap_update', compact('rap' ,'lots', 'clusters'));
     }
 

@@ -46,7 +46,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Total</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-total" name="total" readonly="" value="{{ number_format((int)str_replace('.', '', $rap->total), 0, '.', ',') }}">
+              <input class="form-control floating" type="text" id="input-total" name="total" readonly="" value="{{ number_format((int)str_replace('.', '', $rap->total), 2, '.', ',') }}">
             </div>
           </div>
           <section class="review-section">
@@ -99,12 +99,12 @@
                                 </td>
                                 <td>{{ $item->inventory->unit->name }}</td>
                                 <td>
-                                    {{ number_format((int)str_replace('.', '', $item->price), 0, '.', ',') }}
-                                    <input type="hidden" name="item_price[]" value="{{ number_format((int)str_replace('.', '', $item->price), 0, '.', ',') }}">
+                                    {{ number_format((int)explode('.', $item->price)[0], 2, '.', ',') }}
+                                    <input type="hidden" name="item_price[]" value="{{ number_format((int)explode('.', $item->price)[0], 2, '.', ',') }}">
                                 </td>
                                 <td id="total">
-                                    {{ number_format((int)str_replace('.', '', $item->total), 0, '.', ',') }}
-                                    <input type="hidden" name="item_total[]" value="{{ number_format((int)str_replace('.', '', $item->total), 0, '.', ',') }}">
+                                  {{ number_format((int)explode('.', $item->total)[0], 2, '.', ',') }}
+                                    <input type="hidden" name="item_total[]" value="{{ number_format((int)explode('.', $item->total)[0], 2, '.', ',') }}">
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-danger" id="comments_remove">
