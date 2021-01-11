@@ -8,10 +8,12 @@ use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Inventory\Suppliers;
 use App\Http\Models\Purchase\PurchaseOrders;
 use App\Http\Models\Project\RequestMaterials;
+use App\Http\Models\Inventory\Inventories;
 use App\Http\Models\Ref\Province;
 use App\Http\Models\Ref\RefGeneralStatuses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Models\Purchase\PurchaseOrderItems;
 
 class PurchaseOrderController extends Controller
 {
@@ -191,6 +193,18 @@ class PurchaseOrderController extends Controller
 
     public function delete($id)
     {
+        $items = PurchaseOrderItems::where('purchase_order_id', $id)->get();
+        
+        foreach ($items as $item) {
+            $latest_qty = $item->inventory->stock;
+            Inventories::whereId($item->inventory_id)
+                ->update(
+                    [
+                        'stock' => ($latest_qty + $item->qty)
+                    ]
+                );
+                PurchaseOrderItems::where('purchase_order_id', $id)->delete();
+        }
         PurchaseOrders::destroy($id);
         return response()->json([
             'message' => 'data berhasil dihapus',
