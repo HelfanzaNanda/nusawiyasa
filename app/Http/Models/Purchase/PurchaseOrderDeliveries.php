@@ -111,7 +111,7 @@ class PurchaseOrderDeliveries extends Model
 
         $qry = self::select($_select)->addSelect('suppliers.name as supplier_name')->addSelect('purchase_orders.number as po_number')
                     ->join('purchase_orders', 'purchase_orders.id', '=', 'purchase_order_deliveries.purchase_order_id')
-                    ->join('suppliers', 'suppliers.id', '=', 'purchase_orders.supplier_id');
+                    ->leftjoin('suppliers', 'suppliers.id', '=', 'purchase_orders.supplier_id');
         
         $totalFiltered = $qry->count();
         
@@ -191,7 +191,7 @@ class PurchaseOrderDeliveries extends Model
                 $adjust['purchase_order_id'] = $params['purchase_order_id'];
                 $adjust_qty = PurchaseOrderItems::adjustPurchaseOrderDeliveredItems($adjust);
                 
-                if ($adjust_qty == null) {
+                if (isset($adjust_qty['status']) && $adjust_qty['status'] == 'error') {
                     DB::rollBack();
                     return response()->json($adjust_qty);
                 }
@@ -231,7 +231,7 @@ class PurchaseOrderDeliveries extends Model
                 $adjust['purchase_order_id'] = $params['purchase_order_id'];
                 $adjust_qty = PurchaseOrderItems::adjustPurchaseOrderDeliveredItems($adjust);
                 
-                if ($adjust_qty == null) {
+                if (isset($adjust_qty['status']) && $adjust_qty['status'] == 'error') {
                     DB::rollBack();
                     return response()->json($adjust_qty);
                 }
