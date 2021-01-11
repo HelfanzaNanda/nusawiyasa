@@ -173,6 +173,7 @@ class PurchaseOrderDeliveries extends Model
         if (isset($params['id']) && $params['id']) {
             $id = $params['id'];
             unset($params['id']);
+            unset($params['serial']);
 
             $update = self::where('id', $id)->update($receipt_of_goods);
 
@@ -361,5 +362,9 @@ class PurchaseOrderDeliveries extends Model
         return response()->json([
             'data' => $db->get()
         ]);
+    }
+
+    public function purchase_order(){
+        return $this->belongsTo(PurchaseOrders::class);
     }
 }

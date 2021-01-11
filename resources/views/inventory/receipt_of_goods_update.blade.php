@@ -15,12 +15,15 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">No. PO</label>
             <div class="col-md-10">
-              <select id="input-po" name="purchase_order_id"> 
-                <option value="0"> - Pilih PO - </option>
+              <input class="form-control floating" type="text" id="input-bpb-number" name="serial" value="{{ $delivery->purchase_order->number }}">
+              <input type="hidden" name="purchase_order_id" value="{{ $delivery->purchase_order_id }}">
+              {{-- <select id="input-po" name="purchase_order_id">  --}}
+
+                {{-- <option value="0"> - Pilih PO - </option>
                 @foreach($purchase_orders as $purchase_order)
                   <option value="{{$purchase_order['id']}}" {{ ($purchase_order['id'] == $delivery->purchase_order_id) ? 'selected' : ''}} >{{$purchase_order['number']}}</option>
                 @endforeach
-              </select>
+              </select> --}}
             </div>
           </div>
           <div class="form-group row">
@@ -71,8 +74,7 @@
                                     <input type="hidden" name="inventory_id[]" value="{{ $item->inventory->id }}">
                                 </td>
                                 <td>
-                                    {{ $item->delivered_qty }}
-                                    <input type="hidden" name="delivered_qty[]" value="{{ $item->delivered_qty }}">
+                                    <input type="text" class="form-control" name="delivered_qty[]" value="{{ $item->delivered_qty }}">
                                 </td>
                                 <td>
                                     {{ $item->inventory->unit->name }}

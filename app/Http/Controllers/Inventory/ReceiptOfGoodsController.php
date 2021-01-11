@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Inventory;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Inventory\Suppliers;
 use App\Http\Models\Purchase\PurchaseOrderDeliveries;
+use App\Http\Models\Purchase\PurchaseOrderDeliveryItems;
 use App\Http\Models\Purchase\PurchaseOrders;
 use App\Http\Models\Ref\Province;
 use Illuminate\Http\Request;
+use App\Http\Models\Inventory\Inventories;
 use Illuminate\Support\Facades\DB;
 
 class ReceiptOfGoodsController extends Controller
@@ -33,7 +35,8 @@ class ReceiptOfGoodsController extends Controller
 
     public function edit($id)
     {
-        $delivery = PurchaseOrderDeliveries::whereId($id)->first();        
+        $delivery = PurchaseOrderDeliveries::whereId($id)->first();       
+         
         $purchase_orders = PurchaseOrders::whereIn('status', [4, 5])->get();
         $no = 1;
         return view('inventory.receipt_of_goods_update', compact('purchase_orders', 'delivery', 'no'));
@@ -117,7 +120,20 @@ class ReceiptOfGoodsController extends Controller
     }
 
     public function delete($id){
-        $data = PurchaseOrderDeliveries::whereId($id)->delete();
+        $items = PurchaseOrderDeliveryItems::where('purchase_order_delivery_id', $id)->get();
+        
+        foreach ($items as $item) {
+            $latest_qty = $item->inventory->stock;
+            //dd($latest_qty);
+            Inventories::whereId($item->inventory_id)
+                ->update(
+                    [
+                        'stock' => ($latest_qty + $item->delivered_qty)
+                    ]
+                );
+                PurchaseOrderDeliveryItems::where('id', $item->id)->delete();
+        }
+        PurchaseOrderDeliveries::whereId($id)->delete();
         return response()->json([
             'message' => 'data berhasil dihapus',
             'status' => 'success'
