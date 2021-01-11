@@ -350,7 +350,6 @@
           });
 
           var province_id = $("option:selected", '#input-province-update').data('province-code');
-          console.log(data.city);
           city = data.city;
 
           $.ajax({
