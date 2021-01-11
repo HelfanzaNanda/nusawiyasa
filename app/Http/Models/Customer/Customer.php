@@ -173,14 +173,25 @@ class Customer extends Model
         }
 
         if (isset($params['id']) && $params['id']) {
+
             $id = $params['id'];
             unset($params['id']);
+            $userId = self::whereId($id)->first()->user_id;
+
+            $user['name'] = $params['name'];
+            $user['email'] = $params['email'];
+            $user['username'] = $params['email'];
+            $user['phone'] = $params['phone'];
             unset($params['name']);
             unset($params['phone']);
             unset($params['email']);
+
             //dd($params);
-            $update = self::where('id', $id)->first()->update($params);
+            $update = self::where('id', $id)->update($params);
+            $data = Users::where('id',$userId)->update($user);
             
+            DB::commit();
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data Berhasil Diubah!'
