@@ -193,18 +193,18 @@ class PurchaseOrderController extends Controller
 
     public function delete($id)
     {
-        $items = PurchaseOrderItems::where('purchase_order_id', $id)->get();
+        // $items = PurchaseOrderItems::where('purchase_order_id', $id)->get();
         
-        foreach ($items as $item) {
-            $latest_qty = $item->inventory->stock;
-            Inventories::whereId($item->inventory_id)
-                ->update(
-                    [
-                        'stock' => ($latest_qty + $item->qty)
-                    ]
-                );
-                PurchaseOrderItems::where('purchase_order_id', $id)->delete();
-        }
+        // foreach ($items as $item) {
+        //     $latest_qty = $item->inventory->stock;
+        //     Inventories::whereId($item->inventory_id)
+        //         ->update(
+        //             [
+        //                 'stock' => ($latest_qty + $item->qty)
+        //             ]
+        //         );
+        //         PurchaseOrderItems::where('purchase_order_id', $id)->delete();
+        // }
         PurchaseOrders::destroy($id);
         return response()->json([
             'message' => 'data berhasil dihapus',
