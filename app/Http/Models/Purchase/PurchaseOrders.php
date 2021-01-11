@@ -70,7 +70,7 @@ class PurchaseOrders extends Model
 
     public function items()
     {
-        return $this->hasMany('App\Http\Models\Purchase\PurchaseOrderItems', 'purchase_order_id', 'id');
+        return $this->hasMany('App\Http\Models\Purchase\PurchaseOrderItems', 'purchase_order_id');
     }
 
     /**
@@ -181,18 +181,6 @@ class PurchaseOrders extends Model
             unset($params['_token']);
         }
 
-        if (isset($params['id']) && $params['id']) {
-            $id = $params['id'];
-            unset($params['id']);
-
-            $update = self::where('id', $id)->update($params);
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data Berhasil Diubah!'
-            ]);
-        }
-
         $purchase_order['number'] = $params['number'];
         $purchase_order['date'] = $params['date'];
         $purchase_order['status'] = 4;
@@ -210,6 +198,33 @@ class PurchaseOrders extends Model
         $purchase_order['approved_user_id'] = 0;
         $purchase_order['known_user_id'] = 0;
         $purchase_order['created_user_id'] = session()->get('_id');
+
+        if (isset($params['id']) && $params['id']) {
+            $id = $params['id'];
+            unset($params['id']);
+
+            $update = self::where('id', $id)->update($purchase_order);
+            PurchaseOrderItems::where('purchase_order_id', $id)->delete();
+            foreach ($params['item_inventory_id'] as $key => $val) {
+                PurchaseOrderItems::create([
+                    'purchase_order_id' => $id,
+                    'inventory_id' => $params['item_inventory_id'][$key],
+                    'qty' => $params['item_qty'][$key],
+                    'delivered_qty' => 0,
+                    'price' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_price'][$key])),
+                    'tax' => 0,
+                    'discount' => 0,
+                    'total' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_total'][$key])),
+                    'supplier_id' => $params['item_supplier_id'][$key]
+                ]);
+            }
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data Berhasil Diubah!'
+            ]);
+        }
+
 
         $insert = self::create($purchase_order);
 

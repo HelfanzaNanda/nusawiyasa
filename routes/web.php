@@ -149,6 +149,8 @@ Route::group([
 	Route::post('/purchase-order', 'Purchasing\PurchaseOrderController@insertData');
 	Route::post('/purchase-order-datatables', 'Purchasing\PurchaseOrderController@datatables');
 	Route::get('/purchase_orders/{id?}', 'Purchasing\PurchaseOrderController@get');
+	Route::get('/update-purchase-order/{id}', 'Purchasing\PurchaseOrderController@edit')->name('po.edit');
+	Route::get('/purchase-order/{id}/delete', 'Purchasing\PurchaseOrderController@delete');
 
 	Route::get('/receipt-of-goods', 'Inventory\ReceiptOfGoodsController@index');
 	Route::get('/create-receipt-of-goods', 'Inventory\ReceiptOfGoodsController@create');

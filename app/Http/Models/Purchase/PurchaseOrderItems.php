@@ -3,6 +3,7 @@
 namespace App\Http\Models\Purchase;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\Inventory\Suppliers;
 
 /**
  * @property int        $purchase_order_id
@@ -64,9 +65,14 @@ class PurchaseOrderItems extends Model
         'created_at', 'updated_at'
     ];
 
+    public function supplier()
+    {
+        return $this->belongsTo(Suppliers::class, 'supplier_id');
+    }
+
     public function inventory()
     {
-        return $this->hasOne('App\Http\Models\Inventory\Inventories', 'id', 'inventory_id');
+        return $this->belongsTo('App\Http\Models\Inventory\Inventories');
     }
 
     /**
