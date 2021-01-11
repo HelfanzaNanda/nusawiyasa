@@ -71,7 +71,7 @@ class PurchaseOrderDeliveries extends Model
 
     public function items()
     {
-        return $this->hasMany('App\Http\Models\Purchase\PurchaseOrderDeliveryItems', 'id', 'purchase_order_delivery_id');
+        return $this->hasMany('App\Http\Models\Purchase\PurchaseOrderDeliveryItems', 'purchase_order_delivery_id');
     }
 
     /**
@@ -165,22 +165,55 @@ class PurchaseOrderDeliveries extends Model
             unset($params['_token']);
         }
 
+        $receipt_of_goods['date'] = $params['date'];
+        $receipt_of_goods['purchase_order_id'] = $params['purchase_order_id'];
+        $receipt_of_goods['bpb_number'] = $params['bpb_number'];
+        $receipt_of_goods['invoice_number'] = $params['invoice_number'];
+
         if (isset($params['id']) && $params['id']) {
             $id = $params['id'];
             unset($params['id']);
 
-            $update = self::where('id', $id)->update($params);
+            $update = self::where('id', $id)->update($receipt_of_goods);
 
+            PurchaseOrderDeliveryItems::where('purchase_order_delivery_id', $id)->delete();
+
+            foreach ($params['inventory_id'] as $key => $val) {
+                PurchaseOrderDeliveryItems::create([
+                    'purchase_order_delivery_id' => $id,
+                    'inventory_id' => $val,
+                    'delivered_qty' => $params['delivered_qty'][$key],
+                    'note' => $params['note'][$key],
+                ]);
+
+                $adjust['inventory_id'] = $val;
+                $adjust['delivered_qty'] = $params['delivered_qty'][$key];
+                $adjust['purchase_order_id'] = $params['purchase_order_id'];
+                $adjust_qty = PurchaseOrderItems::adjustPurchaseOrderDeliveredItems($adjust);
+                
+                if ($adjust_qty == null) {
+                    DB::rollBack();
+                    return response()->json($adjust_qty);
+                }
+
+                $adjust['qty'] = $adjust['delivered_qty'];
+                Inventories::stockMovement($adjust, 'in');
+
+                InventoryHistories::create([
+                    'ref_number' => $params['bpb_number'],
+                    'inventory_id' => $val,
+                    'qty' => $params['delivered_qty'][$key],
+                    'date' => $params['date'],
+                    'type' => 'in',
+                    'models' => __CLASS__
+                ]);
+            }
+            DB::commit();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data Berhasil Diubah!'
             ]);
         }
-
-        $receipt_of_goods['date'] = $params['date'];
-        $receipt_of_goods['purchase_order_id'] = $params['purchase_order_id'];
-        $receipt_of_goods['bpb_number'] = $params['bpb_number'];
-        $receipt_of_goods['invoice_number'] = $params['invoice_number'];
 
         $insert = self::create($receipt_of_goods);
 
@@ -197,8 +230,8 @@ class PurchaseOrderDeliveries extends Model
                 $adjust['delivered_qty'] = $params['delivered_qty'][$key];
                 $adjust['purchase_order_id'] = $params['purchase_order_id'];
                 $adjust_qty = PurchaseOrderItems::adjustPurchaseOrderDeliveredItems($adjust);
-
-                if ($adjust_qty['status'] == 'error') {
+                
+                if ($adjust_qty == null) {
                     DB::rollBack();
                     return response()->json($adjust_qty);
                 }

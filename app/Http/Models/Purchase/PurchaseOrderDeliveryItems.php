@@ -66,4 +66,8 @@ class PurchaseOrderDeliveryItems extends Model
     // Functions ...
 
     // Relations ...
+    public function inventory()
+    {
+        return $this->belongsTo('App\Http\Models\Inventory\Inventories', 'inventory_id');
+    }
 }

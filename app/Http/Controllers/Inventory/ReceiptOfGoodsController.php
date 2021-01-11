@@ -33,7 +33,10 @@ class ReceiptOfGoodsController extends Controller
 
     public function edit($id)
     {
-
+        $delivery = PurchaseOrderDeliveries::whereId($id)->first();        
+        $purchase_orders = PurchaseOrders::whereIn('status', [4, 5])->get();
+        $no = 1;
+        return view('inventory.receipt_of_goods_update', compact('purchase_orders', 'delivery', 'no'));
     }
 
     public function datatables(Request $request)
@@ -89,8 +92,8 @@ class ReceiptOfGoodsController extends Controller
                 $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';
                 $nestedData['action'] .='            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(159px, 32px, 0px);">';
                 $nestedData['action'] .='                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#edit_leave"><i class="fa fa-info m-r-5"></i> Detail</a>';
-                $nestedData['action'] .='                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#edit_leave"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
-                $nestedData['action'] .='                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
+                $nestedData['action'] .='                <a class="dropdown-item" href="'.route('receipt_a.edit', $row['id']).'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
+                $nestedData['action'] .='                <a class="dropdown-item" id="delete" data-id="'.$row['id'].'" href="#" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
                 $nestedData['action'] .='            </div>';
                 $nestedData['action'] .='        </div>';
                 $data[] = $nestedData;
@@ -111,5 +114,13 @@ class ReceiptOfGoodsController extends Controller
     public function detail($id)
     {
 
+    }
+
+    public function delete($id){
+        $data = PurchaseOrderDeliveries::whereId($id)->delete();
+        return response()->json([
+            'message' => 'data berhasil dihapus',
+            'status' => 'success'
+        ]);
     }
 }
