@@ -330,11 +330,25 @@
             width: '100%'
           });
 
-          $('#input-city-update').select2()
-          $('#input-city-update').val(data.province)
-          $('#input-city-update').select2().trigger('change');
-          $('#input-city-update').select2({
-            width: '100%'
+          var province_id = $("option:selected", '#input-province-update').data('province-code');
+          city = data.city;
+
+          $.ajax({
+            url: BASE_URL+'/city_by_province/'+province_id,
+            type: "GET",
+            dataType: "json",
+            beforeSend: function() {
+                $('#input-city-update').empty();
+            },
+            success: function(data) {
+              $.each(data, function(key, value) {
+                  tmp = '';
+                  if(city == value.name){
+                    tmp = 'selected';
+                  }
+                  $('#input-city-update').append('<option value="'+ value.name +'" data-city="'+ value.code+'"'+tmp+'>' + value.name + '</option>');
+              });
+            }
           });
         }
       })
