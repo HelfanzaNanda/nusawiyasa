@@ -146,12 +146,11 @@
                                     <input type="hidden" name="item_inventory_id[]" value="{{ $item->inventory->id }}">
                                 </td>
                                 <td>
-                                    {{ $item->supplier->name }}
-                                    <input type="hidden" name="item_supplier_id[]" value="{{ $item->supplier->id }}">
+                                    {{ ($item->supplier) ? $item->supplier->name : '' }}
+                                    <input type="hidden" name="item_supplier_id[]" value="{{ ($item->supplier) ? $item->supplier->id : '0' }}">
                                 </td>
                                 <td>
-                                    {{ $item->qty }}
-                                    <input type="hidden" name="item_qty[]" value="{{ $item->qty }}">
+                                    <input type="text" class="form-control" name="item_qty[]" id="input-item-qty" value="{{ $item->qty }}">
                                 </td>
                                 <td>{{ $item->inventory->unit->name }}</td>
                                 <td>
@@ -523,5 +522,17 @@
       }
     });
   });
+  $('#general_comments_tbody').on('keyup', 'input', function(data){
+      console.log(this.value);
+    var row = $(this).closest("tr");
+    row.find("td").eq(5).html();
+    var price = row.find("td:eq(5) input").val()
+    var subTotal = addSeparator((this.value * detectFloat(price)).toFixed(2), '.', '.', ',')
+
+     cols = subTotal+'<input type="hidden" name="item_total[]" value='+ subTotal +'>';
+     row.find("td").eq(6).html(cols)
+     calculateTotal()
+     totalCalc();
+  })
 </script>
 @endsection

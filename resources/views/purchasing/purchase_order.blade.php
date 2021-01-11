@@ -129,6 +129,5 @@
           })
         })
   });
-  purchase-order
 </script>
 @endsection
