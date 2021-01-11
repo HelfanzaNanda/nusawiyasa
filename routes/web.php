@@ -177,4 +177,6 @@ Route::group([
 	Route::get('/user', 'User\UserController@index');
 	Route::post('/user', 'User\UserController@insertData');
 	Route::post('/user-datatables', 'User\UserController@datatables');
+	Route::get('/user/{id:}', 'User\UserController@detail');
+	Route::get('/user/{id}/delete', 'User\UserController@delete');
 });

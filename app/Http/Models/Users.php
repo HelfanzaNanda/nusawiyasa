@@ -101,21 +101,22 @@ class Users extends Model
                 unset($params['password']);
             }
 
-            $user = self::where('employee_code', $employee_code)->first();
+            $user = self::where('id', $employee_code)->first();
 
-            if (isset($params['old_password']) && $params['old_password']) {
-                if (!Hash::check($params['old_password'], $user->password)) {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'GAGAL! Password Lama Tidak Sesuai!'
-                    ]);
-                }
+            // if (isset($params['old_password']) && $params['old_password']) {
+            //     if (!Hash::check($params['old_password'], $user->password)) {
+            //         return response()->json([
+            //             'status' => 'error',
+            //             'message' => 'GAGAL! Password Lama Tidak Sesuai!'
+            //         ]);
+            //     }
 
-                unset($params['old_password']);
-            }
+            //     unset($params['old_password']);
+            // }
 
-            $update = self::where('employee_code', $employee_code)->update($params);
-
+            $update = self::where('id', $employee_code)->update($params);
+            
+            DB::commit();
             return response()->json([
                 'status' => 'success',
                 'message' => 'User Sukses Diubah!'
