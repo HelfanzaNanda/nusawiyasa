@@ -69,7 +69,7 @@ class ReceiptOfGoodsRequest extends Model
 
     public function items()
     {
-        return $this->hasMany('App\Http\Models\Purchase\ReceiptOfGoodsRequestItems', 'id', 'receipt_of_goods_request_id');
+        return $this->hasMany(ReceiptOfGoodsRequestItems::class);
     }
 
     /**
@@ -175,18 +175,6 @@ class ReceiptOfGoodsRequest extends Model
             unset($params['_token']);
         }
 
-        if (isset($params['id']) && $params['id']) {
-            $id = $params['id'];
-            unset($params['id']);
-
-            $update = self::where('id', $id)->update($params);
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data Berhasil Diubah!'
-            ]);
-        }
-
         $request_of_goods_request['number'] = $params['number'];
         $request_of_goods_request['date'] = $params['date'];
         $request_of_goods_request['lot_id'] = $params['lot_id'];
@@ -194,6 +182,44 @@ class ReceiptOfGoodsRequest extends Model
         $request_of_goods_request['approved_user_id'] = 0;
         $request_of_goods_request['known_user_id'] = 0;
         $request_of_goods_request['created_user_id'] = session()->get('_id');
+
+        if (isset($params['id']) && $params['id']) {
+            $id = $params['id'];
+            unset($params['id']);
+
+            $update = self::where('id', $id)->update($request_of_goods_request);
+
+            ReceiptOfGoodsRequestItems::whereReceiptOfGoodsRequestId($id)->delete();
+            
+            foreach ($params['inventory_id'] as $key => $val) {
+                ReceiptOfGoodsRequestItems::create([
+                    'receipt_of_goods_request_id' => $id,
+                    'inventory_id' => $val,
+                    'qty' => $params['qty'][$key],
+                    'note' => $params['note'][$key],
+                ]);
+
+                $adjust['inventory_id'] = $val;
+                $adjust['qty'] = $params['qty'][$key];
+
+                Inventories::stockMovement($adjust, 'out');
+
+                InventoryHistories::create([
+                    'ref_number' => $params['number'],
+                    'inventory_id' => $val,
+                    'qty' => $params['qty'][$key],
+                    'date' => $params['date'],
+                    'type' => 'out',
+                    'models' => __CLASS__
+                ]); 
+            }
+
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data Berhasil Diubah!'
+            ]);
+        }
 
         $insert = self::create($request_of_goods_request);
 
