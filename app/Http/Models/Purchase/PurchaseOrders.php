@@ -204,6 +204,7 @@ class PurchaseOrders extends Model
             unset($params['id']);
 
             $update = self::where('id', $id)->update($purchase_order);
+            self::adjustPOStatus($id);
             PurchaseOrderItems::where('purchase_order_id', $id)->delete();
             foreach ($params['item_inventory_id'] as $key => $val) {
                 PurchaseOrderItems::create([

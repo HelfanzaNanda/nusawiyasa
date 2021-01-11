@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Inventory;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Inventory\Suppliers;
 use App\Http\Models\Ref\Province;
+use App\Http\Models\Ref\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -113,6 +114,9 @@ class SupplierController extends Controller
     public function detail($id)
     {
         $supplier = Suppliers::whereId($id)->first();
+        $city = City::whereName($supplier->city)->first();
+        $supplier->province = $city->province->name;
+
         return response()->json($supplier);
     }
 
