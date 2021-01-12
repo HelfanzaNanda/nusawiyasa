@@ -177,6 +177,7 @@ class PurchaseOrderDeliveries extends Model
 
             $update = self::where('id', $id)->update($receipt_of_goods);
 
+            $purchaseItem = PurchaseOrderDeliveryItems::where('purchase_order_delivery_id', $id)->get();
             PurchaseOrderDeliveryItems::where('purchase_order_delivery_id', $id)->delete();
 
             foreach ($params['inventory_id'] as $key => $val) {
@@ -188,8 +189,9 @@ class PurchaseOrderDeliveries extends Model
                 ]);
 
                 $adjust['inventory_id'] = $val;
-                $adjust['delivered_qty'] = $params['delivered_qty'][$key];
+                $adjust['delivered_qty'] = $params['delivered_qty'][$key] - $purchaseItem[$key]->delivered_qty;
                 $adjust['purchase_order_id'] = $params['purchase_order_id'];
+                
                 $adjust_qty = PurchaseOrderItems::adjustPurchaseOrderDeliveredItems($adjust);
                 
                 if (isset($adjust_qty['status']) && $adjust_qty['status'] == 'error') {

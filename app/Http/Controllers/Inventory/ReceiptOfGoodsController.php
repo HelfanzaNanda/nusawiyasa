@@ -128,7 +128,7 @@ class ReceiptOfGoodsController extends Controller
             Inventories::whereId($item->inventory_id)
                 ->update(
                     [
-                        'stock' => ($latest_qty + $item->delivered_qty)
+                        'stock' => ($latest_qty - $item->delivered_qty)
                     ]
                 );
                 PurchaseOrderDeliveryItems::where('id', $item->id)->delete();
