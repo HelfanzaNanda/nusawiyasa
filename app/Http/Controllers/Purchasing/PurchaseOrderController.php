@@ -42,10 +42,10 @@ class PurchaseOrderController extends Controller
     public function edit($id)
     {
         $suppliers = Suppliers::get();
-        $lots = Lot::selectClusterBySession();
         $clusters = Cluster::selectClusterBySession();
         $request_materials = RequestMaterials::selectClusterBySession();
         $purchase = PurchaseOrders::whereId($id)->first();
+        $lots = Lot::whereClusterId($purchase->cluster_id)->get();
 
         if($purchase){
             $purchase->subtotal = self::withoutCurency($purchase->subtotal);

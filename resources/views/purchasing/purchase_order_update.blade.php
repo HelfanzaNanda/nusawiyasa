@@ -7,7 +7,7 @@
   <div class="col-lg-12">
     <div class="card">
       <div class="card-header">
-        <h4 class="card-title mb-0">Tambah Purchase Order</h4>
+        <h4 class="card-title mb-0">Edit Purchase Order</h4>
       </div>
       <form id="add-form" method="POST" action="#">
         <div class="card-body">
