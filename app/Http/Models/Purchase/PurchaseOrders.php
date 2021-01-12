@@ -198,13 +198,13 @@ class PurchaseOrders extends Model
         $purchase_order['approved_user_id'] = 0;
         $purchase_order['known_user_id'] = 0;
         $purchase_order['created_user_id'] = session()->get('_id');
-
+        $purchase_order['lot_id'] = $params['lot_id'];
         if (isset($params['id']) && $params['id']) {
             $id = $params['id'];
             unset($params['id']);
-
             $update = self::where('id', $id)->update($purchase_order);
             self::adjustPOStatus($id);
+
             PurchaseOrderItems::where('purchase_order_id', $id)->delete();
             foreach ($params['item_inventory_id'] as $key => $val) {
                 PurchaseOrderItems::create([
