@@ -50,7 +50,7 @@ class DeliveryOrders extends Model
      * @var array
      */
     protected $hidden = [
-        
+
     ];
 
     /**
@@ -116,11 +116,11 @@ class DeliveryOrders extends Model
         }
 
         $qry = self::select($_select);
-        
+
         $totalFiltered = $qry->count();
-        
+
         if (empty($search)) {
-            
+
             if ($length > 0) {
                 $qry->skip($start)
                     ->take($length);
@@ -242,7 +242,7 @@ class DeliveryOrders extends Model
 
         $countAll = $db->count();
         $currentPage = $paramsPage > 0 ? $paramsPage - 1 : 0;
-        $page = $paramsPage > 0 ? $paramsPage + 1 : 2; 
+        $page = $paramsPage > 0 ? $paramsPage + 1 : 2;
         $nextPage = env('APP_URL').'/inventories?page='.$page;
         $prevPage = env('APP_URL').'/inventories?page='.($currentPage < 1 ? 1 : $currentPage);
         $totalPage = ceil((int)$countAll / 10);
@@ -301,5 +301,10 @@ class DeliveryOrders extends Model
         return response()->json([
             'data' => $db->get()
         ]);
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(DeliveryOrderItems::class, 'delivery_order_id', 'id');
     }
 }

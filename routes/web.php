@@ -115,6 +115,7 @@ Route::group([
 	Route::get('/create-delivery-order', 'Inventory\DeliveryOrderController@create');
 	Route::post('/delivery-order', 'Inventory\DeliveryOrderController@insertData');
 	Route::post('/delivery-order-datatables', 'Inventory\DeliveryOrderController@datatables');
+	Route::get('/delivery-order-pdf/{id}', 'Inventory\DeliveryOrderController@generatePdf');
 
 	Route::get('/unit', 'Inventory\UnitController@index');
 	Route::post('/unit', 'Inventory\UnitController@insertData');
