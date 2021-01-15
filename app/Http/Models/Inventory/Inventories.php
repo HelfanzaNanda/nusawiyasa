@@ -47,7 +47,7 @@ class Inventories extends Model
      * @var array
      */
     protected $hidden = [
-        
+
     ];
 
     /**
@@ -68,9 +68,14 @@ class Inventories extends Model
         'created_at', 'updated_at'
     ];
 
+    // public function unit()
+    // {
+    //     return $this->hasOne('App\Http\Models\Inventory\InventoryUnits', 'id', 'unit_id');
+    // }
+
     public function unit()
     {
-        return $this->hasOne('App\Http\Models\Inventory\InventoryUnits', 'id', 'unit_id');
+        return $this->belongsTo(InventoryUnits::class, 'unit_id', 'id');
     }
 
     /**
@@ -122,15 +127,15 @@ class Inventories extends Model
                     ->join('inventory_units', 'inventory_units.id', '=', 'inventories.unit_id')
                     ->join('clusters', 'clusters.id', 'inventories.cluster_id');
                     // ->join('inventory_categories', 'inventory_categories.id', '=', 'inventories.category_id');
-        
+
         if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
             $qry->where('inventories.cluster_id', $session['_cluster_id']);
         }
 
         $totalFiltered = $qry->count();
-        
+
         if (empty($search)) {
-            
+
             if ($length > 0) {
                 $qry->skip($start)
                     ->take($length);
@@ -245,7 +250,7 @@ class Inventories extends Model
 
         $countAll = $db->count();
         $currentPage = $paramsPage > 0 ? $paramsPage - 1 : 0;
-        $page = $paramsPage > 0 ? $paramsPage + 1 : 2; 
+        $page = $paramsPage > 0 ? $paramsPage + 1 : 2;
         $nextPage = env('APP_URL').'/inventories?page='.$page;
         $prevPage = env('APP_URL').'/inventories?page='.($currentPage < 1 ? 1 : $currentPage);
         $totalPage = ceil((int)$countAll / 10);

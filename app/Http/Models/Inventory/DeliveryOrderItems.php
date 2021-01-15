@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Inventory;
 
+use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 
@@ -49,7 +50,7 @@ class DeliveryOrderItems extends Model
      * @var array
      */
     protected $hidden = [
-        
+
     ];
 
     /**
@@ -73,10 +74,16 @@ class DeliveryOrderItems extends Model
         'created_at', 'updated_at'
     ];
 
+    // public function inventory()
+    // {
+    //     return $this->hasOne('App\Http\Models\Inventory\Inventory', 'id', 'inventory_id');
+    // }
+
     public function inventory()
     {
         return $this->belongsTo('App\Http\Models\Inventory\Inventories', 'inventory_id');
     }
+
 
     /**
      * Indicates if the model should be timestamped.
@@ -116,11 +123,11 @@ class DeliveryOrderItems extends Model
         }
 
         $qry = self::select($_select);
-        
+
         $totalFiltered = $qry->count();
-        
+
         if (empty($search)) {
-            
+
             if ($length > 0) {
                 $qry->skip($start)
                     ->take($length);
@@ -231,7 +238,7 @@ class DeliveryOrderItems extends Model
 
         $countAll = $db->count();
         $currentPage = $paramsPage > 0 ? $paramsPage - 1 : 0;
-        $page = $paramsPage > 0 ? $paramsPage + 1 : 2; 
+        $page = $paramsPage > 0 ? $paramsPage + 1 : 2;
         $nextPage = env('APP_URL').'/inventories?page='.$page;
         $prevPage = env('APP_URL').'/inventories?page='.($currentPage < 1 ? 1 : $currentPage);
         $totalPage = ceil((int)$countAll / 10);
@@ -290,5 +297,37 @@ class DeliveryOrderItems extends Model
         return response()->json([
             'data' => $db->get()
         ]);
+    }
+
+    public function deleveryOrder()
+    {
+        return $this->belongsTo(DeliveryOrders::class, 'delivery_order_id', 'id');
+    }
+
+    public static function generatePdf($id)
+    {
+        $orderItems = self::whereHas('deleveryOrder', function($order) use ($id){
+            $order->where('id', $id);
+        })->get();
+
+        $result = [];
+        foreach ($orderItems as $k => $val) {
+            $body[] = [
+                'code'  => $val->inventory->code ?? '-',
+                'name'  => $val->inventory->name,
+                'total' => $val->sum('qty'),
+                'unit'  => $val->inventory->unit->name,
+                'note'  => $val->note
+            ];
+            $item = [
+                'date' => Carbon::parse($val->deleveryOrder->date)->translatedFormat('d F Y'),
+                'address' => $val->deleveryOrder->dest_address,
+                'name' => $val->deleveryOrder->dest_name,
+                'number' => $val->deleveryOrder->number,
+                'body' => $body
+            ];
+            $result = $item;
+        }
+        return $result;
     }
 }
