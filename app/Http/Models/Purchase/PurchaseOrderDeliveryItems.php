@@ -79,8 +79,8 @@ class PurchaseOrderDeliveryItems extends Model
                 'note' => $val->note ?? '-',
             ];
             $item = [
-                'supplier_name' => $val->purchaseOrderDelivery->purchaseOrder->supplier->name,
-                'supplier_address' => $val->purchaseOrderDelivery->purchaseOrder->supplier->address,
+                'supplier_name' => $val->purchaseOrderDelivery->purchaseOrder->supplier ? $val->purchaseOrderDelivery->purchaseOrder->supplier->name : '-',
+                'supplier_address' => $val->purchaseOrderDelivery->purchaseOrder->supplier ? $val->purchaseOrderDelivery->purchaseOrder->supplier->address : '-',
                 'bpb_number' => $val->purchaseOrderDelivery->bpb_number,
                 'date' => Carbon::parse($val->purchaseOrderDelivery->date)->translatedFormat('d F Y'),
                 'po_number' => $val->purchaseOrderDelivery->purchaseOrder->number,
@@ -98,10 +98,10 @@ class PurchaseOrderDeliveryItems extends Model
         return $this->belongsTo(PurchaseOrderDeliveries::class);
     }
 
-    public function inventory()
-    {
-        return $this->belongsTo(Inventories::class);
-    }
+    // public function inventory()
+    // {
+    //     return $this->belongsTo(Inventories::class);
+    // }
 
     // Scopes...
 
