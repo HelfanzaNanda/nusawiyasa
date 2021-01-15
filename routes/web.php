@@ -88,6 +88,7 @@ Route::group([
 	Route::post('/rap-datatables', 'Project\RAPController@datatables');
 
 	Route::get('/request-material', 'Project\RequestMaterialController@index');
+	Route::get('/request-material-pdf/{id}', 'Project\RequestMaterialController@generatePdf');
 	Route::get('/create-request-material', 'Project\RequestMaterialController@create');
 	Route::post('/request-material', 'Project\RequestMaterialController@insertData');
 	Route::post('/request-material-datatables', 'Project\RequestMaterialController@datatables');
