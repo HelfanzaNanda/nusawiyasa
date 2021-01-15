@@ -38,6 +38,11 @@ class Lot extends Model
         return $this->hasOne('App\Http\Models\Cluster\Cluster', 'id', 'cluster_id');
     }
 
+    public function cluster()
+    {
+        return $this->belongsTo(Cluster::class);
+    }
+
     public static function mapSchema($params = [], $user = [])
     {
         $model = new self;
@@ -103,7 +108,7 @@ class Lot extends Model
 
         $countAll = $db->count();
         $currentPage = $paramsPage > 0 ? $paramsPage - 1 : 0;
-        $page = $paramsPage > 0 ? $paramsPage + 1 : 2; 
+        $page = $paramsPage > 0 ? $paramsPage + 1 : 2;
         $nextPage = env('APP_URL').'/api/users?page='.$page;
         $prevPage = env('APP_URL').'/api/users?page='.($currentPage < 1 ? 1 : $currentPage);
         $totalPage = ceil((int)$countAll / 10);
@@ -208,9 +213,9 @@ class Lot extends Model
         }
 
         $totalFiltered = $qry->count();
-        
+
         if (empty($search)) {
-            
+
             if ($length > 0) {
                 $qry->skip($start)
                     ->take($length);
@@ -270,7 +275,7 @@ class Lot extends Model
         if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
             $qry->where('lots.cluster_id', $session['_cluster_id']);
         }
-        
+
         return $qry->get();
     }
 }

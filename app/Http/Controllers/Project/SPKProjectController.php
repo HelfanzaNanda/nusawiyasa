@@ -7,6 +7,7 @@ use App\Http\Models\Customer\CustomerLot;
 use App\Http\Models\Project\SpkProjects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class SPKProjectController extends Controller
 {
@@ -35,8 +36,8 @@ class SPKProjectController extends Controller
                     ->join('users', 'users.id', '=', 'customers.user_id')
                     ->join('lots', 'lots.id', '=', 'customer_lots.lot_id')
                     ->join('clusters', 'clusters.id', '=', 'lots.cluster_id');
-                    
-        
+
+
         if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
             $lots->where('lots.cluster_id', $session['_cluster_id']);
         }
@@ -121,6 +122,7 @@ class SPKProjectController extends Controller
                 $nestedData['action'] .='            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(159px, 32px, 0px);">';
                 $nestedData['action'] .='                <a class="dropdown-item" id="edit" href="#" data-toggle="modal" data-target="#edit_leave" data-id="'.$row['id'].'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
                 $nestedData['action'] .='                <a class="dropdown-item" id="delete" href="#" data-toggle="modal" data-target="#delete_approve"  data-id="'.$row['id'].'"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
+                $nestedData['action'] .='                <a class="dropdown-item" target="_blank" href="'.url('/spk-project-pdf/'.$row['id']).'"><i class="fa fa-print m-r-5"></i> Cetak</a>';
                 $nestedData['action'] .='            </div>';
                 $nestedData['action'] .='        </div>';
                 $data[] = $nestedData;
@@ -152,5 +154,19 @@ class SPKProjectController extends Controller
             'message' => 'data berhasil dihapus',
             'status' => 'success'
         ]);
+    }
+
+    public function generatePdf($id)
+    {
+        //return json_encode(SpkProjects::generatePdf($id));
+        // return view('project.spk_project_pdf', [
+        //     'data' => SpkProjects::generatePdf($id)
+        // ]);
+
+        $pdf = PDF::setOptions(['isRemoteEnabled' => true])
+        ->loadview('project.spk_project_pdf', [
+            'data' => SpkProjects::generatePdf($id)
+        ]);
+        return $pdf->download('Surat Perintah Kerja.pdf');
     }
 }

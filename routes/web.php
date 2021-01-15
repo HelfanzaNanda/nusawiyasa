@@ -76,11 +76,12 @@ Route::group([
 	Route::get('/ref/term_purchasing_customers', ['as' => 'ref.term_purchasing_customers', 'uses' => 'Ref\RefTermPurchasingCustomerController@get']);
 
 	Route::get('/spk-project', 'Project\SPKProjectController@index');
+	Route::get('/spk-project-pdf/{id}', 'Project\SPKProjectController@generatePdf');
 	Route::post('/spk-project', 'Project\SPKProjectController@insertData');
 	Route::post('/spk-project-datatables', 'Project\SPKProjectController@datatables');
 	Route::get('/spk-project/{id}', 'Project\SPKProjectController@detail');
 	Route::get('/spk-project/{id}/delete', 'Project\SPKProjectController@delete');
-	
+
 
 	Route::get('/customer-confirmation', 'Project\CustomerConfirmationController@index');
 	Route::get('/customer-confirmation/detail/{id}', 'Project\CustomerConfirmationController@detail');

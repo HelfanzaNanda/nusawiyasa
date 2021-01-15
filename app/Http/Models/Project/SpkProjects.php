@@ -2,6 +2,8 @@
 
 namespace App\Http\Models\Project;
 
+use App\Http\Models\Customer\CustomerLot;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 
@@ -55,7 +57,7 @@ class SpkProjects extends Model
      * @var array
      */
     protected $hidden = [
-        
+
     ];
 
     /**
@@ -116,15 +118,15 @@ class SpkProjects extends Model
                     ->join('users', 'users.id', '=', 'customers.user_id')
                     ->join('lots', 'lots.id', '=', 'customer_lots.lot_id')
                     ->join('clusters', 'clusters.id', '=', 'lots.cluster_id');
-        
+
         if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
             $qry->where('lots.cluster_id', $session['_cluster_id']);
         }
 
         $totalFiltered = $qry->count();
-        
+
         if (empty($search)) {
-            
+
             if ($length > 0) {
                 $qry->skip($start)
                     ->take($length);
@@ -240,7 +242,7 @@ class SpkProjects extends Model
 
         $countAll = $db->count();
         $currentPage = $paramsPage > 0 ? $paramsPage - 1 : 0;
-        $page = $paramsPage > 0 ? $paramsPage + 1 : 2; 
+        $page = $paramsPage > 0 ? $paramsPage + 1 : 2;
         $nextPage = env('APP_URL').'/inventories?page='.$page;
         $prevPage = env('APP_URL').'/inventories?page='.($currentPage < 1 ? 1 : $currentPage);
         $totalPage = ceil((int)$countAll / 10);
@@ -299,5 +301,29 @@ class SpkProjects extends Model
         return response()->json([
             'data' => $db->get()
         ]);
+    }
+
+    public static function generatePdf($id)
+    {
+        $spkProject = self::findOrFail($id);
+        $item = [
+            'number_project' => $spkProject->number,
+            'from' => $spkProject->customerLot->lot->cluster->name,
+            'date' => Carbon::parse($spkProject->date)->translatedFormat('d F Y'),
+            'title' =>$spkProject->title,
+            'customer_name' => $spkProject->customerLot->customer->user->name,
+            'lot_number' => $spkProject->customerLot->lot->unit_number,
+            'block' => $spkProject->customerLot->lot->block,
+            'surface_area' => $spkProject->customerLot->lot->surface_area,
+            'note' => $spkProject->note,
+            'status' => 'lorem ipsum',
+        ];
+
+        return $item;
+    }
+
+    public function customerLot()
+    {
+        return $this->belongsTo(CustomerLot::class);
     }
 }

@@ -72,9 +72,10 @@
             top: 90%;
             left: 10%;
         }
-        #tfooter td{
+        #tfooter .ttd{
             padding-bottom: 70px;
         }
+
     </style>
 </head>
 
@@ -87,21 +88,26 @@
         <img src="{{ env("SITE_FOOTER_PDF_URL") }}" width="100%" height="100%"/>
     </footer>
 
-    <div style="margin-top: 20px;">
-        <h3 style=" width: 100%; text-align: center;"><b> REQUESITION MATERIAL FORM (RMF) </b></h3>
+    <div>
+        <div style="width: 100%; text-align: center; ">
+            <h3 style="display: inline"><b> SURAT PERINTAH KERJA </b></h3>
+            <p style="padding: 0px; margin: 0px;">{{ $data['number_project'] }}</p>
+
+            <div></div>
+        </div>
         <div class="content">
             <table id="header">
                 <tr>
                     <td style="width: 20%">Kpd Yth</td>
-                    <td > : Purchasing Departement</td>
+                    <td> : Purchasing Departement</td>
+                </tr>
+                <tr>
+                    <td style="width: 20%">Dari</td>
+                    <td > : {{ $data['from'] }}</td>
                 </tr>
                 <tr>
                     <td style="width: 20%">Tanggal</td>
                     <td > : {{ $data['date'] }}</td>
-                </tr>
-                <tr>
-                    <td style="width: 20%">RMF Nomor</td>
-                    <td > : {{ $data['rmf_number'] }}</td>
                 </tr>
                 <tr>
                     <td style="width: 20%">Perihal</td>
@@ -110,29 +116,45 @@
             </table>
             <table id="table">
                 <tr>
-                    <th style="width: 10%">No</th>
-                    <th>Nama Barang</th>
-                    <th style="width: 10%">Merk</th>
-                    <th style="width: 10%">Jumlah</th>
+                    <th style="width: 50%" >Uraian Pekerjaan</th>
+                    <th>Keterangan</th>
                 </tr>
-                @foreach ($data['body'] as $val)
+                <tr>
+                    <td>Mohon untuk segera dilaksanankan <br>
+                        pembagunan untuk unit rumah untuk, <br>
+                        <p>Nama Konsumen : {{ $data['customer_name'] }}<br></p>
+                        <p>Nomor Kavling : {{ $data['lot_number'] }}<br></p>
+                        <p>Type Rumah : {{ $data['block'] }}<br></p>
+                        <p>Luas Tanah : {{ $data['surface_area'] }}<br></p>
+                        <p>Status Perbankan : {{ $data['status'] }}<br></p>
+                    </td>
+                    <td>{{ $data['note'] }}</td>
+                </tr>
+                {{-- @foreach ($data['body'] as $val)
                 <tr class="text-center">
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $val['inventory_name'] }}</td>
                     <td>{{ $val['inventory_brand'] }}</td>
                     <td>{{ $val['total'] }}</td>
                 </tr>
-                @endforeach
+                @endforeach --}}
             </table>
 
             <table id="tfooter">
                 <tr>
-                    <td style="width: 20%;">Setujui Oleh,</td>
-                    <td style="width: 15%">Dibuat Oleh,</td>
+                    <td class="ttd" style="width: 20%;">Diterima Oleh,</td>
+                    <td class="ttd" style="width: 20%;">Setujui Oleh,</td>
+                    <td class="ttd" style="width: 15%">Dibuat Oleh,</td>
                 </tr>
-                <tr>
-                    <td >(Project Manager)</td>
-                    <td >(Project Implementers)</td>
+                <tr id="ttb">
+                    <td >(Oki Setyawan)</td>
+                    <td >(D Widi Nugroho)</td>
+                    <td ></td>
+                </tr>
+                <tr >
+                    <td >Project Manager</td>
+                    <td >Direktur Utama</td>
+                    <td >Marketing</td>
                 </tr>
             </table>
         </div>
