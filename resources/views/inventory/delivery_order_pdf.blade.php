@@ -47,7 +47,7 @@
     <div style="padding: 2rem">
         <div style="padding: 1rem; display: flex">
             <div><img src="{{ env("SITE_LOGO_URL") }}" style="width: 100px; height: auto;"></div>
-            <h3 style="margin-left: 35%"><b> SURAT JALAN </b></h3>
+            <h3 style="width: 100%; text-align: center;"><b> SURAT JALAN </b></h3>
         </div>
         <div class="content">
             <table id="header">
