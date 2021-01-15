@@ -99,6 +99,7 @@ Route::group([
 	Route::get('/rap/{id}/delete', 'Project\RAPController@delete');
 
 	Route::get('/request-material', 'Project\RequestMaterialController@index');
+	Route::get('/request-material-pdf/{id}', 'Project\RequestMaterialController@generatePdf');
 	Route::get('/create-request-material', 'Project\RequestMaterialController@create');
 	Route::post('/request-material', 'Project\RequestMaterialController@insertData');
 	Route::post('/request-material-datatables', 'Project\RequestMaterialController@datatables');
@@ -154,6 +155,7 @@ Route::group([
 	Route::get('/purchase-order/{id}/delete', 'Purchasing\PurchaseOrderController@delete');
 
 	Route::get('/receipt-of-goods', 'Inventory\ReceiptOfGoodsController@index');
+	Route::get('/receipt-of-goods-pdf/{id}', 'Inventory\ReceiptOfGoodsController@generatePdf');
 	Route::get('/create-receipt-of-goods', 'Inventory\ReceiptOfGoodsController@create');
 	Route::post('/receipt-of-goods', 'Inventory\ReceiptOfGoodsController@insertData');
 	Route::post('/receipt-of-goods-datatables', 'Inventory\ReceiptOfGoodsController@datatables');

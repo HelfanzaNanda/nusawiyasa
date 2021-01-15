@@ -7,9 +7,11 @@ use App\Http\Models\Project\RequestMaterials;
 use App\Http\Models\Project\SpkProjects;
 use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Cluster\Lot;
+use App\Http\Models\Project\RequestMaterialItems;
 use App\Http\Models\Ref\Province;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class RequestMaterialController extends Controller
 {
@@ -109,6 +111,7 @@ class RequestMaterialController extends Controller
                 $nestedData['action'] .='            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(159px, 32px, 0px);">';
                 $nestedData['action'] .='                <a class="dropdown-item" href="'.route('request_material.edit', $row['id']).'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
                 $nestedData['action'] .='                <a class="dropdown-item" id="delete" href="#" data-toggle="modal" data-target="#delete_approve" data-id="'.$row['id'].'"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
+                $nestedData['action'] .='                <a class="dropdown-item" target="_blank" href="'.url('/request-material-pdf/'.$row['id']).'"><i class="fa fa-print m-r-5"></i> Cetak</a>';
                 $nestedData['action'] .='            </div>';
                 $nestedData['action'] .='        </div>';
                 $data[] = $nestedData;
@@ -174,5 +177,19 @@ class RequestMaterialController extends Controller
             'message' => 'data berhasil dihapus',
             'status' => 'success'
         ]);
+    }
+
+    public function generatePdf($id)
+    {
+        //return json_encode(RequestMaterialItems::generatePdf($id));
+        // return view('project.request_material_pdf', [
+        //     'data' => RequestMaterialItems::generatePdf($id)
+        // ]);
+
+        $pdf = PDF::setOptions(['isRemoteEnabled' => true])
+        ->loadview('project.request_material_pdf', [
+            'data' => RequestMaterialItems::generatePdf($id)
+        ]);
+        return $pdf->download('Requesition Material Form.pdf');
     }
 }

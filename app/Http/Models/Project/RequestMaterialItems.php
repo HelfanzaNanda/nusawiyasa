@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Project;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -44,7 +45,7 @@ class RequestMaterialItems extends Model
      * @var array
      */
     protected $hidden = [
-        
+
     ];
 
     /**
@@ -75,6 +76,36 @@ class RequestMaterialItems extends Model
     public function inventory()
     {
         return $this->belongsTo('App\Http\Models\Inventory\Inventories', 'inventory_id');
+    }
+
+    public function requestMaterial()
+    {
+        return $this->belongsTo(RequestMaterials::class);
+    }
+
+    public static function generatePdf($id)
+    {
+        $requestMaterialItems =  self::with('requestMaterial')->whereHas('requestMaterial', function($reqMaterial) use ($id){
+            $reqMaterial->where('id', $id);
+        })->get();
+
+        $result = [];
+        foreach ($requestMaterialItems as $val) {
+            $body[] = [
+                'inventory_name' => $val->inventory_name,
+                'inventory_brand' => $val->brand ?? '-',
+                'total' => $val->qty
+            ];
+            $item = [
+                'date' => Carbon::parse($val->requestMaterial->date)->translatedFormat('d F Y'),
+                'rmf_number' => $val->requestMaterial->number,
+                'title' => $val->requestMaterial->title,
+                'body' => $body
+            ];
+
+            $result = $item;
+        }
+        return $result;
     }
     // Scopes...
 
