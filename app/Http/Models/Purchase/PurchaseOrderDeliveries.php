@@ -48,7 +48,7 @@ class PurchaseOrderDeliveries extends Model
      * @var array
      */
     protected $hidden = [
-        
+
     ];
 
     /**
@@ -72,6 +72,11 @@ class PurchaseOrderDeliveries extends Model
     public function items()
     {
         return $this->hasMany('App\Http\Models\Purchase\PurchaseOrderDeliveryItems', 'id', 'purchase_order_delivery_id');
+    }
+
+    public function purchaseOrder()
+    {
+        return $this->belongsTo(PurchaseOrders::class);
     }
 
     /**
@@ -112,11 +117,11 @@ class PurchaseOrderDeliveries extends Model
         $qry = self::select($_select)->addSelect('suppliers.name as supplier_name')->addSelect('purchase_orders.number as po_number')
                     ->join('purchase_orders', 'purchase_orders.id', '=', 'purchase_order_deliveries.purchase_order_id')
                     ->join('suppliers', 'suppliers.id', '=', 'purchase_orders.supplier_id');
-        
+
         $totalFiltered = $qry->count();
-        
+
         if (empty($search)) {
-            
+
             if ($length > 0) {
                 $qry->skip($start)
                     ->take($length);
@@ -215,7 +220,7 @@ class PurchaseOrderDeliveries extends Model
                     'models' => __CLASS__
                 ]);
             }
-            
+
             PurchaseOrders::adjustPOStatus($params['purchase_order_id']);
         }
 
@@ -269,7 +274,7 @@ class PurchaseOrderDeliveries extends Model
 
         $countAll = $db->count();
         $currentPage = $paramsPage > 0 ? $paramsPage - 1 : 0;
-        $page = $paramsPage > 0 ? $paramsPage + 1 : 2; 
+        $page = $paramsPage > 0 ? $paramsPage + 1 : 2;
         $nextPage = env('APP_URL').'/inventories?page='.$page;
         $prevPage = env('APP_URL').'/inventories?page='.($currentPage < 1 ? 1 : $currentPage);
         $totalPage = ceil((int)$countAll / 10);

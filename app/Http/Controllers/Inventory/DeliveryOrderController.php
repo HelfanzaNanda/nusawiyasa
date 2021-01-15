@@ -116,9 +116,5 @@ class DeliveryOrderController extends Controller
             'data' => DeliveryOrderItems::generatePdf($id),
         ]);
         return $pdf->download('surat jalan.pdf');
-        //return json_encode(DeliveryOrderItems::generatePdf($id));
-        // return view('inventory.delivery_order_pdf', [
-        //     'data' => DeliveryOrderItems::generatePdf($id),
-        // ]);
     }
 }

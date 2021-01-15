@@ -3,6 +3,7 @@
 namespace App\Http\Models\Purchase;
 
 use App\Http\Models\Cluster\Lot;
+use App\Http\Models\Inventory\Suppliers;
 use App\Http\Models\Purchase\PurchaseOrderItems;
 use DB;
 use Illuminate\Database\Eloquent\Model;
@@ -47,7 +48,7 @@ class PurchaseOrders extends Model
      * @var array
      */
     protected $hidden = [
-        
+
     ];
 
     /**
@@ -71,6 +72,11 @@ class PurchaseOrders extends Model
     public function items()
     {
         return $this->hasMany('App\Http\Models\Purchase\PurchaseOrderItems', 'purchase_order_id', 'id');
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Suppliers::class);
     }
 
     /**
@@ -124,15 +130,15 @@ class PurchaseOrders extends Model
         }
 
         $qry = self::select($_select)->addSelect('request_materials.number as request_number')->leftJoin('request_materials', 'request_materials.id', '=', 'purchase_orders.fpp_number');
-        
+
         if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
             $qry->where('cluster_id', $session['_cluster_id']);
         }
 
         $totalFiltered = $qry->count();
-        
+
         if (empty($search)) {
-            
+
             if ($length > 0) {
                 $qry->skip($start)
                     ->take($length);
@@ -279,7 +285,7 @@ class PurchaseOrders extends Model
 
         $countAll = $db->count();
         $currentPage = $paramsPage > 0 ? $paramsPage - 1 : 0;
-        $page = $paramsPage > 0 ? $paramsPage + 1 : 2; 
+        $page = $paramsPage > 0 ? $paramsPage + 1 : 2;
         $nextPage = env('APP_URL').'/inventories?page='.$page;
         $prevPage = env('APP_URL').'/inventories?page='.($currentPage < 1 ? 1 : $currentPage);
         $totalPage = ceil((int)$countAll / 10);

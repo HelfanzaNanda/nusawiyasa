@@ -132,6 +132,7 @@ Route::group([
 	Route::get('/purchase_orders/{id?}', 'Purchasing\PurchaseOrderController@get');
 
 	Route::get('/receipt-of-goods', 'Inventory\ReceiptOfGoodsController@index');
+	Route::get('/receipt-of-goods-pdf/{id}', 'Inventory\ReceiptOfGoodsController@generatePdf');
 	Route::get('/create-receipt-of-goods', 'Inventory\ReceiptOfGoodsController@create');
 	Route::post('/receipt-of-goods', 'Inventory\ReceiptOfGoodsController@insertData');
 	Route::post('/receipt-of-goods-datatables', 'Inventory\ReceiptOfGoodsController@datatables');
