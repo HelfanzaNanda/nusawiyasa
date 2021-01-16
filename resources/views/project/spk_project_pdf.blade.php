@@ -128,16 +128,8 @@
                         <p>Luas Tanah : {{ $data['surface_area'] }}<br></p>
                         <p>Status Perbankan : {{ $data['status'] }}<br></p>
                     </td>
-                    <td>{{ $data['note'] }}</td>
+                    <td style="vertical-align: top">{{ $data['note'] }}</td>
                 </tr>
-                {{-- @foreach ($data['body'] as $val)
-                <tr class="text-center">
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $val['inventory_name'] }}</td>
-                    <td>{{ $val['inventory_brand'] }}</td>
-                    <td>{{ $val['total'] }}</td>
-                </tr>
-                @endforeach --}}
             </table>
 
             <table id="tfooter">
@@ -149,7 +141,7 @@
                 <tr id="ttb">
                     <td >(Oki Setyawan)</td>
                     <td >(D Widi Nugroho)</td>
-                    <td ></td>
+                    <td>(&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</td>
                 </tr>
                 <tr >
                     <td >Project Manager</td>

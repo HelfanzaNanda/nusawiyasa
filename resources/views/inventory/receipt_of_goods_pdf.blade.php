@@ -21,6 +21,11 @@
             width: 100%;
         }
 
+        #tfooter{
+            position: absolute;
+            top: 60%;
+        }
+
         #table {
             border-collapse: collapse;
         }
@@ -40,10 +45,50 @@
         .text-center {
             text-align: center
         }
+        /**
+            Set the margins of the page to 0, so the footer and the header
+            can be of the full height and width !
+            **/
+            @page {
+            margin: 0cm 0cm;
+        }
+
+        /** Define now the real margins of every page in the PDF **/
+        body {
+            margin-top: 3cm;
+            margin-left: 1cm;
+            margin-right: 1cm;
+            margin-bottom: 2cm;
+        }
+
+        /** Define the header rules **/
+        header {
+            position: fixed;
+            top: 0cm;
+            left: 0cm;
+            right: 0cm;
+            height: 3cm;
+        }
+
+        /** Define the footer rules **/
+        footer {
+            position: fixed;
+            bottom: 0cm;
+            left: 0cm;
+            right: 0cm;
+            height: 2cm;
+        }
     </style>
 </head>
 
 <body>
+    <header>
+        <img src="{{ env("SITE_HEADER_PDF_URL") }}" width="100%" height="100%"/>
+    </header>
+
+    <footer>
+        <img src="{{ env("SITE_FOOTER_PDF_URL") }}" width="100%" height="100%"/>
+    </footer>
     <div>
         <div style="display: flex">
             <div><img src="{{ env("SITE_LOGO_URL") }}" style="width: 100px; height: auto;"></div>
@@ -94,16 +139,16 @@
                 </tr>
                 @endforeach
             </table>
-            <table id="footer">
+            <table id="tfooter">
                 <tr>
-                    <td colspan="4"></td>
+                    <td style="width: 60%; padding-bottom: 20%"></td>
                     <td style="width: 20%">Diketahui Oleh,</td>
-                    <td style="width: 15%">Dibuat Oleh,</td>
+                    <td style="width: 20%">Dibuat Oleh,</td>
                 </tr>
                 <tr>
-                    <td colspan="4"></td>
-                    <td >........................</td>
-                    <td >........................</td>
+                    <td style="width: 60%"></td>
+                    <td>(&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</td>
+                    <td>(&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</td>
                 </tr>
             </table>
         </div>

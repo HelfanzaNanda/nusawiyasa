@@ -36,8 +36,8 @@ class ReceiptOfGoodsController extends Controller
 
     public function edit($id)
     {
-        $delivery = PurchaseOrderDeliveries::whereId($id)->first();       
-         
+        $delivery = PurchaseOrderDeliveries::whereId($id)->first();
+
         $purchase_orders = PurchaseOrders::whereIn('status', [4, 5])->get();
         $no = 1;
         return view('inventory.receipt_of_goods_update', compact('purchase_orders', 'delivery', 'no'));
@@ -123,7 +123,7 @@ class ReceiptOfGoodsController extends Controller
 
     public function delete($id){
         $items = PurchaseOrderDeliveryItems::where('purchase_order_delivery_id', $id)->get();
-        
+
         foreach ($items as $item) {
             $latest_qty = $item->inventory->stock;
             //dd($latest_qty);
@@ -144,6 +144,9 @@ class ReceiptOfGoodsController extends Controller
 
     public function generatePdf($id)
     {
+        // return view('inventory.receipt_of_goods_pdf', [
+        //     'data' => PurchaseOrderDeliveryItems::generatePdf($id)
+        // ]);
         $pdf = PDF::setOptions(['isRemoteEnabled' => true])->loadview('inventory.receipt_of_goods_pdf', [
             'data' => PurchaseOrderDeliveryItems::generatePdf($id)
         ]);

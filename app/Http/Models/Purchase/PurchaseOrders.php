@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Purchase;
 
+use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Cluster\Lot;
 use App\Http\Models\Inventory\Suppliers;
 use App\Http\Models\Purchase\PurchaseOrderItems;
@@ -77,6 +78,11 @@ class PurchaseOrders extends Model
     public function supplier()
     {
         return $this->belongsTo(Suppliers::class);
+    }
+
+    public function cluster()
+    {
+        return $this->belongsTo(Cluster::class);
     }
 
     /**

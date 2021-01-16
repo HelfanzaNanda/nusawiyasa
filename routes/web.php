@@ -148,6 +148,7 @@ Route::group([
 	Route::get('/supplier/{id}/delete', 'Inventory\SupplierController@delete');
 
 	Route::get('/purchase-order', 'Purchasing\PurchaseOrderController@index');
+	Route::get('/purchase-order-pdf/{id}', 'Purchasing\PurchaseOrderController@generatePdf');
 	Route::get('/create-purchase-order', 'Purchasing\PurchaseOrderController@create');
 	Route::post('/purchase-order', 'Purchasing\PurchaseOrderController@insertData');
 	Route::post('/purchase-order-datatables', 'Purchasing\PurchaseOrderController@datatables');

@@ -31,7 +31,7 @@ class DeliveryOrderController extends Controller
     public function edit($id)
     {
         $order = DeliveryOrders::whereId($id)->first();
-        
+
         return view('inventory.delivery_order_update', compact('order'));
 
     }
@@ -120,9 +120,12 @@ class DeliveryOrderController extends Controller
             'status' => 'success'
         ]);
     }
-    
+
     public function generatePdf($id)
     {
+        // return view('inventory.delivery_order_pdf', [
+        //     'data' => DeliveryOrderItems::generatePdf($id),
+        // ]);
         $pdf = PDF::setOptions(['isRemoteEnabled' => true])->loadview('inventory.delivery_order_pdf', [
             'data' => DeliveryOrderItems::generatePdf($id),
         ]);
