@@ -124,7 +124,7 @@
                         pembagunan untuk unit rumah untuk, <br>
                         <p>Nama Konsumen : {{ $data['customer_name'] }}<br></p>
                         <p>Nomor Kavling : {{ $data['lot_number'] }}<br></p>
-                        <p>Type Rumah : {{ $data['block'] }}<br></p>
+                        <p>Type Rumah : {{ $data['building_area'] }}<br></p>
                         <p>Luas Tanah : {{ $data['surface_area'] }}<br></p>
                         <p>Status Perbankan : {{ $data['status'] }}<br></p>
                     </td>

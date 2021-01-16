@@ -131,7 +131,7 @@ class PurchaseOrderItems extends Model
                 'po_number' => $val->purchaseOrder->number,
                 'fpp_number' => $val->purchaseOrder->fpp_number,
                 'isRap' => $val->type == 'rap' ? true : false,
-                'receiver' => 'ini gatau',
+                //'receiver' => 'ini gatau',
                 'supplier_name' => $val->purchaseOrder->supplier ? $val->purchaseOrder->supplier->name : '-',
                 'supplier_address' => $val->purchaseOrder->supplier ? $val->purchaseOrder->supplier->address : '-',
                 'supplier_phone' => $val->purchaseOrder->supplier ? $val->purchaseOrder->supplier->phone : '-',
