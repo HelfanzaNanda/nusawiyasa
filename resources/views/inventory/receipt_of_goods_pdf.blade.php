@@ -64,10 +64,10 @@
         /** Define the header rules **/
         header {
             position: fixed;
-            top: 0cm;
-            left: 0cm;
-            right: 0cm;
-            height: 3cm;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            height: 2cm;
         }
 
         /** Define the footer rules **/
