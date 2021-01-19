@@ -113,6 +113,7 @@ Route::group([
 	Route::get('/create-development-progress', 'Project\DevelopmentProgressController@create');
 	Route::post('/development-progress', 'Project\DevelopmentProgressController@insertData');
 	Route::post('/development-progress-datatables', 'Project\DevelopmentProgressController@datatables');
+	Route::get('/development-progress/pdf/{id}', 'Project\DevelopmentProgressController@pdf');
 
 	Route::get('/inventory', 'Inventory\InventoryController@index');
 	Route::post('/inventory', 'Inventory\InventoryController@insertData');

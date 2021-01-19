@@ -7,6 +7,8 @@ use App\Http\Models\Inventory\Inventories;
 use App\Http\Models\Project\DevelopmentProgressFiles;
 use App\Http\Models\Project\DevelopmentProgressJobs;
 use App\Http\Models\Project\DevelopmentProgressMaterials;
+use App\Http\Models\Cluster\Cluster;
+use App\Http\Models\Cluster\Lot;
 use DB;
 use File;
 use Illuminate\Database\Eloquent\Model;
@@ -434,5 +436,23 @@ class DevelopmentProgress extends Model
         return response()->json([
             'data' => $db->get()
         ]);
+    }
+
+    public function cluster(){
+        return $this->belongsTo(Cluster::class);
+    }
+
+    public function lot(){
+        return $this->belongsTo(Lot::class);
+    }
+
+    public function files(){
+        return $this->hasMany(DevelopmentProgressFiles::class);
+    }
+    public function jobs(){
+        return $this->hasMany(DevelopmentProgressJobs::class);
+    }
+    public function materials(){
+        return $this->hasMany(DevelopmentProgressMaterials::class);
     }
 }

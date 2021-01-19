@@ -11,6 +11,7 @@ use App\Http\Models\Project\DevelopmentProgressMaterials;
 use App\Http\Models\Ref\Province;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class DevelopmentProgressController extends Controller
 {
@@ -96,6 +97,7 @@ class DevelopmentProgressController extends Controller
                 $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';
                 $nestedData['action'] .='            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(159px, 32px, 0px);">';
                 $nestedData['action'] .='                <a class="dropdown-item" href="'.url('/development-progress/detail/'.$row['id']).'"><i class="fa fa-info m-r-5"></i> Detail</a>';
+                $nestedData['action'] .='                <a class="dropdown-item" target="_blank" href="'.url('development-progress/pdf/'.$row['id']).'"><i class="fa fa-print m-r-5"></i> Cetak</a>';
                 $nestedData['action'] .='            </div>';
                 $nestedData['action'] .='        </div>';
                 $data[] = $nestedData;
@@ -122,5 +124,46 @@ class DevelopmentProgressController extends Controller
         $materials = DevelopmentProgressMaterials::select(['inventories.name as inventory_name', 'development_progress_materials.qty as qty', 'development_progress_materials.type as type', 'inventory_units.name as inventory_unit'])->join('inventories', 'inventories.id', '=', 'development_progress_materials.inventory_id')->join('inventory_units', 'inventory_units.id', '=', 'inventories.unit_id')->where('development_progress_materials.development_progress_id', $id)->get();
 
         return view('project.development_progress_detail', compact('data', 'files', 'jobs', 'materials'));
+    }
+
+    public function pdf($id){
+        $dev = DevelopmentProgress::whereId($id)->first();
+        $dev['file'] = $dev->files;
+        $dev['cluster'] = $dev->cluster;
+        $dev['lot'] = $dev->lot;
+        $dev['job'] = $dev->jobs;
+        $max = 0;
+        $service = DevelopmentProgressMaterials::whereDevelopmentProgressId($id)->where('type', 'service')->get();
+        $tool = DevelopmentProgressMaterials::whereDevelopmentProgressId($id)->where('type', 'tools')->get();
+        $material = DevelopmentProgressMaterials::whereDevelopmentProgressId($id)->where('type', 'materials')->get();
+
+        $max = ($service->count() > $max) ? $service->count() : $max;
+        $max = ($tool->count() > $max) ? $tool->count() : $max;
+        $max = ($material->count() > $max) ? $material->count() : $max;
+
+        $eq = null;
+        $dev['host'] = substr_replace(asset(''), "", -1);
+        for ($i=0; $i < $max; $i++) { 
+            $eq[$i] = array(
+                'no' => ($i+1),
+                'material_name' => (isset($material[$i])) ? $material[$i]->inventory->name : '-',
+                'material_qty' => (isset($material[$i])) ? $material[$i]->qty.' '.$material[$i]->inventory->unit->name : '-',
+                'tool_name' => (isset($tool[$i])) ? $tool[$i]->inventory->name : '-',
+                'tool_qty' => (isset($tool[$i])) ? $tool[$i]->qty : '-',
+                'service_name' => (isset($service[$i])) ? $service[$i]->inventory->name : '-',
+                'service_qty' => (isset($service[$i])) ? $service[$i]->qty : '-',
+                
+            );
+        }
+        $dev['eq'] = $eq;
+        $customPaper = array(0,0,360,360);
+        $pdf = PDF::setOptions(['isRemoteEnabled' => true, 'isHtml5ParserEnabled' => true, 'setPaper' => $customPaper])
+        ->loadview('project.development_progress_pdf', [
+            'data' => $dev
+        ]);
+        return $pdf->download('Development progress '.$dev['date'].'.pdf');
+        // $data = $dev;
+        // return view('project.development_progress_pdf', compact('data'));
+        
     }
 }
