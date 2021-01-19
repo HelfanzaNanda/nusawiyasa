@@ -10,6 +10,7 @@ use App\Http\Models\Project\DevelopmentProgressJobs;
 use App\Http\Models\Project\DevelopmentProgressMaterials;
 use App\Http\Models\Ref\Province;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade as PDF;
 
@@ -128,6 +129,7 @@ class DevelopmentProgressController extends Controller
 
     public function pdf($id){
         $dev = DevelopmentProgress::whereId($id)->first();
+        $dev['tanggal'] = $dev->date->isoFormat('dddd, D MMMM Y');
         $dev['file'] = $dev->files;
         $dev['cluster'] = $dev->cluster;
         $dev['lot'] = $dev->lot;

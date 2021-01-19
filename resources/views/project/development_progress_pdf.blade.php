@@ -107,7 +107,7 @@
                 <br>
                 BLOK {{ $data['lot']['block'].'-'. $data['lot']['unit_number']}}
                 <br>
-                {{ $data['date'] }}
+                {{ $data['tanggal'] }}
                 <br>
             </h4>
         </center>
@@ -124,7 +124,7 @@
                 <Td>: {{ $data['cluster']['address'].', Kp. '.$data['cluster']['subdistrict'].', Kec.'.$data['cluster']['district'].', '.$data['cluster']['city'].', '.$data['cluster']['province'] }}</Td>
             </tr>
             <td width="50px">Tanggal </td>
-                <Td>: {{ $data['date'] }}</Td>
+                <Td>: {{ $data['tanggal'] }}</Td>
         </table></b>
     </div>
     <center>
