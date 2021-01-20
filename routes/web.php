@@ -185,4 +185,19 @@ Route::group([
 	Route::post('/user-datatables', 'User\UserController@datatables');
 	Route::get('/user/{id:}', 'User\UserController@detail');
 	Route::get('/user/{id}/delete', 'User\UserController@delete');
+
+	Route::get('employe', 'Hr\EmployeController@index');
+	Route::post('/employe', 'Hr\EmployeController@insertData');
+	Route::post('/employe-datatables', 'Hr\EmployeController@datatables');
+	Route::get('/employe/{id:}', 'Hr\EmployeController@get');
+	Route::get('/employe-detail/{id:}', 'Hr\EmployeController@detail')->name('employe.detail');
+	Route::delete('/employe/{id:}', 'Hr\EmployeController@delete');
+
+	Route::get('employe/education/{id}', 'Hr\EmployeEducationController@get');
+	Route::post('employe/education', 'Hr\EmployeEducationController@insertData');
+	Route::delete('employe/education/{id}', 'Hr\EmployeEducationController@delete');
+
+	Route::get('employe/media/{id}', 'Hr\EmployeMediaController@get');
+	Route::post('employe/media', 'Hr\EmployeMediaController@insertData');
+	Route::delete('employe/media/{id}', 'Hr\EmployeMediaController@delete');
 });
