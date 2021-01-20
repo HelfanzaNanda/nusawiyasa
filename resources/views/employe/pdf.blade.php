@@ -159,18 +159,6 @@
                 {{ ($data['current_address_province']) ? $data['current_address_province'].', ' : ''}}
             </div>
           </div>
-        {{-- <p style="flex-wrap: wrap;">
-            Alamat :
-            <span style="display: ; float: right; min-margin-left:30px">
-                {{ ($data['current_address_street']) ? $data['current_address_street'].', ' : ''}}
-                {{ ($data['current_address_rt']) ? 'RT.'.$data['current_address_rt'].', ' : ''}}
-                {{ ($data['current_address_rw']) ? 'RW.'.$data['current_address_rw'].', ' : ''}}
-                {{ ($data['current_address_kelurahan']) ? 'Kel.'.$data['current_address_kelurahan'].', ' : ''}}
-                {{ ($data['current_address_kecamatan']) ? 'Kec.'.$data['current_address_kecamatan'].', ' : ''}}
-                {{ ($data['current_address_city']) ? $data['current_address_city'].', ' : ''}}
-                {{ ($data['current_address_province']) ? $data['current_address_province'].', ' : ''}}
-            </span>
-        </p> --}}
         <h5>Riwayat Pendidikan</h5>
         <table id="table">
             <tr>
