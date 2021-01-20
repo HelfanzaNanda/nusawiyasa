@@ -6,6 +6,9 @@
         <a href="{{url('/')}}"><i class="la la-dashboard"></i> <span>Beranda</span></a>
     </li>
     @if(Session::get('_role_id') == 1 || Session::get('_role_id') == 2)
+    <li {{ (request()->segment(1) == 'employe' || request()->segment(1) == 'employe-detail') ? 'class=active' : '' }}> 
+        <a href="{{url('/employe')}}"><i class="la la-user"></i> <span>Pegawai</span></a>
+    </li>
     <li class="menu-title"> 
         <span>Marketing</span>
     </li>
