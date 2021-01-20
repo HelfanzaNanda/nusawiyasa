@@ -36,14 +36,6 @@
                 <div class="row">
                   <div class="col-md-6">
                     <p class="clearfix">
-                      <span class="float-left">
-                        NIK
-                      </span>
-                      <span class="float-right ml-3 text-muted">
-                        {{ ($employee->nik) ? $employee->nik : '-' }}
-                      </span>
-                    </p>
-                    <p class="clearfix">
                         <span class="float-left">
                           Status
                         </span>
@@ -51,6 +43,14 @@
                           {{ ($employee->employe_status) ? $employee->employe_status : '-' }}
                         </span>
                     </p>
+                    <p class="clearfix">
+                      <span class="float-left">
+                        Pemilik Rekening
+                      </span>
+                      <span class="float-right ml-3 text-muted">
+                        {{ ($employee->owner_bank_number) ? $employee->owner_bank_number : '-' }}
+                      </span>
+                  </p>
                     <p class="clearfix">
                         <span class="float-left">
                           Nomor Rekening
@@ -451,6 +451,10 @@
     $("#media-detail").hide();
   });
 
+  $('#input-identity-update').select2({
+      width: '100%'
+  });
+
   $(document).on('click', '#media-tab', function() {
     $("#education-tab").removeClass("active");
     $(this).addClass("active");
@@ -697,6 +701,9 @@
               // $('#city').empty();
           }
       });
+      $('#input-status-update').select2({
+            width: '100%'
+        });
           $(document).on('click', '#edit', function(){
             var id = $(this).data("id")
             $('#update-modal').modal('show');
@@ -723,14 +730,12 @@
                     $('#current_address_street').val(data.current_address_street)
                     $('#bank_name').val(data.bank_name)
                     $('#bank_account').val(data.bank_account)
-                    $('#identity_type').val(data.identity_type)
+                    $('#owner_bank_number').val(data.owner_bank_number)
                     $('#identity_card_number').val(data.identity_card_number)
                     $('#father_name').val(data.father_name)
                     $('#mother_name').val(data.mother_name)
                     $('#emergency_name').val(data.emergency_name)
                     $('#emergency_number').val(data.emergency_number)
-                    // $('#emergency_relation').val(data.emergency_relation)
-                    $('#employe_status').val(data.employe_status)
                     $('#input-joined-update').val(data.joined_at)
                     $('#input-resign-update').val(data.resign_at)
                     $('#twitter').val(data.twitter)
@@ -738,6 +743,20 @@
                     $('#linkedin').val(data.linkedin)
                     $('#youtube').val(data.youtube)
                     $('#instagram').val(data.instagram)
+
+                    $('#input-status-update').select2()
+                    $('#input-status-update').val(data.employe_status)
+                    $('#input-status-update').select2().trigger('change');
+                    $('#input-status-update').select2({
+                        width: '100%'
+                    });
+
+                    $('#input-identity-update').select2()
+                    $('#input-identity-update').val(data.identity_type)
+                    $('#input-identity-update').select2().trigger('change');
+                    $('#input-identity-update').select2({
+                        width: '100%'
+                    });
 
                     $('#input-gender-update').select2()
                     $('#input-gender-update').val(data.gender)

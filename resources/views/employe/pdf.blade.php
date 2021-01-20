@@ -118,6 +118,7 @@
         <p>Nama Lengkap : <span style="float: right">{{ ($data['fullname']) ? $data['fullname'] : '-'}}</span></p>
         <p>Email : <span style="float: right">{{ ($data['email']) ? $data['email'] : '-'}}</span></p>
         <p>No. Handphone : <span style="float: right">{{ ($data['phone_number']) ? $data['phone_number'] : '-'}}</span></p>
+        <p>Pemilik Rekening : <span style="float: right">{{ ($data['owner_bank_number']) ? $data['owner_bank_number'] : '-'}}</span></p>
         <p>
             Akun Bank :
             <span style="float: right">

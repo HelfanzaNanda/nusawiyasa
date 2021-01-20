@@ -175,6 +175,21 @@
         $('#input-mariage').select2({
             width: '100%'
         });
+        $('#input-identity').select2({
+            width: '100%'
+        });
+
+        $('#input-status').select2({
+            width: '100%'
+        });
+
+        $('#input-status-update').select2({
+            width: '100%'
+        });
+
+        $('#input-identity-update').select2({
+            width: '100%'
+        });
 
         $('#input-province').on('change', function() {
             var province_id = $("option:selected", this).data('province-code');
@@ -306,7 +321,7 @@
                 success: function(data) {
                     $('#id').val(data.id)
                     $('#fullname').val(data.fullname)
-                    $('#nik').val(data.nik)
+                    $('#owner_bank_number').val(data.owner_bank_number)
                     $('#place_birth').val(data.place_birth)
                     $('#input-dob-update').val(data.date_birth)    
                     $('#email').val(data.email)
@@ -318,7 +333,6 @@
                     $('#current_address_street').val(data.current_address_street)
                     $('#bank_name').val(data.bank_name)
                     $('#bank_account').val(data.bank_account)
-                    $('#identity_type').val(data.identity_type)
                     $('#identity_card_number').val(data.identity_card_number)
                     $('#father_name').val(data.father_name)
                     $('#mother_name').val(data.mother_name)
@@ -333,6 +347,20 @@
                     $('#linkedin').val(data.linkedin)
                     $('#youtube').val(data.youtube)
                     $('#instagram').val(data.instagram)
+
+                    $('#input-status-update').select2()
+                    $('#input-status-update').val(data.employe_status)
+                    $('#input-status-update').select2().trigger('change');
+                    $('#input-status-update').select2({
+                        width: '100%'
+                    });
+
+                    $('#input-identity-update').select2()
+                    $('#input-identity-update').val(data.identity_type)
+                    $('#input-identity-update').select2().trigger('change');
+                    $('#input-identity-update').select2({
+                        width: '100%'
+                    });
 
                     $('#input-gender-update').select2()
                     $('#input-gender-update').val(data.gender)

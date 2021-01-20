@@ -20,7 +20,10 @@ class EmployeMedia extends Model
         $filepath = null;
         $type = null;
         if($request->hasFile('file')){
-            $allowedFileExtension = ['jpg', 'png', 'mp4', 'pdf'];
+            $allowedFileExtension = [
+                'jpg', 'jpeg', 'png', 'gif', 'psd','tiff','raw','bmp',
+                'pdf', 'doc', 'docx', 'txt', 'prc', 'xls', 'xlsx','ppt', 'pptx'
+            ];
 
             $files = $request->file('file');
             $filename = $files->getClientOriginalName();

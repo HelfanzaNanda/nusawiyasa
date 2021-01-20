@@ -19,11 +19,6 @@
                 </div>
 
                 <div class="col-sm-6 form-group">
-                    <label>Nomor KTP</label>
-                    <input class="form-control" type="text" name="nik">
-                </div>
-
-                <div class="col-sm-6 form-group">
                     <label>Tempat Lahir</label>
                     <input class="form-control" type="text" name="place_birth">
                 </div>
@@ -132,12 +127,21 @@
                     <label>Nomor Rekening</label>
                     <input class="form-control" type="text" name="bank_account">
                 </div>
+                <div class="col-sm-6 form-group">
+                    <label>Atas Nama No. Rekening</label>
+                    <input class="form-control" type="text" name="owner_bank_number">
+                </div>
 
                 <div class="col-md-12"><hr></div>
                 <h5 class="col-md-12 modal-title">Nomor Identitas</h5>
                 <div class="col-sm-6 form-group">
                     <label>Jenis Identitas</label>
-                    <input class="form-control" type="text" name="identity_type">
+                    <select name="identity_type" class="form-control" id="input-identity">
+                        <option value="-">Pilih Kartu Pengenal</option>
+                        <option value="KTP">KTP</option>
+                        <option value="SIM">SIM</option>
+                        <option value="Passport">Passport</option>
+                    </select>
                 </div>
                 <div class="col-sm-6 form-group">
                     <label>Nomor Identitas</label>
@@ -180,7 +184,12 @@
                 <h5 class="col-md-12 modal-title">Data Pekerjaan</h5>
                 <div class="col-sm-6 form-group">
                     <label>Status</label>
-                    <input class="form-control" type="text" name="employe_status">
+                    <select name="employe_status" class="form-control" id="input-status">
+                        <option value="-">Status</option>
+                        <option value="Kontrak">Kontrak</option>
+                        <option value="Tetap">Tetap</option>
+                        <option value="Freelance">Freelance</option>
+                    </select>
                 </div>
                 <div class="col-sm-6 form-group">
                     <label>Foto</label>
