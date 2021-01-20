@@ -192,6 +192,7 @@ Route::group([
 	Route::get('/employe/{id:}', 'Hr\EmployeController@get');
 	Route::get('/employe-detail/{id:}', 'Hr\EmployeController@detail')->name('employe.detail');
 	Route::delete('/employe/{id:}', 'Hr\EmployeController@delete');
+	Route::get('/employe-pdf/{id:}', 'Hr\EmployeController@pdf')->name('employe.pdf');
 
 	Route::get('employe/education/{id}', 'Hr\EmployeEducationController@get');
 	Route::post('employe/education', 'Hr\EmployeEducationController@insertData');

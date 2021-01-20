@@ -30,7 +30,7 @@
                   <div class="d-flex align-items-center">
                   </div>
                 </div>
-                <p class="w-75 mx-auto mb-3">{{ $employee->place_birth ? $employee->place_birth : '-' }}, {{ $employee->date_birth ? $employee->date_birth : '-' }} ({{ $age }})</p>
+                <p class="w-75 mx-auto mb-3">{{ $employee->place_birth ? $employee->place_birth : '-' }}, {{ $employee->date_birth ? $employee->date_birth : '-' }} ({{ $employee['age'] }})</p>
               </div>
               <div class="py-4">
                 <div class="row">
@@ -65,6 +65,7 @@
                         </span>
                         <span class="float-right ml-3 text-muted">
                           {{ ($employee->joined_at) ? $employee->joined_at : '-' }}
+                          ({{ $employee['lama_kerja'] }})
                         </span>
                     </p>
                     <p class="clearfix">
@@ -225,7 +226,7 @@
                 <hr>             
               </div>
               <button class="btn btn-info btn-block mb-2" id="edit" data-id="{{ $employee->id}}">Edit</button>
-              <a href="/employee/pdf/gg" target="_blank"><button class="btn btn-success btn-block mb-2"><i class="fa fa-print"></i> Print</button></a>
+              <a href="{{ route('employe.pdf', $employee->id) }}" target="_blank"><button class="btn btn-success btn-block mb-2"><i class="fa fa-print"></i> Print</button></a>
             </div>
           </div>
           <div class="row">

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Models\Ref\Province;
 use App\Http\Models\Hr\Employe;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class EmployeController extends Controller
 {
@@ -112,10 +113,61 @@ class EmployeController extends Controller
 
     public function detail($id){
         $employee = Employe::whereId($id)->first();
-        $age =  Carbon::createFromDate($employee->date_birth)->diff(Carbon::now())->format('%y thn, %m bln and %d hr');
-        $employee->date_birth = Carbon::parse($employee->date_birth)->isoFormat('D MMMM Y');
-        //dd($employee->educations);
+
+        if($employee->date_birth){
+            $employee['age'] =  Carbon::createFromDate($employee->date_birth)->diff(Carbon::now())->format('%y thn, %m bln and %d hr');
+            $employee->date_birth = Carbon::parse($employee->date_birth)->isoFormat('D MMMM Y');
+        }else{
+            $employee['age'] = '-';
+            $employee->date_birth = '-';
+        }
+        
+        if($employee->joined_at){
+            $employee['lama_kerja'] = Carbon::createFromDate($employee->joined_at)->diff(Carbon::now())->format('%y thn, %m bln and %d hr');
+            $employee->joined_at = Carbon::parse($employee->joined_at)->isoFormat('D MMMM Y');
+        }else{
+            $employee['lama_kerja'] = '-';
+            $employee->joined_at = '-';
+        }
         $provinces = Province::get();
-        return view('employe.detail', compact(['employee', 'age', 'provinces']));
+        
+        return view('employe.detail', compact(['employee', 'provinces']));
+    }
+
+    public function pdf($id){
+        $data = Employe::whereId($id)->first();
+
+        if($data->date_birth){
+            $data['age'] =  Carbon::createFromDate($data->date_birth)->diff(Carbon::now())->format('%y thn, %m bln and %d hr');
+            $data->date_birth = Carbon::parse($data->date_birth)->isoFormat('D MMMM Y');
+        }else{
+            $data['age'] = '-';
+            $data->date_birth = '-';
+        }
+        
+        if($data->joined_at){
+            $data['lama_kerja'] = Carbon::createFromDate($data->joined_at)->diff(Carbon::now())->format('%y thn, %m bln and %d hr');
+            $data->joined_at = Carbon::parse($data->joined_at)->isoFormat('D MMMM Y');
+        }else{
+            $data['lama_kerja'] = '-';
+            $data->joined_at = '-';
+        }
+        
+        $path = ($data['avatar']) ? public_path($data['avatar']) : public_path('template/assets/img/user.jpg');
+        
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $datafile = file_get_contents($path);
+        $data['avatar'] = 'data:image/' . $type . ';base64,' . base64_encode($datafile);
+        
+        $customPaper = array(0,0,360,360);
+        $pdf = PDF::setOptions([
+            'isRemoteEnabled' => true, 
+            'isHtml5ParserEnabled' => true, 
+            'setPaper' => $customPaper
+        ])
+        ->loadview('employe.pdf', [
+            'data' => $data
+        ]);
+        return $pdf->download('Data diri '.$data['fullname'].'-'.Carbon::now().'.pdf');
     }
 }
