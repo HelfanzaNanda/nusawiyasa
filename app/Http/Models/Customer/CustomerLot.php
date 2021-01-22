@@ -22,6 +22,8 @@ class CustomerLot extends Model
 		'is_deleted',
         'booking_date',
         'payment_type',
+        'bank_status',
+        'bank_statu_number'
     ];
 
     private $operators = [
@@ -59,6 +61,8 @@ class CustomerLot extends Model
 			'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string'],
             'booking_date' => ['alias' => $model->table.'.booking_date', 'type' => 'string'],
             'payment_type' => ['alias' => $model->table.'.payment_type', 'type' => 'string'],
+            'bank_status' => ['alias' => $model->table.'.bank_status', 'type' => 'string'],
+            'bank_status_number' => ['alias' => $model->table.'.bank_status_number', 'type' => 'string'],
         ];
     }
 
@@ -179,6 +183,8 @@ class CustomerLot extends Model
 
             $update = self::where('id', $id)->update($params);
 
+            DB::commit();
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data Berhasil Diubah!'
@@ -190,6 +196,7 @@ class CustomerLot extends Model
         $customer_lot['status'] = 1;
         $customer_lot['booking_date'] = $params['booking_date'];
         $customer_lot['payment_type'] = $params['payment_type'];
+        $customer_lot['bank_status'] = 1;
 
         $insert = self::create($customer_lot);
 

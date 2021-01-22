@@ -9,7 +9,7 @@
     <div class="col">
       <h3 class="page-title">Data Booking</h3>
       <ul class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index-2.html">Booking</a></li>
+        <li class="breadcrumb-item"><a href="#">Booking</a></li>
         <li class="breadcrumb-item active">Data Booking</li>
       </ul>
     </div>
@@ -85,6 +85,44 @@
     </div>
   </div>
 </div>
+
+<div id="bank-status-modal" class="modal custom-modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update Status Bank</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="add-form" method="POST" action="#">
+          {!! csrf_field() !!}
+          <div class="row"> 
+            <input type="hidden" name="id" id="input-id">
+            <div class="col-sm-12" id="installment-row">  
+              <div class="form-group">
+                <label>Status Bank</label>
+                <select class="form-control" id="input-bank-status" name="bank_status">
+                  <option> - Pilih Status - </option>
+                  <option value="3">Ditolak</option>
+                  <option value="2">Disetujui</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>No Ref Bank</label>
+                <input type="text" name="bank_status_number" class="form-control" id="input-bank-status-number">
+              </div>
+            </div>
+          </div>
+          <div class="submit-section">
+            <button class="btn btn-primary submit-btn">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('additionalScriptJS')
@@ -93,6 +131,26 @@
   $("#main-table").on('click', '#booking-installment', function() {
       let id = $(this).data('id');
       $('#installment-modal').modal('show');
+  });
+
+  $("#main-table").on('click', '#update-bank-status', function() {
+      let id = $(this).data('id');
+      $.ajax({
+        url: BASE_URL+'/bookings/'+id,
+        type: "GET",
+        dataType: "json",
+        beforeSend: function() {
+
+        },
+        success: function(res) {
+          console.log(res);
+
+          $('#input-id').val(id);
+          $('#input-bank-status').val(res.bank_status).trigger('change');
+          $('#input-bank-status-number').val(res.bank_status_number);
+          $('#bank-status-modal').modal('show');
+        }
+      });
   });
 
   $(document).on("click", '.btn-add-row', function () {
@@ -153,6 +211,53 @@
 
   $('#input-city').select2({
     width: '100%'
+  });
+
+  $('#bank-status').select2({
+    width: '100%'
+  });
+
+  $('form#add-form').submit( function( e ) {
+    e.preventDefault();
+    var form_data = new FormData( this );
+
+    $.ajax({
+      type: 'post',
+      url: BASE_URL+'/bookings',
+      data: form_data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      dataType: 'json',
+      beforeSend: function() {
+        
+      },
+      success: function(msg) {
+        if(msg.status == 'success'){
+            setTimeout(function() {
+                swal({
+                    title: "Sukses",
+                    text: msg.message,
+                    type:"success",
+                    html: true
+                }, function() {
+                    // $('#main-table').DataTable().ajax.reload(null, false);
+                    $('#main-table').DataTable().ajax.reload(null, false);
+                    $('#bank-status-modal').modal('hide');
+                });
+            }, 500);
+        } else {
+            swal({
+                title: "Gagal",
+                text: msg.message,
+                showConfirmButton: true,
+                confirmButtonColor: '#0760ef',
+                type:"error",
+                html: true
+            });
+        }
+      }
+    });
   });
 </script>
 @endsection

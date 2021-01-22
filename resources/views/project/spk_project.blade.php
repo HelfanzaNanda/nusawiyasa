@@ -64,26 +64,26 @@
           {!! csrf_field() !!}
           <div class="row"> 
             <div class="col-md-12"> 
-              <div class="form-group">
+{{--               <div class="form-group">
                 <label>Judul</label>
                 <input class="form-control" type="text" name="title">
-              </div>
+              </div> --}}
               <div class="form-group">
                 <label>No. SPK</label>
                 <input class="form-control" type="text" name="number">
               </div>
-              <div class="form-group">
+{{--               <div class="form-group">
                 <label>Kepada</label>
                 <input class="form-control" type="text" name="dest_name">
-              </div>
+              </div> --}}
               <div class="form-group">
                 <label>Tanggal</label>
                 <input class="form-control" type="text" name="date" id="input-date">
               </div>
-              <div class="form-group">
+{{--               <div class="form-group">
                 <label>Perihal</label>
                 <input class="form-control" type="text" name="subject">
-              </div>
+              </div> --}}
               <div class="form-group">
                 <label>Kapling</label>
                 <select id="input-customer-lot-id" name="customer_lot_id"> 
@@ -122,27 +122,27 @@
           {!! csrf_field() !!}
           <div class="row"> 
             <div class="col-md-12"> 
-              <div class="form-group">
+{{--               <div class="form-group">
                 <label>Judul</label>
                 <input class="form-control" type="text" name="title" id="title">
                 <input type="hidden" name="id" id="id-update">
-              </div>
+              </div> --}}
               <div class="form-group">
                 <label>No. SPK</label>
                 <input class="form-control" type="text" name="number" id="number">
               </div>
-              <div class="form-group">
+{{--               <div class="form-group">
                 <label>Kepada</label>
                 <input class="form-control" type="text" name="dest_name" id="dest_name">
-              </div>
+              </div> --}}
               <div class="form-group">
                 <label>Tanggal</label>
                 <input class="form-control" type="text" name="date" id="input-date-update" id="date">
               </div>
-              <div class="form-group">
+{{--               <div class="form-group">
                 <label>Perihal</label>
                 <input class="form-control" type="text" name="subject" id="subject">
-              </div>
+              </div> --}}
               <div class="form-group">
                 <label>Kapling</label>
                 <select id="input-customer-lot-id-update" name="customer_lot_id"> 

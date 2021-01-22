@@ -169,4 +169,19 @@ class SPKProjectController extends Controller
         ]);
         return $pdf->download('Surat Perintah Kerja.pdf');
     }
+
+    public function get($id=null, Request $request)
+    {
+        $request = $request->all();
+
+        if ($id != null) {
+            $res = SpkProjects::getById($id, $request);
+        } else if (isset($request['all']) && $request['all']) {
+            $res = SpkProjects::getAllResult($request);
+        } else {
+            $res = SpkProjects::getPaginatedResult($request);
+        }
+
+        return $res;
+    }
 }

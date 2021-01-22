@@ -66,8 +66,8 @@ Route::group([
 	Route::get('/lots/{id}/delete', 'Cluster\LotController@delete');
 
 	Route::get('/booking-page', 'Customer\CustomerLotController@index');
-	Route::get('/bookings/{lot_id?}', 'Customer\CustomerLotController@create');
-	Route::post('/bookings/{lot_id?}', 'Customer\CustomerLotController@insertData');
+	Route::get('/bookings/{lot_id?}', 'Customer\CustomerLotController@get');
+	Route::post('/bookings/{lot_id}', 'Customer\CustomerLotController@insertData');
 	Route::post('/booking-datatables', 'Customer\CustomerLotController@datatables');
 	Route::get('/bookings/detail/{id}', 'Customer\CustomerLotController@detail');
 
@@ -81,7 +81,7 @@ Route::group([
 	Route::post('/spk-project-datatables', 'Project\SPKProjectController@datatables');
 	Route::get('/spk-project/{id}', 'Project\SPKProjectController@detail');
 	Route::get('/spk-project/{id}/delete', 'Project\SPKProjectController@delete');
-
+	Route::get('/spk_projects/{id?}', 'Project\SPKProjectController@get');
 
 	Route::get('/customer-confirmation', 'Project\CustomerConfirmationController@index');
 	Route::get('/customer-confirmation/detail/{id}', 'Project\CustomerConfirmationController@detail');

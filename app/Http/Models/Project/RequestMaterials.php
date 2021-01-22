@@ -173,8 +173,8 @@ class RequestMaterials extends Model
         }
 
         $request_material['number'] = $params['number'];
-        $request_material['title'] = $params['title'];
-        $request_material['subject'] = $params['subject'];
+        $request_material['title'] = isset($params['title']) && $params['title'] ? $params['title'] : 'Request Pengajuan Bahan';
+        $request_material['subject'] = isset($params['subject']) && $params['subject'] ? $params['subject'] : 'Permohonan Pembelian Barang';
         $request_material['spk_id'] = $params['spk_id'];
         $request_material['date'] = $params['date'];
         $request_material['type'] = $params['type'];

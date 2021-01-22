@@ -187,6 +187,9 @@ class SpkProjects extends Model
             ]);
         }
 
+        $params['title'] = (isset($params['title']) && $params['title']) ? $params['title'] : 'Surat Perintah Kerja';
+        $params['subject'] = (isset($params['subject']) && $params['subject']) ? $params['subject'] : 'Pembangunan Unit Rumah';
+        $params['dest_name'] = (isset($params['dest_name']) && $params['dest_name']) ? $params['dest_name'] : 'Project Department';
         $params['created_by_user_id'] = session()->get('_id');
         $params['approved_by_user_id'] = 0;
         $params['received_by_user_id'] = 0;
@@ -264,7 +267,7 @@ class SpkProjects extends Model
 
     public static function getById($id, $params = null)
     {
-        $data = self::where('id', $id)
+        $data = self::where('id', $id)->with('customerLot.lot')
                     ->first();
 
         return response()->json($data);

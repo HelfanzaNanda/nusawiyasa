@@ -78,7 +78,7 @@ class CustomerTermController extends Controller
                 $nestedData['email'] = $row['email'];
                 $nestedData['phone'] = $row['phone'];
                 $nestedData['status'] = $row['status'];
-                $nestedData['completeness'] = ''
+                $nestedData['completeness'] = '';
                 $nestedData['action'] = '';
                 $nestedData['action'] .='        <div class="dropdown dropdown-action">';
                 $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';

@@ -202,7 +202,7 @@ class Customer extends Model
         $user['email'] = $params['email'];
         $user['username'] = $params['email'];
         $user['phone'] = $params['phone'];
-        $user['password'] = '123456';
+        $user['password'] = bcrypt('123456');
         $user['role_id'] = 99;
         
         $create_user = Users::create($user);

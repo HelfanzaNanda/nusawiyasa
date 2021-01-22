@@ -12,24 +12,24 @@
       <form id="add-form" method="POST" action="#">
         <div class="card-body">
           {!! csrf_field() !!}
-          <div class="form-group row">
+{{--           <div class="form-group row">
             <label class="col-form-label col-md-2">Judul</label>
             <div class="col-md-10">
               <input class="form-control floating" type="text" id="input-title" name="title">
             </div>
-          </div>
+          </div> --}}
           <div class="form-group row">
             <label class="col-form-label col-md-2">Nomor Pengajuan</label>
             <div class="col-md-10">
               <input class="form-control floating" type="text" id="input-number" name="number">
             </div>
           </div>
-          <div class="form-group row">
+{{--           <div class="form-group row">
             <label class="col-form-label col-md-2">Perihal</label>
             <div class="col-md-10">
               <input class="form-control floating" type="text" id="input-subject" name="subject">
             </div>
-          </div>
+          </div> --}}
           <div class="form-group row">
             <label class="col-form-label col-md-2">SPK</label>
             <div class="col-md-10">
@@ -75,12 +75,12 @@
                 Non RAP
                 </label>
               </div>
-              <div class="form-check form-check-inline">
+{{--               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="type" id="disposition" value="disposition">
                 <label class="form-check-label" for="disposition">
                 Disposisi
                 </label>
-              </div>
+              </div> --}}
             </div>
           </div>
           <div class="form-group row">
@@ -386,6 +386,29 @@
                 html: true
             });
         }
+      }
+    });
+  });
+
+  $("#input-spk").on('change', function(e) {
+    e.preventDefault();
+    let id = $(this).val();
+    $.ajax({
+      url: BASE_URL+'/spk_projects/'+id,
+      type: "GET",
+      dataType: "json",
+      beforeSend: function() {
+        addLoadSpiner($('#input-lot')); 
+        // $("select#input-lot").empty();
+        // $("select#input-lot").append('<option value="0"> - Pilih Kavling - </option>');
+      },
+      success: function(res) {
+        $('#input-cluster').val(res.customer_lot.lot.cluster_id).trigger('change');
+
+        setTimeout(function(){ 
+          $('#input-lot').val(res.customer_lot.lot_id).trigger('change');
+          hideLoadSpinner($('#input-lot'));
+        }, 1000);
       }
     });
   });

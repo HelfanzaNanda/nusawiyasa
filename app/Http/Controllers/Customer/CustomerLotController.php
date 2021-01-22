@@ -97,6 +97,9 @@ class CustomerLotController extends Controller
                 if ($row['payment_type'] == 'cash_in_stages') {
                     $nestedData['action'] .='                <button class="dropdown-item" id="booking-installment" data-id="'.$row['id'].'"><i class="fa fa-info m-r-5"></i> Cicilan Cash</button>';
                 }
+                if ($row['payment_type'] == 'credit') {
+                    $nestedData['action'] .='                <button class="dropdown-item" id="update-bank-status" data-id="'.$row['id'].'"><i class="fa fa-info m-r-5"></i> Update Status Bank</button>';
+                }
                 $nestedData['action'] .='            </div>';
                 $nestedData['action'] .='        </div>';
                 $data[] = $nestedData;
@@ -136,5 +139,20 @@ class CustomerLotController extends Controller
         $customer_costs = CustomerCost::select('customer_costs.*')->addSelect('ref_term_purchasing_customers.name as key_name')->where('customer_id', $data['customer_id'])->where('lot_id', $data['lot_id'])->join('ref_term_purchasing_customers', 'ref_term_purchasing_customers.id', '=', 'customer_costs.ref_term_purchasing_customer_id')->get();
 
         return view('customer.customer_lot_detail', compact('data', 'customer_terms', 'customer_costs'));
+    }
+
+    public function get($id=null, Request $request)
+    {
+        $request = $request->all();
+
+        if ($id != null) {
+            $res = CustomerLot::getById($id, $request);
+        } else if (isset($request['all']) && $request['all']) {
+            $res = CustomerLot::getAllResult($request);
+        } else {
+            $res = CustomerLot::getPaginatedResult($request);
+        }
+
+        return $res;
     }
 }

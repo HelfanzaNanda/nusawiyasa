@@ -70,12 +70,12 @@
                 Non RAP
                 </label>
               </div>
-              <div class="form-check form-check-inline">
+{{--               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="type" id="disposition" value="disposition">
                 <label class="form-check-label" for="disposition">
                 Disposisi
                 </label>
-              </div>
+              </div> --}}
             </div>
           </div>
 
