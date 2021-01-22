@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Inventory;
 
+use App\Http\Models\Cluster\Cluster;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Models\Inventory\InventoryUnits;
@@ -113,7 +114,7 @@ class Inventories extends Model
 
     // Relations ...
 
-    public static function datatables($start, $length, $order, $dir, $search, $filter = '', $session = [])
+    public static function datatables($start, $length, $order, $dir, $search, $filter = '', $filter_cluster = '', $session = [])
     {
         $totalData = self::count();
 
@@ -122,10 +123,18 @@ class Inventories extends Model
             $_select[] = $select['alias'];
         }
 
-        $qry = self::select($_select)->addSelect('inventory_units.name as unit_name')->addSelect('clusters.name as cluster_name')
+        if ($filter_cluster) {
+            $qry = self::select($_select)->addSelect('inventory_units.name as unit_name')->addSelect('clusters.name as cluster_name')
+                    // ->addSelect('inventory_categories.name as category_name')
+                    ->join('inventory_units', 'inventory_units.id', '=', 'inventories.unit_id')
+                    ->join('clusters', 'clusters.id', 'inventories.cluster_id')
+                    ->where('inventories.cluster_id', '=', $filter_cluster);
+        }else{
+            $qry = self::select($_select)->addSelect('inventory_units.name as unit_name')->addSelect('clusters.name as cluster_name')
                     // ->addSelect('inventory_categories.name as category_name')
                     ->join('inventory_units', 'inventory_units.id', '=', 'inventories.unit_id')
                     ->join('clusters', 'clusters.id', 'inventories.cluster_id');
+        }
                     // ->join('inventory_categories', 'inventory_categories.id', '=', 'inventories.category_id');
 
         if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
@@ -320,5 +329,31 @@ class Inventories extends Model
         } else if ($type == 'in') {
             $data->increment('stock', $params['qty']);
         }
+    }
+
+    public function cluster()
+    {
+        return $this->belongsTo(Cluster::class);
+    }
+
+    public static function generatePdf($cluster)
+    {
+        $_select = [];
+        foreach(array_values(self::mapSchema()) as $select) {
+            $_select[] = $select['alias'];
+        }
+        if (!$cluster) {
+            return self::select($_select)->addSelect('inventory_units.name as unit_name')->addSelect('clusters.name as cluster_name')
+                    // ->addSelect('inventory_categories.name as category_name')
+                    ->join('inventory_units', 'inventory_units.id', '=', 'inventories.unit_id')
+                    ->join('clusters', 'clusters.id', 'inventories.cluster_id')
+                    ->get();
+        }
+
+        return self::select($_select)->addSelect('inventory_units.name as unit_name')->addSelect('clusters.name as cluster_name')
+                    // ->addSelect('inventory_categories.name as category_name')
+                    ->join('inventory_units', 'inventory_units.id', '=', 'inventories.unit_id')
+                    ->join('clusters', 'clusters.id', 'inventories.cluster_id')
+                    ->where('inventories.cluster_id', '=', $cluster)->get();
     }
 }
