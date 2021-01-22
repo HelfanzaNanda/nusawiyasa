@@ -133,8 +133,8 @@ $( document ).ready(function() {
           {data: 'name', name: 'name'},
           {data: 'stock', name: 'stock'},
           {data: 'unit_name', name: 'unit_name'},
-          {data: 'type', name: 'type'},
           {data: 'brand', name: 'brand'},
+          {data: 'type', name: 'type'},
         ],
     });
   }

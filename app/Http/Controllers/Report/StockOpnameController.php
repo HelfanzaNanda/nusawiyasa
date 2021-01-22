@@ -69,7 +69,7 @@ class StockOpnameController extends Controller
                 $nestedData['name'] = $row['name'];
                 $nestedData['stock'] = floatval($row['stock']);
                 $nestedData['unit_name'] = $row['unit_name'];
-                $nestedData['brand'] = $row['brand'];
+                $nestedData['brand'] = $row['brand'] ?? '-';
                 $nestedData['type'] = $row['type'];
                 $data[] = $nestedData;
             }
