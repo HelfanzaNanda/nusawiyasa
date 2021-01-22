@@ -1,18 +1,18 @@
 <ul>
-    <li class="menu-title"> 
+    <li class="menu-title">
         <span>Main</span>
     </li>
-    <li {{ (request()->segment(1) == '') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == '') ? 'class=active' : '' }}>
         <a href="{{url('/')}}"><i class="la la-dashboard"></i> <span>Beranda</span></a>
     </li>
     @if(Session::get('_role_id') == 1 || Session::get('_role_id') == 2)
-    <li {{ (request()->segment(1) == 'employe' || request()->segment(1) == 'employe-detail') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == 'employe' || request()->segment(1) == 'employe-detail') ? 'class=active' : '' }}>
         <a href="{{url('/employe')}}"><i class="la la-user"></i> <span>Pegawai</span></a>
     </li>
-    <li class="menu-title"> 
+    <li class="menu-title">
         <span>Marketing</span>
     </li>
-{{--     <li {{ (request()->segment(1) == 'dashboard') ? 'class=active' : '' }}> 
+{{--     <li {{ (request()->segment(1) == 'dashboard') ? 'class=active' : '' }}>
         <a href="{{url('/dashboard/marketing')}}"><i class="la la-dashboard"></i> <span>Beranda Marketing</span></a>
     </li> --}}
     <li class="submenu">
@@ -32,19 +32,19 @@
             <li><a {{ (request()->segment(1) == 'lots') ? 'class=active' : '' }} href="{{url('/lots')}}">Data Kavling</a></li>
         </ul>
     </li>
-    <li {{ (request()->segment(1) == 'booking-page') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == 'booking-page') ? 'class=active' : '' }}>
         <a href="{{url('/booking-page')}}"><i class="la la-hand-o-up"></i> <span>Customer Booking</span></a>
     </li>
-    <li {{ (request()->segment(1) == 'spk-project') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == 'spk-project') ? 'class=active' : '' }}>
         <a href="{{url('/spk-project')}}"><i class="la la-briefcase"></i> <span>SPK Project</span></a>
     </li>
     @endif
 
     @if(Session::get('_role_id') == 1 || Session::get('_role_id') == 3)
-    <li class="menu-title"> 
+    <li class="menu-title">
         <span>Project </span>
     </li>
-{{--     <li> 
+{{--     <li>
         <a {{ (request()->segment(1) == 'dashboard') ? 'class=active' : '' }} href="{{url('/dashboard/project')}}"><i class="la la-dashboard"></i> <span>Beranda Project</span></a>
     </li> --}}
     <li class="submenu">
@@ -53,23 +53,23 @@
             <li><a {{ (request()->segment(1) == 'customer-confirmation') ? 'class=active' : '' }} href="{{url('/customer-confirmation')}}">Konfirmasi Konsumen</a></li>
         </ul>
     </li>
-    <li {{ (request()->segment(1) == 'work-agreement') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == 'work-agreement') ? 'class=active' : '' }}>
         <a href="{{url('/work-agreement')}}"><i class="la la-handshake"></i> <span>Surat Perjanjian Kerja</span></a>
     </li>
-    <li {{ (request()->segment(1) == 'rap') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == 'rap') ? 'class=active' : '' }}>
         <a href="{{url('/rap')}}"><i class="la la-clipboard-list"></i> <span>RAP</span></a>
     </li>
-    <li {{ (request()->segment(1) == 'request-material') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == 'request-material') ? 'class=active' : '' }}>
         <a href="{{url('/request-material')}}"><i class="la la-dolly-flatbed"></i> <span>Pengajuan Bahan</span></a>
     </li>
-    <li {{ (request()->segment(1) == 'development-progress') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == 'development-progress') ? 'class=active' : '' }}>
         {{-- <a href="{{url('/development-progress')}}"><i class="la la-paint-roller"></i> <span>Progress Pembangunan</span></a> --}}
         <a href="{{url('/development-progress')}}"><i class="la la-paint-roller"></i> <span>Laporan Harian</span></a>
     </li>
     @endif
 
     @if(Session::get('_role_id') == 1 || Session::get('_role_id') == 5)
-    <li class="menu-title"> 
+    <li class="menu-title">
         <span>Gudang </span>
     </li>
     <li class="submenu">
@@ -80,49 +80,49 @@
             <li><a {{ (request()->segment(1) == 'unit') ? 'class=active' : '' }} href="{{url('/unit')}}">Unit</a></li>
         </ul>
     </li>
-    <li {{ (request()->segment(1) == 'supplier') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == 'supplier') ? 'class=active' : '' }}>
         <a href="{{url('/supplier')}}"><i class="la la-user-tag"></i> <span>Supplier</span></a>
     </li>
-    <li {{ (request()->segment(1) == 'inventory-history') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == 'inventory-history') ? 'class=active' : '' }}>
         <a href="{{url('/inventory-history')}}"><i class="la la-boxes"></i> <span>Riwayat Stok</span></a>
     </li>
-    <li {{ (request()->segment(1) == 'receipt-of-goods-request') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == 'receipt-of-goods-request') ? 'class=active' : '' }}>
         <a href="{{url('/receipt-of-goods-request')}}"><i class="la la-hand-holding"></i> <span>Bon Permintaan Barang</span></a>
     </li>
-    <li {{ (request()->segment(1) == 'receipt-of-goods') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == 'receipt-of-goods') ? 'class=active' : '' }}>
         <a href="{{url('/receipt-of-goods')}}"><i class="la la-hand-holding"></i> <span>Bukti Penerimaan Barang</span></a>
     </li>
-    <li {{ (request()->segment(1) == 'delivery-order') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == 'delivery-order') ? 'class=active' : '' }}>
         <a href="{{url('/delivery-order')}}"><i class="la la-truck"></i> <span>Surat Jalan Keluar</span></a>
     </li>
-    <li {{ (request()->segment(1) == 'report-used-inventory') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == 'report-used-inventory') ? 'class=active' : '' }}>
         <a href="{{url('/report-used-inventory')}}"><i class="la la-pallet"></i> <span>Lap. Pemakaian Bahan</span></a>
     </li>
-    <li {{ (request()->segment(1) == 'report-stock-opname') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == 'report-stock-opname') ? 'class=active' : '' }}>
         <a href="{{url('/report-stock-opname')}}"><i class="la la-clipboard-check"></i> <span>Lap. Stock Opname</span></a>
     </li>
     @endif
 
     @if(Session::get('_role_id') == 1 || Session::get('_role_id') == 6)
-    <li class="menu-title"> 
+    <li class="menu-title">
         <span>Purchasing </span>
     </li>
-    <li {{ (request()->segment(1) == 'purchase-order') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == 'purchase-order') ? 'class=active' : '' }}>
         <a href="{{url('/purchase-order')}}"><i class="la la-money-bill-wave"></i> <span>Purchase Order</span></a>
     </li>
-    <li {{ (request()->segment(1) == 'report-inventory-purchase') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == 'report-inventory-purchase') ? 'class=active' : '' }}>
         <a href="{{url('/report-inventory-purchase')}}"><i class="la la-file-alt"></i> <span>Lap. Pembelian Barang</span></a>
     </li>
-    <li {{ (request()->segment(1) == 'report-outstanding-po') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == 'report-outstanding-po') ? 'class=active' : '' }}>
         <a href="{{url('/report-outstanding-po')}}"><i class="la la-file-alt"></i> <span>Lap. Outstanding PO</span></a>
     </li>
     @endif
 
     @if(Session::get('_role_id') == 1)
-    <li class="menu-title"> 
+    <li class="menu-title">
         <span>Pengaturan </span>
     </li>
-    <li {{ (request()->segment(1) == 'user') ? 'class=active' : '' }}> 
+    <li {{ (request()->segment(1) == 'user') ? 'class=active' : '' }}>
         <a href="{{url('/user')}}"><i class="la la-file-alt"></i> <span>Pengguna</span></a>
     </li>
     @endif
