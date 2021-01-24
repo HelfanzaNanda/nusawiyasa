@@ -6,8 +6,12 @@ use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Cluster\Lot;
 use App\Http\Models\Inventory\Suppliers;
 use App\Http\Models\Purchase\PurchaseOrderItems;
+use App\Http\Models\Ref\RefGeneralStatuses;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use tidy;
 
 /**
  * @property string     $number
@@ -126,7 +130,29 @@ class PurchaseOrders extends Model
 
     // Relations ...
 
-    public static function datatables($start, $length, $order, $dir, $search, $filter = '', $session = [])
+    public static function queryFilter($_select, $operator, $cluster, $daterange){
+        $startDate = Carbon::parse(substr($daterange, 0, 10))->format('Y-m-d');
+        $endDate = Carbon::parse(substr($daterange, 12))->format('Y-m-d');
+        return self::select($_select)->addSelect('request_materials.number as request_number')
+                ->leftJoin('request_materials', 'request_materials.id', '=', 'purchase_orders.fpp_number')
+                ->leftJoin('purchase_order_items', 'purchase_order_items.purchase_order_id', '=', 'purchase_orders.id')
+                ->leftJoin('clusters', 'clusters.id', 'purchase_orders.cluster_id')
+                ->where('purchase_orders.status', '!=', '6')
+                ->where('purchase_order_items.delivered_qty', '!=', '0')
+                ->whereBetween('purchase_orders.date', [$startDate, $endDate])
+                ->where('purchase_orders.cluster_id', $operator, $cluster);
+    }
+
+    public static function queryOutStanding($_select)
+    {
+        return self::select($_select)->addSelect('request_materials.number as request_number')
+                ->leftJoin('request_materials', 'request_materials.id', '=', 'purchase_orders.fpp_number')
+                ->leftJoin('purchase_order_items', 'purchase_order_items.purchase_order_id', '=', 'purchase_orders.id')
+                ->where('purchase_orders.status', '!=', '6')
+                ->where('purchase_order_items.delivered_qty', '!=', '0');
+    }
+
+    public static function datatables($start, $length, $order, $dir, $search, $filter = '', $outstanding_po = false, $cluster = '', $daterange = '',  $session = [])
     {
         $totalData = self::count();
 
@@ -135,7 +161,17 @@ class PurchaseOrders extends Model
             $_select[] = $select['alias'];
         }
 
-        $qry = self::select($_select)->addSelect('request_materials.number as request_number')->leftJoin('request_materials', 'request_materials.id', '=', 'purchase_orders.fpp_number');
+        if ($outstanding_po) {
+            if ($cluster == '' && $daterange == '') {
+                $qry = self::queryOutStanding($_select);
+            }else{
+                $operator = $cluster == '0' || $cluster == '' ? '!=' : '=';
+                $qry = self::queryFilter($_select,$operator, $cluster, $daterange);
+            }
+        }else{
+            $qry = self::select($_select)->addSelect('request_materials.number as request_number')
+                ->leftJoin('request_materials', 'request_materials.id', '=', 'purchase_orders.fpp_number');
+        }
 
         if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
             $qry->where('cluster_id', $session['_cluster_id']);
@@ -394,4 +430,42 @@ class PurchaseOrders extends Model
 
         return;
     }
+
+
+    public static function generatePdf(Request $request)
+    {
+        $cluster = $request->cluster_pdf;
+        $startDate = Carbon::parse(substr($request->daterange_pdf, 0, 10))->format('Y-m-d');
+        $endDate = Carbon::parse(substr($request->daterange_pdf, 12))->format('Y-m-d');
+        $purchases = self::where('cluster_id', $cluster)
+        ->where('status', '!=', '6')
+        ->whereBetween('date', [$startDate, $endDate])
+        ->with(['purchaseOrderItems' => function($item){
+            $item->where('delivered_qty', '!=', '0');
+        }])->get();
+        $res = [];
+        foreach($purchases as $purchase){
+            if (count($purchase->purchaseOrderItems) > 0) {
+                array_push($res, $purchase);
+            }
+        }
+        return $res;
+    }
+
+    public function purchaseOrderItems()
+    {
+        return $this->hasMany(PurchaseOrderItems::class, 'purchase_order_id', 'id');
+    }
+
+    public function date_translate_format()
+    {
+        return Carbon::parse($this->date)->translatedFormat('d F Y');
+    }
+
+
+    public function refGeneralStatuses()
+    {
+        return $this->belongsTo(RefGeneralStatuses::class, 'status', 'id');
+    }
+
 }

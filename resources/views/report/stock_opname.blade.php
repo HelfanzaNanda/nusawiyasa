@@ -20,7 +20,7 @@
             <input type="hidden" name="cluster_pdf" id="cluster-pdf">
             <button type="submit" class="btn btn-secondary"><i class="fa fa-print"> Cetak</i></button>
         </form>
-      </div>
+    </div>
   </div>
 </div>
 <!-- /Page Header -->
@@ -50,10 +50,10 @@
         </div>
       </div>
     </div>
-  </div>
+</div>
 
   <!-- filter Modal -->
-<div id="filter-modal" class="modal custom-modal fade" role="dialog">
+  <div id="filter-modal" class="modal custom-modal fade" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -77,7 +77,7 @@
                 </div>
               </div>
             <div class="submit-section">
-              <button class="btn btn-primary submit-btn">Submit</button>
+              <button class="btn btn-primary submit-btn">Filter</button>
             </div>
           </form>
         </div>
@@ -111,7 +111,6 @@ $( document ).ready(function() {
     }else{
         alertError('silahkan pilih dahulu');
     }
-
   });
 
   function fill_datatables(filter_cluster = ''){

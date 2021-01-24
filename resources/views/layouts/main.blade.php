@@ -34,9 +34,10 @@
     <link rel="stylesheet" href="{{ asset('template/assets/css/bootstrap-datetimepicker.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('template/assets/css/dropify.min.css') }}">
-    
+
     <!-- Main CSS -->
     <link rel="stylesheet" href="{{ asset('template/assets/css/style.css') }}">
+    @yield('style')
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -103,7 +104,7 @@
 
       <script type="text/javascript">
         $('.dropify').dropify();
-        
+
         if ($("#datepicker-popup").length) {
           $('#datepicker-popup').datepicker({
             enableOnReadonly: true,
@@ -130,7 +131,7 @@
 
         function formatDateIndo(str) {
           var dataMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-          
+
           if (str) {
             var result = str.split('-');
 
@@ -146,7 +147,7 @@
 
         function formatDateTimeIndo(str) {
           var dataMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-          
+
           if (str) {
             var dateTime = str.split(' ');
 
@@ -183,8 +184,8 @@
           var dateNow = now.getDate();
 
           var dob = new Date(dateString.substring(0,4),
-                             dateString.substring(5,7)-1,                   
-                             dateString.substring(8,10)                  
+                             dateString.substring(5,7)-1,
+                             dateString.substring(8,10)
                              );
 
           var yearDob = dob.getYear();
@@ -298,7 +299,7 @@
             if (el.length > 0) {
                 if ($("#img_" + el[0].id).length > 0) {
                     $("#img_" + el[0].id).css('display', 'block');
-                }               
+                }
                 else {
                     var img = $('<img class="ddloading">');
                     img.attr('id', "img_" + el[0].id);
@@ -306,7 +307,7 @@
                     img.css({ 'display': 'block', 'width': '25px', 'height': '25px', 'z-index': '100', 'float': 'left', 'margin-top': '10px', 'margin-left': '10px' });
                     img.prependTo(el[0].nextElementSibling);
                 }
-                el.prop("disabled", true);               
+                el.prop("disabled", true);
             }
         }
 
@@ -316,7 +317,7 @@
                      setTimeout(function () {
                          $("#img_" + el[0].id).css('display', 'none');
                          el.prop("disabled", false);
-                    }, 500);                    
+                    }, 500);
                 }
             }
         }

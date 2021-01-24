@@ -177,7 +177,7 @@ Route::group([
 	Route::post('/report-inventory-purchase-datatables', 'Report\InventoryPurchaseController@datatables');
 
 	Route::get('/report-outstanding-po', 'Report\OutstandingPOController@index');
-	Route::post('/report-outstanding-po', 'Report\OutstandingPOController@insertData');
+	Route::post('/report-outstanding-po-pdf', 'Report\OutstandingPOController@generatePdf')->name('report.outstanding.pdf');
     Route::post('/report-outstanding-po-datatables', 'Report\OutstandingPOController@datatables');
 
     Route::get('/report-stock-opname', 'Report\StockOpnameController@index');
