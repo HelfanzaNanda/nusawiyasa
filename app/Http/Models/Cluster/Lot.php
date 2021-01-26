@@ -43,6 +43,11 @@ class Lot extends Model
         return $this->belongsTo(Cluster::class);
     }
 
+    public function galleries()
+    {
+        return $this->hasMany('App\Http\Models\Cluster\LotGallery', 'lot_id', 'id');
+    }
+
     public static function mapSchema($params = [], $user = [])
     {
         $model = new self;
@@ -78,7 +83,7 @@ class Lot extends Model
 
         unset($params['page']);
 
-        $db = self::select(array_keys(self::mapSchema()));
+        $db = self::select(array_keys(self::mapSchema()))->with('galleries');
 
         if ($params) {
             foreach (array($params) as $k => $v) {
@@ -132,7 +137,7 @@ class Lot extends Model
     {
         unset($params['all']);
 
-        $db = self::select(array_keys(self::mapSchema()));
+        $db = self::select(array_keys(self::mapSchema()))->with('galleries');
 
         if ($params) {
             foreach (array($params) as $k => $v) {
