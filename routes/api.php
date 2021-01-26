@@ -17,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::group(['namespace' => 'Cluster'], function () {
+    Route::get('clusters/{id?}', ['as' => 'get.cluster', 'uses' => 'ClusterController@get']);
+    Route::get('lots/{id?}', ['as' => 'get.lot', 'uses' => 'LotController@get']);
+});

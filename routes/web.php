@@ -65,6 +65,9 @@ Route::group([
 	Route::get('/lots/{id}', 'Cluster\LotController@detail');
 	Route::get('/lots/{id}/delete', 'Cluster\LotController@delete');
 
+	Route::post('/lot-gallery', 'Cluster\LotGalleryController@insertData');
+	Route::get('/lot_galleries', 'Cluster\LotGalleryController@get');
+
 	Route::get('/booking-page', 'Customer\CustomerLotController@index');
 	Route::get('/bookings/{lot_id?}', 'Customer\CustomerLotController@get');
 	Route::post('/bookings/{lot_id}', 'Customer\CustomerLotController@insertData');

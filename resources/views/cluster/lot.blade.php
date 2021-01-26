@@ -3,6 +3,13 @@
 @section('title', 'Kapling')
 
 @section('content')
+<style type="text/css">
+.image-row {
+  margin:10px;
+  width:200px;
+  height:150px;
+}
+</style>
 <!-- Page Header -->
 <div class="page-header">
   <div class="row align-items-center">
@@ -51,6 +58,39 @@
     </div>
   </div>
 </div>
+
+<!-- Add Salary Modal -->
+<div id="image-modal" class="modal custom-modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Tambah Gallery</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="image-form" method="POST" action="#">
+          {!! csrf_field() !!}
+          <input type="text" name="lot_id" id="input-image-lot-id">
+          <div class="row"> 
+            <div class="col-md-12"> 
+              <div class="form-group">
+                <label>Gambar</label>
+                <input class="form-control" type="file" name="files[]" class="form-control" id="input-image" onchange="preview_image();" multiple>
+              </div>
+              <div id="image_preview"></div>
+            </div>
+          </div>
+          <div class="submit-section">
+            <button class="btn btn-primary submit-btn">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Add Salary Modal -->
 
 <!-- Add Salary Modal -->
 <div id="add-modal" class="modal custom-modal fade" role="dialog">
@@ -119,7 +159,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Tambah Kapling</h5>
+        <h5 class="modal-title">Edit Kapling</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -333,6 +373,49 @@
     })
   });
 
+  $('form#image-form').submit(function( e ) {
+    e.preventDefault();
+    var form_data = new FormData( this );
+
+    $.ajax({
+      type: 'post',
+      url: BASE_URL+'/lot-gallery',
+      data: form_data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      dataType: 'json',
+      beforeSend: function() {
+        
+      },
+      success: function(msg) {
+        if(msg.status == 'success'){
+            setTimeout(function() {
+                swal({
+                    title: "Sukses",
+                    text: msg.message,
+                    type:"success",
+                    html: true
+                }, function() {
+                    $('#main-table').DataTable().ajax.reload(null, false);
+                    $('#image-modal').modal('hide');
+                    // window.location.replace(URL_LIST_PURCHASES);
+                });
+            }, 500);
+        } else {
+            swal({
+                title: "Gagal",
+                text: msg.message,
+                showConfirmButton: true,
+                confirmButtonColor: '#0760ef',
+                type:"error",
+                html: true
+            });
+        }
+      }
+    })
+  });
+
   $(document).on('click', '#delete', function(e){
     event.preventDefault()
     var id = $(this).data("id")
@@ -383,6 +466,19 @@
             }
           })
         })
+  });
+
+  function preview_image() {
+   var total_file=document.getElementById("input-image").files.length;
+   for(var i=0;i<total_file;i++) {
+    $('#image_preview').append("<img class='image-row' src='"+URL.createObjectURL(event.target.files[i])+"'>");
+   }
+  }
+
+  $(document).on('click', '#lot-gallery', function(e){
+    let lotId = $(this).data('id');
+    $('#input-image-lot-id').val(lotId);
+    $('#image-modal').modal('show');
   });
 </script>
 @endsection

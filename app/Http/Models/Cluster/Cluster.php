@@ -152,9 +152,7 @@ class Cluster extends Model
             }
         }
 
-        return response()->json([
-            'data' => $db->get()
-        ]);
+        return response()->json($db->get());
     }
 
     public static function createOrUpdate($params, $method, $request)

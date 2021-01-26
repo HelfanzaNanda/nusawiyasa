@@ -121,4 +121,19 @@ class ClusterController extends Controller
             'status' => 'success'
         ]);
     }
+
+    public function get($id=null, Request $request)
+    {
+        $request = $request->all();
+
+        if ($id != null) {
+            $res = Cluster::getById($id, $request);
+        } else if (isset($request['all']) && $request['all']) {
+            $res = Cluster::getAllResult($request);
+        } else {
+            $res = Cluster::getPaginatedResult($request);
+        }
+
+        return $res;
+    }
 }

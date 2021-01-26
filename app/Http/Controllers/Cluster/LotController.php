@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Cluster;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Cluster\Lot;
+use App\Http\Models\Cluster\LotGallery;
 use App\Http\Models\Ref\Province;
 use App\Http\Models\Ref\RefLotStatuses;
 use Illuminate\Http\Request;
@@ -99,6 +100,7 @@ class LotController extends Controller
                 }
                 $nestedData['action'] .='<a href="#" class="dropdown-item" id="edit" data-id="'.$row['id'].'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
                 $nestedData['action'] .='<a href="#" class="dropdown-item" id="delete" data-id="'.$row['id'].'"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
+                $nestedData['action'] .='<a href="#" class="dropdown-item" id="lot-gallery" data-id="'.$row['id'].'"><i class="fa fa-info m-r-5"></i> Gallery</a>';
 
                 $nestedData['action'] .='</div>';
                 $nestedData['action'] .='</div>';
@@ -165,5 +167,11 @@ class LotController extends Controller
             'message' => 'data berhasil dihapus',
             'status' => 'success'
         ]);
+    }
+
+    public function insertGallery(Request $requerst)
+    {
+        $params = $request->all();
+        return LotGallery::createOrUpdate($params, $request->method(), $request);   
     }
 }
