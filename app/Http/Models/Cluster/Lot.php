@@ -20,7 +20,8 @@ class Lot extends Model
 		'price',
 		'is_active',
 		'is_deleted',
-        'lot_status'
+        'lot_status',
+        'description'
     ];
 
     private $operators = [
@@ -64,6 +65,7 @@ class Lot extends Model
             'lot_status' => ['alias' => $model->table.'.lot_status', 'type' => 'int'],
 			'is_active' => ['alias' => $model->table.'.is_active', 'type' => 'string'],
 			'is_deleted' => ['alias' => $model->table.'.is_deleted', 'type' => 'string'],
+            'description' => ['alias' => $model->table.'.description', 'type' => 'string'],
 			'created_at' => ['alias' => $model->table.'.created_at', 'type' => 'string'],
 			'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string'],
         ];

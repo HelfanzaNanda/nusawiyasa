@@ -27,6 +27,8 @@
 
     <link rel="stylesheet" href="{{ asset('template/assets/plugins/sweetalert/sweetalert.css') }}">
 
+    <link rel="stylesheet" href="{{ asset('template/assets/plugins/summernote/dist/summernote-bs4.css') }}">
+
     <link rel="stylesheet" href="{{ asset('template/assets/css/dataTables.bootstrap4.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('template/assets/css/select2.min.css') }}">
@@ -89,6 +91,7 @@
       <script src="{{ asset('template/assets/js/select2.min.js') }}"></script>
 
       <script src="{{ asset('template/assets/plugins/sweetalert/sweetalert.min.js') }}"></script>
+      <script src="{{ asset('template/assets/plugins/summernote/dist/summernote-bs4.min.js') }}"></script>
 
       <script src="{{ asset('template/assets/js/moment.min.js') }}"></script>
       <script src="{{ asset('template/assets/js/bootstrap-datetimepicker.min.js') }}"></script>

@@ -142,6 +142,10 @@
                 <label>Harga</label>
                 <input class="form-control" type="number" name="price">
               </div>
+              <div class="form-group">
+                <label>Spesifikasi</label>
+                <textarea id="input-description" name="description"></textarea>
+              </div>
             </div>
           </div>
           <div class="submit-section">
@@ -204,6 +208,10 @@
               <div class="form-group">
                 <label>Harga</label>
                 <input class="form-control" type="number" name="price" id="price-update">
+              </div>
+              <div class="form-group">
+                <label>Spesifikasi</label>
+                <textarea id="edit-description" name="description"></textarea>
               </div>
             </div>
           </div>
@@ -325,6 +333,8 @@
           $('#surface-area-update').val(data.surface_area)
           $('#building-area-update').val(data.building_area)
           $('#price-update').val(data.price)
+
+          $('#edit-description').summernote("code", data.description);
         }
       })
   });
@@ -479,6 +489,14 @@
     let lotId = $(this).data('id');
     $('#input-image-lot-id').val(lotId);
     $('#image-modal').modal('show');
+  });
+
+  $('#input-description').summernote({
+    height: 200
+  });
+
+  $('#edit-description').summernote({
+    height: 200
   });
 </script>
 @endsection
