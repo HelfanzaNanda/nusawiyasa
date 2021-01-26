@@ -130,10 +130,24 @@ class PurchaseOrders extends Model
 
     // Relations ...
 
-    public static function queryFilter($_select, $operator, $cluster, $daterange){
+    public static function queryFilterOutStanding($_select, $operator, $cluster, $daterange){
         $startDate = Carbon::parse(substr($daterange, 0, 10))->format('Y-m-d');
         $endDate = Carbon::parse(substr($daterange, 12))->format('Y-m-d');
         return self::select($_select)->addSelect('request_materials.number as request_number')
+                ->leftJoin('request_materials', 'request_materials.id', '=', 'purchase_orders.fpp_number')
+                ->leftJoin('purchase_order_items', 'purchase_order_items.purchase_order_id', '=', 'purchase_orders.id')
+                ->leftJoin('clusters', 'clusters.id', 'purchase_orders.cluster_id')
+                ->where('purchase_orders.status', '!=', '6')
+                ->where('purchase_order_items.delivered_qty', '!=', '0')
+                ->whereBetween('purchase_orders.date', [$startDate, $endDate])
+                ->where('purchase_orders.cluster_id', $operator, $cluster);
+    }
+
+    public static function queryFilterInventoryPurchase($_select, $operator, $cluster, $daterange){
+        $startDate = Carbon::parse(substr($daterange, 0, 10))->format('Y-m-d');
+        $endDate = Carbon::parse(substr($daterange, 12))->format('Y-m-d');
+        return self::select($_select)->addSelect('request_materials.number as request_number')
+                ->addSelect('purchase_order_items.qty as qty')
                 ->leftJoin('request_materials', 'request_materials.id', '=', 'purchase_orders.fpp_number')
                 ->leftJoin('purchase_order_items', 'purchase_order_items.purchase_order_id', '=', 'purchase_orders.id')
                 ->leftJoin('clusters', 'clusters.id', 'purchase_orders.cluster_id')
@@ -152,7 +166,17 @@ class PurchaseOrders extends Model
                 ->where('purchase_order_items.delivered_qty', '!=', '0');
     }
 
-    public static function datatables($start, $length, $order, $dir, $search, $filter = '', $outstanding_po = false, $cluster = '', $daterange = '',  $session = [])
+    public static function queryInventoryPurchase($_select)
+    {
+        return self::select($_select)->addSelect('request_materials.number as request_number')
+                ->addSelect('purchase_order_items.qty as qty')
+                ->leftJoin('request_materials', 'request_materials.id', '=', 'purchase_orders.fpp_number')
+                ->leftJoin('purchase_order_items', 'purchase_order_items.purchase_order_id', '=', 'purchase_orders.id')
+                ->where('purchase_orders.status', '!=', '6')
+                ->where('purchase_order_items.delivered_qty', '!=', '0');
+    }
+
+    public static function datatables($start, $length, $order, $dir, $search, $filter = '', $session = [])
     {
         $totalData = self::count();
 
@@ -161,17 +185,29 @@ class PurchaseOrders extends Model
             $_select[] = $select['alias'];
         }
 
-        if ($outstanding_po) {
-            if ($cluster == '' && $daterange == '') {
+        if ($filter['outstanding_po'] ?? '') {
+            if ($filter['cluster'] == '' && $filter['daterange'] == '') {
                 $qry = self::queryOutStanding($_select);
             }else{
-                $operator = $cluster == '0' || $cluster == '' ? '!=' : '=';
-                $qry = self::queryFilter($_select,$operator, $cluster, $daterange);
+                $operator = $filter['cluster'] == '0' || $filter['cluster'] == '' ? '!=' : '=';
+                $qry = self::queryFilterOutStanding($_select,$operator, $filter['cluster'], $filter['daterange']);
             }
-        }else{
+        }elseif ($filter['inventory_purchase'] ?? '') {
+            if ($filter['cluster'] == '' && $filter['daterange'] == '') {
+                $qry = self::queryInventoryPurchase($_select);
+            }else{
+                $operator = $filter['cluster'] == '0' || $filter['cluster'] == '' ? '!=' : '=';
+                $qry = self::queryFilterInventoryPurchase($_select,$operator, $filter['cluster'], $filter['daterange']);
+            }
+
+        }
+        else{
             $qry = self::select($_select)->addSelect('request_materials.number as request_number')
                 ->leftJoin('request_materials', 'request_materials.id', '=', 'purchase_orders.fpp_number');
         }
+
+        // $qry = self::select($_select)->addSelect('request_materials.number as request_number')
+        //         ->leftJoin('request_materials', 'request_materials.id', '=', 'purchase_orders.fpp_number');
 
         if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
             $qry->where('cluster_id', $session['_cluster_id']);

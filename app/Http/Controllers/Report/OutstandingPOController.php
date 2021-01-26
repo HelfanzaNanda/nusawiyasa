@@ -75,13 +75,9 @@ class OutstandingPOController extends Controller
 
         $search = $request->search['value'];
 
-        $filter = $request->only(['sDate', 'eDate']);
+        $filter = $request->only(['sDate', 'eDate', 'outstanding_po', 'daterange', 'cluster']);
 
-        $outstanding_po = $request->outstanding_po;
-        $daterange = $request->daterange;
-        $cluster = $request->cluster;
-
-        $res = PurchaseOrders::datatables($start, $limit, $order, $dir, $search, $filter, $outstanding_po, $cluster, $daterange, $session);
+        $res = PurchaseOrders::datatables($start, $limit, $order, $dir, $search, $filter, $session);
         //return json_encode($res);
         //$res = PurchaseOrders::datatables($start, $limit, $order, $dir, $search, $filter, $outstanding_po, $filters, $session);
 

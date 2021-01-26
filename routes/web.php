@@ -173,7 +173,7 @@ Route::group([
 	Route::get('/receipt-of-goods-request/{id}/delete', 'Inventory\ReceiptOfGoodsRequestController@delete');
 
 	Route::get('/report-inventory-purchase', 'Report\InventoryPurchaseController@index');
-	Route::post('/report-inventory-purchase', 'Report\InventoryPurchaseController@insertData');
+	Route::post('/report-inventory-purchase-pdf', 'Report\InventoryPurchaseController@generatePdf')->name('report.inventory-purchase.pdf');
 	Route::post('/report-inventory-purchase-datatables', 'Report\InventoryPurchaseController@datatables');
 
 	Route::get('/report-outstanding-po', 'Report\OutstandingPOController@index');
