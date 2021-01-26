@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Stock Opname</title>
+    <title>Out Standing PO</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <style>
@@ -20,9 +20,9 @@
             text-align: center;
             margin-top: 20px;
         }
-        table td {
+        /* table td::fir{
             text-align: center;
-        }
+        } */
         table,
         table td,
         table th {
@@ -32,7 +32,9 @@
 
         .title {
             text-align: center;
-            padding: 1rem 0rem;
+            text-transform: uppercase;
+
+            /* padding: 1rem 0rem; */
         }
 
         /**
@@ -81,27 +83,54 @@
         <img src="{{ env("SITE_FOOTER_PDF_URL") }}" width="100%" height="100%"/>
         {{-- <img src="https://i.ibb.co/mhvmQvt/Picture-1-footer.png" width="100%" height="100%"/> --}}
     </footer>
-    <h3 class="title">{{ $title }}</h3>
-    <table id="content">
+    <table>
         <tr>
-            <th>#</th>
-            <th width="10%">Nama Barang</th>
-            <th>Stok</th>
-            <th>Unit</th>
-            <th>Brand</th>
-            <th>Type</th>
+            <td colspan="4" class="title"><strong>{{ $title }}</strong></td>
         </tr>
-        @foreach ($data as $item)
-        <tr>
-            <td>{{ $loop->iteration }}</td>
-            <td>{{ $item->name }}</td>
-            <td>{{ number_format(floatval($item->stock)) }}</td>
-            <td>{{ $item->unit_name }}</td>
-            <td>{{ $item->brand  ?? '-' }}</td>
-            <td>{{ $item->type }}</td>
-        </tr>
-        @endforeach
     </table>
+    @foreach ($datas as $index => $data)
+        <table id="content">
+            <tr>
+                <td style="width: 3%">{{ $loop->iteration }}</td>
+                <td colspan="2">PO : {{ $data->number }}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="2">Status : {{ $data->refGeneralStatuses->name }}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="2">Tanggal : {{ $data->date_translate_format() }}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="2">total : Rp. {{ number_format(floatval($data->total)) }},-</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="2">OUTSTANDING ITEM</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td style="width: 3%">#</td>
+                <td>Nama Barang</td>
+                <td>Qty Belum Terkirim</td>
+            </tr>
+            @foreach ($data->purchaseOrderItems as $item)
+                <tr>
+                    <td></td>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $item->inventory->name }}</td>
+                    <td>{{ $item->delivered_qty }}</td>
+                </tr>
+            @endforeach
+        </table>
+    @endforeach
 </body>
 
 </html>
