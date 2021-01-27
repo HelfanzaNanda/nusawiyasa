@@ -37,10 +37,12 @@ Route::group([
 	Route::post('/customer-terms', 'Customer\CustomerTermController@insertData');
 	Route::post('/customer-term-datatables', 'Customer\CustomerTermController@datatables');
 
-	Route::get('/customer-costs', function () {
-	    return abort(404);
-	});
-	// Route::get('/customer-costs', 'Customer\CustomerCostController@index');
+	Route::get('/customer-payments', 'Customer\CustomerPaymentController@index');
+	Route::get('/bookings/{id}/payments', 'Customer\CustomerPaymentController@detail');
+	Route::post('/bookings/{id}/payments', 'Customer\CustomerPaymentController@insertData');
+	Route::get('/customer_payments/{id?}', 'Customer\CustomerPaymentController@get');
+	Route::post('/customer-payment-datatables', 'Customer\CustomerPaymentController@datatables');
+
 	Route::post('/customer-costs', 'Customer\CustomerCostController@insertData');
 	Route::post('/customer-cost-datatables', 'Customer\CustomerCostController@datatables');
 

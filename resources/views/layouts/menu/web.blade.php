@@ -19,8 +19,8 @@
         <a href="#"><i class="la la-users"></i> <span> Konsumen</span> <span class="menu-arrow"></span></a>
         <ul style="display: none;">
             <li><a {{ (request()->segment(1) == 'customers') ? 'class=active' : '' }} href="{{url('/customers')}}">Data Konsumen</a></li>
-{{--             <li><a {{ (request()->segment(1) == 'customer-terms') ? 'class=active' : '' }} href="{{url('/customer-terms')}}">Dokumen</a></li>
-            <li><a {{ (request()->segment(1) == 'customer-costs') ? 'class=active' : '' }} href="{{url('/customer-costs')}}">Pembayaran</a></li> --}}
+            {{-- <li><a {{ (request()->segment(1) == 'customer-terms') ? 'class=active' : '' }} href="{{url('/customer-terms')}}">Dokumen</a></li> --}}
+            <li><a {{ (request()->segment(1) == 'customer-payments') ? 'class=active' : '' }} href="{{url('/customer-payments')}}">Pembayaran</a></li>
         </ul>
     </li>
     <li class="submenu">
