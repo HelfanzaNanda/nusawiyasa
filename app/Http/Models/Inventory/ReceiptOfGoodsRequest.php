@@ -2,14 +2,15 @@
 
 namespace App\Http\Models\Inventory;
 
-use App\Http\Models\Cluster\Lot;
-use App\Http\Models\Inventory\Inventories;
-use App\Http\Models\Inventory\ReceiptOfGoodsRequestItems;
-use App\Http\Models\Purchase\PurchaseOrderDeliveryItems;
-use App\Http\Models\Purchase\PurchaseOrderItems;
-use App\Http\Models\Purchase\PurchaseOrders;
 use DB;
+use Carbon\Carbon;
+use App\Http\Models\Cluster\Lot;
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\Inventory\Inventories;
+use App\Http\Models\Purchase\PurchaseOrders;
+use App\Http\Models\Purchase\PurchaseOrderItems;
+use App\Http\Models\Purchase\PurchaseOrderDeliveryItems;
+use App\Http\Models\Inventory\ReceiptOfGoodsRequestItems;
 
 /**
  * @property Date       $date
@@ -55,7 +56,7 @@ class ReceiptOfGoodsRequest extends Model
      * @var array
      */
     protected $hidden = [
-        
+
     ];
 
     /**
@@ -101,6 +102,34 @@ class ReceiptOfGoodsRequest extends Model
 
     // Relations ...
 
+    public static function queryUsedInventory($_select)
+    {
+        return self::select($_select)
+                ->addSelect('clusters.name as cluster_name')
+                ->addSelect('lots.block')
+                ->addSelect('lots.unit_number')
+                ->addSelect('lots.surface_area')
+                ->addSelect('lots.building_area')
+                ->leftJoin('lots', 'lots.id', '=', 'receipt_of_goods_request.lot_id')
+                ->leftJoin('clusters', 'clusters.id', '=', 'lots.cluster_id');
+    }
+
+    public static function queryFilterUsedInventory($_select, $operator, $filter)
+    {
+        $startDate = Carbon::parse(substr($filter['daterange'], 0, 10))->format('Y-m-d');
+        $endDate = Carbon::parse(substr($filter['daterange'], 12))->format('Y-m-d');
+        return self::select($_select)
+                ->addSelect('clusters.name as cluster_name')
+                ->addSelect('lots.block')
+                ->addSelect('lots.unit_number')
+                ->addSelect('lots.surface_area')
+                ->addSelect('lots.building_area')
+                ->leftJoin('lots', 'lots.id', '=', 'receipt_of_goods_request.lot_id')
+                ->leftJoin('clusters', 'clusters.id', '=', 'lots.cluster_id')
+                ->where('receipt_of_goods_request.cluster_id', $operator, $filter['cluster'])
+                ->whereBetween('receipt_of_goods_request.date', [$startDate, $endDate]);
+    }
+
     public static function datatables($start, $length, $order, $dir, $search, $filter = '', $session = [])
     {
         $totalData = self::count();
@@ -110,7 +139,15 @@ class ReceiptOfGoodsRequest extends Model
             $_select[] = $select['alias'];
         }
 
-        $qry = self::select($_select)
+        if ($filter['used_inventory'] ?? '') {
+            if ($filter['cluster'] == '' && $filter['daterange'] == '') {
+                $qry = self::queryUsedInventory($_select);
+            }else{
+                $operator = $filter['cluster'] == '0' || $filter['cluster'] == '' ? '!=' : '=';
+                $qry = self::queryFilterUsedInventory($_select,$operator, $filter);
+            }
+        }else{
+            $qry = self::select($_select)
                 ->addSelect('clusters.name as cluster_name')
                 ->addSelect('lots.block')
                 ->addSelect('lots.unit_number')
@@ -118,15 +155,16 @@ class ReceiptOfGoodsRequest extends Model
                 ->addSelect('lots.building_area')
                 ->leftJoin('lots', 'lots.id', '=', 'receipt_of_goods_request.lot_id')
                 ->leftJoin('clusters', 'clusters.id', '=', 'lots.cluster_id');
-        
+        }
+
         if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
             $qry->where('lots.cluster_id', $session['_cluster_id']);
         }
 
         $totalFiltered = $qry->count();
-        
+
         if (empty($search)) {
-            
+
             if ($length > 0) {
                 $qry->skip($start)
                     ->take($length);
@@ -190,7 +228,7 @@ class ReceiptOfGoodsRequest extends Model
             $update = self::where('id', $id)->update($request_of_goods_request);
 
             ReceiptOfGoodsRequestItems::whereReceiptOfGoodsRequestId($id)->delete();
-            
+
             foreach ($params['inventory_id'] as $key => $val) {
                 ReceiptOfGoodsRequestItems::create([
                     'receipt_of_goods_request_id' => $id,
@@ -211,7 +249,7 @@ class ReceiptOfGoodsRequest extends Model
                     'date' => $params['date'],
                     'type' => 'out',
                     'models' => __CLASS__
-                ]); 
+                ]);
             }
 
             DB::commit();
@@ -244,7 +282,7 @@ class ReceiptOfGoodsRequest extends Model
                     'date' => $params['date'],
                     'type' => 'out',
                     'models' => __CLASS__
-                ]); 
+                ]);
             }
         }
 
@@ -296,7 +334,7 @@ class ReceiptOfGoodsRequest extends Model
 
         $countAll = $db->count();
         $currentPage = $paramsPage > 0 ? $paramsPage - 1 : 0;
-        $page = $paramsPage > 0 ? $paramsPage + 1 : 2; 
+        $page = $paramsPage > 0 ? $paramsPage + 1 : 2;
         $nextPage = env('APP_URL').'/inventories?page='.$page;
         $prevPage = env('APP_URL').'/inventories?page='.($currentPage < 1 ? 1 : $currentPage);
         $totalPage = ceil((int)$countAll / 10);
@@ -355,5 +393,31 @@ class ReceiptOfGoodsRequest extends Model
         return response()->json([
             'data' => $db->get()
         ]);
+    }
+
+    public static function generatePdf($request)
+    {
+        $cluster = $request->cluster_pdf;
+        $startDate = Carbon::parse(substr($request->daterange_pdf, 0, 10))->format('Y-m-d');
+        $endDate = Carbon::parse(substr($request->daterange_pdf, 12))->format('Y-m-d');
+        $receipts = self::where('cluster_id', $cluster)
+        ->whereBetween('date', [$startDate, $endDate])
+        ->with('receiptOfGoodsRequestItems')->get();
+        return $receipts;
+    }
+
+    public function receiptOfGoodsRequestItems()
+    {
+        return $this->hasMany(ReceiptOfGoodsRequestItems::class);
+    }
+
+    public function date_translate_format()
+    {
+        return Carbon::parse($this->date)->translatedFormat('d F Y');
+    }
+
+    public function lot()
+    {
+        return $this->belongsTo(Lot::class);
     }
 }

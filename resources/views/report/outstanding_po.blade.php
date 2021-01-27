@@ -115,20 +115,15 @@
     });
 
     $('form#filter-form').submit( function( e ) {
-    e.preventDefault();
-    const cluster = $('#input-cluster').val();
-    const daterange = $('#daterange').val();
-    $('#filter-modal').modal('hide');
-    $('#main-table').DataTable().destroy();
-    $('#cluster-pdf').val(cluster);
-    $('#daterange-pdf').val(daterange);
-    fill_datatables(cluster, daterange);
-    // if(cluster != '0' && daterange){
-
-    // }else{
-    //     alertError('silahkan pilih dahulu');
-    // }
-  });
+        e.preventDefault();
+        const cluster = $('#input-cluster').val();
+        const daterange = $('#daterange').val();
+        $('#filter-modal').modal('hide');
+        $('#main-table').DataTable().destroy();
+        $('#cluster-pdf').val(cluster);
+        $('#daterange-pdf').val(daterange);
+        fill_datatables(cluster, daterange);
+    });
 
     function fill_datatables(cluster = '', daterange = ''){
         $("#main-table").DataTable({

@@ -2,17 +2,24 @@
 
 namespace App\Http\Controllers\Report;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Customer\Customer;
-use App\Http\Models\Ref\Province;
 use Illuminate\Http\Request;
+use App\Http\Models\Ref\Province;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Models\Cluster\Cluster;
+use App\Http\Models\Customer\Customer;
+use App\Http\Models\Purchase\PurchaseOrderItems;
+use App\Http\Models\Ref\RefGeneralStatuses;
+use App\Http\Models\Purchase\PurchaseOrders;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class InventoryPurchaseController extends Controller
 {
     public function index()
     {
-        return view('report.inventory_purchase');
+        return view('report.inventory_purchase', [
+            'clusters' => Cluster::selectClusterBySession(),
+        ]);
     }
 
     public function create()
@@ -34,17 +41,20 @@ class InventoryPurchaseController extends Controller
 
     public function datatables(Request $request)
     {
-        $_login = session()->get('_login');
-        $_id = session()->get('_id');
-        $_name = session()->get('_name');
-        $_email = session()->get('_email');
-        $_username = session()->get('_username');
-        $_phone = session()->get('_phone');
-        $_role_id = session()->get('_role_id');
-        $_role_name = session()->get('_role_name');
+        $session = [
+            '_login' => session()->get('_login'),
+            '_id' => session()->get('_id'),
+            '_name' => session()->get('_name'),
+            '_email' => session()->get('_email'),
+            '_username' => session()->get('_username'),
+            '_phone' => session()->get('_phone'),
+            '_role_id' => session()->get('_role_id'),
+            '_role_name' => session()->get('_role_name'),
+            '_cluster_id' => session()->get('_cluster_id')
+        ];
 
         $columns = [
-            0 => 'customers.id'
+            0 => 'purchase_orders.id'
         ];
 
         $dataOrder = [];
@@ -66,28 +76,32 @@ class InventoryPurchaseController extends Controller
 
         $search = $request->search['value'];
 
-        $filter = $request->only(['sDate', 'eDate']);
+        $filter = $request->only(['sDate', 'eDate', 'inventory_purchase', 'daterange', 'cluster']);
 
-        $res = Customer::datatables($start, $limit, $order, $dir, $search, $filter);
-
+        $res = PurchaseOrders::datatables($start, $limit, $order, $dir, $search, $filter, $session);
         $data = [];
+
+        $status_collection = RefGeneralStatuses::get();
+
+        $type = '';
 
         if (!empty($res['data'])) {
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
-                $nestedData['name'] = $row['name'];
-                $nestedData['email'] = $row['email'];
-                $nestedData['phone'] = $row['phone'];
-                $nestedData['province'] = $row['province'];
-                $nestedData['city'] = $row['city'];
-                $nestedData['action'] = '';
-                $nestedData['action'] .='        <div class="dropdown dropdown-action">';
-                $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';
-                $nestedData['action'] .='            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(159px, 32px, 0px);">';
-                $nestedData['action'] .='                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#edit_leave"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
-                $nestedData['action'] .='                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_approve"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
-                $nestedData['action'] .='            </div>';
-                $nestedData['action'] .='        </div>';
+                $nestedData['number'] = $row['number'];
+                $nestedData['fpp_number'] = $row['request_number']  ?? '-';
+                if ($row['type'] == 'non_rap') {
+                    $type = 'NON RAP';
+                } else if ($row['type'] == 'rap') {
+                    $type = 'RAP';
+                } else if ($row['type'] == 'disposition') {
+                    $type = 'DISPOSISI';
+                }
+
+                $nestedData['type'] = $type;
+                $nestedData['date'] = $row['date'];
+                $nestedData['status'] = $status_collection->where('id', $row['status'])->values()[0]['name'];
+                $nestedData['qty'] = number_format(floatval($row['qty']));
                 $data[] = $nestedData;
             }
         }
@@ -106,5 +120,21 @@ class InventoryPurchaseController extends Controller
     public function detail($id)
     {
 
+    }
+
+    public function generatePdf(Request $request)
+    {
+        $filename = 'Inventory Purchase per '.$request->daterange_pdf;
+        // return view('report.inventory_purchase_pdf', [
+        //     'title' => $filename,
+        //     'datas' => PurchaseOrders::generatePdf($request)
+        // ]);
+
+        $pdf = PDF::setOptions(['isRemoteEnabled' => true])
+        ->loadview('report.outstanding_po_pdf', [
+            'datas' => PurchaseOrders::generatePdf($request),
+            'title' => $filename
+        ]);
+        return $pdf->download($filename.'.pdf');
     }
 }

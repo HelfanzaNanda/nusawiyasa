@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Out Standing PO</title>
+    <title>Inventory Purchase</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <style>
@@ -35,9 +35,6 @@
             text-transform: uppercase;
 
             /* padding: 1rem 0rem; */
-        }
-        .content {
-            margin-bottom: 1%;
         }
 
         /**
@@ -92,7 +89,7 @@
         </tr>
     </table>
     @foreach ($datas as $index => $data)
-        <table class="content">
+        <table id="content">
             <tr>
                 <td style="width: 3%">{{ $loop->iteration }}</td>
                 <td colspan="2">PO : {{ $data->number }}</td>
