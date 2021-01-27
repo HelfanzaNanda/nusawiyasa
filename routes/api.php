@@ -26,3 +26,17 @@ Route::group(['namespace' => 'Cluster'], function () {
 Route::group(['namespace' => 'Project'], function () {
     Route::get('development_progress/{id?}', ['as' => 'get.development.progress', 'uses' => 'DevelopmentProgressController@get']);
 });
+Route::get('banner', function(){
+    $banner = [
+        [
+            'id' => '1',
+            'name' => 'Perumahan nyaman',
+            'image' => 'https://nusawiyasapropertindo.com/wp-content/uploads/2020/06/6-3-1024x1024.png'
+        ],[
+            'id' => '2',
+            'name' => 'Peruman keluarga',
+            'image' => 'https://nusawiyasapropertindo.com/wp-content/uploads/2020/06/6-2-1024x1024.png'
+        ]
+        ];
+    return response()->json($banner);
+});
