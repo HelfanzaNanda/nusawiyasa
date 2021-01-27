@@ -71,7 +71,7 @@ Route::group([
 	Route::get('/lot_galleries', 'Cluster\LotGalleryController@get');
 
 	Route::get('/booking-page', 'Customer\CustomerLotController@index');
-	Route::get('/bookings/{lot_id?}', 'Customer\CustomerLotController@get');
+	Route::get('/bookings/{lot_id?}', 'Customer\CustomerLotController@create');
 	Route::post('/bookings/{lot_id}', 'Customer\CustomerLotController@insertData');
 	Route::post('/booking-datatables', 'Customer\CustomerLotController@datatables');
 	Route::get('/bookings/detail/{id}', 'Customer\CustomerLotController@detail');
