@@ -172,6 +172,10 @@ Route::group([
 	Route::get('/update-receipt-of-goods-request/{id}', 'Inventory\ReceiptOfGoodsRequestController@edit')->name('receipt.edit');
 	Route::get('/receipt-of-goods-request/{id}/delete', 'Inventory\ReceiptOfGoodsRequestController@delete');
 
+    Route::get('/report-used-inventory', 'Report\UsedInventoryController@index');
+    Route::post('/report-used-inventory-pdf', 'Report\UsedInventoryController@generatePdf')->name('report.used-inventory.pdf');
+    Route::post('/report-used-inventory-datatables', 'Report\UsedInventoryController@datatables');
+
 	Route::get('/report-inventory-purchase', 'Report\InventoryPurchaseController@index');
 	Route::post('/report-inventory-purchase-pdf', 'Report\InventoryPurchaseController@generatePdf')->name('report.inventory-purchase.pdf');
 	Route::post('/report-inventory-purchase-datatables', 'Report\InventoryPurchaseController@datatables');
