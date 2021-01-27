@@ -168,4 +168,19 @@ class DevelopmentProgressController extends Controller
         // return view('project.development_progress_pdf', compact('data'));
         
     }
+
+    public function get($id=null, Request $request)
+    {
+        $request = $request->all();
+
+        if ($id != null) {
+            $res = DevelopmentProgress::getById($id, $request);
+        } else if (isset($request['all']) && $request['all']) {
+            $res = DevelopmentProgress::getAllResult($request);
+        } else {
+            $res = DevelopmentProgress::getPaginatedResult($request);
+        }
+
+        return $res;
+    }
 }
