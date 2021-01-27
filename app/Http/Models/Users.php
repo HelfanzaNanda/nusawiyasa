@@ -10,9 +10,11 @@ use DataTables;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Passport\HasApiTokens;
 
 class Users extends Model
 {
+    use HasApiTokens;
     protected $table = 'users';
     protected $fillable = [
         'id',
