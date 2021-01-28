@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Models\Project\DevelopmentProgress;
 use Carbon\Carbon;
 
 class AuthController extends Controller
@@ -28,7 +29,9 @@ class AuthController extends Controller
         $token = $tokenResult->token;
         if ($request->remember_me)
             $token->expires_at = Carbon::now()->addWeeks(1);
+
         $token->save();
+
         return response()->json([
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
@@ -40,6 +43,26 @@ class AuthController extends Controller
 
     public function user(Request $request){
         $user = $request->user();
+        
+
+        if($user->customer->developmentProgress->count() == 0){
+            $user['submission'] = "await";
+        }else{
+            $user['submission'] = ($user->customer->developmentProgress[$user->customer->developmentProgress->count()-1]->customer_approval)
+                ? 'accept'
+                : 'decline';
+        }
+        $user['customer_id'] = $user->customer->id;
+        unset($user['customer']);
         return response()->json($user);
+    }
+
+    public function logout(Request $request){
+        $request->user()->token()->revoke();
+
+        return response()->json([
+            'message' => 'Logout success'
+        ]);
+
     }
 }
