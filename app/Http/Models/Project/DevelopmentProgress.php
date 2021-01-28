@@ -345,9 +345,11 @@ class DevelopmentProgress extends Model
             $_select[] = $select['alias'];
         }
 
-        $db = self::select($_select)
-                ->addSelect('inventory_units.name as unit_name')
-                ->join('inventory_units', 'inventory_units.id', '=', 'inventories.unit_id');
+        $db = self::select($_select);
+
+        if (isset($params['detail']) && $params['detail']) {
+            $db->with('files')->with('jobs')->with('materials');
+        }
 
         if ($params) {
             foreach (array($params) as $k => $v) {
@@ -411,6 +413,10 @@ class DevelopmentProgress extends Model
 
         $db = self::select(array_keys(self::mapSchema()));
 
+        if (isset($params['detail']) && $params['detail']) {
+            $db->with('files')->with('jobs')->with('materials');
+        }
+        
         if ($params) {
             foreach (array($params) as $k => $v) {
                 foreach (array_keys($v) as $key => $row) {
@@ -433,9 +439,7 @@ class DevelopmentProgress extends Model
             }
         }
 
-        return response()->json([
-            'data' => $db->get()
-        ]);
+        return response()->json($db->get());
     }
 
     public function cluster(){

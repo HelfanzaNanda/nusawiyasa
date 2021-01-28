@@ -22,3 +22,7 @@ Route::group(['namespace' => 'Cluster'], function () {
     Route::get('clusters/{id?}', ['as' => 'get.cluster', 'uses' => 'ClusterController@get']);
     Route::get('lots/{id?}', ['as' => 'get.lot', 'uses' => 'LotController@get']);
 });
+
+Route::group(['namespace' => 'Project'], function () {
+    Route::get('development_progress/{id?}', ['as' => 'get.development.progress', 'uses' => 'DevelopmentProgressController@get']);
+});
