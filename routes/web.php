@@ -218,6 +218,19 @@ Route::group([
 	Route::delete('employe/media/{id}', 'Hr\EmployeMediaController@delete');
 
 	Route::get('accounting-master', 'Accounting\AccountingMasterController@index');
+
+	Route::get('accounting-general-ledger', 'Accounting\GeneralLedgerController@index');
+	Route::post('accounting-general-ledger-datatables', 'Accounting\GeneralLedgerController@datatables');
+
+	Route::get('accounting-ledger', 'Accounting\LedgerController@index');
+	Route::post('accounting-ledger-datatables', 'Accounting\LedgerController@datatables');
+
+	Route::get('accounting-profit-loss', 'Accounting\ProfitLossController@index');
+	Route::post('accounting-profit-loss-datatables', 'Accounting\ProfitLossController@datatables');
+
+	Route::get('accounting-balance-sheet', 'Accounting\BalanceSheetController@index');
+	Route::post('accounting-balance-sheet-datatables', 'Accounting\BalanceSheetController@datatables');
+
 	
 	Route::group(['namespace' => 'Accounting', 'prefix' => 'accounting'], function () {
     	Route::get('accounting-master', 'AccountingMasterController@index');

@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Cluster')
+@section('title', 'COA')
 
 @section('style')
 	<link rel="stylesheet" href="{{ asset('template/assets/plugins/treeview/dist/bootstrap-treeview.min.css') }}">
