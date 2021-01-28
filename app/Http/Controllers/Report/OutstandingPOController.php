@@ -11,6 +11,7 @@ use App\Http\Models\Customer\Customer;
 use App\Http\Models\Ref\RefGeneralStatuses;
 use App\Http\Models\Purchase\PurchaseOrders;
 use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 
 class OutstandingPOController extends Controller
 {
@@ -78,8 +79,6 @@ class OutstandingPOController extends Controller
         $filter = $request->only(['sDate', 'eDate', 'outstanding_po', 'daterange', 'cluster']);
 
         $res = PurchaseOrders::datatables($start, $limit, $order, $dir, $search, $filter, $session);
-        //return json_encode($res);
-        //$res = PurchaseOrders::datatables($start, $limit, $order, $dir, $search, $filter, $outstanding_po, $filters, $session);
 
         $data = [];
 
@@ -129,11 +128,14 @@ class OutstandingPOController extends Controller
         // return view('report.outstanding_po_pdf', [
         //     'datas' => PurchaseOrders::generatePdf($request)
         // ]);
+        $data = PurchaseOrders::generatePdf($request);
+        $startDate = Carbon::parse($data['startDate'])->format('d-m-Y');
+        $endDate = Carbon::parse($data['endDate'])->format('d-m-Y');
+        $filename = 'Used Inventory per '.$startDate. ' - '. $endDate;
 
-        $filename = 'Outstanding PO per '.$request->daterange_pdf;
         $pdf = PDF::setOptions(['isRemoteEnabled' => true])
         ->loadview('report.outstanding_po_pdf', [
-            'datas' => PurchaseOrders::generatePdf($request),
+            'datas' => $data['purchases'],
             'title' => $filename
         ]);
         return $pdf->download($filename.'.pdf');

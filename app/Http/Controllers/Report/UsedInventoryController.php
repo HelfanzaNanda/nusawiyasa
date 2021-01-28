@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Inventory\ReceiptOfGoodsRequest;
 use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 
 class UsedInventoryController extends Controller
 {
@@ -88,8 +89,12 @@ class UsedInventoryController extends Controller
 
     public function generatePdf(Request $request)
     {
-        $filename = 'Used Inventory per '.$request->daterange_pdf;
 
+        $data = ReceiptOfGoodsRequest::generatePdf($request);
+        $startDate = Carbon::parse($data['startDate'])->format('d-m-Y');
+        $endDate = Carbon::parse($data['endDate'])->format('d-m-Y');
+        $filename = 'Used Inventory per '.$startDate. ' - '. $endDate;
+        
         //return json_encode(ReceiptOfGoodsRequest::generatePdf($request));
         // return view('report.used_inventory_pdf', [
         //     'datas' => ReceiptOfGoodsRequest::generatePdf($request),
@@ -97,7 +102,7 @@ class UsedInventoryController extends Controller
         // ]);
         $pdf = PDF::setOptions(['isRemoteEnabled' => true])
         ->loadview('report.used_inventory_pdf', [
-            'datas' => ReceiptOfGoodsRequest::generatePdf($request),
+            'datas' => $data['receipts'],
             'title' => $filename
         ]);
         return $pdf->download($filename.'.pdf');

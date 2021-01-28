@@ -12,6 +12,7 @@ use App\Http\Models\Purchase\PurchaseOrderItems;
 use App\Http\Models\Ref\RefGeneralStatuses;
 use App\Http\Models\Purchase\PurchaseOrders;
 use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 
 class InventoryPurchaseController extends Controller
 {
@@ -124,15 +125,19 @@ class InventoryPurchaseController extends Controller
 
     public function generatePdf(Request $request)
     {
-        $filename = 'Inventory Purchase per '.$request->daterange_pdf;
+        //$filename = 'Inventory Purchase per '.$request->daterange_pdf;
         // return view('report.inventory_purchase_pdf', [
         //     'title' => $filename,
         //     'datas' => PurchaseOrders::generatePdf($request)
         // ]);
+        $data = PurchaseOrders::generatePdf($request);
+        $startDate = Carbon::parse($data['startDate'])->format('d-m-Y');
+        $endDate = Carbon::parse($data['endDate'])->format('d-m-Y');
+        $filename = 'Used Inventory per '.$startDate. ' - '. $endDate;
 
         $pdf = PDF::setOptions(['isRemoteEnabled' => true])
-        ->loadview('report.outstanding_po_pdf', [
-            'datas' => PurchaseOrders::generatePdf($request),
+        ->loadview('report.inventory_purchase_pdf', [
+            'datas' => $data['purchases'],
             'title' => $filename
         ]);
         return $pdf->download($filename.'.pdf');

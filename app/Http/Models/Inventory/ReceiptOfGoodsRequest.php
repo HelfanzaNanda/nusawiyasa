@@ -104,6 +104,9 @@ class ReceiptOfGoodsRequest extends Model
 
     public static function queryUsedInventory($_select)
     {
+        $year = now()->year();
+        $month = now()->month();
+        $endDate = now()->format('Y-m-d');
         return self::select($_select)
                 ->addSelect('clusters.name as cluster_name')
                 ->addSelect('lots.block')
@@ -111,7 +114,8 @@ class ReceiptOfGoodsRequest extends Model
                 ->addSelect('lots.surface_area')
                 ->addSelect('lots.building_area')
                 ->leftJoin('lots', 'lots.id', '=', 'receipt_of_goods_request.lot_id')
-                ->leftJoin('clusters', 'clusters.id', '=', 'lots.cluster_id');
+                ->leftJoin('clusters', 'clusters.id', '=', 'lots.cluster_id')
+                ->whereBetween('receipt_of_goods_request.date', [$year.'-'.$month.'-01', $endDate]);
     }
 
     public static function queryFilterUsedInventory($_select, $operator, $filter)
@@ -397,13 +401,24 @@ class ReceiptOfGoodsRequest extends Model
 
     public static function generatePdf($request)
     {
-        $cluster = $request->cluster_pdf;
+        
         $startDate = Carbon::parse(substr($request->daterange_pdf, 0, 10))->format('Y-m-d');
         $endDate = Carbon::parse(substr($request->daterange_pdf, 12))->format('Y-m-d');
-        $receipts = self::where('cluster_id', $cluster)
-        ->whereBetween('date', [$startDate, $endDate])
-        ->with('receiptOfGoodsRequestItems')->get();
-        return $receipts;
+        if ($request->cluster_pdf == '0') {
+            
+            $receipts = self::whereBetween('date', [$startDate, $endDate])
+            ->with('receiptOfGoodsRequestItems')->get();
+        }else{
+            $cluster = $request->cluster_pdf;
+            $receipts = self::where('cluster_id', $cluster)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->with('receiptOfGoodsRequestItems')->get();
+        }
+        return [
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'receipts' => $receipts
+        ];
     }
 
     public function receiptOfGoodsRequestItems()

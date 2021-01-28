@@ -110,7 +110,7 @@
             </tr>
             <tr>
                 <td></td>
-                <td colspan="2">total : Rp. {{ number_format(floatval($data->total)) }},-</td>
+                <td colspan="2">Total : Rp. {{ number_format(floatval($data->total)) }},-</td>
                 <td></td>
             </tr>
             <tr>
