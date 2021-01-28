@@ -12,6 +12,7 @@ use App\Http\Models\Cluster\Lot;
 use DB;
 use File;
 use Illuminate\Database\Eloquent\Model;
+use DateTimeInterface;
 
 /**
  * @property int        $cluster_id
@@ -79,6 +80,11 @@ class DevelopmentProgress extends Model
         'date', 'created_at', 'updated_at'
     ];
 
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
+
     /**
      * Indicates if the model should be timestamped.
      *
@@ -104,7 +110,7 @@ class DevelopmentProgress extends Model
             'id' => ['alias' => $model->table.'.id', 'type' => 'int'],
             'cluster_id' => ['alias' => $model->table.'.cluster_id', 'type' => 'int'],
             'lot_id' => ['alias' => $model->table.'.lot_id', 'type' => 'int'],
-            'date' => ['alias' => $model->table.'.date', 'type' => 'string'],
+            'date' => ['alias' => $model->table.'.date', 'type' => 'date'],
             'user_created_id' => ['alias' => $model->table.'.user_created_id', 'type' => 'int'],
             'user_consultant_id' => ['alias' => $model->table.'.user_consultant_id', 'type' => 'int'],
             'user_supervisor_id' => ['alias' => $model->table.'.user_supervisor_id', 'type' => 'int'],
@@ -359,14 +365,14 @@ class DevelopmentProgress extends Model
                             if ($this->operators[array_keys(array_values($v)[$key])[$key]] != 'like') {
                                 $db->where(self::mapSchema()[$row]['alias'], $this->operators[array_keys(array_values($v)[$key])[$key]], array_values(array_values($v)[$key])[$key]);
                             } else {
-                                if (self::mapSchema()[$row]['type'] === 'int') {
+                                if (self::mapSchema()[$row]['type'] === 'int' || self::mapSchema()[$row]['type'] === 'date') {
                                     $db->where(self::mapSchema()[$row]['alias'], array_values($v)[$key]);
                                 } else {
                                     $db->where(self::mapSchema()[$row]['alias'], 'like', '%'.array_values($v)[$key].'%');
                                 }
                             }
                         } else {
-                            if (self::mapSchema()[$row]['type'] === 'int') {
+                            if (self::mapSchema()[$row]['type'] === 'int' || self::mapSchema()[$row]['type'] === 'date') {
                                 $db->where(self::mapSchema()[$row]['alias'], array_values($v)[$key]);
                             } else {
                                 $db->where(self::mapSchema()[$row]['alias'], 'like', '%'.array_values($v)[$key].'%');
@@ -376,6 +382,8 @@ class DevelopmentProgress extends Model
                 }
             }
         }
+
+        // dd($db->toSql(), $db->getBindings());
 
         $countAll = $db->count();
         $currentPage = $paramsPage > 0 ? $paramsPage - 1 : 0;
@@ -428,7 +436,7 @@ class DevelopmentProgress extends Model
                                 $db->where(self::mapSchema()[$row], 'like', '%'.array_values($v)[$key].'%');
                             }
                         } else {
-                            if (self::mapSchema()[$row]['type'] === 'int') {
+                            if (self::mapSchema()[$row]['type'] === 'int' || self::mapSchema()[$row]['type'] === 'date') {
                                 $db->where(self::mapSchema()[$row]['alias'], array_values($v)[$key]);
                             } else {
                                 $db->where(self::mapSchema()[$row]['alias'], 'like', '%'.array_values($v)[$key].'%');
