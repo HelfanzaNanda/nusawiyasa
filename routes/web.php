@@ -214,4 +214,34 @@ Route::group([
 	Route::get('employe/media/{id}', 'Hr\EmployeMediaController@get');
 	Route::post('employe/media', 'Hr\EmployeMediaController@insertData');
 	Route::delete('employe/media/{id}', 'Hr\EmployeMediaController@delete');
+
+	Route::get('accounting-master', 'Accounting\AccountingMasterController@index');
+	
+	Route::group(['namespace' => 'Accounting', 'prefix' => 'accounting'], function () {
+    	Route::get('accounting-master', 'AccountingMasterController@index');
+        Route::get('/', ['as' => 'accounting.master', 'uses' => 'AccountingMasterController@initTree']);
+        Route::get('/add/{coa}', ['as' => 'accounting.add', 'uses' => 'AccountingMasterController@create']);
+        Route::post('/store/{coa}', ['as' => 'accounting.store', 'uses' => 'AccountingMasterController@store']);
+        Route::get('/edit/{coa}', ['as' => 'accounting.edit', 'uses' => 'AccountingMasterController@edit']);
+        Route::post('/update/{coa}', ['as' => 'accounting.update', 'uses' => 'AccountingMasterController@update']);
+        Route::delete('/destroy/{coa}', ['as' => 'accounting.destroy', 'uses' => 'AccountingMasterController@update']);
+        Route::get('/get', ['as' => 'accounting.get', 'uses' => 'AccountingMasterController@get_coa']);
+
+        Route::group(['prefix' => 'general_ledger'], function () {
+            Route::post('/datatables', ['as' => 'accounting.general_ledger.datatable', 'uses' => 'GeneralLedgerController@index']);
+            Route::post('/store', ['as' => 'accounting.general_ledger.store', 'uses' => 'GeneralLedgerController@store']);
+        });
+
+        Route::group(['prefix' => 'ledger'], function () {
+            Route::post('/datatables', ['as' => 'accounting.ledger.datatable', 'uses' => 'LedgerController@index']);
+        });
+
+        Route::group(['prefix' => 'profit_loss'], function () {
+            Route::post('/get', ['as' => 'accounting.profit_loss.get', 'uses' => 'ProfitLossController@index']);
+        });
+
+        Route::group(['prefix' => 'balance_sheet'], function () {
+            Route::post('/', ['as' => 'accounting.profit_loss.get', 'uses' => 'BalanceSheetController@index']);
+        });
+	});
 });
