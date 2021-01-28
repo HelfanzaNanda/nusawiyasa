@@ -30,7 +30,7 @@
     <div class="col-md-12 d-flex">
         <div class="card card-table flex-fill">
             <div class="card-header">
-                <h3 class="card-title mb-0">Data Lap. Outstanding PO</h3>
+                <h3 class="card-title mb-0">Report Pembelian Inventory</h3>
             </div>
             <div class="card-body ml-3 mt-3 mr-3 mb-3">
                 <div class="table-responsive">
@@ -95,15 +95,39 @@
 @section('additionalScriptJS')
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script type="text/javascript">
+
     $(document).ready(function(){
+        const cluster = $('#input-cluster').val();
+        const daterange = $('#daterange').val();
+        $('#cluster-pdf').val(cluster);
+        $('#daterange-pdf').val(daterange);
         fill_datatables()
     })
+
+    var date = new Date();
+    var currentMonth = date.getMonth();
+    var currentDate = date.getDate();
+    var currentYear = date.getFullYear();
+    
+    $('#daterange').daterangepicker({
+        startDate:  new Date(currentYear, currentMonth, '1'),
+        endDate: new Date(currentYear, currentMonth, currentDate),
+        "opens": "left",
+        "drops": "up"
+    });
 
     $("#show-filter-modal").on('click',function() {
         $('#filter-modal').modal('show');
     });
 
+    var date = new Date();
+    var currentMonth = date.getMonth();
+    var currentDate = date.getDate();
+    var currentYear = date.getFullYear();
+
     $('#daterange').daterangepicker({
+        startDate:  new Date(currentYear, currentMonth, '1'),
+        endDate: moment().startOf('day').toDate(),
         "opens": "left",
         "drops": "up"
     });

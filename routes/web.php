@@ -40,6 +40,8 @@ Route::group([
 	Route::get('/customer-payments', 'Customer\CustomerPaymentController@index');
 	Route::get('/bookings/{id}/payments', 'Customer\CustomerPaymentController@detail');
 	Route::post('/bookings/{id}/payments', 'Customer\CustomerPaymentController@insertData');
+	Route::post('/bookings/payments/{id}', 'Customer\CustomerPaymentController@update');
+	Route::get('/bookings/payments/{id}/delete', 'Customer\CustomerPaymentController@delete');
 	Route::get('/customer_payments/{id?}', 'Customer\CustomerPaymentController@get');
 	Route::post('/customer-payment-datatables', 'Customer\CustomerPaymentController@datatables');
 

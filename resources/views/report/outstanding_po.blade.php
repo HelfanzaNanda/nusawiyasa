@@ -98,6 +98,10 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
+        const cluster = $('#input-cluster').val();
+        const daterange = $('#daterange').val();
+        $('#cluster-pdf').val(cluster);
+        $('#daterange-pdf').val(daterange);
         fill_datatables()
     })
 
@@ -105,7 +109,14 @@
         $('#filter-modal').modal('show');
     });
 
+    var date = new Date();
+    var currentMonth = date.getMonth();
+    var currentDate = date.getDate();
+    var currentYear = date.getFullYear();
+
     $('#daterange').daterangepicker({
+        startDate:  new Date(currentYear, currentMonth, '1'),
+        endDate: new Date(currentYear, currentMonth, currentDate),
         "opens": "left",
         "drops": "up"
     });
