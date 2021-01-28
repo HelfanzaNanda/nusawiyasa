@@ -126,4 +126,27 @@
         <a href="{{url('/user')}}"><i class="la la-file-alt"></i> <span>Pengguna</span></a>
     </li>
     @endif
+
+    @if(Session::get('_role_id') == 1)
+    <li class="menu-title">
+        <span>Accounting </span>
+    </li>
+    <li {{ (request()->segment(1) == 'accounting-master') ? 'class=active' : '' }}>
+        <a href="{{url('/accounting-master')}}"><i class="la la-file-alt"></i> <span>COA</span></a>
+    </li>
+    <li {{ (request()->segment(1) == 'accounting-general-ledger') ? 'class=active' : '' }}>
+        <a href="{{url('/accounting-general-ledger')}}"><i class="la la-file-alt"></i> <span>Jurnal Umum</span></a>
+    </li>
+    <li {{ (request()->segment(1) == 'accounting-ledger') ? 'class=active' : '' }}>
+        <a href="{{url('/accounting-ledger')}}"><i class="la la-file-alt"></i> <span>Buku Besar</span></a>
+    </li>
+
+    <li {{ (request()->segment(1) == 'accounting-profit-loss') ? 'class=active' : '' }}>
+        <a href="{{url('/accounting-profit-loss')}}"><i class="la la-file-alt"></i> <span>Laba Rugi</span></a>
+    </li>
+
+    <li {{ (request()->segment(1) == 'accounting-balance-sheet') ? 'class=active' : '' }}>
+        <a href="{{url('/accounting-balance-sheet')}}"><i class="la la-file-alt"></i> <span>Neraca</span></a>
+    </li>
+    @endif
 </ul>

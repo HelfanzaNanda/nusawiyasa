@@ -30,6 +30,22 @@ class CustomerPaymentController extends Controller
 
     }
 
+    public function update(Request $request)
+    {
+        $params = $request->all();
+        //return $params;
+        return CustomerPayment::createOrUpdate($params, $request->method(), $request);
+    }
+
+    public function delete($id)
+    {
+        CustomerPayment::destroy($id);
+        return response()->json([
+            'message' => 'data berhasil dihapus',
+            'status' => 'success'
+        ]);
+    }
+
     public function datatables(Request $request)
     {
         $session = [

@@ -52,7 +52,10 @@
                             <td>Rp {{number_format($customer_payment['value'])}}</td>
                             <td>{{strtoupper($customer_payment['payment_type'])}}</td>
                             <td>{{$customer_payment['note']}}</td>
-                            <td><button type="button" class="btn btn-success btn-sm">View</button>&nbsp;<button type="button" class="btn btn-primary btn-sm">Edit</button>&nbsp;<button type="button" class="btn btn-danger btn-sm">Delete</button></td>
+                            {{-- <td>{{ pathinfo($customer_payment['filename'], PATHINFO_EXTENSION) }}</td> --}}
+                            <td><button data-payment="{{ $customer_payment }}" data-id="{{ $customer_payment['id'] }}" data-ext="{{ pathinfo($customer_payment['filename'], PATHINFO_EXTENSION) }}" type="button" class="btn-view btn btn-success btn-sm">View</button>&nbsp;<button type="button" data-payment="{{ $customer_payment }}" class="btn edit-payment-button btn-primary btn-sm">Edit</button>&nbsp;<button id="delete" data-id={{ $customer_payment['id'] }} type="button" class="btn btn-danger btn-sm">Delete</button>
+                              <a href="#" id="download-pdf"></a></td>
+
                           </tr>
                           @endif
                           @endforeach
@@ -120,11 +123,82 @@
     </div>
   </div>
 </div>
+
+<div id="edit-payment-modal" class="modal custom-modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Pembayaran</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-form" method="POST" action="#">
+          {!! csrf_field() !!}
+          
+          <input type="hidden" name="id" id="edit-customer-payment-id">
+          <div class="row"> 
+            <div class="col-md-12"> 
+              <div class="form-group">
+                <label>Tanggal</label>
+                <input class="form-control" type="text" name="date" id="edit-input-date">
+              </div>
+              <div class="form-group">
+                <label>Nominal</label>
+                <input class="form-control" type="text" name="value" id="edit-input-value">
+              </div>
+              <div class="form-group">
+                <label>Tipe Pembayaran</label>
+                <select class="form-control" id="edit-input-payment-type" name="payment_type">
+                  <option> - Pilih Tipe - </option>
+                  <option value="transfer">Transfer</option>
+                  <option value="cash">Cash</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Bukti Pembayaran</label>
+                <input class="form-control" type="file" name="file" id="edit-input-file">
+              </div>
+              <div class="form-group">
+                <label>Catatan</label>
+                <textarea class="form-control" name="note" id="edit-input-note"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="submit-section">
+            <button class="btn btn-primary submit-btn">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="img-modal" class="modal custom-modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="img-title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img src="" alt="" id="img-img">
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('additionalScriptJS')
 <script type="text/javascript">
   $('#input-payment-type').select2({
+    width: '100%'
+  });
+
+  $('#edit-input-payment-type').select2({
     width: '100%'
   });
 
@@ -140,15 +214,97 @@
     });
   }
 
+  if($('#edit-input-date').length > 0) {
+    $('#edit-input-date').datetimepicker({
+      format: 'YYYY-MM-DD',
+      icons: {
+        up: "fa fa-angle-up",
+        down: "fa fa-angle-down",
+        next: 'fa fa-angle-right',
+        previous: 'fa fa-angle-left'
+      }
+    });
+  }
+
+  $('.btn-view').on('click', function(){
+      const id = $(this).data('id');
+      const payment = $(this).data('payment');
+      const ext = $(this).data('ext');
+      if (ext === 'pdf') {
+        window.open(BASE_URL+payment.filepath+'/'+payment.filename);
+      }else{
+          $('#img-modal').modal('show')
+          $('#img-img').attr("src",BASE_URL+payment.filepath+'/'+payment.filename)
+      }
+  })
+
   $(".add-payment-button").on('click',function() {
       let customerCostId = $(this).data('id');
       $('#input-customer-cost-id').val(customerCostId);
       $('#add-payment-modal').modal('show');
   });
 
+  var customer_payment_id = $('#edit-customer-payment-id');
+
+  $(".edit-payment-button").on('click', function(){
+    const customerpayment = $(this).data('payment');
+    // $('#edit-customer-payment-id').val(customerpayment.id);
+    customer_payment_id.val(customerpayment.id);
+    $('#edit-input-date').val(customerpayment.date);
+    $('#edit-input-value').val(customerpayment.value);  
+    $('#edit-input-payment-type').val(customerpayment.payment_type);
+    $('#edit-input-note').val(customerpayment.note);  
+    $('#edit-payment-modal').modal('show');
+  })
+
+  $('form#edit-form').submit( function( e ){
+      e.preventDefault();
+      //console.log($('#edit-input-file')[0].files[0]);
+
+      var form_data = new FormData( this );
+
+    $.ajax({
+      type: 'post',
+      url: BASE_URL+`/bookings/payments/{${customer_payment_id.val()}}`,
+      data: form_data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      dataType: 'json',
+      beforeSend: function() {
+        
+      },
+      success: function(res) {
+        console.log(res);
+        if(res.status == 'success'){
+            setTimeout(function() {
+                swal({
+                    title: "Sukses",
+                    text: res.message,
+                    type:"success",
+                    html: true
+                }, function() {
+                    window.location.reload();
+                });
+            }, 500);
+        } else {
+            swal({
+                title: "Gagal",
+                text: res.message,
+                showConfirmButton: true,
+                confirmButtonColor: '#0760ef',
+                type:"error",
+                html: true
+            });
+        }
+      }
+    })
+  });
+
   $('form#add-form').submit( function( e ) {
     e.preventDefault();
     var form_data = new FormData( this );
+    
 
     $.ajax({
       type: 'post',
@@ -185,6 +341,58 @@
         }
       }
     })
+  });
+
+  $(document).on('click', '#delete', function(e){
+    event.preventDefault()
+    var id = $(this).data("id")
+
+    swal({
+            title: 'Apakah kamu yakin untuk menghapus?',
+            text: "Data ini tidak bisa dikebalikan lagi",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Batal',
+            confirmButtonText: 'Hapus'
+        }, function(){
+          $.ajax({
+            type: 'get',
+            url: BASE_URL+`/bookings/payments/${id}/delete`,
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            beforeSend: function() {
+              
+            },
+            success: function(res) {
+              if(res.status == 'success'){
+                  setTimeout(function() {
+                    
+                      swal({
+                          title: "sukses",
+                          text: res.message,
+                          type:"success",
+                          html: true
+                      }, function() {
+                          window.location.reload();
+                      });
+                  }, 500);
+              } else {
+                  swal({
+                      title: "Gagal",
+                      text: res.message,
+                      showConfirmButton: true,
+                      confirmButtonColor: '#0760ef',
+                      type:"error",
+                      html: true
+                  });
+              }
+            }
+          })
+        })
   });
 </script>
 @endsection

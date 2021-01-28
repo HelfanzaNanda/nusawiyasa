@@ -107,4 +107,15 @@ class CustomerPayment extends Model
             'message' => 'Data Berhasil Disimpan'
         ]);
     }
+
+    protected $appends = ['image_url'];
+    
+    public function getImageUrlAttribute()
+    {
+        $imageUrl = "";
+        if (isset($this->attributes['image']) && $this->attributes['image'] != "") {
+            $imageUrl = storage_path('app/public').$this->attributes['image'];
+        }
+        return $imageUrl;
+    }
 }

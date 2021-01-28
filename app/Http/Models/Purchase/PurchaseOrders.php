@@ -140,7 +140,8 @@ class PurchaseOrders extends Model
                 ->where('purchase_orders.status', '!=', '6')
                 ->where('purchase_order_items.delivered_qty', '!=', '0')
                 ->whereBetween('purchase_orders.date', [$startDate, $endDate])
-                ->where('purchase_orders.cluster_id', $operator, $cluster);
+                ->where('purchase_orders.cluster_id', $operator, $cluster)
+                ->groupBy('purchase_order_items.purchase_order_id');
     }
 
     public static function queryFilterInventoryPurchase($_select, $operator, $cluster, $daterange){
@@ -154,26 +155,37 @@ class PurchaseOrders extends Model
                 ->where('purchase_orders.status', '!=', '6')
                 ->where('purchase_order_items.delivered_qty', '!=', '0')
                 ->whereBetween('purchase_orders.date', [$startDate, $endDate])
-                ->where('purchase_orders.cluster_id', $operator, $cluster);
+                ->where('purchase_orders.cluster_id', $operator, $cluster)
+                ->groupBy('purchase_order_items.purchase_order_id');
     }
 
     public static function queryOutStanding($_select)
     {
+        $year = now()->year();
+        $month = now()->month();
+        $endDate = now()->format('Y-m-d');
         return self::select($_select)->addSelect('request_materials.number as request_number')
-                ->leftJoin('request_materials', 'request_materials.id', '=', 'purchase_orders.fpp_number')
-                ->leftJoin('purchase_order_items', 'purchase_order_items.purchase_order_id', '=', 'purchase_orders.id')
+                ->join('request_materials', 'request_materials.id', '=', 'purchase_orders.fpp_number')
+                ->join('purchase_order_items', 'purchase_order_items.purchase_order_id', '=', 'purchase_orders.id')
                 ->where('purchase_orders.status', '!=', '6')
-                ->where('purchase_order_items.delivered_qty', '!=', '0');
+                ->where('purchase_order_items.delivered_qty', '!=', '0')
+                ->whereBetween('purchase_orders.date', [$year.'-'.$month.'-01', $endDate])
+                ->groupBy('purchase_order_items.purchase_order_id');
     }
 
     public static function queryInventoryPurchase($_select)
     {
+        $year = now()->year();
+        $month = now()->month();
+        $endDate = now()->format('Y-m-d');
         return self::select($_select)->addSelect('request_materials.number as request_number')
                 ->addSelect('purchase_order_items.qty as qty')
                 ->leftJoin('request_materials', 'request_materials.id', '=', 'purchase_orders.fpp_number')
                 ->leftJoin('purchase_order_items', 'purchase_order_items.purchase_order_id', '=', 'purchase_orders.id')
                 ->where('purchase_orders.status', '!=', '6')
-                ->where('purchase_order_items.delivered_qty', '!=', '0');
+                ->where('purchase_order_items.delivered_qty', '!=', '0')
+                ->whereBetween('purchase_orders.date', [$year.'-'.$month.'-01', $endDate])
+                ->groupBy('purchase_order_items.purchase_order_id');
     }
 
     public static function datatables($start, $length, $order, $dir, $search, $filter = '', $session = [])
@@ -470,22 +482,43 @@ class PurchaseOrders extends Model
 
     public static function generatePdf(Request $request)
     {
-        $cluster = $request->cluster_pdf;
         $startDate = Carbon::parse(substr($request->daterange_pdf, 0, 10))->format('Y-m-d');
         $endDate = Carbon::parse(substr($request->daterange_pdf, 12))->format('Y-m-d');
-        $purchases = self::where('cluster_id', $cluster)
-        ->where('status', '!=', '6')
-        ->whereBetween('date', [$startDate, $endDate])
-        ->with(['purchaseOrderItems' => function($item){
-            $item->where('delivered_qty', '!=', '0');
-        }])->get();
-        $res = [];
-        foreach($purchases as $purchase){
-            if (count($purchase->purchaseOrderItems) > 0) {
-                array_push($res, $purchase);
+        if ($request->cluster_pdf == '0') {
+            $purchases = self::where('status', '!=', '6')
+            ->whereBetween('date', [$startDate, $endDate])
+            ->with(['purchaseOrderItems' => function($item){
+                $item->where('delivered_qty', '!=', '0');
+            }])->get();
+            $res = [];
+            foreach($purchases as $purchase){
+                if (count($purchase->purchaseOrderItems) > 0) {
+                    array_push($res, $purchase);
+                }
+            }
+        }else{
+            $cluster = $request->cluster_pdf;
+            $startDate = Carbon::parse(substr($request->daterange_pdf, 0, 10))->format('Y-m-d');
+            $endDate = Carbon::parse(substr($request->daterange_pdf, 12))->format('Y-m-d');
+
+            $purchases = self::where('cluster_id', $cluster)
+            ->where('status', '!=', '6')
+            ->whereBetween('date', [$startDate, $endDate])
+            ->with(['purchaseOrderItems' => function($item){
+                $item->where('delivered_qty', '!=', '0');
+            }])->get();
+            $res = [];
+            foreach($purchases as $purchase){
+                if (count($purchase->purchaseOrderItems) > 0) {
+                    array_push($res, $purchase);
+                }
             }
         }
-        return $res;
+        return [
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'purchases' => $res
+        ];
     }
 
     public function purchaseOrderItems()

@@ -99,23 +99,37 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-<script type="text/javascript">
 
-    $(document).ready(function(){
-        fill_datatables();
-    })
+<script type="text/javascript">
 
     $("#show-filter-modal").on('click',function() {
         $('#filter-modal').modal('show');
     });
 
-    $('#daterange').daterangepicker({
-        "opens": "left",
-        "drops": "up"
-    });
-
+  
     $('#input-cluster').select2({
         width: '100%'
+    });
+
+    
+    $(document).ready(function(){
+        const cluster = $('#input-cluster').val();
+        const daterange = $('#daterange').val();
+        $('#cluster-pdf').val(cluster);
+        $('#daterange-pdf').val(daterange);
+        fill_datatables()
+    });
+
+    var date = new Date();
+    var currentMonth = date.getMonth();
+    var currentDate = date.getDate();
+    var currentYear = date.getFullYear();
+    
+    $('#daterange').daterangepicker({
+        startDate:  new Date(currentYear, currentMonth, '1'),
+        endDate: new Date(currentYear, currentMonth, currentDate),
+        "opens": "left",
+        "drops": "up"
     });
 
     $('form#filter-form').submit( function( e ) {
