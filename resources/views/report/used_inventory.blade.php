@@ -1,36 +1,37 @@
 @extends('layouts.main')
 
-@section('title', 'Report Pembelian Inventory')
+@section('title', 'Report Pemakaian Bahan')
 @section('style')
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 @endsection
 @section('content')
 <!-- Page Header -->
 <div class="page-header">
-  <div class="row align-items-center">
-    <div class="col">
-      <h3 class="page-title">Report Pembelian Inventory</h3>
-      <ul class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index-2.html">Report Pembelian Inventory</a></li>
-        <li class="breadcrumb-item active">Report Pembelian Inventory</li>
-      </ul>
+    <div class="row align-items-center">
+        <div class="col">
+            <h3 class="page-title">Report Pemakaian Bahan</h3>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-2.html">Report Pemakaian Bahan</a></li>
+                <li class="breadcrumb-item active">Report Pemakaian Bahan</li>
+            </ul>
+        </div>
+        <div class="col-auto float-right ml-auto">
+            <a href="#" class="btn btn-primary" id="show-filter-modal"><i class="fa fa-filter"></i> Filter</a>
+            <form action="{{ route('report.used-inventory.pdf') }}" target="_blank" method="POST" class="d-inline">
+                @csrf
+                <input type="hidden" name="cluster_pdf" id="cluster-pdf">
+                <input type="hidden" name="daterange_pdf" id="daterange-pdf">
+                <button type="submit" class="btn btn-secondary"><i class="fa fa-print"> Cetak</i></button>
+            </form>
+        </div>
     </div>
-    <div class="col-auto float-right ml-auto">
-        <a href="#" class="btn btn-primary" id="show-filter-modal"><i class="fa fa-filter"></i> Filter</a>
-        <form action="{{ route('report.inventory-purchase.pdf') }}" target="_blank" method="POST" class="d-inline">
-            @csrf
-            <input type="hidden" name="cluster_pdf" id="cluster-pdf">
-            <input type="hidden" name="daterange_pdf" id="daterange-pdf">
-            <button type="submit" class="btn btn-secondary"><i class="fa fa-print"> Cetak</i></button>
-        </form>
-    </div>
-  </div>
 </div>
+
 <div class="row">
     <div class="col-md-12 d-flex">
         <div class="card card-table flex-fill">
             <div class="card-header">
-                <h3 class="card-title mb-0">Data Lap. Outstanding PO</h3>
+                <h3 class="card-title mb-0">Report Pemakaian Bahan</h3>
             </div>
             <div class="card-body ml-3 mt-3 mr-3 mb-3">
                 <div class="table-responsive">
@@ -38,15 +39,18 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th width="10%">No. PO</th>
-                                <th width="10%">No. FPP</th>
-                                <th>Jenis Permintaan</th>
+                                <th width="10%">No. Bon</th>
                                 <th>Tanggal</th>
-                                <th>Qty</th>
-                                <th>Status</th>
+                                <th>Cluster/Perumahan</th>
+                                <th>No. Kapling</th>
+                                <th>Blok</th>
+                                <th>LT</th>
+                                <th>LB</th>
                             </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -79,7 +83,8 @@
 
                         <div class="form-group">
                             <label for="">Tanggal</label>
-                            <input type="text" name="daterange" class="form-control" id="daterange" readonly style="background: white; cursor: pointer;" />
+                            <input type="text" name="daterange" class="form-control" id="daterange" readonly
+                                style="background: white; cursor: pointer;" />
                         </div>
                     </div>
                     <div class="submit-section">
@@ -95,8 +100,9 @@
 @section('additionalScriptJS')
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script type="text/javascript">
+
     $(document).ready(function(){
-        fill_datatables()
+        fill_datatables();
     })
 
     $("#show-filter-modal").on('click',function() {
@@ -113,15 +119,15 @@
     });
 
     $('form#filter-form').submit( function( e ) {
-    e.preventDefault();
-    const cluster = $('#input-cluster').val();
-    const daterange = $('#daterange').val();
-    $('#filter-modal').modal('hide');
-    $('#main-table').DataTable().destroy();
-    $('#cluster-pdf').val(cluster);
-    $('#daterange-pdf').val(daterange);
-    fill_datatables(cluster, daterange);
-  });
+        e.preventDefault();
+        const cluster = $('#input-cluster').val();
+        const daterange = $('#daterange').val();
+        $('#filter-modal').modal('hide');
+        $('#main-table').DataTable().destroy();
+        $('#cluster-pdf').val(cluster);
+        $('#daterange-pdf').val(daterange);
+        fill_datatables(cluster, daterange);
+    });
 
     function fill_datatables(cluster = '', daterange = ''){
         $("#main-table").DataTable({
@@ -129,16 +135,16 @@
             "processing": true,
             "serverSide": true,
             "ajax":{
-                "url": BASE_URL+"/report-inventory-purchase-datatables",
+                "url": BASE_URL+"/report-used-inventory-datatables",
                 "dataType": "json",
                 "type": "POST",
                 "data":function(d) {
                     d._token = "{{csrf_token()}}"
-                    d.inventory_purchase = true
+                    d.used_inventory = true
                     d.cluster = cluster
                     d.daterange = daterange
                 },
-                // success: function(resp){
+                // success: function(resp) {
                 //     trimResponse = $.trim(resp);
                 //     console.log(resp); //works! I can see the item names in console log
                 // },
@@ -146,13 +152,13 @@
             "columns": [
                 {data: 'id', name: 'id', width: '5%', "visible": false},
                 {data: 'number', name: 'number'},
-                {data: 'fpp_number', name: 'fpp_number'},
-                {data: 'type', name: 'type'},
                 {data: 'date', name: 'date'},
-                {data: 'qty', name: 'qty'},
-                {data: 'status', name: 'status'},
+                {data: 'cluster_name', name: 'cluster_name'},
+                {data: 'unit_number', name: 'unit_number'},
+                {data: 'block', name: 'block'},
+                {data: 'surface_area', name: 'surface_area'},
+                {data: 'building_area', name: 'building_area'},
             ],
-
         });
     }
 </script>

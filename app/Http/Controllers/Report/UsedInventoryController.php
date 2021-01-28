@@ -3,39 +3,18 @@
 namespace App\Http\Controllers\Report;
 
 use Illuminate\Http\Request;
-use App\Http\Models\Ref\Province;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Cluster\Cluster;
-use App\Http\Models\Customer\Customer;
-use App\Http\Models\Ref\RefGeneralStatuses;
-use App\Http\Models\Purchase\PurchaseOrders;
+use App\Http\Models\Inventory\ReceiptOfGoodsRequest;
 use Barryvdh\DomPDF\Facade as PDF;
 
-class OutstandingPOController extends Controller
+class UsedInventoryController extends Controller
 {
     public function index()
     {
-        return view('report.outstanding_po',[
+        return view('report.used_inventory', [
             'clusters' => Cluster::selectClusterBySession(),
         ]);
-    }
-
-    public function create()
-    {
-
-    }
-
-    public function insertData(Request $request)
-    {
-        $params = $request->all();
-
-        return Customer::createOrUpdate($params, $request->method(), $request);
-    }
-
-    public function edit($id)
-    {
-
     }
 
     public function datatables(Request $request)
@@ -53,7 +32,7 @@ class OutstandingPOController extends Controller
         ];
 
         $columns = [
-            0 => 'purchase_orders.id'
+            0 => 'receipt_of_goods_request.id'
         ];
 
         $dataOrder = [];
@@ -75,35 +54,23 @@ class OutstandingPOController extends Controller
 
         $search = $request->search['value'];
 
-        $filter = $request->only(['sDate', 'eDate', 'outstanding_po', 'daterange', 'cluster']);
+        $filter = $request->only(['sDate', 'eDate', 'used_inventory', 'daterange', 'cluster']);
 
-        $res = PurchaseOrders::datatables($start, $limit, $order, $dir, $search, $filter, $session);
-        //return json_encode($res);
-        //$res = PurchaseOrders::datatables($start, $limit, $order, $dir, $search, $filter, $outstanding_po, $filters, $session);
+        $res = ReceiptOfGoodsRequest::datatables($start, $limit, $order, $dir, $search, $filter, $session);
+        //return $res;
 
         $data = [];
-
-        $status_collection = RefGeneralStatuses::get();
-
-        $type = '';
 
         if (!empty($res['data'])) {
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
-                $nestedData['number'] = $row['number'];
-                $nestedData['fpp_number'] = $row['request_number']  ?? '-';
-                if ($row['type'] == 'non_rap') {
-                    $type = 'NON RAP';
-                } else if ($row['type'] == 'rap') {
-                    $type = 'RAP';
-                } else if ($row['type'] == 'disposition') {
-                    $type = 'DISPOSISI';
-                }
-
-                $nestedData['type'] = $type;
                 $nestedData['date'] = $row['date'];
-                $nestedData['status'] = $status_collection->where('id', $row['status'])->values()[0]['name'];
-                $nestedData['total'] = number_format(floatval($row['total']));
+                $nestedData['number'] = $row['number'];
+                $nestedData['cluster_name'] = $row['cluster_name'];
+                $nestedData['block'] = $row['block'];
+                $nestedData['unit_number'] = $row['unit_number'];
+                $nestedData['surface_area'] = $row['surface_area'];
+                $nestedData['building_area'] = $row['building_area'];
                 $data[] = $nestedData;
             }
         }
@@ -119,21 +86,18 @@ class OutstandingPOController extends Controller
         return json_encode($json_data);
     }
 
-    public function detail($id)
-    {
-
-    }
-
     public function generatePdf(Request $request)
     {
-        // return view('report.outstanding_po_pdf', [
-        //     'datas' => PurchaseOrders::generatePdf($request)
-        // ]);
+        $filename = 'Used Inventory per '.$request->daterange_pdf;
 
-        $filename = 'Outstanding PO per '.$request->daterange_pdf;
+        //return json_encode(ReceiptOfGoodsRequest::generatePdf($request));
+        // return view('report.used_inventory_pdf', [
+        //     'datas' => ReceiptOfGoodsRequest::generatePdf($request),
+        //     'title' => $filename
+        // ]);
         $pdf = PDF::setOptions(['isRemoteEnabled' => true])
-        ->loadview('report.outstanding_po_pdf', [
-            'datas' => PurchaseOrders::generatePdf($request),
+        ->loadview('report.used_inventory_pdf', [
+            'datas' => ReceiptOfGoodsRequest::generatePdf($request),
             'title' => $filename
         ]);
         return $pdf->download($filename.'.pdf');

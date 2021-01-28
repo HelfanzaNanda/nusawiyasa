@@ -5,13 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Out Standing PO</title>
+    <title>Used Inventory</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <style>
         table {
             width: 100%;
             border-collapse: collapse;
+
         }
 
         table th{
@@ -20,9 +21,9 @@
             text-align: center;
             margin-top: 20px;
         }
-        /* table td::fir{
-            text-align: center;
-        } */
+        table td {
+            /* text-align: center; */
+        }
         table,
         table td,
         table th {
@@ -32,12 +33,13 @@
 
         .title {
             text-align: center;
-            text-transform: uppercase;
-
-            /* padding: 1rem 0rem; */
+            padding: 1rem 0rem;
         }
         .content {
             margin-bottom: 1%;
+        }
+        .content .title-item td{
+            text-align: center;
         }
 
         /**
@@ -86,54 +88,46 @@
         <img src="{{ env("SITE_FOOTER_PDF_URL") }}" width="100%" height="100%"/>
         {{-- <img src="https://i.ibb.co/mhvmQvt/Picture-1-footer.png" width="100%" height="100%"/> --}}
     </footer>
-    <table>
-        <tr>
-            <td colspan="4" class="title"><strong>{{ $title }}</strong></td>
-        </tr>
-    </table>
-    @foreach ($datas as $index => $data)
+    <h3 class="title">{{ $title }}</h3>
+
+
+    @foreach ($datas as $data)
         <table class="content">
             <tr>
-                <td style="width: 3%">{{ $loop->iteration }}</td>
-                <td colspan="2">PO : {{ $data->number }}</td>
-                <td></td>
+                <td>No. Permintaan</td>
+                <td colspan="6">{{ $data->number }}</td>
             </tr>
             <tr>
-                <td></td>
-                <td colspan="2">Status : {{ $data->refGeneralStatuses->name }}</td>
-                <td></td>
+                <td>Kapling</td>
+                <td colspan="6">{{ 'Blok '.$data->lot->block.' '.$data->lot->unit_number }}</td>
             </tr>
             <tr>
-                <td></td>
-                <td colspan="2">Tanggal : {{ $data->date_translate_format() }}</td>
-                <td></td>
+                <td>Tanggal</td>
+                <td colspan="6">{{ $data->date_translate_format() }}</td>
             </tr>
-            <tr>
-                <td></td>
-                <td colspan="2">total : Rp. {{ number_format(floatval($data->total)) }},-</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td colspan="2">OUTSTANDING ITEM</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td style="width: 3%">#</td>
+            <tr class="title-item">
+                <td>No</td>
                 <td>Nama Barang</td>
-                <td>Qty Belum Terkirim</td>
+                <td>Unit</td>
+                <td>Quantity</td>
+                <td>Merk</td>
+                <td>Harga</td>
+                <td>Total</td>
             </tr>
-            @foreach ($data->purchaseOrderItems as $item)
+            @foreach ($data->receiptOfGoodsRequestItems as $item)
                 <tr>
-                    <td></td>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->inventory->name }}</td>
-                    <td>{{ $item->delivered_qty }}</td>
+                    <td>{{ $item->inventory->unit->name }}</td>
+                    <td>{{ $item->qty }}</td>
+                    <td>{{ $item->inventory->branch ?? '-' }}</td>
+                    <td>{{ 'Rp '.number_format($item->inventory->purchase_price ?? '0'). ',-' }}</td>
+                    <td>{{'Rp. '. number_format($item->inventory->purchase_price * $item->qty).',-' }}</td>
                 </tr>
             @endforeach
         </table>
     @endforeach
+
 </body>
 
 </html>
