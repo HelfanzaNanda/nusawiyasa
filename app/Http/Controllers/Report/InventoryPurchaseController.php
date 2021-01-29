@@ -102,7 +102,7 @@ class InventoryPurchaseController extends Controller
                 $nestedData['type'] = $type;
                 $nestedData['date'] = $row['date'];
                 $nestedData['status'] = $status_collection->where('id', $row['status'])->values()[0]['name'];
-                $nestedData['qty'] = number_format(floatval($row['qty']));
+                $nestedData['total'] = number_format(floatval($row['total']));
                 $data[] = $nestedData;
             }
         }
@@ -130,10 +130,10 @@ class InventoryPurchaseController extends Controller
         //     'title' => $filename,
         //     'datas' => PurchaseOrders::generatePdf($request)
         // ]);
-        $data = PurchaseOrders::generatePdf($request);
+        $data = PurchaseOrders::generatePdfInventoryPurchase($request);
         $startDate = Carbon::parse($data['startDate'])->format('d-m-Y');
         $endDate = Carbon::parse($data['endDate'])->format('d-m-Y');
-        $filename = 'Used Inventory per '.$startDate. ' - '. $endDate;
+        $filename = 'Inventory Purchase per '.$startDate. ' - '. $endDate;
 
         $pdf = PDF::setOptions(['isRemoteEnabled' => true])
         ->loadview('report.inventory_purchase_pdf', [
