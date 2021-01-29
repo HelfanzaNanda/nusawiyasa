@@ -98,4 +98,12 @@ class AccountingJournal extends Model
             'totalFiltered' => $totalFiltered
         ];
     }
+    
+    public function accountingLedgers()
+    {
+        return $this->hasMany(AccountingLedger::class);
+    }
+
+
+    
 }

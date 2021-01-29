@@ -120,4 +120,9 @@ class AccountingLedger extends Model
             'totalFiltered' => $totalFiltered
         ];
     }
+
+    public function accountingMaster()
+    {
+        return $this->hasOne(AccountingMaster::class, 'coa', 'coa');
+    }
 }
