@@ -480,7 +480,7 @@ class PurchaseOrders extends Model
     }
 
 
-    public static function generatePdf(Request $request)
+    public static function generatePdfOutStanding(Request $request)
     {
         $startDate = Carbon::parse(substr($request->daterange_pdf, 0, 10))->format('Y-m-d');
         $endDate = Carbon::parse(substr($request->daterange_pdf, 12))->format('Y-m-d');
@@ -503,6 +503,45 @@ class PurchaseOrders extends Model
 
             $purchases = self::where('cluster_id', $cluster)
             ->where('status', '!=', '6')
+            ->whereBetween('date', [$startDate, $endDate])
+            ->with(['purchaseOrderItems' => function($item){
+                $item->where('delivered_qty', '!=', '0');
+            }])->get();
+            $res = [];
+            foreach($purchases as $purchase){
+                if (count($purchase->purchaseOrderItems) > 0) {
+                    array_push($res, $purchase);
+                }
+            }
+        }
+        return [
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'purchases' => $res
+        ];
+    }
+
+    public static function generatePdfInventoryPurchase(Request $request)
+    {
+        $startDate = Carbon::parse(substr($request->daterange_pdf, 0, 10))->format('Y-m-d');
+        $endDate = Carbon::parse(substr($request->daterange_pdf, 12))->format('Y-m-d');
+        if ($request->cluster_pdf == '0') {
+            $purchases = self::whereBetween('date', [$startDate, $endDate])
+            ->with(['purchaseOrderItems' => function($item){
+                $item->where('delivered_qty', '!=', '0');
+            }])->get();
+            $res = [];
+            foreach($purchases as $purchase){
+                if (count($purchase->purchaseOrderItems) > 0) {
+                    array_push($res, $purchase);
+                }
+            }
+        }else{
+            $cluster = $request->cluster_pdf;
+            $startDate = Carbon::parse(substr($request->daterange_pdf, 0, 10))->format('Y-m-d');
+            $endDate = Carbon::parse(substr($request->daterange_pdf, 12))->format('Y-m-d');
+
+            $purchases = self::where('cluster_id', $cluster)
             ->whereBetween('date', [$startDate, $endDate])
             ->with(['purchaseOrderItems' => function($item){
                 $item->where('delivered_qty', '!=', '0');

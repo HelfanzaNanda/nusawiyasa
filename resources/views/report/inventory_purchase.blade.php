@@ -42,7 +42,7 @@
                                 <th width="10%">No. FPP</th>
                                 <th>Jenis Permintaan</th>
                                 <th>Tanggal</th>
-                                <th>Qty</th>
+                                <th>Total</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -173,7 +173,7 @@
                 {data: 'fpp_number', name: 'fpp_number'},
                 {data: 'type', name: 'type'},
                 {data: 'date', name: 'date'},
-                {data: 'qty', name: 'qty'},
+                {data: 'total', name: 'total'},
                 {data: 'status', name: 'status'},
             ],
 

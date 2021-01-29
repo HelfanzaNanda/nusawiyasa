@@ -128,10 +128,10 @@ class OutstandingPOController extends Controller
         // return view('report.outstanding_po_pdf', [
         //     'datas' => PurchaseOrders::generatePdf($request)
         // ]);
-        $data = PurchaseOrders::generatePdf($request);
+        $data = PurchaseOrders::generatePdfOutStanding($request);
         $startDate = Carbon::parse($data['startDate'])->format('d-m-Y');
         $endDate = Carbon::parse($data['endDate'])->format('d-m-Y');
-        $filename = 'Used Inventory per '.$startDate. ' - '. $endDate;
+        $filename = 'OutStanding PO per '.$startDate. ' - '. $endDate;
 
         $pdf = PDF::setOptions(['isRemoteEnabled' => true])
         ->loadview('report.outstanding_po_pdf', [

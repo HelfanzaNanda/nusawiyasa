@@ -129,7 +129,7 @@
                     <td></td>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->inventory->name }}</td>
-                    <td>{{ $item->delivered_qty }}</td>
+                    <td>{{ $item->qty - $item->delivered_qty }}</td>
                 </tr>
             @endforeach
         </table>

@@ -119,14 +119,14 @@
                 <td></td>
                 <td style="width: 3%">#</td>
                 <td>Nama Barang</td>
-                <td>Qty Belum Terkirim</td>
+                <td>Quantity</td>
             </tr>
             @foreach ($data->purchaseOrderItems as $item)
                 <tr>
                     <td></td>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->inventory->name }}</td>
-                    <td>{{ $item->delivered_qty }}</td>
+                    <td>{{ $item->qty }}</td>
                 </tr>
             @endforeach
         </table>

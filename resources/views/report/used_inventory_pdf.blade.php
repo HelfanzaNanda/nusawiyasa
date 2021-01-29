@@ -94,7 +94,7 @@
     @foreach ($datas as $data)
         <table class="content">
             <tr>
-                <td>No. Permintaan</td>
+                <td style="width: 5%">No. Permintaan</td>
                 <td colspan="6">{{ $data->number }}</td>
             </tr>
             <tr>

@@ -251,7 +251,7 @@
     // $('#edit-customer-payment-id').val(customerpayment.id);
     customer_payment_id.val(customerpayment.id);
     $('#edit-input-date').val(customerpayment.date);
-    $('#edit-input-value').val(customerpayment.value);  
+    $('#edit-input-value').val(parseInt(customerpayment.value));  
     $('#edit-input-payment-type').val(customerpayment.payment_type);
     $('#edit-input-note').val(customerpayment.note);  
     $('#edit-payment-modal').modal('show');
