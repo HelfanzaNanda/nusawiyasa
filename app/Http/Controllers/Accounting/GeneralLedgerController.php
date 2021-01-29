@@ -69,7 +69,7 @@ class GeneralLedgerController extends Controller
                 $nestedData['action'] .='<div class="dropdown dropdown-action">';
                 $nestedData['action'] .='<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';
                 $nestedData['action'] .='<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(159px, 32px, 0px);">';
-                $nestedData['action'] .='<a href="#" class="dropdown-item" id="edit" data-id="'.$row['id'].'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
+                $nestedData['action'] .='<a href="#" data-journal="'.$row.'" class="dropdown-item" id="edit" data-id="'.$row['id'].'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
                 $nestedData['action'] .='<a href="#" class="dropdown-item" id="delete" data-id="'.$row['id'].'"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
                 $nestedData['action'] .='</div>';
                 $nestedData['action'] .='</div>';
@@ -117,6 +117,52 @@ class GeneralLedgerController extends Controller
             'status' => 'success',
             'message' => 'Data Jurnal Umum Telah Berhasil Disimpan',
             'data' => $saveJournal
+        ]);
+    }
+
+    public function edit($id)
+    {
+        return AccountingJournal::where('id', $id)->with(['accountingLedgers' => function($query){
+            $query->with('accountingMaster');
+        }])->first();
+    }
+
+    public function update(Request $request, $id)
+    {
+        $total = 0;
+        $accountingJournal = AccountingJournal::where('id', $id)->first();
+        $accountingJournal->update([
+            'date' => $request->date,
+            'description' => $request->description,
+            'ref' => $request->ref
+        ]);
+        $accountingJournal->accountingLedgers()->delete();
+        for ($i=0; $i < count($request->coa); $i++) { 
+            $total += $request->debit[$i];
+            $accountingJournal->accountingLedgers()->create([
+                'coa' => $request->coa[$i],
+                'debit' => $request->debit[$i],
+                'credit' => $request->credit[$i],
+            ]);
+        }
+        $accountingJournal->update([
+            'total' => $total
+        ]);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data Jurnal Umum Telah Berhasil DIUpdate',
+        ]);
+    }
+
+    public function delete($id)
+    {
+        $accountingJournal = AccountingJournal::where('id', $id)->first();
+        $accountingJournal->accountingLedgers()->delete();
+        $accountingJournal->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data Jurnal Umum Telah Berhasil Di Hapus',
         ]);
     }
 }
