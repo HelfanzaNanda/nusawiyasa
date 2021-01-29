@@ -10,8 +10,18 @@ class SlfTemplateController extends Controller
 {
     public function index()
     {
+        $tabs = ['BAB I', 'BAB II', 'BAB III', 'BAB IV', 'BAB V'];
+        //$datas = SLFTemplate::all();
+        $results = [];
+        for ($i=0; $i < count($tabs); $i++) { 
+            $data = SLFTemplate::where('name', $tabs[$i])->first();
+            array_push($results, [$data, $tabs[$i]]);
+        }
+
+        //dd($results);
         return view('slf.slf_template', [
-            'tabs' => ['BAB I', 'BAB II', 'BAB III', 'BAB IV', 'BAB V']
+            'slfTemplates' => $results
+            //'tabs' => ['BAB I', 'BAB II', 'BAB III', 'BAB IV', 'BAB V']
         ]);
     }
 
