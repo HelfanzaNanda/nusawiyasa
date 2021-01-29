@@ -6,6 +6,7 @@ use App\Http\Models\Users;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Models\Project\DevelopmentProgress;
+use App\Http\Models\Customer\CustomerLot;
 use Redirect;
 
 class Customer extends Model
@@ -282,5 +283,9 @@ class Customer extends Model
 
     public function developmentProgress(){
         return $this->hasMany(DevelopmentProgress::class);
+    }
+
+    public function customerLot(){
+        return $this->hasOne(customerLot::class, 'customer_id');
     }
 }

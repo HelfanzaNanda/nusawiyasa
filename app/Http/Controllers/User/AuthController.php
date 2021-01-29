@@ -43,15 +43,24 @@ class AuthController extends Controller
 
     public function user(Request $request){
         $user = $request->user();
-        
+        $status = "await";
 
-        if($user->customer->developmentProgress->count() == 0){
-            $user['submission'] = "await";
-        }else{
-            $user['submission'] = ($user->customer->developmentProgress[$user->customer->developmentProgress->count()-1]->customer_approval)
-                ? 'accept'
-                : 'decline';
+        $customerLot = $user->customer->customerLot;
+        if($customerLot != null){
+            $generalStatus = $customerLot->generalStatus;
+            if($generalStatus != null){
+                $status = ($generalStatus->key == 'approved') ? 'accept' : 'decline';
+            }
         }
+        $user['submission'] = $status;
+        // if($user->customer->developmentProgress->count() == 0){
+        //     $user['submission'] = "await";
+        // }else{
+        //     $user['submission'] = ($user->customer->developmentProgress[$user->customer->developmentProgress->count()-1]->customer_approval)
+        //         ? 'accept'
+        //         : 'decline';
+        // }
+        
         $user['customer_id'] = $user->customer->id;
         unset($user['customer']);
         return response()->json($user);

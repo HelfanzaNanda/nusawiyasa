@@ -8,6 +8,7 @@ use App\Http\Models\Customer\CustomerCost;
 use App\Http\Models\Customer\CustomerTerm;
 use DB;
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\Ref\RefGeneralStatuses;
 use Redirect;
 
 class CustomerLot extends Model
@@ -365,5 +366,7 @@ class CustomerLot extends Model
         return $qry->get();
     }
 
-
+    public function generalStatus(){
+        return $this->belongsTo(RefGeneralStatuses::class, 'bank_status');
+    }
 }
