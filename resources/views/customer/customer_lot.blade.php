@@ -136,7 +136,7 @@
   $("#main-table").on('click', '#update-bank-status', function() {
       let id = $(this).data('id');
       $.ajax({
-        url: BASE_URL+'/bookings/'+id,
+        url: BASE_URL+'/bookings/'+id+'/get',
         type: "GET",
         dataType: "json",
         beforeSend: function() {
