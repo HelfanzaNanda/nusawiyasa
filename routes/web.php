@@ -231,6 +231,9 @@ Route::group([
 	Route::get('accounting-balance-sheet', 'Accounting\BalanceSheetController@index');
 	Route::post('accounting-balance-sheet-datatables', 'Accounting\BalanceSheetController@datatables');
 
+	Route::get('debt', 'Accounting\DebtController@index');
+	Route::post('debt', 'Accounting\DebtController@insertData');
+	Route::post('debt-datatables', 'Accounting\DebtController@datatables');
 	
 	Route::group(['namespace' => 'Accounting', 'prefix' => 'accounting'], function () {
     	Route::get('accounting-master', 'AccountingMasterController@index');
