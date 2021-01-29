@@ -260,3 +260,6 @@ Route::group([
         });
 	});
 });
+
+Route::get('number/generate', 'NumberGenerateController@generate');
+Route::get('number/validate', 'NumberGenerateController@validateNumber');
