@@ -194,7 +194,7 @@
         });    
     });
 
-    $( 'form#add_general-ledger_form' ).submit( function( e ) {
+    $( 'form#add-form' ).submit( function( e ) {
       e.preventDefault();
       var form_data   = new FormData( this );
       $.ajax({
@@ -218,7 +218,7 @@
                           html: true
                       }, function() {
                           $('#main-modal').modal('hide');
-                          $("#table-general-ledger").DataTable().ajax.reload( null, false ); // user paging is not reset on reload
+                          $("#main-table").DataTable().ajax.reload( null, false ); // user paging is not reset on reload
                       });
                   }, 200);
               } else {

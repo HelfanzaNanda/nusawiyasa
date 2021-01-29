@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Accounting;
 
 use App\Http\Controllers\Controller;
 use App\Http\Models\Accounting\AccountingJournal;
+use App\Http\Models\Accounting\AccountingLedger;
 use Illuminate\Http\Request;
 
 class GeneralLedgerController extends Controller
@@ -85,5 +86,37 @@ class GeneralLedgerController extends Controller
         ];
 
         return json_encode($json_data);
+    }
+
+    public function store(Request $request)
+    {
+    	$total = 0;
+
+        $saveJournal = new AccountingJournal;
+        $saveJournal->ref = $request->ref;
+        $saveJournal->description = $request->description;
+        $saveJournal->type = 5;
+        $saveJournal->date = $request->date;
+        if ($saveJournal->save()) {
+            for ($i = 0; $i < count($request->coa); $i++){
+            	$total += $request->debit[$i];
+                $saveGenLedger = new AccountingLedger;
+                $saveGenLedger->accounting_journal_id = $saveJournal->id;
+                $saveGenLedger->coa = $request->coa[$i];
+                $saveGenLedger->debit = $request->debit[$i];
+                $saveGenLedger->credit = $request->credit[$i];
+                $saveGenLedger->save();
+            }
+        }
+
+        AccountingJournal::where('id', $saveJournal->id)->update([
+        	'total' => $total
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data Jurnal Umum Telah Berhasil Disimpan',
+            'data' => $saveJournal
+        ]);
     }
 }

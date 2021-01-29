@@ -252,11 +252,11 @@ Route::group([
         });
 
         Route::group(['prefix' => 'profit_loss'], function () {
-            Route::post('/get', ['as' => 'accounting.profit_loss.get', 'uses' => 'ProfitLossController@index']);
+            Route::post('/get', ['as' => 'accounting.profit_loss.get', 'uses' => 'ProfitLossController@get']);
         });
 
         Route::group(['prefix' => 'balance_sheet'], function () {
-            Route::post('/', ['as' => 'accounting.profit_loss.get', 'uses' => 'BalanceSheetController@index']);
+            Route::post('/', ['as' => 'accounting.profit_loss.get', 'uses' => 'BalanceSheetController@get']);
         });
 	});
 });
