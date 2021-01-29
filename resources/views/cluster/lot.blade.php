@@ -72,7 +72,7 @@
       <div class="modal-body">
         <form id="image-form" method="POST" action="#">
           {!! csrf_field() !!}
-          <input type="text" name="lot_id" id="input-image-lot-id">
+          <input type="hidden" name="lot_id" id="input-image-lot-id">
           <div class="row"> 
             <div class="col-md-12"> 
               <div class="form-group">

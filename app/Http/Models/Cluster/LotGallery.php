@@ -95,7 +95,7 @@ class LotGallery extends Model
             $files = $request->file('files');
 
             $month_year_pfx = date('mY');
-            $path_pfx = 'media/lot-gallery/'.$month_year_pfx;
+            $path_pfx = 'public/media/lot-gallery/'.$month_year_pfx;
             $path = '/storage/app/'.$path_pfx;
 
             File::makeDirectory($path, 0777, true, true);
