@@ -78,6 +78,7 @@ Route::group([
 	Route::post('/booking-datatables', 'Customer\CustomerLotController@datatables');
 	Route::get('/bookings/detail/{id}', 'Customer\CustomerLotController@detail');
 	Route::get('/bookings/{id}/get', 'Customer\CustomerLotController@get');
+	Route::get('/bookings/create', 'Customer\CustomerLotController@insertData');
 
 	Route::get('/city_by_province/{province_id}', ['as' => 'show.city', 'uses' => 'Ref\CityController@cityByProvince']);
 

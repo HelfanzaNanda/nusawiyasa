@@ -223,7 +223,7 @@
 
     $.ajax({
       type: 'post',
-      url: BASE_URL+'/bookings',
+      url: BASE_URL+'/bookings/create',
       data: form_data,
       cache: false,
       contentType: false,
