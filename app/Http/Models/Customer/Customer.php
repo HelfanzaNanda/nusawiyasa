@@ -5,6 +5,7 @@ namespace App\Http\Models\Customer;
 use App\Http\Models\Users;
 use DB;
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Models\Project\DevelopmentProgress;
 use Redirect;
 
 class Customer extends Model
@@ -277,5 +278,9 @@ class Customer extends Model
             'totalData' => $totalData,
             'totalFiltered' => $totalFiltered
         ];
+    }
+
+    public function developmentProgress(){
+        return $this->hasMany(DevelopmentProgress::class);
     }
 }

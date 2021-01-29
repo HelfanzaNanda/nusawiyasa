@@ -424,6 +424,11 @@ class DevelopmentProgress extends Model
         if (isset($params['detail']) && $params['detail']) {
             $db->with('files')->with('jobs')->with('materials');
         }
+
+        if(isset($params['report']) && $params['report']){
+            $db->with('files')->with('lot')->with('cluster');
+        }
+        
         
         if ($params) {
             foreach (array($params) as $k => $v) {

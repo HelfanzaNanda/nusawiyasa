@@ -139,7 +139,7 @@ class Lot extends Model
     {
         unset($params['all']);
 
-        $db = self::select(array_keys(self::mapSchema()))->with('galleries');
+        $db = self::select(array_keys(self::mapSchema()))->with('galleries')->with('cluster');
 
         if ($params) {
             foreach (array($params) as $k => $v) {
@@ -166,7 +166,6 @@ class Lot extends Model
                 }
             }
         }
-
         return response()->json($db->get());
     }
 
