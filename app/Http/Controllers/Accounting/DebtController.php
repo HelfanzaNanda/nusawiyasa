@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Accounting;
 
 use App\Http\Controllers\Controller;
 use App\Http\Models\Accounting\Debt;
+use App\Http\Models\Inventory\Suppliers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -11,7 +12,8 @@ class DebtController extends Controller
 {
     public function index()
     {
-        return view('accounting.debt.index');
+        $suppliers = Suppliers::get();
+        return view('accounting.debt.index', compact('suppliers'));
     }
 
     public function insertData(Request $request)
@@ -64,11 +66,13 @@ class DebtController extends Controller
         if (!empty($res['data'])) {
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
-                $nestedData['name'] = $row['name'];
-                $nestedData['email'] = $row['email'];
-                $nestedData['phone'] = $row['phone'];
-                $nestedData['province'] = $row['province'];
-                $nestedData['city'] = $row['city'];
+                $nestedData['number'] = $row['number'];
+                $nestedData['total'] = $row['total'];
+                $nestedData['date'] = $row['date'];
+                $nestedData['payment_plan_date'] = $row['payment_plan_date'];
+                $nestedData['description'] = $row['description'];
+                $nestedData['supplier_name'] = $row['supplier_name'];
+                $nestedData['po_number'] = $row['po_number'];
                 $nestedData['action'] = '';
                 $nestedData['action'] .='        <div class="dropdown dropdown-action">';
                 $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';
