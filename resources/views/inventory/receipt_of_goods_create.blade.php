@@ -82,6 +82,18 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+  $(document).ready(function(){
+    var url = '{{ asset('') }}'
+    
+    $.ajax({
+      type: 'GET',
+      url: url+'number/generate?prefix=BkPB',
+      success: function(data){
+        $('#input-bpb-number').val(data.number)
+      }
+    })
+  })
+
   $('#input-po').select2({
     width: '100%'
   });
@@ -131,41 +143,58 @@
     var form_data = new FormData( this );
 
     $.ajax({
-      type: 'post',
-      url: BASE_URL+'/receipt-of-goods',
-      data: form_data,
-      cache: false,
-      contentType: false,
-      processData: false,
-      dataType: 'json',
-      beforeSend: function() {
-        
-      },
-      success: function(msg) {
-        if(msg.status == 'success'){
-          setTimeout(function() {
-            swal({
-              title: "Sukses",
-              text: msg.message,
-              type:"success",
-              html: true
-            }, function() {
-              $('#add-modal').modal('hide');
-              window.location.replace("{{url('/receipt-of-goods')}}");
-            });
-          }, 500);
-        } else {
-          swal({
-            title: "Gagal",
-            text: msg.message,
-            showConfirmButton: true,
-            confirmButtonColor: '#0760ef',
-            type:"error",
-            html: true
-          });
-        }
+    type: 'GET',
+    url: '{{asset('')}}'+'number/validate?prefix=BkPB&number='+$('#input-bpb-number').val(),
+    success: function(data){
+      if(data.status == 'error'){
+        swal({
+          title: "Gagal",
+          text: "Maaf, Nomor BPB telah digunakan,",
+          showConfirmButton: true,
+          confirmButtonColor: '#0760ef',
+          type:"error",
+          html: true
+        });
+      }else{
+        $.ajax({
+          type: 'post',
+          url: BASE_URL+'/receipt-of-goods',
+          data: form_data,
+          cache: false,
+          contentType: false,
+          processData: false,
+          dataType: 'json',
+          beforeSend: function() {
+            
+          },
+          success: function(msg) {
+            if(msg.status == 'success'){
+              setTimeout(function() {
+                swal({
+                  title: "Sukses",
+                  text: msg.message,
+                  type:"success",
+                  html: true
+                }, function() {
+                  $('#add-modal').modal('hide');
+                  window.location.replace("{{url('/receipt-of-goods')}}");
+                });
+              }, 500);
+            } else {
+              swal({
+                title: "Gagal",
+                text: msg.message,
+                showConfirmButton: true,
+                confirmButtonColor: '#0760ef',
+                type:"error",
+                html: true
+              });
+            }
+          }
+        });
       }
-    });
+    }
+  })
   });
 </script>
 @endsection

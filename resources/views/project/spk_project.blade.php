@@ -70,7 +70,7 @@
               </div> --}}
               <div class="form-group">
                 <label>No. SPK</label>
-                <input class="form-control" type="text" name="number">
+                <input class="form-control number-input" type="text" name="number">
               </div>
 {{--               <div class="form-group">
                 <label>Kepada</label>
@@ -195,7 +195,17 @@
   });
 
   $("#show-add-modal").on('click',function() {
+    var url = '{{ asset('') }}'
+      $.ajax({
+        type: 'GET',
+        url: url+'number/generate?prefix=SPK',
+        success: function(data){
+          console.log(data)
+          $('.number-input').val(data.number)
+        }
+      })
       $('#add-modal').modal('show');
+      
   });
 
   $('#input-customer-lot-id').select2({
@@ -218,39 +228,56 @@
     e.preventDefault();
     var form_data = new FormData( this );
 
-    $.ajax({
-      type: 'post',
-      url: BASE_URL+'/spk-project',
-      data: form_data,
-      cache: false,
-      contentType: false,
-      processData: false,
-      dataType: 'json',
-      beforeSend: function() {
-        
-      },
-      success: function(msg) {
-        if(msg.status == 'success'){
-          setTimeout(function() {
-            swal({
-                title: "Sukses",
-                text: msg.message,
-                type:"success",
-                html: true
-            }, function() {
-                $('#main-table').DataTable().ajax.reload(null, false);
-                $('#add-modal').modal('hide');
-            });
-          }, 500);
-        } else {
+      $.ajax({
+      type: 'GET',
+      url: '{{asset('')}}'+'number/validate?prefix=SPK&number='+$('.number-input').val(),
+      success: function(data){
+        if(data.status == 'error'){
           swal({
             title: "Gagal",
-            text: msg.message,
+            text: "Maaf, Nomor pengajuan telah digunakan,",
             showConfirmButton: true,
             confirmButtonColor: '#0760ef',
             type:"error",
             html: true
           });
+        }else{
+          $.ajax({
+            type: 'post',
+            url: BASE_URL+'/spk-project',
+            data: form_data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            beforeSend: function() {
+              
+            },
+            success: function(msg) {
+              if(msg.status == 'success'){
+                setTimeout(function() {
+                  swal({
+                      title: "Sukses",
+                      text: msg.message,
+                      type:"success",
+                      html: true
+                  }, function() {
+                      $('#main-table').DataTable().ajax.reload(null, false);
+                      $('#add-modal').modal('hide');
+                  });
+                }, 500);
+              } else {
+                swal({
+                  title: "Gagal",
+                  text: msg.message,
+                  showConfirmButton: true,
+                  confirmButtonColor: '#0760ef',
+                  type:"error",
+                  html: true
+                });
+              }
+            }
+          })
         }
       }
     })

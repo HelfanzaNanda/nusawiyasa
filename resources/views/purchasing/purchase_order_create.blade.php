@@ -171,6 +171,17 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+  $(document).ready(function(){
+    var url = '{{ asset('') }}'
+    
+    $.ajax({
+      type: 'GET',
+      url: url+'number/generate?prefix=PO',
+      success: function(data){
+        $('#input-number').val(data.number)
+      }
+    })
+  })
   $('#input-supplier').select2({
     width: '100%'
   });
@@ -358,42 +369,61 @@
     var form_data = new FormData( this );
 
     $.ajax({
-      type: 'post',
-      url: BASE_URL+'/purchase-order',
-      data: form_data,
-      cache: false,
-      contentType: false,
-      processData: false,
-      dataType: 'json',
-      beforeSend: function() {
-        
-      },
-      success: function(msg) {
-        if(msg.status == 'success'){
-            setTimeout(function() {
+    type: 'GET',
+    url: '{{asset('')}}'+'number/validate?prefix=PO&number='+$('#input-number').val(),
+    success: function(data){
+      if(data.status == 'error'){
+        swal({
+          title: "Gagal",
+          text: "Maaf, Nomor PO telah digunakan,",
+          showConfirmButton: true,
+          confirmButtonColor: '#0760ef',
+          type:"error",
+          html: true
+        });
+      }else{
+        $.ajax({
+          type: 'post',
+          url: BASE_URL+'/purchase-order',
+          data: form_data,
+          cache: false,
+          contentType: false,
+          processData: false,
+          dataType: 'json',
+          beforeSend: function() {
+            
+          },
+          success: function(msg) {
+            if(msg.status == 'success'){
+                setTimeout(function() {
+                    swal({
+                        title: "Sukses",
+                        text: msg.message,
+                        type:"success",
+                        html: true
+                    }, function() {
+                        // $('#main-table').DataTable().ajax.reload(null, false);
+                        $('#add-modal').modal('hide');
+                        window.location.replace("{{url('/purchase-order')}}");
+                    });
+                }, 500);
+            } else {
                 swal({
-                    title: "Sukses",
+                    title: "Gagal",
                     text: msg.message,
-                    type:"success",
+                    showConfirmButton: true,
+                    confirmButtonColor: '#0760ef',
+                    type:"error",
                     html: true
-                }, function() {
-                    // $('#main-table').DataTable().ajax.reload(null, false);
-                    $('#add-modal').modal('hide');
-                    window.location.replace("{{url('/purchase-order')}}");
                 });
-            }, 500);
-        } else {
-            swal({
-                title: "Gagal",
-                text: msg.message,
-                showConfirmButton: true,
-                confirmButtonColor: '#0760ef',
-                type:"error",
-                html: true
-            });
-        }
+            }
+          }
+        });
+
+ 
       }
-    });
+    }
+  })
   });
 
   $("#input-cluster").on('change', function(e) {
