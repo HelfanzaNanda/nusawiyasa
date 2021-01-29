@@ -179,7 +179,7 @@ class RequestMaterials extends Model
         $request_material['date'] = $params['date'];
         $request_material['type'] = $params['type'];
         $request_material['cluster_id'] = $params['cluster_id'];
-        $request_material['lot_id'] = $params['lot_id'];
+        $request_material['lot_id'] = isset($params['lot_id']) && $params['lot_id'] ? $params['lot_id'] : null;
 
         if (isset($params['id']) && $params['id']) {
             $id = $params['id'];

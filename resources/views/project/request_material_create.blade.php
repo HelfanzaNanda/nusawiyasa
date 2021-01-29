@@ -191,10 +191,9 @@
       },
       success: function(res) {
         let cols = '';
-        $.each(res.data, function(key, value) {
+        $.each(res, function(key, value) {
           cols += '<option value="'+value.id+'">'+value.block+' - '+value.unit_number+'</option>';
         });
-
         $("select#input-lot").append(cols);
       }
     });
