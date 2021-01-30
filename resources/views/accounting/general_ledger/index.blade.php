@@ -134,11 +134,14 @@
 		});
 	}
 
+	var jj=0;
+	var counter = 0;
     $(document).on('click', '#show-add-modal', function() {
+		jj = 0
 		$('#ref').val('');
 		$('#journal_date').val('');
 		$('#description').val('');
-		$('#myTable tbody tr').html('');
+		$('#myTable tbody tr').remove();
         $('.loading-area').hide();
         $('#typePost').val('add');
         $("#submit_button").prop('disabled', true);
@@ -265,9 +268,9 @@
 	    } );
 	});
 
-	var jj=0;
-	var counter = 0;
+	
 	$("#addrow").on("click", function () {
+		console.log(jj);
 	    counter = $('#myTable tbody tr').length;
 	    var newRow = $("<tr>");
 	    var cols = "";
@@ -287,7 +290,7 @@
 	    newRow.append(cols);
 	    if (counter == 100) $('#addrow').attr('disabled', true).prop('value', "You've reached the limit");
 	    $("table#myTable").append(newRow); 
-	    $(".select2").select2({minimumResultsForSearch: Infinity});
+	    //$(".select2").select2({minimumResultsForSearch: Infinity});
 	    $("select#dk_"+ jj).change(function () {
 	        var id = $(this).attr('data-id');
 	        if ($(this).val() === '1') {
@@ -302,7 +305,6 @@
 	          $("input#debit_"+ id).prop('readonly', false);
 	        }
 	    });
-
 	    $("#coa_"+jj).select2({
 	      minimumInputLength: 2,
 	      dropdownParent: $("#main-modal"),
@@ -331,12 +333,13 @@
 	    });
 	  counter++;
 	  jj++;
+	  
 	});
 
 
-	function selectDk(index){
+	function selectDk(){
 		//$(".select2").select2({minimumResultsForSearch: Infinity});
-	    $("#dk_"+ index).change(function () {
+	    $("#dk_"+ jj).change(function () {
 	        var id = $(this).attr('data-id');
 	        if ($(this).val() === '1') {
 	          $("input#debit_"+ id).val(0);
@@ -352,8 +355,8 @@
 	    });
 	}
 
-	function searchCoa(index){
-		$("#coa_"+index).select2({
+	function searchCoa(){
+		$("#coa_"+jj).select2({
 	      minimumInputLength: 2,
 	      dropdownParent: $("#main-modal"),
 	      minimumResultsForSearch: '',
@@ -381,27 +384,25 @@
 	    });
 	}
 
-	function addRow(index) {
-		counter = $('#myTable tbody tr').length;
+	function addRow() {
 	    var newRow = $("<tr>");
 	    var cols = "";
-	    cols += '<td><input type="hidden" name="accounting_ledger[]" id="accounting_ledger_'+index+'">';
-	    cols += '<select id="coa_'+index+'" class="form-control" name="coa[]" style="width: 100%;">';
+	    cols += '<td><input type="hidden" name="accounting_ledger[]" id="accounting_ledger_'+jj+'">';
+	    cols += '<select id="coa_'+jj+'" class="form-control" name="coa[]" style="width: 100%;">';
 	    cols += '<option value"">Pilih</option>';
 	    cols += '</select></td>';
-	    cols += '<td><select class="select2 form-control dk_type" name="type[]" id="dk_'+index+'" data-id="'+index+'">';
+	    cols += '<td><select class="select2 form-control dk_type" name="type[]" id="dk_'+jj+'" data-id="'+jj+'">';
 	    cols += '<option value="">K/D</option>';
 	    cols += '<option value="1">K</option>';
 	    cols += '<option value="2">D</option>';
 	    cols += '</select></td>';
-	    cols += '<td><input type="text" class="form-control debit" name="debit[]" id="debit_'+index+'" onkeyup="checkBalance()"></td>';
-	    cols += '<td><input type="text" class="form-control credit" name="credit[]" id="credit_'+index+'" onkeyup="checkBalance()"></td>';
+	    cols += '<td><input type="text" class="form-control debit" name="debit[]" id="debit_'+jj+'" onkeyup="checkBalance()"></td>';
+	    cols += '<td><input type="text" class="form-control credit" name="credit[]" id="credit_'+jj+'" onkeyup="checkBalance()"></td>';
 	    cols += '<td><button type="button" id="ibtnDel" class="btn btn-danger"><i class="fa fa-trash"></i></button></td>';
 	    newRow.append(cols);
-	    if (counter == 100) $('#addrow').attr('disabled', true).prop('value', "You've reached the limit");
 	    $("table#myTable").append(newRow); 
-		selectDk(index)
-		searchCoa(index)
+		//selectDk()
+		
 	}
 
 	$(document).on('click', '#edit', function() {    
@@ -423,21 +424,26 @@
 					$('#journal_date').val(data.date);
 					$('#description').val(data.description);
 					$.each( data.accounting_ledgers, function( key, accounting_ledger ) {
-						addRow(key)
+						addRow()
+						searchCoa()
+						selectDk()
 						var option = $("<option selected></option>").val(accounting_ledger.coa).text(`${accounting_ledger.accounting_master.accounting_code} | ${accounting_ledger.accounting_master.name}`);
-						$(`#coa_${key}`).append(option).change();
+						$(`#coa_${jj}`).append(option).change();
 						if (parseInt(accounting_ledger.debit) === 0) {
-							$(`#dk_${key} option[value='1']`).attr('selected','selected');
-							$(`#debit_${key}`).prop('readonly', true);
-							$(`#credit_${key}`).prop('readonly', false);
+							$(`#dk_${jj} option[value='1']`).attr('selected','selected');
+							$(`#debit_${jj}`).prop('readonly', true);
+							$(`#credit_${jj}`).prop('readonly', false);
 						}else if(parseInt(accounting_ledger.credit) === 0){
-							$(`#dk_${key} option[value='2']`).attr('selected','selected');
-							$(`#debit_${key}`).prop('readonly', false);
-							$(`#credit_${key}`).prop('readonly', true);
+							$(`#dk_${jj} option[value='2']`).attr('selected','selected');
+							$(`#debit_${jj}`).prop('readonly', false);
+							$(`#credit_${jj}`).prop('readonly', true);
 						}
-						$(`#debit_${key}`).val(parseInt(accounting_ledger.debit))
-						$(`#credit_${key}`).val(parseInt(accounting_ledger.credit))
-						$(`#accounting_ledger_${key}`).val(parseInt(accounting_ledger.id))
+						$(`#debit_${jj}`).val(parseInt(accounting_ledger.debit))
+						$(`#credit_${jj}`).val(parseInt(accounting_ledger.credit))
+						$(`#accounting_ledger_${jj}`).val(parseInt(accounting_ledger.id))
+						console.log(jj);
+						jj++
+						
 					});
 					
 					$('#main-modal').modal('show');
