@@ -5,10 +5,12 @@
     <li {{ (request()->segment(1) == '') ? 'class=active' : '' }}>
         <a href="{{url('/')}}"><i class="la la-dashboard"></i> <span>Beranda</span></a>
     </li>
-    @if(Session::get('_role_id') == 1 || Session::get('_role_id') == 2)
+    @if(Session::get('_role_id') == 1)
     <li {{ (request()->segment(1) == 'employe' || request()->segment(1) == 'employe-detail') ? 'class=active' : '' }}>
         <a href="{{url('/employe')}}"><i class="la la-user"></i> <span>Pegawai</span></a>
     </li>
+    @endif
+    @if(Session::get('_role_id') == 1 || Session::get('_role_id') == 2)
     <li class="menu-title">
         <span>Marketing</span>
     </li>
