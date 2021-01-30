@@ -68,7 +68,7 @@
             <div class="col-md-12"> 
 				<label>No. Ref</label>
 				<div class="form-group">
-					<input type="text" class="form-control" placeholder="KD0001" name="ref" id="ref">
+					<input type="text" class="form-control ref-number" placeholder="KD0001" name="ref" id="ref">
 				</div><!-- form-group -->
 				<label>Tanggal</label>
 				<div class="form-group">
@@ -146,6 +146,18 @@
         $('#typePost').val('add');
         $("#submit_button").prop('disabled', true);
         $('#main-modal').modal('show'); 
+
+		$(document).ready(function(){
+    var url = '{{ asset('') }}'
+    
+    $.ajax({
+      type: 'GET',
+      url: url+'number/generate?prefix=JU',
+      success: function(data){
+        $('.ref-number').val(data.number)
+      }
+    })
+  })
     });
 
 	$("#main-table").DataTable({
@@ -219,8 +231,67 @@
                   });
               }
             }
-      })
+      });
     });
+
+    $( 'form#add-form' ).submit( function( e ) {
+      e.preventDefault();
+      var form_data   = new FormData( this );
+		type: 'GET',
+		url: '{{asset('')}}'+'number/validate?prefix=JU&number='+$('.ref-number').val(),
+		success: function(data){
+		if(data.status == 'error'){
+			swal({
+			title: "Gagal",
+			text: "Maaf, Nomor jurnal umum telah digunakan,",
+			showConfirmButton: true,
+			confirmButtonColor: '#0760ef',
+			type:"error",
+			html: true
+			});
+		}else{
+			$.ajax({
+				type: 'post',
+				url: $('#typePost').val() === 'edit' ? URL_UPDATE + '/' + $('#id').val() : URL_ADD,
+				data: form_data,
+				cache: false,
+				contentType: false,
+				processData: false,
+				dataType: 'json',
+				beforeSend: function() {
+				$('.loading-area').show();
+				},
+				success: function(msg) {
+				if(msg.status == 'success'){
+					setTimeout(function() {
+						swal({
+							title: "Sukses",
+							text: msg.message,
+							type:"success",
+							html: true
+						}, function() {
+							$('#main-modal').modal('hide');
+							$("#main-table").DataTable().ajax.reload( null, false ); // user paging is not reset on reload
+						});
+					}, 200);
+				} else {
+					$('.loading-area').hide();
+					swal({
+						title: "Gagal",
+						text: msg.message,
+						showConfirmButton: true,
+						confirmButtonColor: '#0760ef',
+						type:"error",
+						html: true
+					});
+				}
+				}
+			})
+
+
+		}
+		}
+	});
 
 	$(document).on( 'click', '#delete', function( e ) {
 		

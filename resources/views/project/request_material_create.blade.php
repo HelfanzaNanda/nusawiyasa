@@ -147,7 +147,7 @@
     
     $.ajax({
       type: 'GET',
-      url: url+'number/generate?prefix=pj',
+      url: url+'number/generate?prefix=PB',
       success: function(data){
         $('#input-number').val(data.number)
       }
@@ -364,12 +364,12 @@
     }
     $.ajax({
       type: 'GET',
-      url: '{{asset('')}}'+'number/validate?prefix=pj&number='+$('#input-number').val(),
+      url: '{{asset('')}}'+'number/validate?prefix=PB&number='+$('#input-number').val(),
       success: function(data){
         if(data.status == 'error'){
           swal({
             title: "Gagal",
-            text: "Maaf, Nomor pengajuan telah digunakan,",
+            text: "Maaf, Nomor surat pengajuan bahan telah digunakan,",
             showConfirmButton: true,
             confirmButtonColor: '#0760ef',
             type:"error",
