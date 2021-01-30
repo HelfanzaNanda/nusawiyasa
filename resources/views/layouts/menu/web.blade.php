@@ -40,13 +40,14 @@
     </li>
     @endif
 
-    @if(Session::get('_role_id') == 1 || Session::get('_role_id') == 3)
+    @if(Session::get('_role_id') == 1 || Session::get('_role_id') == 3 || Session::get('_role_id') == 10)
     <li class="menu-title">
         <span>Project </span>
     </li>
 {{--     <li>
         <a {{ (request()->segment(1) == 'dashboard') ? 'class=active' : '' }} href="{{url('/dashboard/project')}}"><i class="la la-dashboard"></i> <span>Beranda Project</span></a>
     </li> --}}
+    @if(Session::get('_role_id') == 1 || Session::get('_role_id') == 3)
     <li class="submenu">
         <a href="#"><i class="la la-broadcast-tower"></i> <span> Konfirmasi Pembangunan</span> <span class="menu-arrow"></span></a>
         <ul style="display: none;">
@@ -59,13 +60,18 @@
     <li {{ (request()->segment(1) == 'rap') ? 'class=active' : '' }}>
         <a href="{{url('/rap')}}"><i class="la la-clipboard-list"></i> <span>RAP</span></a>
     </li>
+    @endif
+    @if(Session::get('_role_id') == 1 || Session::get('_role_id') == 3 || Session::get('_role_id') == 10)
     <li {{ (request()->segment(1) == 'request-material') ? 'class=active' : '' }}>
         <a href="{{url('/request-material')}}"><i class="la la-dolly-flatbed"></i> <span>Pengajuan Bahan</span></a>
     </li>
+    @endif
+    @if(Session::get('_role_id') == 1 || Session::get('_role_id') == 3)
     <li {{ (request()->segment(1) == 'development-progress') ? 'class=active' : '' }}>
         {{-- <a href="{{url('/development-progress')}}"><i class="la la-paint-roller"></i> <span>Progress Pembangunan</span></a> --}}
         <a href="{{url('/development-progress')}}"><i class="la la-paint-roller"></i> <span>Laporan Harian</span></a>
     </li>
+    @endif
     @endif
 
     @if(Session::get('_role_id') == 1 || Session::get('_role_id') == 5)
@@ -127,10 +133,11 @@
     </li>
     @endif
 
-    @if(Session::get('_role_id') == 1)
+    @if(Session::get('_role_id') == 1 || Session::get('_role_id') == 10)
     <li class="menu-title">
         <span>Accounting </span>
     </li>
+    @if(Session::get('_role_id') == 1)
     <li {{ (request()->segment(1) == 'debt') ? 'class=active' : '' }}>
         <a href="{{url('/debt')}}"><i class="la la-file-alt"></i> <span>Hutang</span></a>
     </li>
@@ -138,9 +145,13 @@
     <li {{ (request()->segment(1) == 'accounting-master') ? 'class=active' : '' }}>
         <a href="{{url('/accounting-master')}}"><i class="la la-file-alt"></i> <span>COA</span></a>
     </li>
+    @endif
+    @if(Session::get('_role_id') == 10 || Session::get('_role_id') == 1)
     <li {{ (request()->segment(1) == 'accounting-general-ledger') ? 'class=active' : '' }}>
         <a href="{{url('/accounting-general-ledger')}}"><i class="la la-file-alt"></i> <span>Jurnal Umum</span></a>
     </li>
+    @endif
+    @if(Session::get('_role_id') == 1)
     <li {{ (request()->segment(1) == 'accounting-ledger') ? 'class=active' : '' }}>
         <a href="{{url('/accounting-ledger')}}"><i class="la la-file-alt"></i> <span>Buku Besar</span></a>
     </li>
@@ -152,6 +163,7 @@
     <li {{ (request()->segment(1) == 'accounting-balance-sheet') ? 'class=active' : '' }}>
         <a href="{{url('/accounting-balance-sheet')}}"><i class="la la-file-alt"></i> <span>Neraca</span></a>
     </li>
+    @endif
     @endif
 
 
