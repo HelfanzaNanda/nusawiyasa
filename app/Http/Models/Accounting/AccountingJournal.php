@@ -104,6 +104,22 @@ class AccountingJournal extends Model
         return $this->hasMany(AccountingLedger::class);
     }
 
+    public static function journalPosting($oarams)
+    {
+        $journal['ref'] = $params['ref'];
+        $journal['description'] = $params['description'];
+        $journal['date'] = $params['date'];
+        $journal['total'] = $params['total'];
 
+        $insertJournal = self::create($journal);
+
+        if ($insertJournal) {
+            if (isset($params['items']) && count($params['items']) > 0) {
+                foreach($params['items'] as $row) {
+                    
+                }
+            }
+        }
+    }
     
 }

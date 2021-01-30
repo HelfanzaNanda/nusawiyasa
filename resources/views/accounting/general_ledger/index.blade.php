@@ -190,53 +190,54 @@
 
     
 
-    $( 'form#add-form' ).submit( function( e ) {
-      e.preventDefault();
-      var form_data   = new FormData( this );
-      $.ajax({
-            type: 'post',
-            url: $('#typePost').val() === 'edit' ? URL_UPDATE + '/' + $('#id').val() : URL_ADD,
-            data: form_data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            dataType: 'json',
-            beforeSend: function() {
-              $('.loading-area').show();
-			  console.log($('#typePost').val());
-            },
-            success: function(msg) {
-				//console.log(msg);
-              if(msg.status == 'success'){
-                  setTimeout(function() {
-                      swal({
-                          title: "Sukses",
-                          text: msg.message,
-                          type:"success",
-                          html: true
-                      }, function() {
-                          $('#main-modal').modal('hide');
-                          $("#main-table").DataTable().ajax.reload( null, false ); // user paging is not reset on reload
-                      });
-                  }, 200);
-              } else {
-                  $('.loading-area').hide();
-                  swal({
-                      title: "Gagal",
-                      text: msg.message,
-                      showConfirmButton: true,
-                      confirmButtonColor: '#0760ef',
-                      type:"error",
-                      html: true
-                  });
-              }
-            }
-      });
-    });
+    // $( 'form#add-form' ).submit( function( e ) {
+    //   e.preventDefault();
+    //   var form_data   = new FormData( this );
+    //   $.ajax({
+    //         type: 'post',
+    //         url: $('#typePost').val() === 'edit' ? URL_UPDATE + '/' + $('#id').val() : URL_ADD,
+    //         data: form_data,
+    //         cache: false,
+    //         contentType: false,
+    //         processData: false,
+    //         dataType: 'json',
+    //         beforeSend: function() {
+    //           $('.loading-area').show();
+			 //  console.log($('#typePost').val());
+    //         },
+    //         success: function(msg) {
+				// //console.log(msg);
+    //           if(msg.status == 'success'){
+    //               setTimeout(function() {
+    //                   swal({
+    //                       title: "Sukses",
+    //                       text: msg.message,
+    //                       type:"success",
+    //                       html: true
+    //                   }, function() {
+    //                       $('#main-modal').modal('hide');
+    //                       $("#main-table").DataTable().ajax.reload( null, false ); // user paging is not reset on reload
+    //                   });
+    //               }, 200);
+    //           } else {
+    //               $('.loading-area').hide();
+    //               swal({
+    //                   title: "Gagal",
+    //                   text: msg.message,
+    //                   showConfirmButton: true,
+    //                   confirmButtonColor: '#0760ef',
+    //                   type:"error",
+    //                   html: true
+    //               });
+    //           }
+    //         }
+    //   });
+    // });
 
     $( 'form#add-form' ).submit( function( e ) {
       e.preventDefault();
       var form_data   = new FormData( this );
+      $.ajax({
 		type: 'GET',
 		url: '{{asset('')}}'+'number/validate?prefix=JU&number='+$('.ref-number').val(),
 		success: function(data){
@@ -292,6 +293,7 @@
 		}
 		}
 	});
+      });
 
 	$(document).on( 'click', '#delete', function( e ) {
 		
