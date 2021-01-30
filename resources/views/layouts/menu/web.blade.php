@@ -153,4 +153,14 @@
         <a href="{{url('/accounting-balance-sheet')}}"><i class="la la-file-alt"></i> <span>Neraca</span></a>
     </li>
     @endif
+
+
+    @if(Session::get('_role_id') == 1)
+    <li class="menu-title">
+        <span>SLF </span>
+    </li>
+    <li {{ (request()->segment(1) == 'slf-template') ? 'class=active' : '' }}>
+        <a href="{{url('/slf-template')}}"><i class="la la-file-alt"></i> <span>SLF Template</span></a>
+    </li>
+    @endif
 </ul>

@@ -226,7 +226,7 @@ Route::group([
 
 	Route::get('accounting-ledger', 'Accounting\LedgerController@index');
 	Route::post('accounting-ledger-datatables', 'Accounting\LedgerController@datatables');
-
+	
 	Route::get('accounting-profit-loss', 'Accounting\ProfitLossController@index');
 	Route::post('accounting-profit-loss-datatables', 'Accounting\ProfitLossController@datatables');
 
@@ -250,6 +250,9 @@ Route::group([
         Route::group(['prefix' => 'general_ledger'], function () {
             Route::post('/datatables', ['as' => 'accounting.general_ledger.datatable', 'uses' => 'GeneralLedgerController@index']);
             Route::post('/store', ['as' => 'accounting.general_ledger.store', 'uses' => 'GeneralLedgerController@store']);
+            Route::post('/update/{id}', ['as' => 'accounting.general_ledger.update', 'uses' => 'GeneralLedgerController@update']);
+            Route::get('/delete/{id}', ['as' => 'accounting.general_ledger.delete', 'uses' => 'GeneralLedgerController@delete']);
+            Route::get('/{id}', ['as' => 'accounting.general_ledger.edit', 'uses' => 'GeneralLedgerController@edit']);
         });
 
         Route::group(['prefix' => 'ledger'], function () {
@@ -264,6 +267,10 @@ Route::group([
             Route::post('/', ['as' => 'accounting.profit_loss.get', 'uses' => 'BalanceSheetController@get']);
         });
 	});
+
+
+	Route::get('slf-template', 'Slf\SlfTemplateController@index');
+	Route::post('slf-template-store', 'Slf\SlfTemplateController@store');
 });
 
 Route::get('number/generate', 'NumberGenerateController@generate');

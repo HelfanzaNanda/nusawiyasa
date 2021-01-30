@@ -68,7 +68,7 @@
             <div class="col-md-12"> 
 				<label>No. Ref</label>
 				<div class="form-group">
-					<input type="text" class="form-control" placeholder="KD0001" name="ref" id="ref">
+					<input type="text" class="form-control ref-number" placeholder="KD0001" name="ref" id="ref">
 				</div><!-- form-group -->
 				<label>Tanggal</label>
 				<div class="form-group">
@@ -92,10 +92,7 @@
 				        </th>
 				    </tr>
 				  </thead>
-				    
-				   <tbody id="journal_detail">
-
-				  </tbody>
+				   <tbody id="journal_detail"></tbody>
 				</table> 
 				</div>
 				<input type="hidden" id="typePost">
@@ -120,6 +117,9 @@
 @section('additionalScriptJS')
 <script type="text/javascript">
   var URL_ADD = BASE_URL+'/accounting/general_ledger/store';
+  var URL_EDIT = BASE_URL+'/accounting/general_ledger';
+  var URL_UPDATE = BASE_URL+'/accounting/general_ledger/update';
+  var URL_DELETE = BASE_URL+'/accounting/general_ledger/delete';
   var URL_SEARCH_COA = BASE_URL+'/accounting/get';
 
 	if($('#journal_date').length > 0) {
@@ -134,11 +134,30 @@
 		});
 	}
 
-    $(document).on('click', '#show-add-modal', function() {    
+	var jj=0;
+	var counter = 0;
+    $(document).on('click', '#show-add-modal', function() {
+		jj = 0
+		$('#ref').val('');
+		$('#journal_date').val('');
+		$('#description').val('');
+		$('#myTable tbody tr').remove();
         $('.loading-area').hide();
         $('#typePost').val('add');
         $("#submit_button").prop('disabled', true);
         $('#main-modal').modal('show'); 
+
+		$(document).ready(function(){
+    var url = '{{ asset('') }}'
+    
+    $.ajax({
+      type: 'GET',
+      url: url+'number/generate?prefix=JU',
+      success: function(data){
+        $('.ref-number').val(data.number)
+      }
+    })
+  })
     });
 
 	$("#main-table").DataTable({
@@ -154,6 +173,9 @@
 	      "data":function(d) { 
 	        d._token = "{{csrf_token()}}"
 	      },
+		//   success: function(res){
+		// 	  console.log(res);
+		//   }
 	  },
 	  "columns": [
 			{data: 'id', name: 'id', width: '5%', "visible": false},
@@ -166,33 +188,7 @@
 	  ],
 	});
 
-    $(document).on('click', '#edit-general-ledger', function() {    
-
-        var id = $(this).data('id');
-        $('.loading-area').hide();
-        $.ajax({
-          url: URL_EDIT+'/'+id,
-          type: 'GET',
-            "headers": {
-                'Authorization': _token
-            },
-          dataType: 'JSON',
-          success: function(data, textStatus, jqXHR){ 
-            $('#code').val(data.data.code);
-            $('#name').val(data.data.name);
-            $('#address').val(data.data.address);
-            $('#phone').val(data.data.phone);
-            $('#email').val(data.data.email);
-            $('#general-ledger_receivable').val(data.data.general-ledger_receivable);
-            $('#id').val(id);
-            $('#typePost').val('edit');
-            $('#main-modal').modal('show');
-          },
-          error: function(jqXHR, textStatus, errorThrown){
-
-          },
-        });    
-    });
+    
 
     $( 'form#add-form' ).submit( function( e ) {
       e.preventDefault();
@@ -207,8 +203,10 @@
             dataType: 'json',
             beforeSend: function() {
               $('.loading-area').show();
+			  console.log($('#typePost').val());
             },
             success: function(msg) {
+				//console.log(msg);
               if(msg.status == 'success'){
                   setTimeout(function() {
                       swal({
@@ -233,10 +231,70 @@
                   });
               }
             }
-      })
+      });
     });
 
-	$( '#table-general-ledger' ).on( 'click', 'button#delete-general-ledger', function( e ) {
+    $( 'form#add-form' ).submit( function( e ) {
+      e.preventDefault();
+      var form_data   = new FormData( this );
+		type: 'GET',
+		url: '{{asset('')}}'+'number/validate?prefix=JU&number='+$('.ref-number').val(),
+		success: function(data){
+		if(data.status == 'error'){
+			swal({
+			title: "Gagal",
+			text: "Maaf, Nomor jurnal umum telah digunakan,",
+			showConfirmButton: true,
+			confirmButtonColor: '#0760ef',
+			type:"error",
+			html: true
+			});
+		}else{
+			$.ajax({
+				type: 'post',
+				url: $('#typePost').val() === 'edit' ? URL_UPDATE + '/' + $('#id').val() : URL_ADD,
+				data: form_data,
+				cache: false,
+				contentType: false,
+				processData: false,
+				dataType: 'json',
+				beforeSend: function() {
+				$('.loading-area').show();
+				},
+				success: function(msg) {
+				if(msg.status == 'success'){
+					setTimeout(function() {
+						swal({
+							title: "Sukses",
+							text: msg.message,
+							type:"success",
+							html: true
+						}, function() {
+							$('#main-modal').modal('hide');
+							$("#main-table").DataTable().ajax.reload( null, false ); // user paging is not reset on reload
+						});
+					}, 200);
+				} else {
+					$('.loading-area').hide();
+					swal({
+						title: "Gagal",
+						text: msg.message,
+						showConfirmButton: true,
+						confirmButtonColor: '#0760ef',
+						type:"error",
+						html: true
+					});
+				}
+				}
+			})
+
+
+		}
+		}
+	});
+
+	$(document).on( 'click', '#delete', function( e ) {
+		
 	    e.preventDefault();
 	    var id  = $( this ).attr( "data-id" );
 	    swal( {
@@ -252,25 +310,39 @@
 	    }, function() {
 	        $.ajax({
 	            url:    URL_DELETE + '/' + id,
-	            type:   "DELETE"
+	            type:   "GET",
+				success: function(res) {
+				if(res.status == 'success'){
+					setTimeout(function() {       
+						swal({
+							title: "sukses",
+							text: res.message,
+							type:"success",
+							html: true
+						}, function() {
+							//$('#main-modal').modal('hide');
+                          	$("#main-table").DataTable().ajax.reload( null, false ); // user paging is not reset on reload
+						});
+					}, 500);
+				} else {
+					swal({
+						title: "Gagal",
+						text: res.message,
+						showConfirmButton: true,
+						confirmButtonColor: '#0760ef',
+						type:"error",
+						html: true
+					});
+				}
+            }
 	        })
-	        .done( function( data ) {
-	            swal( "Dihapus!", "Data telah berhasil dihapus!", "success" );
-	            $('#table-general-ledger').DataTable().ajax.reload();
-	        } )
-	        .error( function( data ) {
-	            swal( "Oops", "We couldn't connect to the server!", "error" );
-	        } );
 	    } );
 	});
 
-	var jj=0;     
-	var counter = 0;
-
+	
 	$("#addrow").on("click", function () {
-
+		console.log(jj);
 	    counter = $('#myTable tbody tr').length;
-
 	    var newRow = $("<tr>");
 	    var cols = "";
 
@@ -289,7 +361,7 @@
 	    newRow.append(cols);
 	    if (counter == 100) $('#addrow').attr('disabled', true).prop('value', "You've reached the limit");
 	    $("table#myTable").append(newRow); 
-	    // $(".select2").select2({minimumResultsForSearch: Infinity});
+	    //$(".select2").select2({minimumResultsForSearch: Infinity});
 	    $("select#dk_"+ jj).change(function () {
 	        var id = $(this).attr('data-id');
 	        if ($(this).val() === '1') {
@@ -304,7 +376,6 @@
 	          $("input#debit_"+ id).prop('readonly', false);
 	        }
 	    });
-
 	    $("#coa_"+jj).select2({
 	      minimumInputLength: 2,
 	      dropdownParent: $("#main-modal"),
@@ -333,6 +404,125 @@
 	    });
 	  counter++;
 	  jj++;
+	  
+	});
+
+
+	function selectDk(){
+		//$(".select2").select2({minimumResultsForSearch: Infinity});
+	    $("#dk_"+ jj).change(function () {
+	        var id = $(this).attr('data-id');
+	        if ($(this).val() === '1') {
+	          $("input#debit_"+ id).val(0);
+	          $("input#debit_"+ id).prop('readonly', true);
+	          $("input#credit_"+ id).val(0);
+	          $("input#credit_"+ id).prop('readonly', false);
+	        } else {
+	          $("input#credit_"+ id).val(0);
+	          $("input#credit_"+ id).prop('readonly', true);
+	          $("input#debit_"+ id).val(0);
+	          $("input#debit_"+ id).prop('readonly', false);
+	        }
+	    });
+	}
+
+	function searchCoa(){
+		$("#coa_"+jj).select2({
+	      minimumInputLength: 2,
+	      dropdownParent: $("#main-modal"),
+	      minimumResultsForSearch: '',
+	      ajax: {
+	        url: URL_SEARCH_COA,
+	        dataType: "json",
+	        type: "GET",
+	        data: function (params) {
+	          var queryParameters = {
+	            term: params.term
+	          }
+	          return queryParameters
+	        },
+	        processResults: function (data) {
+	          return {
+	            results: $.map(data, function (item) {
+	              return {
+	                text: item.name,
+	                id: item.coa
+	              }
+	            })
+	          }
+	        }
+	      }
+	    });
+	}
+
+	function addRow() {
+	    var newRow = $("<tr>");
+	    var cols = "";
+	    cols += '<td><input type="hidden" name="accounting_ledger[]" id="accounting_ledger_'+jj+'">';
+	    cols += '<select id="coa_'+jj+'" class="form-control" name="coa[]" style="width: 100%;">';
+	    cols += '<option value"">Pilih</option>';
+	    cols += '</select></td>';
+	    cols += '<td><select class="select2 form-control dk_type" name="type[]" id="dk_'+jj+'" data-id="'+jj+'">';
+	    cols += '<option value="">K/D</option>';
+	    cols += '<option value="1">K</option>';
+	    cols += '<option value="2">D</option>';
+	    cols += '</select></td>';
+	    cols += '<td><input type="text" class="form-control debit" name="debit[]" id="debit_'+jj+'" onkeyup="checkBalance()"></td>';
+	    cols += '<td><input type="text" class="form-control credit" name="credit[]" id="credit_'+jj+'" onkeyup="checkBalance()"></td>';
+	    cols += '<td><button type="button" id="ibtnDel" class="btn btn-danger"><i class="fa fa-trash"></i></button></td>';
+	    newRow.append(cols);
+	    $("table#myTable").append(newRow); 
+		//selectDk()
+		
+	}
+
+	$(document).on('click', '#edit', function() {    
+		$('#typePost').val('edit');
+		$('#myTable tbody tr').html('');
+		var id = $(this).data('id');
+		$('#id').val(id);
+		$('.loading-area').hide();
+
+		$.ajax({
+			url: URL_EDIT+'/'+id,
+			type: 'GET',
+				"headers": {
+					'Authorization': "{{ csrf_token() }}"
+				},
+			dataType: 'JSON',
+			success: function(data, textStatus, jqXHR) {
+					$('#ref').val(data.ref);
+					$('#journal_date').val(data.date);
+					$('#description').val(data.description);
+					$.each( data.accounting_ledgers, function( key, accounting_ledger ) {
+						addRow()
+						searchCoa()
+						selectDk()
+						var option = $("<option selected></option>").val(accounting_ledger.coa).text(`${accounting_ledger.accounting_master.accounting_code} | ${accounting_ledger.accounting_master.name}`);
+						$(`#coa_${jj}`).append(option).change();
+						if (parseInt(accounting_ledger.debit) === 0) {
+							$(`#dk_${jj} option[value='1']`).attr('selected','selected');
+							$(`#debit_${jj}`).prop('readonly', true);
+							$(`#credit_${jj}`).prop('readonly', false);
+						}else if(parseInt(accounting_ledger.credit) === 0){
+							$(`#dk_${jj} option[value='2']`).attr('selected','selected');
+							$(`#debit_${jj}`).prop('readonly', false);
+							$(`#credit_${jj}`).prop('readonly', true);
+						}
+						$(`#debit_${jj}`).val(parseInt(accounting_ledger.debit))
+						$(`#credit_${jj}`).val(parseInt(accounting_ledger.credit))
+						$(`#accounting_ledger_${jj}`).val(parseInt(accounting_ledger.id))
+						console.log(jj);
+						jj++
+						
+					});
+					
+					$('#main-modal').modal('show');
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+
+			},
+		});    
 	});
 
 	$("#submitFilter").click(function(){
