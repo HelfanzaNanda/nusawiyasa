@@ -265,7 +265,7 @@ class Inventories extends Model
         $totalPage = ceil((int)$countAll / 10);
 
         // $db->orderBy($model->table.'.fullname', 'asc');
-        $db->skip($currentPage)
+        $db->skip($currentPage * 10)
            ->take(10);
 
         return response()->json([
