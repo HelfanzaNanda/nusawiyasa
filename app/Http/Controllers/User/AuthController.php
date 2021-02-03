@@ -74,4 +74,21 @@ class AuthController extends Controller
         ]);
 
     }
+
+    public function setting(Request $request){
+        $user = $request->user();
+        
+        $request->validate([
+            'name' => 'required',
+            'password' => 'required'
+        ]);
+
+        $user->name = $request->name;
+        $user->password = bcrypt($request->password);
+
+        $user->save();
+
+        return response()->json(['status'=> 'success']);
+
+    }
 }

@@ -85,7 +85,7 @@ class Lot extends Model
 
         unset($params['page']);
 
-        $db = self::select(array_keys(self::mapSchema()))->with('galleries');
+        $db = self::select(array_keys(self::mapSchema()))->with('galleries')->with('cluster');
 
         if ($params) {
             foreach (array($params) as $k => $v) {
@@ -116,8 +116,8 @@ class Lot extends Model
         $countAll = $db->count();
         $currentPage = $paramsPage > 0 ? $paramsPage - 1 : 0;
         $page = $paramsPage > 0 ? $paramsPage + 1 : 2;
-        $nextPage = env('APP_URL').'/api/users?page='.$page;
-        $prevPage = env('APP_URL').'/api/users?page='.($currentPage < 1 ? 1 : $currentPage);
+        $nextPage = $page;
+        $prevPage = ($currentPage < 1 ? 1 : $currentPage);
         $totalPage = ceil((int)$countAll / 10);
 
         // $db->orderBy($model->table.'.fullname', 'asc');
