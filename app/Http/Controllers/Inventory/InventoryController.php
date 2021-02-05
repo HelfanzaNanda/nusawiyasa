@@ -78,7 +78,7 @@ class InventoryController extends Controller
 
         $filter = $request->only(['sDate', 'eDate']);
 
-        $res = Inventories::datatables($start, $limit, $order, $dir, $search, $filter, $session);
+        $res = Inventories::datatables($start, $limit, $order, $dir, $search, $filter, null, $session);
 
         $data = [];
 

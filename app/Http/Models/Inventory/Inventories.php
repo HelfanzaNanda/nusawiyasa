@@ -114,7 +114,7 @@ class Inventories extends Model
 
     // Relations ...
 
-    public static function datatables($start, $length, $order, $dir, $search, $filter = '', $filter_cluster = '', $session = [])
+    public static function datatables($start, $length, $order, $dir, $search, $filter = '', $filter_cluster = null, $session = [])
     {
         $totalData = self::count();
 
