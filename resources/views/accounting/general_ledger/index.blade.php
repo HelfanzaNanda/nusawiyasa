@@ -257,7 +257,7 @@
 		type: 'GET',
 		url: '{{asset('')}}'+'number/validate?prefix=JU&number='+$('.ref-number').val(),
 		success: function(data){
-		if(data.status == 'error'){
+		if (data.status == 'error' && $('#typePost').val() != 'edit') {
 			swal({
 				title: "Gagal",
 				text: "Maaf, Nomor jurnal umum telah digunakan,",
@@ -266,7 +266,7 @@
 				type:"error",
 				html: true
 			});
-		}else{
+		} else {
 			$.ajax({
 				type: 'post',
 				url: $('#typePost').val() === 'edit' ? URL_UPDATE + '/' + $('#id').val() : URL_ADD,
