@@ -74,7 +74,7 @@
 				<div class="form-group">
 				<label>Cluster/Perumahan</label>
 					<select id="input-cluster" name="cluster_id" required=""> 
-					  <option> - Pilih Cluster - </option>
+					  <option value="0"> - Pilih Cluster - </option>
 					  @foreach($clusters as $cluster)
 					    <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
 					  @endforeach
