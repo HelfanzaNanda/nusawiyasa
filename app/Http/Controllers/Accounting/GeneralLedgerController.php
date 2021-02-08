@@ -140,7 +140,8 @@ class GeneralLedgerController extends Controller
         $accountingJournal->update([
             'date' => $request->date,
             'description' => $request->description,
-            'ref' => $request->ref
+            'ref' => $request->ref,
+            'cluster_id' => $request->cluster_id
         ]);
         $accountingJournal->accountingLedgers()->delete();
         for ($i=0; $i < count($request->coa); $i++) { 
@@ -149,6 +150,7 @@ class GeneralLedgerController extends Controller
                 'coa' => $request->coa[$i],
                 'debit' => $request->debit[$i],
                 'credit' => $request->credit[$i],
+                'cluster_id' => $request->cluster_id
             ]);
         }
         $accountingJournal->update([
