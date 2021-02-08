@@ -212,7 +212,7 @@ class Lot extends Model
                 ->join('clusters', 'clusters.id', '=', 'lots.cluster_id')
                 ->leftJoin('customer_lots', 'customer_lots.lot_id', '=', 'lots.id');
 
-        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6, 10])) && isset($session['_cluster_id'])) {
             $qry->where('lots.cluster_id', $session['_cluster_id']);
         }
 
@@ -276,7 +276,7 @@ class Lot extends Model
        $qry = self::select(['lots.id', 'clusters.name', 'lots.block', 'lots.unit_number'])
                 ->join('clusters', 'clusters.id', '=', 'lots.cluster_id');
 
-        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6, 10])) && isset($session['_cluster_id'])) {
             $qry->where('lots.cluster_id', $session['_cluster_id']);
         }
 

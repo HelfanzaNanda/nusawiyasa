@@ -18,7 +18,8 @@ class AccountingLedger extends Model
         'accounting_journal_id',
         'coa',
         'debit',
-        'credit'
+        'credit',
+        'cluster_id'
     ];
 
     private $operators = [
@@ -41,6 +42,7 @@ class AccountingLedger extends Model
             'coa' => ['alias' => $model->table.'.coa', 'type' => 'int'],
             'debit' => ['alias' => $model->table.'.debit', 'type' => 'string'],
             'credit' => ['alias' => $model->table.'.credit', 'type' => 'string'],
+            'cluster_id' => ['alias' => $model->table.'.cluster_id', 'type' => 'string'],
 			'created_at' => ['alias' => $model->table.'.created_at', 'type' => 'string'],
 			'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string'],
         ];

@@ -38,7 +38,7 @@ class SPKProjectController extends Controller
                     ->join('clusters', 'clusters.id', '=', 'lots.cluster_id');
 
 
-        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6])) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6, 10])) && isset($session['_cluster_id'])) {
             $lots->where('lots.cluster_id', $session['_cluster_id']);
         }
 

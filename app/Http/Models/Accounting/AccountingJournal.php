@@ -16,7 +16,8 @@ class AccountingJournal extends Model
 		'description',
 		'type',
 		'date',
-        'total'
+        'total',
+        'cluster_id'
     ];
 
     private $operators = [
@@ -40,6 +41,7 @@ class AccountingJournal extends Model
 			'type' => ['alias' => $model->table.'.type', 'type' => 'int'],
 			'date' => ['alias' => $model->table.'.date', 'type' => 'string'],
             'total' => ['alias' => $model->table.'.total', 'type' => 'string'],
+            'cluster_id' => ['alias' => $model->table.'.cluster_id', 'type' => 'string'],
 			'created_at' => ['alias' => $model->table.'.created_at', 'type' => 'string'],
 			'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string'],
         ];
@@ -54,7 +56,11 @@ class AccountingJournal extends Model
             $_select[] = $select['alias'];
         }
 
-        $qry = self::select($_select);
+        $qry = self::select($_select)->addSelect('clusters.name as cluster_name')->leftJoin('clusters', 'clusters.id', '=', 'accounting_journals.cluster_id');
+
+        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6, 10])) && isset($session['_cluster_id'])) {
+            $qry->where('accounting_journals.cluster_id', $session['_cluster_id']);
+        }
 
         $totalFiltered = $qry->count();
 

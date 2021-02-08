@@ -39,6 +39,7 @@
 				<th>Tipe</th>
 				<th>Tanggal</th>
 				<th>Total</th>
+				<th>Perumahan</th>
                 <th class="text-right" width="10%">Aksi</th>
               </tr>
             </thead>
@@ -56,7 +57,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">COA</h5>
+        <h5 class="modal-title">Tambah Jurnal Umum</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -70,9 +71,18 @@
 				<div class="form-group">
 					<input type="text" class="form-control ref-number" placeholder="KD0001" name="ref" id="ref">
 				</div><!-- form-group -->
+				<div class="form-group">
+				<label>Cluster/Perumahan</label>
+					<select id="input-cluster" name="cluster_id" required=""> 
+					  <option> - Pilih Cluster - </option>
+					  @foreach($clusters as $cluster)
+					    <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
+					  @endforeach
+					</select>
+				</div>
 				<label>Tanggal</label>
 				<div class="form-group">
-					<input type="text" class="form-control" name="date" id="journal_date" value="{{date('Y-m-d')}}">
+					<input type="text" class="form-control" name="date" id="journal_date" value="{{date('Y-m-d')}}" autocomplete="off">
 				</div><!-- form-group -->
 				<label>Keterangan</label>
 				<div class="form-group">
@@ -116,11 +126,15 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
-  var URL_ADD = BASE_URL+'/accounting/general_ledger/store';
-  var URL_EDIT = BASE_URL+'/accounting/general_ledger';
-  var URL_UPDATE = BASE_URL+'/accounting/general_ledger/update';
-  var URL_DELETE = BASE_URL+'/accounting/general_ledger/delete';
-  var URL_SEARCH_COA = BASE_URL+'/accounting/get';
+	var URL_ADD = BASE_URL+'/accounting/general_ledger/store';
+	var URL_EDIT = BASE_URL+'/accounting/general_ledger';
+	var URL_UPDATE = BASE_URL+'/accounting/general_ledger/update';
+	var URL_DELETE = BASE_URL+'/accounting/general_ledger/delete';
+	var URL_SEARCH_COA = BASE_URL+'/accounting/get';
+
+	$('#input-cluster').select2({
+		width: '100%'
+	});
 
 	if($('#journal_date').length > 0) {
 		$('#journal_date').datetimepicker({
@@ -184,8 +198,10 @@
 			{data: 'type', name: 'type'},
 			{data: 'date', name: 'date'},
 			{data: 'total', name: 'total'},
+			{data: 'cluster_name', name: 'cluster_name'},
 			{data: 'action', name: 'action', className: 'text-right'},
 	  ],
+	  "order": [[ 0, "desc" ]]
 	});
 
     
@@ -243,12 +259,12 @@
 		success: function(data){
 		if(data.status == 'error'){
 			swal({
-			title: "Gagal",
-			text: "Maaf, Nomor jurnal umum telah digunakan,",
-			showConfirmButton: true,
-			confirmButtonColor: '#0760ef',
-			type:"error",
-			html: true
+				title: "Gagal",
+				text: "Maaf, Nomor jurnal umum telah digunakan,",
+				showConfirmButton: true,
+				confirmButtonColor: '#0760ef',
+				type:"error",
+				html: true
 			});
 		}else{
 			$.ajax({

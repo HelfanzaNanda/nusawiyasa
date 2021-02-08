@@ -5,13 +5,16 @@ namespace App\Http\Controllers\Accounting;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Accounting\AccountingJournal;
 use App\Http\Models\Accounting\AccountingLedger;
+use App\Http\Models\Cluster\Cluster;
 use Illuminate\Http\Request;
 
 class GeneralLedgerController extends Controller
 {
     public function index()
     {
-        return view('accounting.general_ledger.'.__FUNCTION__);
+        $clusters = Cluster::selectClusterBySession();
+
+        return view('accounting.general_ledger.'.__FUNCTION__, compact('clusters'));
     }
 
     public function datatables(Request $request)
@@ -64,7 +67,8 @@ class GeneralLedgerController extends Controller
 				$nestedData['description'] = $row['description'];
 				$nestedData['type'] = $row['type'];
 				$nestedData['date'] = $row['date'];
-				$nestedData['total'] = $row['total'];
+				$nestedData['total'] = number_format(floatval($row['total']));
+                $nestedData['cluster_name'] = $row['cluster_name'];
                 $nestedData['action'] = '';
                 $nestedData['action'] .='<div class="dropdown dropdown-action">';
                 $nestedData['action'] .='<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';
@@ -97,6 +101,7 @@ class GeneralLedgerController extends Controller
         $saveJournal->description = $request->description;
         $saveJournal->type = 5;
         $saveJournal->date = $request->date;
+        $saveJournal->cluster_id = $request->cluster_id;
         if ($saveJournal->save()) {
             for ($i = 0; $i < count($request->coa); $i++){
             	$total += $request->debit[$i];
@@ -105,6 +110,7 @@ class GeneralLedgerController extends Controller
                 $saveGenLedger->coa = $request->coa[$i];
                 $saveGenLedger->debit = $request->debit[$i];
                 $saveGenLedger->credit = $request->credit[$i];
+                $saveGenLedger->cluster_id = $request->cluster_id;
                 $saveGenLedger->save();
             }
         }
