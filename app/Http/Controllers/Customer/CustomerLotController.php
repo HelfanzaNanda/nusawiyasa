@@ -7,6 +7,7 @@ use App\Http\Models\Cluster\Lot;
 use App\Http\Models\Customer\Customer;
 use App\Http\Models\Customer\CustomerCost;
 use App\Http\Models\Customer\CustomerLot;
+use App\Http\Models\Customer\CustomerPayment;
 use App\Http\Models\Customer\CustomerTerm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -94,6 +95,7 @@ class CustomerLotController extends Controller
                 $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';
                 $nestedData['action'] .='            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(159px, 32px, 0px);">';
                 $nestedData['action'] .='                <a class="dropdown-item" href="'.url('/bookings/detail/'.$row['id']).'"><i class="fa fa-info m-r-5"></i> Detail</a>';
+                $nestedData['action'] .='                <button class="dropdown-item" id="delete-data" data-id="'.$row['id'].'"><i class="fa fa-info m-r-5"></i> Hapus</button>';
                 if ($row['payment_type'] == 'cash_in_stages') {
                     $nestedData['action'] .='                <button class="dropdown-item" id="booking-installment" data-id="'.$row['id'].'"><i class="fa fa-info m-r-5"></i> Cicilan Cash</button>';
                 }
@@ -154,5 +156,22 @@ class CustomerLotController extends Controller
         }
 
         return $res;
+    }
+
+    public function delete($id){
+        $customer_lot = CustomerLot::where('id', $id)->first();
+
+        CustomerCost::where('customer_id', $customer_lot['customer_id'])->where('lot_id', $customer_lot['lot_id'])->delete();
+
+        CustomerPayment::where('customer_lot_id', $customer_lot['id'])->delete();
+
+        CustomerTerm::where('customer_id', $customer_lot['customer_id'])->where('lot_id', $customer_lot['lot_id'])->delete();
+        
+        $cluster = CustomerLot::destroy($id);
+        
+        return response()->json([
+            'message' => 'data berhasil dihapus',
+            'status' => 'success'
+        ]);
     }
 }
