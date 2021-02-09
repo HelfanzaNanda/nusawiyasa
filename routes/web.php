@@ -273,6 +273,9 @@ Route::group([
 
 	Route::get('slf-template', 'Slf\SlfTemplateController@index');
 	Route::post('slf-template-store', 'Slf\SlfTemplateController@store');
+
+	Route::get('user-permissions', 'Permissions\PermissionsController@index');
+	Route::post('user-permissions-update', 'Permissions\PermissionsController@update');
 });
 
 Route::get('number/generate', 'NumberGenerateController@generate');
