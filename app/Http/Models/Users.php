@@ -4,18 +4,21 @@ namespace App\Http\Models;
 
 use App\Http\Models\Role;
 use App\Http\Models\UserCompany;
-use App\Http\Models\Users;
+use App\Http\Models\Users as User;
 use DB;
 use DataTables;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
-class Users extends Model
+class Users extends Authenticatable
 {
-    use HasApiTokens;
+    use HasApiTokens, HasRoles;
     protected $table = 'users';
+    protected $guard_name = 'web';
     protected $fillable = [
         'id',
         'name',
