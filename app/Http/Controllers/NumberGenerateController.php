@@ -142,7 +142,6 @@ class NumberGenerateController extends Controller
     }
 
     private function generateNumber($params){
-
         $now = Carbon::now();
         $prefixSize = (strlen($params['prefix']))+10;
         
@@ -155,14 +154,13 @@ class NumberGenerateController extends Controller
             ->where($params['field'], 'like', $prefix.'%')
             ->orderBy('created_at', 'DESC')
             ->first();
+
         if($data == null){
             $prefix .= sprintf('%04d', 1); 
         }else{
             $repeat = true;
-
-            $last = substr($data->number, -4);
+            $last = substr($data[$params['field']], -4);
             $new = sprintf('%04d',++$last);
-
             while($repeat){
                 $data = $params['class']::where($params['field'], $prefix.$new)->first();
                 if($data == null){
