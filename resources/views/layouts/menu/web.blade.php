@@ -172,7 +172,7 @@
         @endif
     @endif
 
-    @if($user->can('user'))
+    @if($user->hasAnyPermission(['user', 'user-permissions']))
         <li class="menu-title">
             <span>Pengaturan </span>
         </li>
@@ -180,6 +180,11 @@
             <li {{ (request()->segment(1) == 'user') ? 'class=active' : '' }}>
                 <a href="{{url('/user')}}"><i class="la la-file-alt"></i> <span>Pengguna</span></a>
             </li>
+        @endif
+        @if ($user->can('user-permissions'))
+        <li {{ (request()->segment(1) == 'user-permissions') ? 'class=active' : '' }}>
+            <a href="{{url('/user-permissions')}}"><i class="la la-wrench"></i> <span>Izin Pengguna</span></a>
+        </li>
         @endif
     @endif
 
@@ -232,15 +237,6 @@
         </li>
         <li {{ (request()->segment(1) == 'slf-template') ? 'class=active' : '' }}>
             <a href="{{url('/slf-template')}}"><i class="la la-file-alt"></i> <span>SLF Template</span></a>
-        </li>
-    @endif
-
-    @if ($user->can('user-permissions'))
-        <li class="menu-title">
-            <span>User Permissions </span>
-        </li>
-        <li {{ (request()->segment(1) == 'user-permissions') ? 'class=active' : '' }}>
-            <a href="{{url('/user-permissions')}}"><i class="la la-user"></i> <span>User Permissions</span></a>
         </li>
     @endif
 </ul>

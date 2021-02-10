@@ -146,6 +146,8 @@ class Users extends Authenticatable
             'role_id' => $params['role_id'],
             'cluster_id' => $params['cluster_id']
         ]);
+        $role = Role::find($params['role_id']);
+        $users->assignRole($role->name);
 
         return response()->json([
             'status' => 'success',

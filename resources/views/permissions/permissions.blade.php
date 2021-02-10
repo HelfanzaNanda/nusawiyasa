@@ -25,10 +25,11 @@
           <tbody>
             @foreach ($permissions as $key => $permission)
             <tr class="table-secondary">
+              {{-- <td colspan="8"><strong>{{ __('permissions.'.$key) }}</strong></td> --}}
               <td colspan="8"><strong>{{ $key }}</strong></td>
               @foreach ($permission as $item)
               <tr>
-                <td>{{ $item['name'] }}</td>
+                <td>{{ __('permissions.'.$item['name']) }}</td>
                 <td>{{ $item['guard_name'] }}</td>
                 <td>
                   <div class="form-check">
