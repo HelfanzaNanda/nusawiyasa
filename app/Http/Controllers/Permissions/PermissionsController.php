@@ -17,8 +17,8 @@ class PermissionsController extends Controller
     {
         $perms = DB::table('permissions')->select('permissions.*')
         ->addSelect(DB::raw(' GROUP_CONCAT(DISTINCT roles.name) as roles'))
-        ->join('role_has_permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')
-        ->join('roles', 'role_has_permissions.role_id', '=', 'roles.id')
+        ->leftJoin('role_has_permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')
+        ->leftJoin('roles', 'role_has_permissions.role_id', '=', 'roles.id')
         ->groupBy('permissions.id')->get();
         $attrs = [];
         foreach ($perms as $permission) {

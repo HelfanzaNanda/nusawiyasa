@@ -27,41 +27,41 @@
             <tr class="table-secondary">
               <td colspan="8"><strong>{{ $key }}</strong></td>
               @foreach ($permission as $item)
-            <tr>
-              <td>{{ $item['name'] }}</td>
-              <td>{{ $item['guard_name'] }}</td>
-              <td>
-                <div class="form-check">
-                  <input class="form-check-input checkbox" data-perm="{{ $item['name'] }}" data-role="SuperAdmin" type="checkbox" {{ collect($item['roles'])->contains('SuperAdmin') ? 'checked' : '' }}>
-                </div>
-              </td>
-              <td>
-                <div class="form-check">
-                  <input class="form-check-input checkbox" data-perm="{{ $item['name'] }}" data-role="Marketing" type="checkbox" {{ collect($item['roles'])->contains('Marketing') ? 'checked' : '' }}>
-                </div>
-              </td>
-              <td>
-                <div class="form-check">
-                  <input class="form-check-input checkbox" data-perm="{{ $item['name'] }}" data-role="Project" type="checkbox" {{ collect($item['roles'])->contains('Project') ? 'checked' : '' }}>
-                </div>
-              </td>
-              <td>
-                <div class="form-check">
-                  <input class="form-check-input checkbox" data-perm="{{ $item['name'] }}" data-role="WareHouse" type="checkbox" {{ collect($item['roles'])->contains('WareHouse') ? 'checked' : '' }}>
-                </div>
-              </td>
-              <td>
-                <div class="form-check">
-                  <input class="form-check-input checkbox" data-perm="{{ $item['name'] }}" data-role="Purchashing" type="checkbox" {{ collect($item['roles'])->contains('Purchashing') ? 'checked' : '' }}>
-                </div>
-              </td>
-              <td>
-                <div class="form-check">
-                  <input class="form-check-input checkbox" data-perm="{{ $item['name'] }}" data-role="Customer" type="checkbox" {{ collect($item['roles'])->contains('Customer') ? 'checked' : '' }}>
-                </div>
-              </td>
-            </tr>
-            @endforeach
+              <tr>
+                <td>{{ $item['name'] }}</td>
+                <td>{{ $item['guard_name'] }}</td>
+                <td>
+                  <div class="form-check">
+                    <input class="form-check-input checkbox" data-perm="{{ $item['name'] }}" data-role="SuperAdmin" type="checkbox" {{ collect($item['roles'])->contains('SuperAdmin') ? 'checked' : '' }}>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-check">
+                    <input class="form-check-input checkbox" data-perm="{{ $item['name'] }}" data-role="Marketing" type="checkbox" {{ collect($item['roles'])->contains('Marketing') ? 'checked' : '' }}>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-check">
+                    <input class="form-check-input checkbox" data-perm="{{ $item['name'] }}" data-role="Project" type="checkbox" {{ collect($item['roles'])->contains('Project') ? 'checked' : '' }}>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-check">
+                    <input class="form-check-input checkbox" data-perm="{{ $item['name'] }}" data-role="WareHouse" type="checkbox" {{ collect($item['roles'])->contains('WareHouse') ? 'checked' : '' }}>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-check">
+                    <input class="form-check-input checkbox" data-perm="{{ $item['name'] }}" data-role="Purchashing" type="checkbox" {{ collect($item['roles'])->contains('Purchashing') ? 'checked' : '' }}>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-check">
+                    <input class="form-check-input checkbox" data-perm="{{ $item['name'] }}" data-role="Customer" type="checkbox" {{ collect($item['roles'])->contains('Customer') ? 'checked' : '' }}>
+                  </div>
+                </td>
+              </tr>
+              @endforeach
 
             </tr>
             @endforeach
