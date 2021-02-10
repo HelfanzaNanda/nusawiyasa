@@ -205,6 +205,16 @@ Route::group([
 	Route::get('/user/{id:}', 'User\UserController@detail');
 	Route::get('/user/{id}/delete', 'User\UserController@delete');
 
+	Route::get('user-permissions', 'Permissions\PermissionsController@index');
+	Route::post('user-permissions-update', 'Permissions\PermissionsController@update');
+
+	Route::get('roles', 'Role\RoleController@index');
+	Route::post('roles-datatables', 'Role\RoleController@datatables');
+	Route::post('roles-add', 'Role\RoleController@store');
+	Route::get('roles/{id}', 'Role\RoleController@get');
+	Route::post('roles-update', 'Role\RoleController@update');
+	Route::get('roles-delete/{id}', 'Role\RoleController@delete');
+
 	Route::get('employe', 'Hr\EmployeController@index');
 	Route::post('/employe', 'Hr\EmployeController@insertData');
 	Route::post('/employe-datatables', 'Hr\EmployeController@datatables');
@@ -274,8 +284,7 @@ Route::group([
 	Route::get('slf-template', 'Slf\SlfTemplateController@index');
 	Route::post('slf-template-store', 'Slf\SlfTemplateController@store');
 
-	Route::get('user-permissions', 'Permissions\PermissionsController@index');
-	Route::post('user-permissions-update', 'Permissions\PermissionsController@update');
+	
 });
 
 Route::get('number/generate', 'NumberGenerateController@generate');
