@@ -51,6 +51,8 @@
       let BASE_URL = '{{ url('/') }}'
     </script>
     <body>
+      <x-loading/>
+
       <div class="main-wrapper">
         <div class="header">
           @include('layouts.header')
@@ -70,6 +72,8 @@
           </div>
         </div>
       </div>
+
+      
       <!-- jQuery -->
       <script src="{{ asset('template/assets/js/jquery-3.2.1.min.js') }}"></script>
 
@@ -326,5 +330,17 @@
         }
       </script>
       @yield('additionalScriptJS')
+
+      <script>
+        $(document).on({
+            ajaxStart: function(){
+                $("body").addClass("loading"); 
+            },
+            ajaxStop: function(){ 
+                $("body").removeClass("loading"); 
+            }    
+        });
+
+      </script>
     </body>
 </html>

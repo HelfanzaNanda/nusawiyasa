@@ -109,6 +109,8 @@
     </div>
   </div>
 </div>
+
+
 @endsection
 
 @section('additionalScriptJS')
@@ -141,6 +143,7 @@ $(document).ready(function(){
     });
 
     $('form#add-form').submit(function(e) {
+        
         $('.error').text('');
         e.preventDefault();
         var form_data = new FormData( this );
@@ -157,9 +160,9 @@ $(document).ready(function(){
                 
             },
             success: function(res) {
+              
                 if(res.status == 'success'){
-                    setTimeout(function() {
-                        swal({
+                  swal({
                             title: "Sukses",
                             text: res.message,
                             type:"success",
@@ -169,7 +172,6 @@ $(document).ready(function(){
                             $('#add-modal').modal('hide');
                             // window.location.replace(URL_LIST_PURCHASES);
                         });
-                    }, 500);
                 } else {
                     swal({
                         title: "Gagal",
@@ -182,6 +184,7 @@ $(document).ready(function(){
                 }
             },
             error: function(jqXHR){
+              
                 if (jqXHR.status == 422) {
                     $('.error').text(jqXHR.responseJSON.errors.role)
                 }
