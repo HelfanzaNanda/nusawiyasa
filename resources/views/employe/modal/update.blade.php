@@ -229,7 +229,10 @@
                 </div>
             </div>
             <div class="submit-section">
-              <button class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary submit-btn loading" 
+                data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                  Submit
+                </button>
             </div>
           </form>
         </div>

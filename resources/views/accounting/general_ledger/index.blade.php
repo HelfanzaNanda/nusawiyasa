@@ -109,10 +109,16 @@
 				<input type="hidden" id="id">
             </div>
           </div>
-          <div class="submit-section">
+		  <div class="submit-section">
+            <button type="submit" class="btn btn-primary submit-btn loading" 
+            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+              Submit
+            </button>
+          </div>
+          {{-- <div class="submit-section">
           	<span id="balance"></span><br>
             <button class="btn btn-primary submit-btn" id="submit_button"><i class="fa fa-refresh fa-spin loading-area"></i>Submit</button>
-          </div>
+          </div> --}}
         </form>
       </div>
     </div>
@@ -252,11 +258,14 @@
 
     $( 'form#add-form' ).submit( function( e ) {
       e.preventDefault();
+	  var loading_text = $('.loading').data('loading-text');
+		$('.loading').html(loading_text).attr('disabled', true);
       var form_data   = new FormData( this );
       $.ajax({
 		type: 'GET',
 		url: '{{asset('')}}'+'number/validate?prefix=JU&number='+$('.ref-number').val(),
 		success: function(data){
+		$('.loading').html('Submit').attr('disabled', false)
 		if (data.status == 'error' && $('#typePost').val() != 'edit') {
 			swal({
 				title: "Gagal",

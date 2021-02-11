@@ -20,14 +20,19 @@
           @foreach ($slfTemplates as $keyContent => $template)
           <div class="tab-pane {{$keyContent < 1 ? 'show active' : ''}}" id="solid-tab{{$keyContent}}">
             <div class="col-md-12">
-                <form action="{{ url('/slf-template-store') }}" method="POST">
+                <form id="add-form" action="{{ url('/slf-template-store') }}" method="POST">
                     @csrf
                     <input type="hidden" class="form-control" id="name" name="name" value="{{ $template[1] }}">
                     <div class="form-group">
                         <label>Konten</label>
                         <textarea id="content" class="summernote" name="content">{!! $template[0]['template_text'] ?? '' !!}</textarea>
                     </div>
-                    <button class="btn btn-primary float-right" type="submit">submit</button>
+                    <div class="submit-section">
+                      <button type="submit" class="btn btn-primary float-right loading" 
+                      data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                        Submit
+                      </button>
+                    </div>
                 </form>
             </div>
           </div>
@@ -59,6 +64,11 @@
                 type:"success",
             });
         }
+
+        $('form#add-form').submit(function(e) {
+          var loading_text = $('.loading').data('loading-text');
+          $('.loading').html(loading_text).attr('disabled', true);
+        });
     })
 </script>
 @endsection

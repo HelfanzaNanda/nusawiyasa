@@ -161,7 +161,10 @@
         </div>
         <div class="card-footer">
           <div class="col-auto float-right ml-auto pb-2">
-            <button class="btn btn-primary" type="submit">Submit</button>
+            <button type="submit" class="btn btn-primary float-right loading" 
+            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+              Submit
+            </button>
           </div>
         </div>
       </form>
@@ -198,6 +201,7 @@
 
   $("#input-cluster").on('change', function(e) {
     e.preventDefault();
+    
     let id = $(this).val();
     $.ajax({
       url: BASE_URL+'/get_lots?all=true&cluster_id='+id,
@@ -367,6 +371,8 @@
 
   $('form#add-form').submit( function( e ) {
     e.preventDefault();
+    var loading_text = $('.loading').data('loading-text');
+        $('.loading').html(loading_text).attr('disabled', true);
     var form_data = new FormData( this );
     var rowsLength = document.getElementById("general_comments").getElementsByTagName("tbody")[0].getElementsByTagName("tr").length+1;
     if (rowsLength < 2) {
@@ -393,6 +399,7 @@
         
       },
       success: function(msg) {
+        $('.loading').html('Submit').attr('disabled', false)
         if(msg.status == 'success'){
             setTimeout(function() {
                 swal({

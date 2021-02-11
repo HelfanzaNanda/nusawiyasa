@@ -35,7 +35,10 @@
         </div>
         <div class="card-footer">
           <div class="col-auto float-right ml-auto pb-2">
-            <button class="btn btn-primary" type="submit">Submit</button>
+            <button type="submit" class="btn btn-primary float-right loading" 
+            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+              Submit
+            </button>
           </div>
         </div>
       </form>
@@ -48,6 +51,8 @@
 <script type="text/javascript">
   $('form#add-form').submit( function( e ) {
     e.preventDefault();
+    var loading_text = $('.loading').data('loading-text');
+        $('.loading').html(loading_text).attr('disabled', true);
     var form_data = new FormData( this );
 
     form_data.append('customer_id', '{{$customer['customer_id']}}');
@@ -66,6 +71,7 @@
         
       },
       success: function(msg) {
+        $('.loading').html('Submit').attr('disabled', false)
         if(msg.status == 'success'){
           setTimeout(function() {
             swal({

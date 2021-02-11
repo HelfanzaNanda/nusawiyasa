@@ -172,7 +172,7 @@
         @endif
     @endif
 
-    @if($user->hasAnyPermission(['user', 'user-permissions']))
+    @if($user->hasAnyPermission(['user', 'user-permissions', 'roles']))
         <li class="menu-title">
             <span>Pengaturan </span>
         </li>
@@ -186,8 +186,13 @@
             <a href="{{url('/user-permissions')}}"><i class="la la-wrench"></i> <span>Izin Pengguna</span></a>
         </li>
         @endif
+        @if ($user->can('roles'))
+        <li {{ (request()->segment(1) == 'roles') ? 'class=active' : '' }}>
+            <a href="{{url('/roles')}}"><i class="la la-gears"></i> <span>Hak Akses</span></a>
+        </li>
+        @endif
     @endif
-
+    
     @if($user->hasAnyPermission(['debt', 'accounting-master', 'accounting-general-ledger', 
         'accounting-ledger', 'accounting-profit-loss', 'accounting-balance-sheet']))
         <li class="menu-title">

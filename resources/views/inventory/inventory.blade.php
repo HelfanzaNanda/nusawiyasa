@@ -123,7 +123,10 @@
             </div>
           </div>
           <div class="submit-section">
-            <button class="btn btn-primary submit-btn">Submit</button>
+            <button type="submit" class="btn btn-primary submit-btn loading" 
+            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+              Submit
+            </button>
           </div>
         </form>
       </div>
@@ -202,7 +205,10 @@
             </div>
           </div>
           <div class="submit-section">
-            <button class="btn btn-primary submit-btn">Submit</button>
+            <button type="submit" class="btn btn-primary submit-btn loading" 
+            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+              Submit
+            </button>
           </div>
         </form>
       </div>
@@ -261,6 +267,8 @@
 
   $('form#add-form').submit( function( e ) {
     e.preventDefault();
+    var loading_text = $('.loading').data('loading-text');
+    $('.loading').html(loading_text).attr('disabled', true);
     var form_data = new FormData( this );
 
     $.ajax({
@@ -275,6 +283,7 @@
         
       },
       success: function(msg) {
+        $('.loading').html('Submit').attr('disabled', false)
         if(msg.status == 'success'){
           setTimeout(function() {
             swal({
@@ -348,6 +357,8 @@
 
   $('form#update-form').submit( function( e ) {
     e.preventDefault();
+    var loading_text = $('.loading').data('loading-text');
+        $('.loading').html(loading_text).attr('disabled', true);
     var form_data = new FormData( this );
 
     $.ajax({
@@ -362,6 +373,7 @@
         
       },
       success: function(msg) {
+        $('.loading').html('Submit').attr('disabled', false)
         if(msg.status == 'success'){
           setTimeout(function() {
             swal({

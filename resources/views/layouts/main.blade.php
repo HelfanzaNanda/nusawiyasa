@@ -41,6 +41,11 @@
     <link rel="stylesheet" href="{{ asset('template/assets/css/style.css') }}">
     @yield('style')
 
+    <style>
+      .buttonload .fa-spin{
+         margin-right:10px;
+      }
+    </style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="assets/js/html5shiv.min.js"></script>
@@ -70,6 +75,8 @@
           </div>
         </div>
       </div>
+
+      
       <!-- jQuery -->
       <script src="{{ asset('template/assets/js/jquery-3.2.1.min.js') }}"></script>
 
@@ -326,5 +333,7 @@
         }
       </script>
       @yield('additionalScriptJS')
+
+    
     </body>
 </html>
