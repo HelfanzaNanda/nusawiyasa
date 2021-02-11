@@ -267,6 +267,8 @@
 
         $('form#add-form').submit(function(e){
             e.preventDefault();
+            var loading_text = $('.loading').data('loading-text');
+            $('.loading').html(loading_text).attr('disabled', true);
             var form_data = new FormData( this );
             
             $.ajax({
@@ -281,6 +283,7 @@
                     
                 },
                 success: function(msg) {
+                    $('.loading').html('Submit').attr('disabled', false)
                     if(msg.status == 'success'){
                         setTimeout(function() {
                             swal({
@@ -431,6 +434,8 @@
 
         $('form#update-form').submit(function(e){
             e.preventDefault();
+            var loading_text = $('.loading').data('loading-text');
+            $('.loading').html(loading_text).attr('disabled', true);
             var form_data = new FormData( this );
             
             $.ajax({
@@ -445,6 +450,7 @@
                     
                 },
                 success: function(msg) {
+                    $('.loading').html('Submit').attr('disabled', false)
                     if(msg.status == 'success'){
                         setTimeout(function() {
                             swal({

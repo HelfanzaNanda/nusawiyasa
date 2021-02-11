@@ -9,16 +9,18 @@
       <div class="card-header">
         <h4 class="card-title mb-0">Form Booking</h4>
       </div>
-      <form id="add-form" method="POST" action="#">
+      <form id="update-form" method="POST" action="#" enctype="multipart/form-data">
         <div class="card-body">
           {!! csrf_field() !!}
+          <input type="hidden" value="{{ $data->payment_type }}" id="p-type">
+          <input type="hidden" value="{{ $data->id }}" name="id" id="id">
           <div class="form-group row">
             <label class="col-form-label col-md-2">Konsumen</label>
             <div class="col-md-10">
               <select id="input-customer" name="customer_id"> 
                 <option> - Pilih Konsumen - </option>
                 @foreach($customers as $customer)
-                  <option value="{{$customer['id']}}">{{$customer['name']}}</option>
+                  <option value="{{$customer['id']}}" {{ $customer['id'] == $data->customer_id ? 'selected' : '' }} >{{$customer['name']}}</option>
                 @endforeach
               </select>
             </div>
@@ -29,9 +31,10 @@
               <select id="input-lot" name="lot_id"> 
                 <option value="0"> - Pilih Kapling - </option>
                 @foreach($lots as $lot)
-                  @if(!$lot['booking_id'])
-                  <option value="{{$lot['id']}}">{{$lot['name']}} - {{$lot['block']}} / {{$lot['unit_number']}}</option>
-                  @endif
+                  {{-- @if(!$lot['booking_id'])                  
+                    <option value="{{$lot['id']}}" {{ $lot['id'] == $data->lot_id ? 'selected' : '' }}>{{$lot['name']}} - {{$lot['block']}} / {{$lot['unit_number']}}</option>
+                  @endif --}}
+                  <option value="{{$lot['id']}}" {{ $lot['id'] == $data->lot_id ? 'selected' : '' }}>{{$lot['name']}} - {{$lot['block']}} / {{$lot['unit_number']}}</option>
                 @endforeach
               </select>
             </div>
@@ -39,7 +42,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Tanggal Booking</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" value="{{date('Y-m-d')}}" id="input-booking-date" name="booking_date">
+              <input class="form-control floating" type="text" value="{{ $data->booking_date }}" id="input-booking-date" name="booking_date">
             </div>
           </div>
           <div class="form-group row">
@@ -47,9 +50,9 @@
             <div class="col-md-10">
               <select id="input-payment-type" name="payment_type"> 
                 <option value="0"> - Pilih Metode Pembayaran - </option>
-                <option value="cash">Cash Keras</option>
-                <option value="cash_in_stages">Cash Bertahap</option>
-                <option value="credit">KPR</option>
+                <option value="cash" {{ $data->payment_type == 'cash' ? 'selected' : ''  }} >Cash Keras</option>
+                <option value="cash_in_stages" {{ $data->payment_type == 'cash_in_stages' ? 'selected' : ''  }} >Cash Bertahap</option>
+                <option value="credit" {{ $data->payment_type == 'credit' ? 'selected' : ''  }} >KPR</option>
               </select>
             </div>
           </div>
@@ -104,13 +107,40 @@
     });
   }
 
-  $("#input-lot").val({{$lot_id}}).trigger("change");
+  $(document).ready(function() {
+    var payment_type = $('#input-payment-type').val();
+    payment_type ? showFirstItem() : ''
+  });
+
+  function showFirstItem(){
+      $("#cost").empty();
+      $("#term").empty();
+      let cost = '';
+      let term = '';
+      $.each({!! $customer_costs !!}, function(key, value) {
+          cost += '<div class="col-md-6 mt-2">';
+          cost += '<label>'+value.key_name+'</label>';
+          cost += '<input class="form-control" type="number" name="customer_costs['+value.ref_term_purchasing_customer_id+']" value="'+parseFloat(value.value)+'">';
+          cost += '</div>';
+      });
+      $.each({!! $customer_terms !!}, function(key, value) {
+          term += '<div class="col-md-6 mt-2">';
+          term += '<label >'+value.key_name+'</label>';
+          term += '<input class="form-control" type="file" title="customer_terms['+value.filename+']" name="customer_terms['+value.ref_term_purchasing_customer_id+']" value="'+value.filepath+'/'+value.filename+'">';
+          term += '</div>';
+      });
+
+      $("#cost").append(cost);
+      $("#term").append(term); 
+  }
 
   $('#input-payment-type').on('change', function() {
+    
     var payment_type = $(this).val();
-
-    console.log(payment_type);
-    if(payment_type) {
+    var p_type = $('#p-type').val();
+    if (payment_type == p_type) {
+      showFirstItem() 
+    }else if(payment_type) {
       $.ajax({
         url: BASE_URL+'/ref/term_purchasing_customers?all=true&payment_type='+payment_type+'&is_deleted=0',
         type: "GET",
@@ -124,15 +154,15 @@
           let term = '';
           $.each(res.data, function(key, value) {
             if (value.terms_type == 'cost') {
-              cost += '<div class="col-md-6 mt-2">';
-              cost += '<label>'+value.name+'</label>';
-              cost += '<input class="form-control" type="number" name="customer_costs['+value.id+']">';
-              cost += '</div>';
+                cost += '<div class="col-md-6 mt-2">';
+                cost += '<label>'+value.name+'</label>';
+                cost += '<input class="form-control" type="number" name="customer_costs['+value.id+']">';
+                cost += '</div>';
             } else {
-              term += '<div class="col-md-6 mt-2">';
-              term += '<label>'+value.name+'</label>';
-              term += '<input class="form-control" type="file" name="customer_terms['+value.id+']">';
-              term += '</div>';
+                term += '<div class="col-md-6 mt-2">';
+                term += '<label>'+value.name+'</label>';
+                term += '<input class="form-control" type="file" name="customer_terms['+value.id+']">';
+                term += '</div>';
             }
           });
 
@@ -140,12 +170,12 @@
           $("#term").append(term); 
         }
       });
-    } else {
-        // $('#city').empty();
     }
   });
 
-  $('form#add-form').submit( function( e ) {
+
+
+  $('form#update-form').submit( function( e ) {
     e.preventDefault();
     var loading_text = $('.loading').data('loading-text');
         $('.loading').html(loading_text).attr('disabled', true);
@@ -160,7 +190,6 @@
       processData: false,
       dataType: 'json',
       beforeSend: function() {
-        
       },
       success: function(msg) {
         $('.loading').html('Submit').attr('disabled', false)
@@ -187,6 +216,9 @@
                 html: true
             });
         }
+      },
+      error : function(jqXHR, textStatus, errorThrown){
+        $('.loading').html('Submit').attr('disabled', false)
       }
     })
   });

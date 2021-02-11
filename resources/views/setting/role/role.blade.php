@@ -70,7 +70,10 @@
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn">Submit</button>
+            <button type="submit" class="btn btn-primary submit-btn loading" 
+            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+              Submit
+            </button>
           </div>
         </form>
       </div>
@@ -102,7 +105,10 @@
             </div>
           </div>
           <div class="submit-section">
-            <button class="btn btn-primary submit-btn">Submit</button>
+            <button type="submit" class="btn btn-primary submit-btn loading" 
+            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+              Submit
+            </button>
           </div>
         </form>
       </div>
@@ -143,9 +149,10 @@ $(document).ready(function(){
     });
 
     $('form#add-form').submit(function(e) {
-        
-        $('.error').text('');
         e.preventDefault();
+        var loading_text = $('.loading').data('loading-text');
+        $('.loading').html(loading_text).attr('disabled', true);
+        $('.error').text('');
         var form_data = new FormData( this );
 
         $.ajax({
@@ -160,9 +167,10 @@ $(document).ready(function(){
                 
             },
             success: function(res) {
-              
+              $('.loading').html('Submit').attr('disabled', false)
                 if(res.status == 'success'){
-                  swal({
+                    setTimeout(function() {
+                        swal({
                             title: "Sukses",
                             text: res.message,
                             type:"success",
@@ -172,6 +180,7 @@ $(document).ready(function(){
                             $('#add-modal').modal('hide');
                             // window.location.replace(URL_LIST_PURCHASES);
                         });
+                    }, 500);
                 } else {
                     swal({
                         title: "Gagal",
@@ -184,7 +193,6 @@ $(document).ready(function(){
                 }
             },
             error: function(jqXHR){
-              
                 if (jqXHR.status == 422) {
                     $('.error').text(jqXHR.responseJSON.errors.role)
                 }
@@ -193,6 +201,7 @@ $(document).ready(function(){
     });
 
   $(document).on('click','#edit',function() {
+        
         $('.error').text('');
         var id = $(this).data("id")
         $('#update-modal').modal('show');
@@ -214,6 +223,8 @@ $(document).ready(function(){
   $('form#update-form').submit( function( e ) {
         $('.error').text('');
         e.preventDefault();
+        var loading_text = $('.loading').data('loading-text');
+        $('.loading').html(loading_text).attr('disabled', true);
         var form_data = new FormData( this );
 
         $.ajax({
@@ -228,6 +239,7 @@ $(document).ready(function(){
             
             },
             success: function(msg) {
+              $('.loading').html('Submit').attr('disabled', false)
                 if(msg.status == 'success'){
                     setTimeout(function() {
                     swal({
@@ -253,6 +265,7 @@ $(document).ready(function(){
                 }
             },
             error: function(jqXHR) {
+            $('.loading').html('Submit').attr('disabled', false)
             if (jqXHR.status == 422) {
                 $('.error').text(jqXHR.responseJSON.errors.role)
             }

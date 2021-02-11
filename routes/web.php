@@ -78,6 +78,7 @@ Route::group([
 	Route::delete('/bookings/{lot_id?}', 'Customer\CustomerLotController@delete');
 	// Route::post('/bookings', 'Customer\CustomerLotController@insertData');
 	Route::post('/booking-datatables', 'Customer\CustomerLotController@datatables');
+	Route::get('/bookings/edit/{id}', 'Customer\CustomerLotController@edit');
 	Route::get('/bookings/detail/{id}', 'Customer\CustomerLotController@detail');
 	Route::get('/bookings/{id}/get', 'Customer\CustomerLotController@get');
 	Route::get('/bookings/create', 'Customer\CustomerLotController@insertData');

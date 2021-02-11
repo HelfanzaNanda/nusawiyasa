@@ -181,8 +181,78 @@ class CustomerLot extends Model
         if (isset($params['id']) && $params['id']) {
             $id = $params['id'];
             unset($params['id']);
+            $customer_lot = self::where('id', $id)->first();
 
-            $update = self::where('id', $id)->update($params);
+            $customer_lot_update['customer_id'] = $params['customer_id'];
+            $customer_lot_update['lot_id'] = $params['lot_id'];
+            $customer_lot_update['status'] = 1;
+            $customer_lot_update['booking_date'] = $params['booking_date'];
+            $customer_lot_update['payment_type'] = $params['payment_type'];
+            $customer_lot_update['bank_status'] = 1;
+            $update = $customer_lot->update($customer_lot_update);
+
+            if ($update) {
+                if (isset($params['customer_costs']) && count($params['customer_costs']) > 0) {
+                    CustomerCost::where('customer_id', $customer_lot['customer_id'])->where('lot_id', $customer_lot['lot_id'])->delete();
+                    foreach($params['customer_costs'] as $key => $customer_cost) {
+                        CustomerCost::create([
+                            'customer_id' => $params['customer_id'],
+                            'ref_term_purchasing_customer_id' => $key,
+                            'value' => $customer_cost,
+                            'status' => 1,
+                            'lot_id' => $params['lot_id']
+                        ]);
+                    }
+                }
+    
+                if ($request->file('customer_terms')) {
+                    CustomerTerm::where('customer_id', $customer_lot['customer_id'])->where('lot_id', $customer_lot['lot_id'])->delete();
+                    $allowedfileExtension = ['pdf','jpg','png','docx', 'jpeg', 'txt'];
+                    $files = $request->file('customer_terms');
+    
+                    $month_year_pfx = date('mY');
+                    $path_pfx = 'public/media/customer_terms/'.$month_year_pfx;
+                    $path = '/storage/'.$path_pfx;
+    
+                    File::makeDirectory($path, 0777, true, true);
+    
+                    foreach($files as $keyFile => $file){
+                        $filename = $file->getClientOriginalName();
+                        $extension = $file->getClientOriginalExtension();
+                        $check = in_array($extension, $allowedfileExtension);
+                        if ($check) {
+                            $filename = md5(uniqid(rand(), true).time()).'.'.$extension;
+    
+                            $file->move(storage_path('app').'/'.$path_pfx, $filename);
+    
+                            CustomerTerm::create([
+                                'customer_id' => $params['customer_id'],
+                                'ref_term_purchasing_customer_id' => $keyFile,
+                                'filename' => $filename,
+                                'filepath' => '/storage/media/customer_terms/'.$month_year_pfx,
+                                'filetype' => $extension,
+                                'status' => 1,
+                                'lot_id' => $params['lot_id']
+                            ]);
+    
+                        } else {
+                            DB::rollBack();
+    
+                            return response()->json([
+                                'status' => 'error',
+                                'message' => 'Only upload jpg, png, and pdf'
+                            ]);
+                        }
+                    }
+    
+                    DB::commit();
+    
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Data Berhasil Di Ubah!'
+                    ]);
+                }
+            }
 
             DB::commit();
 
@@ -368,5 +438,10 @@ class CustomerLot extends Model
 
     public function generalStatus(){
         return $this->belongsTo(RefGeneralStatuses::class, 'bank_status');
+    }
+
+    public function customer_costs()
+    {
+        return $this->hasMany(CustomerCost::class);
     }
 }

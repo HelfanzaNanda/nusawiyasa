@@ -32,11 +32,6 @@ class CustomerLotController extends Controller
         return CustomerLot::createOrUpdate($params, $request->method(), $request);
     }
 
-    public function edit($id)
-    {
-
-    }
-
     public function datatables(Request $request)
     {
         $session = [
@@ -94,6 +89,7 @@ class CustomerLotController extends Controller
                 $nestedData['action'] .='        <div class="dropdown dropdown-action">';
                 $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';
                 $nestedData['action'] .='            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(159px, 32px, 0px);">';
+                $nestedData['action'] .='                <a class="dropdown-item" href="'.url('/bookings/edit/'.$row['id']).'"><i class="fa fa-info m-r-5"></i> Edit</a>';
                 $nestedData['action'] .='                <a class="dropdown-item" href="'.url('/bookings/detail/'.$row['id']).'"><i class="fa fa-info m-r-5"></i> Detail</a>';
                 $nestedData['action'] .='                <button class="dropdown-item" id="delete-data" data-id="'.$row['id'].'"><i class="fa fa-info m-r-5"></i> Hapus</button>';
                 if ($row['payment_type'] == 'cash_in_stages') {
@@ -172,6 +168,36 @@ class CustomerLotController extends Controller
         return response()->json([
             'message' => 'data berhasil dihapus',
             'status' => 'success'
+        ]);
+    }
+
+    public function edit($id)
+    {
+        $data = CustomerLot::select('customer_lots.*')->where('customer_lots.id', $id)
+                    ->addSelect('customers.user_id as user_id')
+                    ->addSelect('customers.id as customer_id')
+                    ->addSelect('users.name as customer_name')
+                    ->addSelect('clusters.name as cluster_name')
+                    ->addSelect('lots.block')
+                    ->addSelect('lots.unit_number')
+                    ->addSelect('lots.surface_area')
+                    ->addSelect('lots.building_area')
+                    ->leftJoin('customers', 'customers.id', '=', 'customer_lots.customer_id')
+                    ->leftJoin('users', 'users.id', '=', 'customers.user_id')
+                    ->leftJoin('lots', 'lots.id', '=', 'customer_lots.lot_id')
+                    ->leftJoin('clusters', 'clusters.id', '=', 'lots.cluster_id')
+                    ->first();
+
+        $customer_terms = CustomerTerm::select('customer_terms.*')->addSelect('ref_term_purchasing_customers.name as key_name')->where('customer_id', $data['customer_id'])->where('lot_id', $data['lot_id'])->join('ref_term_purchasing_customers', 'ref_term_purchasing_customers.id', '=', 'customer_terms.ref_term_purchasing_customer_id')->get();
+        $customer_costs = CustomerCost::select('customer_costs.*')->addSelect('ref_term_purchasing_customers.name as key_name')->where('customer_id', $data['customer_id'])->where('lot_id', $data['lot_id'])->join('ref_term_purchasing_customers', 'ref_term_purchasing_customers.id', '=', 'customer_costs.ref_term_purchasing_customer_id')->get();
+        $customers = Customer::select(['customers.id as id', 'users.name as name'])->join('users', 'users.id', '=', 'customers.user_id')->get();
+        $lots = Lot::select(['lots.id', 'clusters.name', 'lots.block', 'lots.unit_number', 'customer_lots.id as booking_id'])->join('clusters', 'clusters.id', '=', 'lots.cluster_id')->leftJoin('customer_lots', 'customer_lots.lot_id', '=', 'lots.id')->get();
+        return view('customer.customer_lot_edit', [
+            'customers' => $customers,
+            'lots' => $lots,
+            'data' => $data,
+            'customer_terms' => $customer_terms,
+            'customer_costs' => $customer_costs
         ]);
     }
 }

@@ -41,6 +41,11 @@
     <link rel="stylesheet" href="{{ asset('template/assets/css/style.css') }}">
     @yield('style')
 
+    <style>
+      .buttonload .fa-spin{
+         margin-right:10px;
+      }
+    </style>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="assets/js/html5shiv.min.js"></script>
@@ -51,8 +56,6 @@
       let BASE_URL = '{{ url('/') }}'
     </script>
     <body>
-      <x-loading/>
-
       <div class="main-wrapper">
         <div class="header">
           @include('layouts.header')
@@ -331,16 +334,6 @@
       </script>
       @yield('additionalScriptJS')
 
-      <script>
-        $(document).on({
-            ajaxStart: function(){
-                $("body").addClass("loading"); 
-            },
-            ajaxStop: function(){ 
-                $("body").removeClass("loading"); 
-            }    
-        });
-
-      </script>
+    
     </body>
 </html>
