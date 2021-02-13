@@ -288,7 +288,7 @@ class PurchaseOrders extends Model
         $purchase_order['delivery'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['delivery']));
         $purchase_order['other'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['other']));
         $purchase_order['total'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['total']));
-        // $purchase_order['lot_id'] = $params['lot_id'];
+        $purchase_order['supplier_id'] = $params['item_supplier_id'];
         // $purchase_order['cluster_id'] = Lot::where('id', $params['lot_id'])->value('cluster_id');
         $purchase_order['cluster_id'] = $params['cluster_id'];
         $purchase_order['approved_user_id'] = 0;
@@ -303,17 +303,20 @@ class PurchaseOrders extends Model
 
             PurchaseOrderItems::where('purchase_order_id', $id)->delete();
             foreach ($params['item_inventory_id'] as $key => $val) {
-                PurchaseOrderItems::create([
-                    'purchase_order_id' => $id,
-                    'inventory_id' => $params['item_inventory_id'][$key],
-                    'qty' => $params['item_qty'][$key],
-                    'delivered_qty' => 0,
-                    'price' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_price'][$key])),
-                    'tax' => 0,
-                    'discount' => 0,
-                    'total' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_total'][$key])),
-                    'supplier_id' => $params['item_supplier_id'][$key]
-                ]);
+                if ($params['checkbox'][$key] == "1") {
+                    PurchaseOrderItems::create([
+                        'purchase_order_id' => $id,
+                        'inventory_id' => $params['item_inventory_id'][$key],
+                        'qty' => $params['item_qty'][$key],
+                        'delivered_qty' => 0,
+                        'price' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_price'][$key])),
+                        'tax' => 0,
+                        'discount' => 0,
+                        'total' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_total'][$key])),
+                        //'supplier_id' => $params['item_supplier_id'][$key]
+                        //'supplier_id' => $params['item_supplier_id']
+                    ]);
+                }
             }
             DB::commit();
             return response()->json([
@@ -327,17 +330,20 @@ class PurchaseOrders extends Model
 
         if ($insert) {
             foreach ($params['item_inventory_id'] as $key => $val) {
-                PurchaseOrderItems::create([
-                    'purchase_order_id' => $insert->id,
-                    'inventory_id' => $params['item_inventory_id'][$key],
-                    'qty' => $params['item_qty'][$key],
-                    'delivered_qty' => 0,
-                    'price' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_price'][$key])),
-                    'tax' => 0,
-                    'discount' => 0,
-                    'total' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_total'][$key])),
-                    'supplier_id' => $params['item_supplier_id'][$key]
-                ]);
+                if ($params['checkbox'][$key] == "1") {
+                    PurchaseOrderItems::create([
+                        'purchase_order_id' => $insert->id,
+                        'inventory_id' => $params['item_inventory_id'][$key],
+                        'qty' => $params['item_qty'][$key],
+                        'delivered_qty' => 0,
+                        'price' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_price'][$key])),
+                        'tax' => 0,
+                        'discount' => 0,
+                        'total' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_total'][$key])),
+                        //'supplier_id' => $params['item_supplier_id'][$key]
+                        //'supplier_id' => $params['item_supplier_id']
+                    ]);
+                }
             }
         }
 

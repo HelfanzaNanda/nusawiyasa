@@ -49,6 +49,17 @@
             </div>
           </div>
           <div class="form-group row">
+            <label class="col-form-label col-md-2">Supplier</label>
+            <div class="col-md-10">
+              <select id="input-supplier" class="select-supplier" name="item_supplier_id"> 
+                <option value="0"> - Pilih Supplier - </option>
+                @foreach($suppliers as $supplier)
+                  <option value="{{$supplier['id']}}">{{$supplier['name']}}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
             <label class="col-form-label col-md-2">Tanggal</label>
             <div class="col-md-10">
               <input class="form-control floating" type="text" id="input-date" name="date">
@@ -98,7 +109,6 @@
                       <tr>
                         <th style="width:40px;">#</th>
                         <th>Item</th>
-                        <th>Supplier</th>
                         <th>Qty</th>
                         <th>Satuan</th>
                         <th>Harga</th>
@@ -112,14 +122,14 @@
                             <option value=""> Pilih </option>
                           </select>
                         </th>
-                        <th>
+                        {{-- <th>
                           <select id="input-supplier"> 
                             <option value="0"> - Pilih Supplier - </option>
                             @foreach($suppliers as $supplier)
                               <option value="{{$supplier['id']}}">{{$supplier['name']}}</option>
                             @endforeach
                           </select>
-                        </th>
+                        </th> --}}
                         <th><input type="text" class="form-control add-item" id="input-item-qty" placeholder="qty" onkeyup="addItemCalc()"></th>
                         <th><input type="text" class="form-control add-item" id="input-item-unit" placeholder="Satuan"></th>
                         <th><input type="text" class="form-control add-item" id="input-item-price" placeholder="Harga" onkeyup="addItemCalc()"></th>
@@ -132,23 +142,23 @@
                     </tbody>
                     <tfoot>
                       <tr>
-                        <td colspan="6" style="text-align: right;">Subtotal</td>
+                        <td colspan="5" style="text-align: right;">Subtotal</td>
                         <td><input type="text" name="subtotal" id="input-subtotal" class="form-control"></td>
                       </tr>
                       <tr>
-                        <td colspan="6" style="text-align: right;">Pajak</td>
+                        <td colspan="5" style="text-align: right;">Pajak</td>
                         <td><input type="text" name="tax" id="input-tax" class="form-control" onkeyup="totalCalc()"></td>
                       </tr>
                       <tr>
-                        <td colspan="6" style="text-align: right;">Pengiriman</td>
+                        <td colspan="5" style="text-align: right;">Pengiriman</td>
                         <td><input type="text" name="delivery" id="input-delivery" class="form-control" onkeyup="totalCalc()"></td>
                       </tr>
                       <tr>
-                        <td colspan="6" style="text-align: right;">Lain - Lain</td>
+                        <td colspan="5" style="text-align: right;">Lain - Lain</td>
                         <td><input type="text" name="other" id="input-other" class="form-control" onkeyup="totalCalc()"></td>
                       </tr>
                       <tr>
-                        <td colspan="6" style="text-align: right;">Total</td>
+                        <td colspan="5" style="text-align: right;">Total</td>
                         <td><input type="text" name="total" id="input-total" class="form-control"></td>
                       </tr>
                     </tfoot>
@@ -185,6 +195,7 @@
       }
     })
   })
+
   $('#input-supplier').select2({
     width: '100%'
   });
@@ -194,7 +205,7 @@
   });
 
   $('#input-lot').select2({
-    width: '100%'
+    width: '100%' 
   });
 
   $('#input-fpp').select2({
@@ -266,27 +277,34 @@
 
   function GetDynamicTextBox(table_id) {
     $('#comments_remove').remove();
+    //var rowsLength = document.getElementById(table_id).getElementsByTagName("tbody")[0].getElementsByTagName("tr").length+1;
     var rowsLength = document.getElementById(table_id).getElementsByTagName("tbody")[0].getElementsByTagName("tr").length+1;
     let cols = '';
 
     var inventoryId = $('#item :selected').val();
     var inventoryName = $('#item :selected').text();
-    var inventorySupplierId = $('#input-supplier :selected').val();
-    var inventorySupplierName = $('#input-supplier :selected').text();
+    // var inventorySupplierId = $('#input-supplier :selected').val();
+    // var inventorySupplierName = $('#input-supplier :selected').text();
     var inventoryQty = $('#input-item-qty').val();
     var inventoryUnit = $('#input-item-unit').val();
     var inventoryPrice = addSeparator($('#input-item-price').val(), '.', '.', ',');
     var subTotal = addSeparator($('#input-item-total').val(), '.', '.', ',');
 
-    cols += '<td>'+rowsLength+'</td>';
+    // cols += '<td>'+rowsLength+'</td>';
+    cols += '<td>';
+    cols += '<div class="form-check">';
+    cols +=     '<input type="checkbox" class="form-check-input checkbox" checked value="1" id="checkbox-'+rowsLength+'">';
+    cols +=     '<input type="hidden" class="input-checkbox" name="checkbox[]" value="1" id="input-checkbox">';
+    cols += '</div>';
+    cols += '</td>';
     cols += '<td>'+inventoryName+'<input type="hidden" name="item_inventory_id[]" value='+ inventoryId +'></td>';
-    cols += '<td>'+inventorySupplierName+'<input type="hidden" name="item_supplier_id[]" value='+ inventorySupplierId +'></td>';
+    
+    // cols += '<td>'+inventorySupplierName+'<input type="hidden" name="item_supplier_id[]" value='+ inventorySupplierId +'></td>';
     cols += '<td>'+inventoryQty+'<input type="hidden" name="item_qty[]" value='+ inventoryQty +'></td>';
     cols += '<td>'+inventoryUnit+'</td>';
     cols += '<td>'+inventoryPrice+'<input type="hidden" name="item_price[]" value='+ inventoryPrice +'></td>';
     cols += '<td id="total">'+subTotal+'<input type="hidden" name="item_total[]" value='+ subTotal +'></td>';
     cols += '<td><button type="button" class="btn btn-danger" id="comments_remove"><i class="fa fa-trash-o"></i></button></td>';
-
     return cols;
   }
 
@@ -304,6 +322,24 @@
     $("#input-subtotal").val(addSeparator(total.toFixed(2), '.', '.', ','));
     totalCalc();
   }
+
+  $(document).on('click', '.checkbox', function() {
+    const total = $(this).parent().parent().parent().children('td#total')
+    const input_checkbox = $(this).parent().children('input.input-checkbox')
+    const value = detectFloat(total.text())
+    const subtotal = $("#input-subtotal").val();
+    if (!$(this).is(':checked')) {
+        input_checkbox.val("0")
+        $("#input-subtotal").val((detectFloat(subtotal) - value).toFixed(2), '.', '.', ',');
+        totalCalc();
+      }else{
+        
+        input_checkbox.val("1")
+        $("#input-subtotal").val((detectFloat(subtotal) + value).toFixed(2), '.', '.', ',');
+        totalCalc();
+      }
+  });
+  
 
   function addItemCalc() {
     var qty = parseFloat($("#input-item-qty").val());
@@ -327,7 +363,6 @@
     let total = 0;
 
     total = subtotal - tax - delivery - other;
-
     $("#input-total").val(addSeparator(total.toFixed(2), '.', '.', ','));
 
     return;
@@ -370,66 +405,64 @@
   $('form#add-form').submit( function( e ) {
     e.preventDefault();
     var loading_text = $('.loading').data('loading-text');
-        $('.loading').html(loading_text).attr('disabled', true);
+    $('.loading').html(loading_text).attr('disabled', true);
     var form_data = new FormData( this );
-
     $.ajax({
-    type: 'GET',
-    url: '{{asset('')}}'+'number/validate?prefix=PO&number='+$('#input-number').val(),
-    success: function(data){
-      if(data.status == 'error'){
-        swal({
-          title: "Gagal",
-          text: "Maaf, Nomor PO telah digunakan,",
-          showConfirmButton: true,
-          confirmButtonColor: '#0760ef',
-          type:"error",
-          html: true
-        });
-      }else{
-        $.ajax({
-          type: 'post',
-          url: BASE_URL+'/purchase-order',
-          data: form_data,
-          cache: false,
-          contentType: false,
-          processData: false,
-          dataType: 'json',
-          beforeSend: function() {
-            
-          },
-          success: function(msg) {
-            $('.loading').html('Submit').attr('disabled', false)
-            if(msg.status == 'success'){
-                setTimeout(function() {
+      type: 'GET',
+      url: '{{asset('')}}'+'number/validate?prefix=PO&number='+$('#input-number').val(),
+      success: function(data){
+          if(data.status == 'error'){
+              $('.loading').html('Submit').attr('disabled', false)
+              swal({
+                title: "Gagal",
+                text: "Maaf, Nomor PO telah digunakan,",
+                showConfirmButton: true,
+                confirmButtonColor: '#0760ef',
+                type:"error",
+                html: true
+              });
+          }else{
+            $.ajax({
+              type: 'post',
+              url: BASE_URL+'/purchase-order',
+              data: form_data,
+              cache: false,
+              contentType: false,
+              processData: false,
+              dataType: 'json',
+              beforeSend: function() {
+                
+              },
+              success: function(msg) {
+                $('.loading').html('Submit').attr('disabled', false)
+                if(msg.status == 'success'){
+                    setTimeout(function() {
+                        swal({
+                            title: "Sukses",
+                            text: msg.message,
+                            type:"success",
+                            html: true
+                        }, function() {
+                            // $('#main-table').DataTable().ajax.reload(null, false);
+                            $('#add-modal').modal('hide');
+                            window.location.replace("{{url('/purchase-order')}}");
+                        });
+                    }, 500);
+                } else {
                     swal({
-                        title: "Sukses",
+                        title: "Gagal",
                         text: msg.message,
-                        type:"success",
+                        showConfirmButton: true,
+                        confirmButtonColor: '#0760ef',
+                        type:"error",
                         html: true
-                    }, function() {
-                        // $('#main-table').DataTable().ajax.reload(null, false);
-                        $('#add-modal').modal('hide');
-                        window.location.replace("{{url('/purchase-order')}}");
                     });
-                }, 500);
-            } else {
-                swal({
-                    title: "Gagal",
-                    text: msg.message,
-                    showConfirmButton: true,
-                    confirmButtonColor: '#0760ef',
-                    type:"error",
-                    html: true
-                });
-            }
+                }
+              }
+            });
           }
-        });
-
- 
-      }
-    }
-  })
+      },
+    })
   });
 
   $("#input-cluster").on('change', function(e) {
@@ -437,6 +470,7 @@
     let id = $(this).val();
     $.ajax({
       url: BASE_URL+'/get_lots?all=true&cluster_id='+id,
+      //url: BASE_URL+'/get_lots?id='+id+'&all=true',
       type: "GET",
       dataType: "json",
       beforeSend: function() {
@@ -445,7 +479,7 @@
       },
       success: function(res) {
         let cols = '';
-        $.each(res.data, function(key, value) {
+        $.each(res, function(key, value) {  
           cols += '<option value="'+value.id+'">'+value.block+' - '+value.unit_number+'</option>';
         });
 
@@ -479,7 +513,6 @@
         // $("select#input-lot").append('<option value="0"> - Pilih Kavling - </option>');
       },
       success: function(res) {
-        console.log(res);
         $('#input-cluster').val(res.cluster_id).trigger('change');
 
         setTimeout(function(){ 
@@ -490,18 +523,30 @@
         $("input[name=type][value=" + res.type + "]").prop('checked', true);
 
 
+        $("#general_comments_tbody").html('');
+        $('#input-subtotal').val('');
+        $('#input-tax').val('');
+        $('#input-delivery').val('');
+        $('#input-other').val('');
+        $('#input-total').val('');
         let cols = '';
+        
 
         $.each(res.items, function(key, value) {
           cols += '<tr>';
-          cols += '<td>'+(key + 1)+'</td>';
+          cols += '<td>';
+          cols += '<div class="form-check">';
+          cols +=     '<input type="checkbox" class="form-check-input checkbox" checked value="1" id="checkbox-'+key+'">';
+          cols +=     '<input type="hidden" class="input-checkbox" name="checkbox[]" value="1" id="input-checkbox">';
+          cols += '</div>';
+          cols += '</td>';
           cols += '<td>'+value.inventory_name+'<input type="hidden" name="item_inventory_id[]" value='+ value.inventory_id +'></td>';
-          cols += '<td><select class="select-supplier" name="item_supplier_id[]"> ';
-          cols += '  <option value="0"> - Pilih Supplier - </option>';
-          @foreach($suppliers as $supplier)
-          cols += '    <option value="{{$supplier['id']}}">{{$supplier['name']}}</option>';
-          @endforeach
-          cols += '</select></td>';
+          // cols += '<td><select class="select-supplier" name="item_supplier_id[]"> ';
+          // cols += '  <option value="0"> - Pilih Supplier - </option>';
+          // @foreach($suppliers as $supplier)
+          // cols += '    <option value="{{$supplier['id']}}">{{$supplier['name']}}</option>';
+          // @endforeach
+          // cols += '</select></td>';
           cols += '<td id="qty-'+(key+1)+'">'+value.qty+'<input type="hidden" name="item_qty[]" value='+ value.qty +'></td>';
           cols += '<td>'+value.inventory.unit.name+'<input type="hidden" name="item_total[]" id="input-total-'+(key+1)+'" value='+ (value.qty * value.inventory.purchase_price) +' class="form-control"></td>';
           cols += '<td><input type="text" class="form-control item-calc" name="item_price[]" value='+ (value.inventory.purchase_price ? value.inventory.purchase_price : 0 ) +' data-id="'+(key+1)+'"></td>';
