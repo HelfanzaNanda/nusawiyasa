@@ -126,7 +126,8 @@
       $.each({!! $customer_terms !!}, function(key, value) {
           term += '<div class="col-md-6 mt-2">';
           term += '<label >'+value.key_name+'</label>';
-          term += '<input class="form-control" type="file" title="customer_terms['+value.filename+']" name="customer_terms['+value.ref_term_purchasing_customer_id+']" value="'+value.filepath+'/'+value.filename+'">';
+          term += '<input class="form-control mb-2" onchange="readURL(this, '+key+');" type="file" title="customer_terms['+value.filename+']" name="customer_terms['+value.ref_term_purchasing_customer_id+']" value="'+value.filepath+'/'+value.filename+'">';
+          term += '<img id="preview-img-'+key+'" src="'+value.filepath+'/'+value.filename+'" width="100" height="100">';
           term += '</div>';
       });
 
@@ -172,6 +173,19 @@
       });
     }
   });
+
+  function readURL(input, key) {
+      if (input.files && input.files[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+              $('#preview-img-'+key)
+                  .attr('src', e.target.result);
+          };
+
+          reader.readAsDataURL(input.files[0]);
+      }
+  }
 
 
 

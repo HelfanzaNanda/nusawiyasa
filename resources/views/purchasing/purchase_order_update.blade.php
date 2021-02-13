@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Tambah Purchase Order')
+@section('title', 'Update Purchase Order')
 
 @section('content')
 <div class="row">
@@ -48,6 +48,17 @@
                 <option value="0"> - Pilih Kavling - </option>
                 @foreach ($lots as $lot)
                     <option value="{{$lot['id']}}" {{ ($lot['id'] == $purchase->lot_id) ? 'selected' : '' }}>{{$lot['block'] .' - '. $lot['unit_number']}}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">Supplier</label>
+            <div class="col-md-10">
+              <select id="input-supplier" class="select-supplier" name="item_supplier_id"> 
+                <option value="0"> - Pilih Supplier - </option>
+                @foreach($suppliers as $supplier)
+                  <option value="{{$supplier['id']}}" {{ $supplier['id'] == $purchase->supplier_id ? 'selected' : '' }}>{{$supplier['name']}}</option>
                 @endforeach
               </select>
             </div>
@@ -102,7 +113,6 @@
                       <tr>
                         <th style="width:40px;">#</th>
                         <th>Item</th>
-                        <th>Supplier</th>
                         <th>Qty</th>
                         <th>Satuan</th>
                         <th>Harga</th>
@@ -116,14 +126,14 @@
                             <option value=""> Pilih </option>
                           </select>
                         </th>
-                        <th>
+                        {{-- <th>
                           <select id="input-supplier"> 
                             <option value="0"> - Pilih Supplier - </option>
                             @foreach($suppliers as $supplier)
                               <option value="{{$supplier['id']}}">{{$supplier['name']}}</option>
                             @endforeach
                           </select>
-                        </th>
+                        </th> --}}
                         <th><input type="text" class="form-control add-item" id="input-item-qty" placeholder="qty" onkeyup="addItemCalc()"></th>
                         <th><input type="text" class="form-control add-item" id="input-item-unit" placeholder="Satuan"></th>
                         <th><input type="text" class="form-control add-item" id="input-item-price" placeholder="Harga" onkeyup="addItemCalc()"></th>
@@ -140,14 +150,15 @@
                                 $item->discount = explode('.', $item->discount)[0];
                             @endphp
                             <tr>
-                                <td>{{ $no++ }}</td>
+                              <td>
+                                <div class="form-check">
+                                  <input type="checkbox" class="form-check-input checkbox" checked value="1" id="checkbox-'+rowsLength+'">
+                                  <input type="hidden" class="input-checkbox" name="checkbox[]" value="1" id="input-checkbox">
+                                </div>
+                              </td>
                                 <td>
                                     {{ $item->inventory->name }}
                                     <input type="hidden" name="item_inventory_id[]" value="{{ $item->inventory->id }}">
-                                </td>
-                                <td>
-                                    {{ ($item->supplier) ? $item->supplier->name : '' }}
-                                    <input type="hidden" name="item_supplier_id[]" value="{{ ($item->supplier) ? $item->supplier->id : '0' }}">
                                 </td>
                                 <td>
                                   {{ $item->qty }}
@@ -172,23 +183,23 @@
                     </tbody>
                     <tfoot>
                       <tr>
-                        <td colspan="6" style="text-align: right;">Subtotal</td>
+                        <td colspan="5" style="text-align: right;">Subtotal</td>
                         <td><input type="text" name="subtotal" id="input-subtotal" class="form-control" value="{{ number_format($purchase->subtotal, 2, '.', ',') }}"></td>
                       </tr>
                       <tr>
-                        <td colspan="6" style="text-align: right;">Pajak</td>
+                        <td colspan="5" style="text-align: right;">Pajak</td>
                         <td><input type="text" name="tax" id="input-tax" class="form-control" onkeyup="totalCalc()" value="{{ number_format($purchase->tax, 2, '.', ',') }}"></td>
                       </tr>
                       <tr>
-                        <td colspan="6" style="text-align: right;">Pengiriman</td>
+                        <td colspan="5" style="text-align: right;">Pengiriman</td>
                         <td><input type="text" name="delivery" id="input-delivery" class="form-control" onkeyup="totalCalc()" value="{{ number_format($purchase->delivery, 2, '.', ',') }}"></td>
                       </tr>
                       <tr>
-                        <td colspan="6" style="text-align: right;">Lain - Lain</td>
+                        <td colspan="5" style="text-align: right;">Lain - Lain</td>
                         <td><input type="text" name="other" id="input-other" class="form-control" onkeyup="totalCalc()" value="{{ number_format($purchase->other, 2, '.', ',') }}"></td>
                       </tr>
                       <tr>
-                        <td colspan="6" style="text-align: right;">Total</td>
+                        <td colspan="5" style="text-align: right;">Total</td>
                         <td><input type="text" name="total" id="input-total" class="form-control" value="{{ number_format($purchase->total, 2, '.', ',') }}"></td>
                       </tr>
                     </tfoot>
@@ -214,6 +225,7 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+
   $('#input-supplier').select2({
     width: '100%'
   });
@@ -307,9 +319,14 @@
     var inventoryPrice = addSeparator($('#input-item-price').val(), '.', '.', ',');
     var subTotal = addSeparator($('#input-item-total').val(), '.', '.', ',');
 
-    cols += '<td>'+rowsLength+'</td>';
+    cols += '<td>';
+    cols += '<div class="form-check">';
+    cols +=     '<input type="checkbox" class="form-check-input checkbox" checked value="1" id="checkbox-'+rowsLength+'">';
+    cols +=     '<input type="hidden" class="input-checkbox" name="checkbox[]" value="1" id="input-checkbox">';
+    cols += '</div>';
+    cols += '</td>';
     cols += '<td>'+inventoryName+'<input type="hidden" name="item_inventory_id[]" value='+ inventoryId +'></td>';
-    cols += '<td>'+inventorySupplierName+'<input type="hidden" name="item_supplier_id[]" value='+ inventorySupplierId +'></td>';
+    // cols += '<td>'+inventorySupplierName+'<input type="hidden" name="item_supplier_id[]" value='+ inventorySupplierId +'></td>';
     cols += '<td>'+inventoryQty+'<input type="hidden" name="item_qty[]" value='+ inventoryQty +'></td>';
     cols += '<td>'+inventoryUnit+'</td>';
     cols += '<td>'+inventoryPrice+'<input type="hidden" name="item_price[]" value='+ inventoryPrice +'></td>';
@@ -318,6 +335,24 @@
 
     return cols;
   }
+
+  $(document).on('click', '.checkbox', function() {
+    const total = $(this).parent().parent().parent().children('td#total')
+    const input_checkbox = $(this).parent().children('input.input-checkbox')
+    const value = detectFloat(total.text())
+    const subtotal = $("#input-subtotal").val();
+    if (!$(this).is(':checked')) {
+        input_checkbox.val("0")
+        $("#input-subtotal").val((detectFloat(subtotal) - value).toFixed(2), '.', '.', ',');
+        totalCalc();
+      }else{
+        
+        input_checkbox.val("1")
+        $("#input-subtotal").val((detectFloat(subtotal) + value).toFixed(2), '.', '.', ',');
+        totalCalc();
+      }
+  });
+  
 
   function calculateTotal() {
     let total = 0;
@@ -499,19 +534,30 @@
 
         $("input[name=type][value=" + res.type + "]").prop('checked', true);
 
+        $("#general_comments_tbody").html('');
+        $('#input-subtotal').val('');
+        $('#input-tax').val('');
+        $('#input-delivery').val('');
+        $('#input-other').val('');
+        $('#input-total').val('');
 
         let cols = '';
 
         $.each(res.items, function(key, value) {
           cols += '<tr>';
-          cols += '<td>'+(key + 1)+'</td>';
+          cols += '<td>';
+          cols += '<div class="form-check">';
+          cols +=     '<input type="checkbox" class="form-check-input checkbox" checked value="1" id="checkbox-'+key+'">';
+          cols +=     '<input type="hidden" class="input-checkbox" name="checkbox[]" value="1" id="input-checkbox">';
+          cols += '</div>';
+          cols += '</td>';
           cols += '<td>'+value.inventory_name+'<input type="hidden" name="item_inventory_id[]" value='+ value.inventory_id +'></td>';
-          cols += '<td><select class="select-supplier" name="item_supplier_id[]"> ';
-          cols += '  <option value="0"> - Pilih Supplier - </option>';
-          @foreach($suppliers as $supplier)
-          cols += '    <option value="{{$supplier['id']}}">{{$supplier['name']}}</option>';
-          @endforeach
-          cols += '</select></td>';
+          // cols += '<td><select class="select-supplier" name="item_supplier_id[]"> ';
+          // cols += '  <option value="0"> - Pilih Supplier - </option>';
+          // @foreach($suppliers as $supplier)
+          // cols += '    <option value="{{$supplier['id']}}">{{$supplier['name']}}</option>';
+          // @endforeach
+          // cols += '</select></td>';
           cols += '<td id="qty-'+(key+1)+'">'+value.qty+'<input type="hidden" name="item_qty[]" value='+ value.qty +'></td>';
           cols += '<td>'+value.inventory.unit.name+'<input type="hidden" name="item_total[]" id="input-total-'+(key+1)+'" value='+ (value.qty * value.inventory.purchase_price) +' class="form-control"></td>';
           cols += '<td><input type="text" class="form-control item-calc" name="item_price[]" value='+ (value.inventory.purchase_price ? value.inventory.purchase_price : 0 ) +' data-id="'+(key+1)+'"></td>';
