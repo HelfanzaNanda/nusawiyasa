@@ -163,7 +163,7 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
+        $('.loading').html('Submit').attr('disabled', false);
         if(msg.status == 'success'){
             setTimeout(function() {
                 swal({
