@@ -95,6 +95,10 @@ Route::group([
 	Route::get('/spk-project/{id}/delete', 'Project\SPKProjectController@delete');
 	Route::get('/spk_projects/{id?}', 'Project\SPKProjectController@get');
 
+	Route::get('/spk-project/{spk_project_id}/additional', 'Project\SpkProjectAdditionalsController@index');
+	Route::post('/spk-project/{spk_project_id}/additional', 'Project\SpkProjectAdditionalsController@insertData');
+	Route::get('/spk-project/{spk_project_id}/additional/{id}/delete', 'Project\SpkProjectAdditionalsController@delete');
+
 	Route::get('/customer-confirmation', 'Project\CustomerConfirmationController@index');
 	Route::get('/customer-confirmation/detail/{id}', 'Project\CustomerConfirmationController@detail');
 	Route::post('/customer-confirmation', 'Project\CustomerConfirmationController@insertData');
@@ -103,6 +107,12 @@ Route::group([
 	Route::get('/work-agreement', 'Project\WorkAgreementController@index');
 	Route::post('/work-agreement', 'Project\WorkAgreementController@insertData');
 	Route::post('/work-agreement-datatables', 'Project\WorkAgreementController@datatables');
+	Route::get('/work-agreement/{id}/delete', 'Project\WorkAgreementController@delete');
+	Route::get('/work-agreement/{id}', 'Project\WorkAgreementController@get');
+
+	Route::get('/work-agreement/{spk_worker_id}/additional', 'Project\WorkAgreementAdditionalsController@index');
+	Route::post('/work-agreement/{spk_worker_id}/additional', 'Project\WorkAgreementAdditionalsController@insertData');
+	Route::get('/work-agreement/{spk_worker_id}/additional/{id}/delete', 'Project\WorkAgreementAdditionalsController@delete');
 
 	Route::get('/rap', 'Project\RAPController@index');
 	Route::get('/create-rap', 'Project\RAPController@create');

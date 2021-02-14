@@ -206,7 +206,6 @@
         type: 'GET',
         url: url+'number/generate?prefix=SPK',
         success: function(data){
-          console.log(data)
           $('.number-input').val(data.number)
         }
       })

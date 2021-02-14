@@ -16,16 +16,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property int        $created_at
  * @property int        $updated_at
  */
-class WorkAgreements extends Model
+class SpkProjectAdditionals extends Model
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'spk_workers';
+    protected $table = 'spk_project_additionals';
 
-    /**
+    /** 
      * The primary key for the model.
      *
      * @var string
@@ -38,7 +38,7 @@ class WorkAgreements extends Model
      * @var array
      */
     protected $fillable = [
-        'number', 'title', 'date', 'filepath', 'filename', 'customer_lot_id', 'create_by_user_id', 'approved_by_user_id', 'received_by_user_id', 'created_at', 'updated_at'
+        'spk_project_id', 'number', 'title', 'date', 'filepath', 'filename', 'create_by_user_id', 'approved_by_user_id', 'received_by_user_id', 'created_at', 'updated_at'
     ];
 
     /**
@@ -56,7 +56,7 @@ class WorkAgreements extends Model
      * @var array
      */
     protected $casts = [
-        'filepath' => 'string',  'filename' => 'string',  'customer_lot_id' => 'int',  'create_by_user_id' => 'int', 'approved_by_user_id' => 'int', 'received_by_user_id' => 'int',
+        'filepath' => 'string',  'filename' => 'string',  'spk_project_id' => 'int',  'create_by_user_id' => 'int', 'approved_by_user_id' => 'int', 'received_by_user_id' => 'int',
         'number' => 'string', 'title' => 'string', 'date' => 'date', 'created_at' => 'timestamp', 'updated_at' => 'timestamp'
     ];
 
@@ -82,12 +82,12 @@ class WorkAgreements extends Model
 
         return [
             'id' => ['alias' => $model->table.'.id', 'type' => 'int'],
+            'spk_project_id' => ['alias' => $model->table.'.spk_project_id', 'type' => 'int'],
             'title' => ['alias' => $model->table.'.title', 'type' => 'string'],
             'number' => ['alias' => $model->table.'.number', 'type' => 'string'],
             'date' => ['alias' => $model->table.'.date', 'type' => 'string'],
             'filepath' => ['alias' => $model->table.'.filepath', 'type' => 'string'],
             'filename' => ['alias' => $model->table.'.filename', 'type' => 'string'],
-            'customer_lot_id' => ['alias' => $model->table.'.customer_lot_id', 'type' => 'int'],
             'created_by_user_id' => ['alias' => $model->table.'.created_by_user_id', 'type' => 'int'],
             'approved_by_user_id' => ['alias' => $model->table.'.approved_by_user_id', 'type' => 'int'],
             'received_by_user_id' => ['alias' => $model->table.'.received_by_user_id', 'type' => 'int'],
@@ -105,11 +105,7 @@ class WorkAgreements extends Model
             $_select[] = $select['alias'];
         }
 
-        $qry = self::select($_select)
-        ->addSelect('users.name as customer_name')
-        ->join('customer_lots', 'customer_lots.id', '=', 'spk_workers.customer_lot_id')
-        ->join('customers', 'customers.id', '=', 'customer_lots.customer_id')
-        ->join('users', 'users.id', '=', 'customers.user_id');
+        $qry = self::select($_select);
         $totalFiltered = $qry->count();
 
         if (empty($search)) {
@@ -182,7 +178,6 @@ class WorkAgreements extends Model
                         'title' => $params['title'],
                         'number' => $params['number'],
                         'date' => $params['date'],
-                        'customer_lot_id' => $params['customer_lot_id'],
                         'filepath' => '/storage/media/work-agreement/'.$month_year_pfx,
                         'filename' => $filename,
                     ]);
@@ -207,7 +202,6 @@ class WorkAgreements extends Model
                 'title' => $params['title'],
                 'number' => $params['number'],
                 'date' => $params['date'],
-                'customer_lot_id' => $params['customer_lot_id'],
             ]);
             
             DB::commit();
@@ -234,7 +228,7 @@ class WorkAgreements extends Model
                     'title' => $params['title'],
                     'number' => $params['number'],
                     'date' => $params['date'],
-                    'customer_lot_id' => $params['customer_lot_id'],
+                    'spk_project_id' => $params['spk_project_id'],
                     'filepath' => '/storage/media/work-agreement/'.$month_year_pfx,
                     'filename' => $filename,
                 ]);
@@ -260,11 +254,6 @@ class WorkAgreements extends Model
             'status' => 'success',
             'message' => 'Data Berhasil Disimpan'
         ]);
-    }
-
-    public function work_agreement_additionals()
-    {
-        return $this->hasMany(WorkAgreementAdditionals::class, 'spk_worker_id');
     }
 
     // Scopes...

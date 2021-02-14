@@ -123,6 +123,7 @@ class SPKProjectController extends Controller
                 $nestedData['action'] .='                <a class="dropdown-item" id="edit" href="#" data-toggle="modal" data-target="#edit_leave" data-id="'.$row['id'].'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
                 $nestedData['action'] .='                <a class="dropdown-item" id="delete" href="#" data-toggle="modal" data-target="#delete_approve"  data-id="'.$row['id'].'"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
                 $nestedData['action'] .='                <a class="dropdown-item" target="_blank" href="'.url('/spk-project-pdf/'.$row['id']).'"><i class="fa fa-print m-r-5"></i> Cetak</a>';
+                $nestedData['action'] .='                <a class="dropdown-item" href="'.url('/spk-project/'.$row['id'].'/additional').'" > SPK Tambahan</a>';
                 $nestedData['action'] .='            </div>';
                 $nestedData['action'] .='        </div>';
                 $data[] = $nestedData;
@@ -148,7 +149,10 @@ class SPKProjectController extends Controller
     }
 
     public function delete($id){
-        SpkProjects::destroy($id);
+        $spkProject = SpkProjects::findOrFail($id);
+        $spkProject->spk_project_additionals()->delete();
+        $spkProject->delete();
+
 
         return response()->json([
             'message' => 'data berhasil dihapus',

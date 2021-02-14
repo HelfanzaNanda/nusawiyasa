@@ -7,8 +7,11 @@ use App\Http\Models\Inventory\ReceiptOfGoodsRequest;
 use App\Http\Models\Accounting\AccountingJournal;
 use App\Http\Models\Inventory\DeliveryOrders;
 use App\Http\Models\Project\RequestMaterials;
+use App\Http\Models\Project\SpkProjectAdditionals;
 use App\Http\Models\Purchase\PurchaseOrders;
 use App\Http\Models\Project\SpkProjects;
+use App\Http\Models\Project\WorkAgreementAdditionals;
+use App\Http\Models\Project\WorkAgreements;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -66,8 +69,25 @@ class NumberGenerateController extends Controller
                     'field' => 'ref',
                     'prefix' => $pref
                 ];
-            }
-            else{
+            }else if($pref == 'WA'){
+                $data = [
+                    'class' => WorkAgreements::class,
+                    'field' => 'number',
+                    'prefix' => $pref
+                ];
+            }else if($pref == 'WAP'){
+                $data = [
+                    'class' => WorkAgreementAdditionals::class,
+                    'field' => 'number',
+                    'prefix' => $pref
+                ];
+            }else if($pref == 'SPKP'){
+                $data = [
+                    'class' => SpkProjectAdditionals::class,
+                    'field' => 'number',
+                    'prefix' => $pref
+                ];
+            }else{
                 return response()->json([
                     'status' => 'error',
                     'data' => '',

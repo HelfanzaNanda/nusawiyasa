@@ -112,7 +112,8 @@ class SpkProjects extends Model
             $_select[] = $select['alias'];
         }
 
-        $qry = self::select($_select)->addSelect('clusters.name as cluster_name')->addSelect('lots.unit_number as unit_number')->addSelect('lots.block as unit_block')->addSelect('users.name as customer_name')
+        $qry = self::select($_select)->addSelect('clusters.name as cluster_name')->addSelect('lots.unit_number as unit_number')
+        ->addSelect('lots.block as unit_block')->addSelect('users.name as customer_name')
                     ->join('customer_lots', 'customer_lots.id', '=', 'spk_projects.customer_lot_id')
                     ->join('customers', 'customers.id', '=', 'customer_lots.customer_id')
                     ->join('users', 'users.id', '=', 'customers.user_id')
@@ -328,5 +329,10 @@ class SpkProjects extends Model
     public function customerLot()
     {
         return $this->belongsTo(CustomerLot::class);
+    }
+
+    public function spk_project_additionals()
+    {
+        return $this->hasMany(SpkProjectAdditionals::class, 'spk_project_id');
     }
 }
