@@ -121,6 +121,13 @@ Route::group([
 	Route::post('/rap-datatables', 'Project\RAPController@datatables');
 	Route::get('/rap/{id}/delete', 'Project\RAPController@delete');
 
+	Route::get('/rab', 'Project\RABController@index');
+	Route::get('/create-rab', 'Project\RABController@create');
+	Route::get('/update-rab/{id?}', 'Project\RABController@update');
+	Route::post('/rab', 'Project\RABController@insertData');
+	Route::post('/rab-datatables', 'Project\RABController@datatables');
+	Route::get('/rab/{id}/delete', 'Project\RABController@delete');
+
 	Route::get('/request-material', 'Project\RequestMaterialController@index');
 	Route::get('/request-material-pdf/{id}', 'Project\RequestMaterialController@generatePdf');
 	Route::get('/create-request-material', 'Project\RequestMaterialController@create');

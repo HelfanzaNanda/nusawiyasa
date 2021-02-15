@@ -55,7 +55,7 @@
         @endif
     @endif
     
-    @if($user->hasAnyPermission(['customer-confirmation', 'work-agreement', 'rap', 'request-material', 'development-progress']))
+    @if($user->hasAnyPermission(['customer-confirmation', 'work-agreement', 'rap', 'rab', 'request-material', 'development-progress']))
         <li class="menu-title">
             <span>Project </span>
         </li>
@@ -75,6 +75,11 @@
         @if ($user->can('rap'))
             <li {{ (request()->segment(1) == 'rap') ? 'class=active' : '' }}>
                 <a href="{{url('/rap')}}"><i class="la la-clipboard-list"></i> <span>RAP</span></a>
+            </li>
+        @endif
+        @if ($user->can('rab'))
+            <li {{ (request()->segment(1) == 'rab') ? 'class=active' : '' }}>
+                <a href="{{url('/rab')}}"><i class="la la-clipboard-list"></i> <span>RAB</span></a>
             </li>
         @endif
         @if($user->can('request-material'))
