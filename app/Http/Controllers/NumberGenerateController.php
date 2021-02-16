@@ -87,6 +87,12 @@ class NumberGenerateController extends Controller
                     'field' => 'number',
                     'prefix' => $pref
                 ];
+            }else if($pref == 'PK'){
+                $data = [
+                    'class' => AccountingJournal::class,
+                    'field' => 'ref',
+                    'prefix' => $pref
+                ];
             }else{
                 return response()->json([
                     'status' => 'error',
@@ -149,6 +155,9 @@ class NumberGenerateController extends Controller
             $data = PurchaseOrders::where('number' ,$request->number)->first();
             $params = ($data == null) ? $success : $error;
         }else if($pref == 'JU'){
+            $data = AccountingJournal::where('ref' ,$request->number)->first();
+            $params = ($data == null) ? $success : $error;
+        }else if($pref == 'PK'){
             $data = AccountingJournal::where('ref' ,$request->number)->first();
             $params = ($data == null) ? $success : $error;
         }else{

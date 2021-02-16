@@ -58,6 +58,13 @@ class AccountingJournal extends Model
 
         $qry = self::select($_select)->addSelect('clusters.name as cluster_name')->leftJoin('clusters', 'clusters.id', '=', 'accounting_journals.cluster_id');
 
+        if ($filter['isPk'] == "ya") {
+            $qry->where('ref', 'like', 'PK'. '%');
+        }else{
+            $qry->where('ref', 'like', 'JU'. '%');
+        }
+
+
         if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6, 10])) && isset($session['_cluster_id'])) {
             $qry->where('accounting_journals.cluster_id', $session['_cluster_id']);
         }

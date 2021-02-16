@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\Accounting;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Accounting\AccountingJournal;
-use App\Http\Models\Accounting\AccountingLedger;
-use App\Http\Models\Cluster\Cluster;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Models\Cluster\Cluster;
+use App\Http\Models\Accounting\AccountingLedger;
+use App\Http\Models\Accounting\AccountingJournal;
 
-class GeneralLedgerController extends Controller
+class FinancialSubmissionController extends Controller
 {
     public function index()
     {
         $clusters = Cluster::selectClusterBySession();
 
-        return view('accounting.general_ledger.'.__FUNCTION__, compact('clusters'));
+        return view('accounting.financial_submission.'.__FUNCTION__, compact('clusters'));
     }
 
     public function datatables(Request $request)
@@ -121,7 +121,7 @@ class GeneralLedgerController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Data Jurnal Umum Telah Berhasil Disimpan',
+            'message' => 'Data Pengajuan Keuangan Lainnya Telah Berhasil Disimpan',
             'data' => $saveJournal
         ]);
     }
@@ -158,7 +158,7 @@ class GeneralLedgerController extends Controller
         ]);
         return response()->json([
             'status' => 'success',
-            'message' => 'Data Jurnal Umum Telah Berhasil DIUpdate',
+            'message' => 'Data Pengajuan Keuangan Lainnya Telah Berhasil DIUpdate',
         ]);
     }
 
@@ -170,7 +170,7 @@ class GeneralLedgerController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Data Jurnal Umum Telah Berhasil Di Hapus',
+            'message' => 'Data Pengajuan Keuangan Lainnya Telah Berhasil Di Hapus',
         ]);
     }
 }

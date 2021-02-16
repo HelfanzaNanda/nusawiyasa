@@ -254,6 +254,9 @@ Route::group([
 	Route::get('accounting-general-ledger', 'Accounting\GeneralLedgerController@index');
 	Route::post('accounting-general-ledger-datatables', 'Accounting\GeneralLedgerController@datatables');
 
+	Route::get('financial-submission', 'Accounting\FinancialSubmissionController@index');
+	Route::post('financial-submission-datatables', 'Accounting\FinancialSubmissionController@datatables');
+
 	Route::get('accounting-ledger', 'Accounting\LedgerController@index');
 	Route::post('accounting-ledger-datatables', 'Accounting\LedgerController@datatables');
 	
@@ -283,6 +286,14 @@ Route::group([
             Route::post('/update/{id}', ['as' => 'accounting.general_ledger.update', 'uses' => 'GeneralLedgerController@update']);
             Route::get('/delete/{id}', ['as' => 'accounting.general_ledger.delete', 'uses' => 'GeneralLedgerController@delete']);
             Route::get('/{id}', ['as' => 'accounting.general_ledger.edit', 'uses' => 'GeneralLedgerController@edit']);
+        });
+
+		Route::group(['prefix' => 'financial-submission'], function () {
+            Route::post('/datatables', ['as' => 'accounting.financial-submission.datatable', 'uses' => 'FinancialSubmissionController@index']);
+            Route::post('/store', ['as' => 'accounting.financial-submission.store', 'uses' => 'FinancialSubmissionController@store']);
+            Route::post('/update/{id}', ['as' => 'accounting.financial-submission.update', 'uses' => 'FinancialSubmissionController@update']);
+            Route::get('/delete/{id}', ['as' => 'accounting.financial-submission.delete', 'uses' => 'FinancialSubmissionController@delete']);
+            Route::get('/{id}', ['as' => 'accounting.financial-submission.edit', 'uses' => 'FinancialSubmissionController@edit']);
         });
 
         Route::group(['prefix' => 'ledger'], function () {

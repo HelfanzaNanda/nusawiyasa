@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Jurnal Umum')
+@section('title', 'Pengajuan Keuangan Lainnya')
 
 @section('style')
 	
@@ -10,14 +10,14 @@
 <div class="page-header">
   <div class="row align-items-center">
     <div class="col">
-      <h3 class="page-title">Data Jurnal Umum</h3>
+      <h3 class="page-title">Data Pengajuan Keuangan Lainnya</h3>
       <ul class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index-2.html">Jurnal Umum</a></li>
-        <li class="breadcrumb-item active">Data Jurnal Umum</li>
+        <li class="breadcrumb-item"><a href="index-2.html">Pengajuan Keuangan Lainnya</a></li>
+        <li class="breadcrumb-item active">Data Pengajuan Keuangan Lainnya</li>
       </ul>
     </div>
     <div class="col-auto float-right ml-auto">
-      <a href="#" class="btn add-btn" id="show-add-modal"><i class="fa fa-plus"></i> Tambah Jurnal Umum</a>
+      <a href="#" class="btn add-btn" id="show-add-modal"><i class="fa fa-plus"></i> Tambah Pengajuan Keuangan Lainnya</a>
     </div>
   </div>
 </div>
@@ -26,7 +26,7 @@
   <div class="col-md-12 d-flex">
     <div class="card card-table flex-fill">
       <div class="card-header">
-        <h3 class="card-title mb-0">Data Jurnal Umum</h3>
+        <h3 class="card-title mb-0">Data Pengajuan Keuangan Lainnya</h3>
       </div>
       <div class="card-body ml-3 mt-3 mr-3 mb-3">
         <div class="table-responsive">
@@ -57,7 +57,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Tambah Jurnal Umum</h5>
+        <h5 class="modal-title">Tambah Pengajuan Keuangan Lainnya</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -132,10 +132,10 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
-	var URL_ADD = BASE_URL+'/accounting/general_ledger/store';
-	var URL_EDIT = BASE_URL+'/accounting/general_ledger';
-	var URL_UPDATE = BASE_URL+'/accounting/general_ledger/update';
-	var URL_DELETE = BASE_URL+'/accounting/general_ledger/delete';
+	var URL_ADD = BASE_URL+'/accounting/financial-submission/store';
+	var URL_EDIT = BASE_URL+'/accounting/financial-submission';
+	var URL_UPDATE = BASE_URL+'/accounting/financial-submission/update';
+	var URL_DELETE = BASE_URL+'/accounting/financial-submission/delete';
 	var URL_SEARCH_COA = BASE_URL+'/accounting/get';
 
 	$('#input-cluster').select2({
@@ -168,16 +168,15 @@
         $('#main-modal').modal('show'); 
 
 		$(document).ready(function(){
-    var url = '{{ asset('') }}'
-    
-    $.ajax({
-      type: 'GET',
-      url: url+'number/generate?prefix=JU',
-      success: function(data){
-        $('.ref-number').val(data.number)
-      }
-    })
-  })
+    		var url = '{{ asset('') }}'
+			$.ajax({
+			type: 'GET',
+			url: url+'number/generate?prefix=PK',
+			success: function(data){
+				$('.ref-number').val(data.number)
+			}
+			})
+		})
     });
 
 	$("#main-table").DataTable({
@@ -191,7 +190,7 @@
 	      "dataType": "json",
 	      "type": "POST",
 	      "data":function(d) { 
-			d.isPk = "no"
+			d.isPk = "ya"
 	        d._token = "{{csrf_token()}}"
 	      },
 		//   success: function(res){
@@ -211,52 +210,7 @@
 	  "order": [[ 0, "desc" ]]
 	});
 
-    
-
-    // $( 'form#add-form' ).submit( function( e ) {
-    //   e.preventDefault();
-    //   var form_data   = new FormData( this );
-    //   $.ajax({
-    //         type: 'post',
-    //         url: $('#typePost').val() === 'edit' ? URL_UPDATE + '/' + $('#id').val() : URL_ADD,
-    //         data: form_data,
-    //         cache: false,
-    //         contentType: false,
-    //         processData: false,
-    //         dataType: 'json',
-    //         beforeSend: function() {
-    //           $('.loading-area').show();
-			 //  console.log($('#typePost').val());
-    //         },
-    //         success: function(msg) {
-				// //console.log(msg);
-    //           if(msg.status == 'success'){
-    //               setTimeout(function() {
-    //                   swal({
-    //                       title: "Sukses",
-    //                       text: msg.message,
-    //                       type:"success",
-    //                       html: true
-    //                   }, function() {
-    //                       $('#main-modal').modal('hide');
-    //                       $("#main-table").DataTable().ajax.reload( null, false ); // user paging is not reset on reload
-    //                   });
-    //               }, 200);
-    //           } else {
-    //               $('.loading-area').hide();
-    //               swal({
-    //                   title: "Gagal",
-    //                   text: msg.message,
-    //                   showConfirmButton: true,
-    //                   confirmButtonColor: '#0760ef',
-    //                   type:"error",
-    //                   html: true
-    //               });
-    //           }
-    //         }
-    //   });
-    // });
-
+	
     $( 'form#add-form' ).submit( function( e ) {
       e.preventDefault();
 	  var loading_text = $('.loading').data('loading-text');
@@ -264,13 +218,13 @@
       var form_data   = new FormData( this );
       $.ajax({
 		type: 'GET',
-		url: '{{asset('')}}'+'number/validate?prefix=JU&number='+$('.ref-number').val(),
+		url: '{{asset('')}}'+'number/validate?prefix=PK&number='+$('.ref-number').val(),
 		success: function(data){
 		$('.loading').html('Submit').attr('disabled', false)
 		if (data.status == 'error' && $('#typePost').val() != 'edit') {
 			swal({
 				title: "Gagal",
-				text: "Maaf, Nomor jurnal umum telah digunakan,",
+				text: "Maaf, Nomor Pengajuan Keuangan Lainnya telah digunakan,",
 				showConfirmButton: true,
 				confirmButtonColor: '#0760ef',
 				type:"error",
