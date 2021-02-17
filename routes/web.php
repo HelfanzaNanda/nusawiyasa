@@ -30,9 +30,6 @@ Route::group([
 	Route::get('/customers/{id}', 'Customer\CustomerController@detail')->name('customer.detail');
 	Route::get('/customers/{id}/delete', 'Customer\CustomerController@delete')->name('customer.delete');
 
-	Route::get('/customer-terms', function () {
-	    return abort(404);
-	});
 	// Route::get('/customer-terms', 'Customer\CustomerTermController@index');
 	Route::post('/customer-terms', 'Customer\CustomerTermController@insertData');
 	Route::post('/customer-term-datatables', 'Customer\CustomerTermController@datatables');
@@ -47,10 +44,6 @@ Route::group([
 
 	Route::post('/customer-costs', 'Customer\CustomerCostController@insertData');
 	Route::post('/customer-cost-datatables', 'Customer\CustomerCostController@datatables');
-
-	Route::get('/development-progress', function () {
-	    return abort(404);
-	});
 
 	// Route::get('/development-progress', 'Customer\CustomerLotProgressController@index');
 	Route::post('/development-progress', 'Customer\CustomerLotProgressController@insertData');
@@ -256,6 +249,19 @@ Route::group([
 
 	Route::get('financial-submission', 'Accounting\FinancialSubmissionController@index');
 	Route::post('financial-submission-datatables', 'Accounting\FinancialSubmissionController@datatables');
+
+	Route::get('customer_lot_progress', 'Customer\CustomerPaymentController@lotProgress');
+
+	Route::group(['namespace' => 'GeneralAdmin'], function () {
+		Route::group(['prefix' => 'salary-submission'], function () {
+			Route::get('/', ['as' => 'general-admin.salary-submission.index', 'uses' => 'WageSubmissionController@index']);
+	        Route::post('/datatables', ['as' => 'general-admin.salary-submission.datatable', 'uses' => 'WageSubmissionController@datatables']);
+	        Route::post('/store', ['as' => 'general-admin.salary-submission.store', 'uses' => 'WageSubmissionController@store']);
+	        Route::post('/update/{id}', ['as' => 'general-admin.salary-submission.update', 'uses' => 'WageSubmissionController@update']);
+	        Route::get('/delete/{id}', ['as' => 'general-admin.salary-submission.delete', 'uses' => 'WageSubmissionController@delete']);
+	        Route::get('/{id}', ['as' => 'general-admin.salary-submission.edit', 'uses' => 'WageSubmissionController@edit']);
+	    });
+    });
 
 	Route::get('accounting-ledger', 'Accounting\LedgerController@index');
 	Route::post('accounting-ledger-datatables', 'Accounting\LedgerController@datatables');

@@ -3,19 +3,30 @@
 @section('title', 'Pembayaran')
 
 @section('content')
-
+<script type="text/javascript">
+  let total_receivable = 0;
+  let total_receivable_payment = 0;
+</script>
 <div class="row">
   <div class="col-md-12">
     <div class="card">
       <div class="card-body">
         <h4 class="card-title">Detail Pembayaran a/n {{$data['customer_name']}}</h4>
+        <h4 class="card-title">Total Piutang : <span id="total-receivable"></span></h4>
+        <h4 class="card-title">Sisa Piutang : <span id="total-receivable-payment" style="color: red;"></span></h4>
         <ul class="nav nav-tabs nav-tabs-solid">
           @foreach($customer_costs as $keyTitle => $customer_cost)
+            @php
+              $total[$keyTitle] = 0;
+            @endphp
             <li class="nav-item"><a class="nav-link {{$keyTitle < 1 ? 'active' : ''}}" href="#solid-tab{{$keyTitle}}" data-toggle="tab">{{$customer_cost['key_name']}}</a></li>
           @endforeach
         </ul>
         <div class="tab-content">
           @foreach($customer_costs as $keyContent => $customer_cost_content)
+            <script type="text/javascript">
+              total_receivable += parseInt({{$customer_cost_content['value']}});
+            </script>
             <div class="tab-pane {{$keyContent < 1 ? 'show active' : ''}}" id="solid-tab{{$keyContent}}">
               <div class="col-md-12">
                 <h3>Nilai Kontrak : Rp {{number_format($customer_cost_content['value'])}}</h3>
@@ -47,6 +58,9 @@
                         <tbody>
                           @foreach($customer_payments as $customer_payment)
                           @if($customer_payment['customer_cost_id'] == $customer_cost_content['id'])
+                          @php
+                            $total[$keyContent] += $customer_payment['value'];
+                          @endphp
                           <tr>
                             <td>{{date('d M Y', strtotime(($customer_payment['date'])))}}</td>
                             <td>Rp {{number_format($customer_payment['value'])}}</td>
@@ -57,6 +71,9 @@
                               <a href="#" id="download-pdf"></a></td>
 
                           </tr>
+                          <script type="text/javascript">
+                            total_receivable_payment += parseInt({{$customer_payment['value']}});
+                          </script>
                           @endif
                           @endforeach
                         </tbody>
@@ -64,6 +81,9 @@
                     </div>
                   </div>
                 </div>
+              </div>
+              <div class="col-md-12">
+                <h4 style="color: red; float: right;">Sisa Piutang {{$customer_cost_content['key_name']}} : Rp {{number_format($customer_cost_content['value'] - $total[$keyContent])}}</h4>
               </div>
             </div>
           @endforeach
@@ -406,5 +426,8 @@
           })
         })
   });
+
+  $("#total-receivable").text(addSeparator(total_receivable, '.', '.', ','));
+  $("#total-receivable-payment").text(addSeparator((total_receivable - total_receivable_payment), '.', '.', ','));
 </script>
 @endsection

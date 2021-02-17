@@ -177,6 +177,24 @@
         @endif
     @endif
 
+    @if($user->hasAnyPermission(['financial-submission']))
+        <li class="menu-title">
+            <span>Admin Umum </span>
+        </li>
+
+        @if ($user->can('financial-submission'))
+            <li {{ (request()->segment(1) == 'financial-submission') ? 'class=active' : '' }}>
+                <a href="{{url('/financial-submission')}}"><i class="la la-file-alt"></i> <span>Pengajuan Keuangan</span></a>
+            </li>
+        @endif
+
+        @if ($user->can('salary-submission'))
+            <li {{ (request()->segment(1) == 'salary-submission') ? 'class=active' : '' }}>
+                <a href="{{url('/salary-submission')}}"><i class="la la-file-alt"></i> <span>Pengajuan Upah</span></a>
+            </li>
+        @endif
+    @endif
+
     @if($user->hasAnyPermission(['user', 'user-permissions', 'roles']))
         <li class="menu-title">
             <span>Pengaturan </span>
@@ -199,7 +217,7 @@
     @endif
     
     @if($user->hasAnyPermission(['debt', 'accounting-master', 'accounting-general-ledger', 
-        'accounting-ledger', 'accounting-profit-loss', 'accounting-balance-sheet', 'financial-submission']))
+        'accounting-ledger', 'accounting-profit-loss', 'accounting-balance-sheet']))
         <li class="menu-title">
             <span>Accounting </span>
         </li>
@@ -219,12 +237,6 @@
         @if ($user->can('accounting-general-ledger'))
             <li {{ (request()->segment(1) == 'accounting-general-ledger') ? 'class=active' : '' }}>
                 <a href="{{url('/accounting-general-ledger')}}"><i class="la la-file-alt"></i> <span>Jurnal Umum</span></a>
-            </li>
-        @endif
-
-        @if ($user->can('financial-submission'))
-            <li {{ (request()->segment(1) == 'financial-submission') ? 'class=active' : '' }}>
-                <a href="{{url('/financial-submission')}}"><i class="la la-file-alt"></i> <span>Pengajuan Keuangan Lainnya</span></a>
             </li>
         @endif
         

@@ -4,7 +4,7 @@
 
 @section('content')
 <style type="text/css">
-  table {
+  /*table {
       display: block;
       overflow-x: auto;
       white-space: nowrap;
@@ -13,7 +13,7 @@
   table tbody {
       display: table;
       width: 100%;
-  }
+  }*/
 </style>
 <div class="row horizontal-scroll">
   <div class="col-md-12">

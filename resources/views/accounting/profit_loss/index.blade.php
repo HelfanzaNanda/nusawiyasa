@@ -201,7 +201,7 @@ function buildData(params) {
           "<tr>"+
             "<td style='text-align:right;'>"+item.accounting_code+"</td>"+
             "<td>"+item.name+"</td>"+
-            "<td>"+item.total+"</td>"+
+            "<td>"+addSeparator(item.total, '.', '.', ',')+"</td>"+
             "<td></td>"+
           "</tr>"
       );
@@ -213,7 +213,7 @@ function buildData(params) {
         "<td></td>"+
         "<td style='text-align:right;'><b>Total Pendapatan</b></td>"+
         "<td></td>"+
-        "<td><b>"+revTotal+"</b></td>"+
+        "<td><b>"+addSeparator(revTotal, '.', '.', ',')+"</b></td>"+
       "</tr>"
   );
 
@@ -235,7 +235,7 @@ function buildData(params) {
           "<tr>"+
             "<td style='text-align:right;'>"+item.accounting_code+"</td>"+
             "<td>"+item.name+"</td>"+
-            "<td>"+item.total+"</td>"+
+            "<td>"+addSeparator(item.total, '.', '.', ',')+"</td>"+
             "<td></td>"+
           "</tr>"
       );
@@ -247,7 +247,7 @@ function buildData(params) {
         "<td></td>"+
         "<td style='text-align:right;'><b>Total Pengeluaran</b></td>"+
         "<td></td>"+
-        "<td><b>"+salTotal+"</b></td>"+
+        "<td><b>"+addSeparator(salTotal, '.', '.', ',')+"</b></td>"+
       "</tr>"
   );
 
@@ -269,7 +269,7 @@ function buildData(params) {
           "<tr>"+
             "<td style='text-align:right;'>"+item.accounting_code+"</td>"+
             "<td>"+item.name+"</td>"+
-            "<td>"+item.total+"</td>"+
+            "<td>"+addSeparator(item.total, '.', '.', ',')+"</td>"+
             "<td></td>"+
           "</tr>"
       );
@@ -281,7 +281,7 @@ function buildData(params) {
         "<td></td>"+
         "<td style='text-align:right;'><b>Total Pendapatan Lain - Lain</b></td>"+
         "<td></td>"+
-        "<td><b>"+othRevTotal+"</b></td>"+
+        "<td><b>"+addSeparator(othRevTotal, '.', '.', ',')+"</b></td>"+
       "</tr>"
   );
 
@@ -303,7 +303,7 @@ function buildData(params) {
           "<tr>"+
             "<td style='text-align:right;'>"+item.accounting_code+"</td>"+
             "<td>"+item.name+"</td>"+
-            "<td>"+item.total+"</td>"+
+            "<td>"+addSeparator(item.total, '.', '.', ',')+"</td>"+
             "<td></td>"+
           "</tr>"
       );
@@ -315,7 +315,7 @@ function buildData(params) {
         "<td></td>"+
         "<td style='text-align:right;'><b>Total Pengeluaran Lain - Lain</b></td>"+
         "<td></td>"+
-        "<td><b>"+othSalTotal+"</b></td>"+
+        "<td><b>"+addSeparator(othSalTotal, '.', '.', ',')+"</b></td>"+
       "</tr>"
   );
 
@@ -332,13 +332,13 @@ function buildData(params) {
         "<td></td>"+
         "<td style='text-align:right;'><b>Subtotal Pendapatan</b></td>"+
         "<td></td>"+
-        "<td><b>"+(othRevTotal + revTotal)+"</b></td>"+
+        "<td><b>"+addSeparator((othRevTotal + revTotal), '.', '.', ',')+"</b></td>"+
       "</tr>"+
       "<tr>"+
         "<td></td>"+
         "<td style='text-align:right;'><b>Subtotal Pengeluaran</b></td>"+
         "<td></td>"+
-        "<td><b>"+(othSalTotal + salTotal)+"</b></td>"+
+        "<td><b>"+addSeparator((othSalTotal + salTotal), '.', '.', ',')+"</b></td>"+
       "</tr>"+
       "<tr>"+
         "<td></td>"+
@@ -350,7 +350,7 @@ function buildData(params) {
         "<td></td>"+
         "<td style='text-align:right;'><b>Laba/Rugi</b></td>"+
         "<td></td>"+
-        "<td><b>"+profitLoss+' '+(profitLoss < 0 ? '(Rugi)' : '(Laba)')+"</b></td>"+
+        "<td><b>"+addSeparator(profitLoss, '.', '.', ',')+' '+(profitLoss < 0 ? '(Rugi)' : '(Laba)')+"</b></td>"+
       "</tr>"
   );
 }

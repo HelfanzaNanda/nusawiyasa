@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Models\Purchase\PurchaseOrderDeliveries;
-use App\Http\Models\Inventory\ReceiptOfGoodsRequest;
 use App\Http\Models\Accounting\AccountingJournal;
+use App\Http\Models\GeneralAdmin\WageSubmission;
 use App\Http\Models\Inventory\DeliveryOrders;
+use App\Http\Models\Inventory\ReceiptOfGoodsRequest;
 use App\Http\Models\Project\RequestMaterials;
 use App\Http\Models\Project\SpkProjectAdditionals;
-use App\Http\Models\Purchase\PurchaseOrders;
 use App\Http\Models\Project\SpkProjects;
 use App\Http\Models\Project\WorkAgreementAdditionals;
 use App\Http\Models\Project\WorkAgreements;
-use Illuminate\Http\Request;
+use App\Http\Models\Purchase\PurchaseOrderDeliveries;
+use App\Http\Models\Purchase\PurchaseOrders;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class NumberGenerateController extends Controller
 {
@@ -93,6 +94,12 @@ class NumberGenerateController extends Controller
                     'field' => 'ref',
                     'prefix' => $pref
                 ];
+            }else if($pref == 'PU'){
+                $data = [
+                    'class' => WageSubmission::class,
+                    'field' => 'number',
+                    'prefix' => $pref
+                ];
             }else{
                 return response()->json([
                     'status' => 'error',
@@ -139,28 +146,31 @@ class NumberGenerateController extends Controller
             $data = RequestMaterials::whereNumber($request->number)->first();
             $params = ($data == null) ? $success : $error;
             
-        }else if($pref == 'SPK'){
+        } else if ($pref == 'SPK') {
             $data = SpkProjects::whereNumber($request->number)->first();
             $params = ($data == null) ? $success : $error;
-        }else if($pref == 'BPB'){
+        } else if ($pref == 'BPB') {
             $data = ReceiptOfGoodsRequest::whereNumber($request->number)->first();
             $params = ($data == null) ? $success : $error;
-        }else if($pref == 'BkPB'){
+        } else if ($pref == 'BkPB') {
             $data = PurchaseOrderDeliveries::where('bpb_number' ,$request->number)->first();
             $params = ($data == null) ? $success : $error;
-        }else if($pref == 'SJ'){
+        } else if ($pref == 'SJ') {
             $data = DeliveryOrders::where('number' ,$request->number)->first();
             $params = ($data == null) ? $success : $error;
-        }else if($pref == 'PO'){
+        } else if ($pref == 'PO') {
             $data = PurchaseOrders::where('number' ,$request->number)->first();
             $params = ($data == null) ? $success : $error;
-        }else if($pref == 'JU'){
+        } else if ($pref == 'JU') {
             $data = AccountingJournal::where('ref' ,$request->number)->first();
             $params = ($data == null) ? $success : $error;
-        }else if($pref == 'PK'){
+        } else if ($pref == 'PK') {
             $data = AccountingJournal::where('ref' ,$request->number)->first();
             $params = ($data == null) ? $success : $error;
-        }else{
+        } else if ($pref == 'PU') {
+            $data = WageSubmission::where('number' ,$request->number)->first();
+            $params = ($data == null) ? $success : $error;
+        } else{
             $params = [
                 'status' => 'error',
                 'message' => 'prefix tidak ditemukan'

@@ -9,6 +9,7 @@ use App\Http\Models\Customer\CustomerCost;
 use App\Http\Models\Customer\CustomerLot;
 use App\Http\Models\Customer\CustomerPayment;
 use App\Http\Models\Customer\CustomerTerm;
+use App\Http\Models\Project\DevelopmentProgress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -160,5 +161,21 @@ class CustomerPaymentController extends Controller
         }
 
         return $res;
+    }
+
+    public function lotProgress(Request $request)
+    {
+        $params = $request->all();
+
+        $data = DevelopmentProgress::select(DB::raw('MAX(development_progress.percentage) as percentage'), 'lots.block', 'lots.unit_number', 'spk_workers.wage', 'customer_lots.id')
+                ->join('customer_lots', 'customer_lots.lot_id', '=', 'development_progress.lot_id')
+                ->join('spk_workers', 'spk_workers.customer_lot_id', '=', 'customer_lots.id')
+                ->join('lots', 'lots.id', '=', 'development_progress.lot_id')
+                ->where(DB::raw('CONCAT(lots.block, "-", lots.unit_number)'), 'LIKE', '%'.$params['term'].'%')
+                ->where('development_progress.cluster_id', $params['cluster_id'])
+                ->groupBy('customer_lots.id')
+                ->get();
+
+        return json_decode($data);
     }
 }
