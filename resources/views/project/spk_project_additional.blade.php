@@ -50,7 +50,7 @@
                           <div class="form-group">
                             <label>File</label>
                             <div class="custom-file">  
-                              <input type="file" class="custom-file-input" id="file" name="file" accept="application/pdf">
+                              <input type="file" onchange="readURL(this)" class="custom-file-input" id="file" name="file" accept="application/pdf">
                               <label class="custom-file-label" for="file">Choose file...</label>
                               <div class="invalid-feedback">Example invalid custom file feedback</div>
                             </div>
@@ -95,6 +95,10 @@
 @section('additionalScriptJS')
 <script type="text/javascript">
 
+    function readURL(input) {
+        $('.custom-file-label').text(input.files[0].name);
+    }
+
 if($('.date').length > 0) {
     $('.date').datetimepicker({
         format: 'YYYY-MM-DD',
@@ -122,6 +126,9 @@ if($('.date').length > 0) {
   
 $(document).ready(function(){
     var spk_project_id = "{{ $spk_project_id }}";
+
+    
+
     $('form#add-form').submit(function(e) {
         e.preventDefault();
         var loading_text = $('.loading').data('loading-text');

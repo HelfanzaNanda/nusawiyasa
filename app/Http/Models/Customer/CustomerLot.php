@@ -204,8 +204,65 @@ class CustomerLot extends Model
                         ]);
                     }
                 }
+
+
+                foreach ($params['term_ids'] as $keyFile => $term_id) {
+                    if ($term_id != null) {
+                        if ($request->file('customer_terms')) {
+
+                            //CustomerTerm::where('customer_id', $customer_lot['customer_id'])->where('lot_id', $customer_lot['lot_id'])->delete();
+                            $allowedfileExtension = ['pdf','jpg','png','docx', 'jpeg', 'txt'];
+                            $files = $request->file('customer_terms');
+            
+                            $month_year_pfx = date('mY');
+                            $path_pfx = 'public/media/customer_terms/'.$month_year_pfx;
+                            $path = '/storage/'.$path_pfx;
+            
+                            File::makeDirectory($path, 0777, true, true);
+
+                            $filename = $files[$keyFile]->getClientOriginalName();
+                            $extension = $files[$keyFile]->getClientOriginalExtension();
+                            $check = in_array($extension, $allowedfileExtension);
+                            if ($check) {
+                                $filename = md5(uniqid(rand(), true).time()).'.'.$extension;
+        
+                                $files[$keyFile]->move(storage_path('app').'/'.$path_pfx, $filename);
+        
+                                $cust_term = CustomerTerm::findOrfail($term_id);
+                                $cust_term->update([
+                                    'customer_id' => $params['customer_id'],
+                                    'ref_term_purchasing_customer_id' => $keyFile,
+                                    'filename' => $filename,
+                                    'filepath' => '/storage/media/customer_terms/'.$month_year_pfx,
+                                    'filetype' => $extension,
+                                    'status' => 1,
+                                    'lot_id' => $params['lot_id']
+                                ]);
+                                // CustomerTerm::create([
+                                    
+                                // ]);
+        
+                            } else {
+                                DB::rollBack();
+        
+                                return response()->json([
+                                    'status' => 'error',
+                                    'message' => 'Only upload jpg, png, and pdf'
+                                ]);
+                            }
+        
+                            DB::commit();
+            
+                            return response()->json([
+                                'status' => 'success',
+                                'message' => 'Data Berhasil Di Ubah!'
+                            ]);
+                        }
+                    }
+                }
     
                 if ($request->file('customer_terms')) {
+
                     CustomerTerm::where('customer_id', $customer_lot['customer_id'])->where('lot_id', $customer_lot['lot_id'])->delete();
                     $allowedfileExtension = ['pdf','jpg','png','docx', 'jpeg', 'txt'];
                     $files = $request->file('customer_terms');
