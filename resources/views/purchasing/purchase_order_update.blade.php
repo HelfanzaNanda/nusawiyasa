@@ -85,12 +85,7 @@
                 Non RAP
                 </label>
               </div>
-{{--               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="type" id="disposition" value="disposition" {{ ($purchase->type == 'disposition') ? 'checked' : '' }}>
-                <label class="form-check-label" for="disposition">
-                Disposisi
-                </label>
-              </div> --}}
+
             </div>
           </div>
 
@@ -490,7 +485,7 @@
       },
       success: function(res) {
         let cols = '';
-        $.each(res.data, function(key, value) {
+        $.each(res, function(key, value) {
           cols += '<option value="'+value.id+'">'+value.block+' - '+value.unit_number+'</option>';
         });
 
@@ -527,7 +522,9 @@
         console.log(res);
         $('#input-cluster').val(res.cluster_id).trigger('change');
 
-        setTimeout(function(){ 
+        setTimeout(function(){
+          // console.log(res.lot_id);
+          // console.log($('#input-lot').val());
           $('#input-lot').val(res.lot_id).trigger('change');
           hideLoadSpinner($('#input-lot'));
         }, 1000);

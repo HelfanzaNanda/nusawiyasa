@@ -48,7 +48,9 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Metode Pembayaran</label>
             <div class="col-md-10">
-              <select id="input-payment-type" name="payment_type"> 
+              {{-- <input type="text" name="" id="" class="form-control" readonly value="{{ $data->payment_type }}"> --}}
+              <input type="hidden" name="payment_type" value="{{ $data->payment_type }}">
+              <select id="input-payment-type" disabled> 
                 <option value="0"> - Pilih Metode Pembayaran - </option>
                 <option value="cash" {{ $data->payment_type == 'cash' ? 'selected' : ''  }} >Cash Keras</option>
                 <option value="cash_in_stages" {{ $data->payment_type == 'cash_in_stages' ? 'selected' : ''  }} >Cash Bertahap</option>
@@ -58,13 +60,31 @@
           </div>
           <hr>
           <h4 class="text-primary">Biaya</h4>
-          <div class="row" id="cost"> 
-
+          <div class="row" id="cost">
+            {{-- {{ dd($customer_costs) }} --}}
+            @foreach ($customer_costs as $cost)
+              <div class="col-md-6 mt-2">
+                <label>{{ $cost->key_name }}</label>
+                <input class="form-control" type="number" 
+                name="customer_costs[{{ $cost->ref_term_purchasing_customer_id }}]" 
+                value="{{ number_format(floatval($cost->value)) }}">
+              </div>
+            @endforeach
           </div>
           <hr>
           <h4 class="text-primary">Persyatan Dokumen</h4>
           <div class="row" id="term"> 
-
+            @foreach ($customer_terms as $key => $term)
+                <div class="col-md-6 mt-2">                      
+                  <label >{{ $term->key_name }}</label>
+                  <input type="hidden" name="term_ids[{{ $term->ref_term_purchasing_customer_id }}]" id="id_new_img-{{ $key }}">
+                  <input class="form-control mb-2" data-id={{ $term->id }} onchange="readURL(this, {{ $key }});" type="file" 
+                  name="customer_terms[{{ $term->ref_term_purchasing_customer_id }}]" 
+                  value="{{ $term->filepath.'/'.$term->filename }}">
+                  <img id="preview-img-{{ $key }}" width="100" height="100"
+                  src="{{ $term->filepath.'/'.$term->filename }}" >
+                </div>                
+            @endforeach
           </div>
         </div>
         <div class="card-footer">
@@ -83,6 +103,23 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+
+  function readURL(input, key) {
+      var termId = input.getAttribute('data-id');
+      if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+              $('#preview-img-'+key).attr('src', e.target.result);
+              $('#id_new_img-'+key).val(termId);
+          };
+
+          reader.readAsDataURL(input.files[0]);
+      }
+  }
+
+
+
+
   $('#input-customer').select2({
     width: '100%'
   });
@@ -107,87 +144,46 @@
     });
   }
 
-  $(document).ready(function() {
-    var payment_type = $('#input-payment-type').val();
-    payment_type ? showFirstItem() : ''
-  });
-
-  function showFirstItem(){
-      $("#cost").empty();
-      $("#term").empty();
-      let cost = '';
-      let term = '';
-      $.each({!! $customer_costs !!}, function(key, value) {
-          cost += '<div class="col-md-6 mt-2">';
-          cost += '<label>'+value.key_name+'</label>';
-          cost += '<input class="form-control" type="number" name="customer_costs['+value.ref_term_purchasing_customer_id+']" value="'+parseFloat(value.value)+'">';
-          cost += '</div>';
-      });
-      $.each({!! $customer_terms !!}, function(key, value) {
-          term += '<div class="col-md-6 mt-2">';
-          term += '<label >'+value.key_name+'</label>';
-          term += '<input class="form-control mb-2" onchange="readURL(this, '+key+');" type="file" title="customer_terms['+value.filename+']" name="customer_terms['+value.ref_term_purchasing_customer_id+']" value="'+value.filepath+'/'+value.filename+'">';
-          term += '<img id="preview-img-'+key+'" src="'+value.filepath+'/'+value.filename+'" width="100" height="100">';
-          term += '</div>';
-      });
-
-      $("#cost").append(cost);
-      $("#term").append(term); 
-  }
-
-  $('#input-payment-type').on('change', function() {
+  // $('#input-payment-type').on('change', function() {
     
-    var payment_type = $(this).val();
-    var p_type = $('#p-type').val();
-    if (payment_type == p_type) {
-      showFirstItem() 
-    }else if(payment_type) {
-      $.ajax({
-        url: BASE_URL+'/ref/term_purchasing_customers?all=true&payment_type='+payment_type+'&is_deleted=0',
-        type: "GET",
-        dataType: "json",
-        beforeSend: function() {
-          $("#cost").empty();
-          $("#term").empty(); 
-        },
-        success: function(res) {
-          let cost = '';
-          let term = '';
-          $.each(res.data, function(key, value) {
-            if (value.terms_type == 'cost') {
-                cost += '<div class="col-md-6 mt-2">';
-                cost += '<label>'+value.name+'</label>';
-                cost += '<input class="form-control" type="number" name="customer_costs['+value.id+']">';
-                cost += '</div>';
-            } else {
-                term += '<div class="col-md-6 mt-2">';
-                term += '<label>'+value.name+'</label>';
-                term += '<input class="form-control" type="file" name="customer_terms['+value.id+']">';
-                term += '</div>';
-            }
-          });
+  //   var payment_type = $(this).val();
+  //   var p_type = $('#p-type').val();
+  //   if (payment_type == p_type) {
+  //     showFirstItem() 
+  //   }else if(payment_type) {
+  //     $.ajax({
+  //       url: BASE_URL+'/ref/term_purchasing_customers?all=true&payment_type='+payment_type+'&is_deleted=0',
+  //       type: "GET",
+  //       dataType: "json",
+  //       beforeSend: function() {
+  //         $("#cost").empty();
+  //         $("#term").empty(); 
+  //       },
+  //       success: function(res) {
+  //         let cost = '';
+  //         let term = '';
+  //         $.each(res.data, function(key, value) {
+  //           if (value.terms_type == 'cost') {
+  //               cost += '<div class="col-md-6 mt-2">';
+  //               cost += '<label>'+value.name+'</label>';
+  //               cost += '<input class="form-control" type="number" name="customer_costs['+value.id+']">';
+  //               cost += '</div>';
+  //           } else {
+  //               term += '<div class="col-md-6 mt-2">';
+  //               term += '<label>'+value.name+'</label>';
+  //               term += '<input class="form-control" type="file" name="customer_terms['+value.id+']">';
+  //               term += '</div>';
+  //           }
+  //         });
 
-          $("#cost").append(cost);
-          $("#term").append(term); 
-        }
-      });
-    }
-  });
+  //         $("#cost").append(cost);
+  //         $("#term").append(term); 
+  //       }
+  //     });
+  //   }
+  // });
 
-  function readURL(input, key) {
-      if (input.files && input.files[0]) {
-          var reader = new FileReader();
-
-          reader.onload = function (e) {
-              $('#preview-img-'+key)
-                  .attr('src', e.target.result);
-          };
-
-          reader.readAsDataURL(input.files[0]);
-      }
-  }
-
-
+  
 
   $('form#update-form').submit( function( e ) {
     e.preventDefault();
@@ -207,6 +203,7 @@
       },
       success: function(msg) {
         $('.loading').html('Submit').attr('disabled', false)
+        
         if(msg.status == 'success'){
             setTimeout(function() {
                 swal({

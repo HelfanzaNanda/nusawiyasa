@@ -83,8 +83,8 @@
               <div class="form-group">
                 <label>File</label>
                 <div class="custom-file">  
-                  <input type="file" class="custom-file-input" id="file" name="file" accept="application/pdf">
-                  <label class="custom-file-label" for="file">Choose file...</label>
+                  <input type="file" class="custom-file-input" id="file" name="file" accept="application/pdf" onchange="readURL(this)">
+                  <label class="custom-file-label" id="label-img" for="file">Choose file...</label>
                   <div class="invalid-feedback">Example invalid custom file feedback</div>
                 </div>
               </div>
@@ -147,7 +147,7 @@
                 <label>File</label>
                 <div class="custom-file">  
                   <input type="file" class="custom-file-input" id="file" name="file" accept="application/pdf" onchange="readURL(this)">
-                  <label class="custom-file-label" id="label-file-edit" for="file">Choose file...</label>
+                  <label class="custom-file-label" id="label-img-edit" for="file">Choose file...</label>
                   <div class="invalid-feedback">Example invalid custom file feedback</div>
                 </div>
               </div>
@@ -197,6 +197,7 @@ $('.select').select2({
 
 $(document).ready(function(){
     $("#show-add-modal").on('click',function() {
+      $('.custom-file-label').text('Choose file...')
         $('.error').text('');
         var url = '{{ asset('') }}'
         $.ajax({
@@ -301,7 +302,7 @@ $(document).ready(function(){
                 $('#title-edit').val(data.title);
                 $('#date-edit').val(formatDate(data.date));
                 $('#customer-lot-id-edit').val(data.customer_lot_id).trigger('change');
-                $('#label-file-edit').text(data.filename)
+                $('#label-img-edit').text(data.filename)
 
             }
         })
@@ -421,5 +422,9 @@ $(document).ready(function(){
     })
   });
 })
+
+function readURL(input) {
+    $('.custom-file-label').text(input.files[0].name);
+  }
 </script>
 @endsection
