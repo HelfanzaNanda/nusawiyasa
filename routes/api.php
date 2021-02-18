@@ -36,12 +36,33 @@ Route::get('banner', function(){
         [
             'id' => '1',
             'name' => 'Perumahan nyaman',
-            'image' => 'https://nusawiyasapropertindo.com/wp-content/uploads/2020/06/6-3-1024x1024.png'
-        ],[
+            'image' => 'http://157.230.250.8/banner/1.jpg'
+        ],
+        [
             'id' => '2',
-            'name' => 'Peruman keluarga',
-            'image' => 'https://nusawiyasapropertindo.com/wp-content/uploads/2020/06/6-2-1024x1024.png'
-        ]
-        ];
+            'name' => 'Perumahan nyaman',
+            'image' => 'http://157.230.250.8/banner/2.jpg'
+        ],
+        [
+            'id' => '3',
+            'name' => 'Perumahan nyaman',
+            'image' => 'http://157.230.250.8/banner/3.jpg'
+        ],
+        [
+            'id' => '4',
+            'name' => 'Perumahan nyaman',
+            'image' => 'http://157.230.250.8/banner/4.jpg'
+        ],
+        [
+            'id' => '5',
+            'name' => 'Perumahan nyaman',
+            'image' => 'http://157.230.250.8/banner/5.jpg'
+        ],
+               [
+            'id' => '6',
+            'name' => 'Perumahan nyaman',
+            'image' => 'http://157.230.250.8/banner/6.jpg'
+        ], 
+    ];
     return response()->json($banner);
 });
