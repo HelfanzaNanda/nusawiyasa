@@ -66,7 +66,7 @@
         </div>
         <div class="card-footer">
           <div class="col-auto float-right ml-auto pb-2">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
+            <button type="submit" class="btn btn-primary float-right loading" 
             data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
               Submit
             </button>

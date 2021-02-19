@@ -77,8 +77,10 @@
             @foreach ($customer_terms as $key => $term)
                 <div class="col-md-6 mt-2">                      
                   <label >{{ $term->key_name }}</label>
+                  {{-- <label for="">term_ids[{{ $term->ref_term_purchasing_customer_id }}]</label> --}}
                   <input type="hidden" name="term_ids[{{ $term->ref_term_purchasing_customer_id }}]" id="id_new_img-{{ $key }}">
-                  <input class="form-control mb-2" data-id={{ $term->id }} onchange="readURL(this, {{ $key }});" type="file" 
+                  <input class="form-control mb-2" data-id={{ $term->id }} onchange="readURL(this, {{ $key }});"
+                   type="file" 
                   name="customer_terms[{{ $term->ref_term_purchasing_customer_id }}]" 
                   value="{{ $term->filepath.'/'.$term->filename }}">
                   <img id="preview-img-{{ $key }}" width="100" height="100"
@@ -89,7 +91,7 @@
         </div>
         <div class="card-footer">
           <div class="col-auto float-right ml-auto pb-2">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
+            <button type="submit" class="btn btn-primary float-right loading" 
             data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
               Submit
             </button>
@@ -144,6 +146,56 @@
     });
   }
 
+  $('form#update-form').submit( function( e ) {
+      e.preventDefault();
+      var loading_text = $('.loading').data('loading-text');
+      $('.loading').html(loading_text).attr('disabled', true);
+      var form_data = new FormData( this );
+
+      $.ajax({
+        type: 'post',
+        url: BASE_URL+'/bookings',
+        data: form_data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        dataType: 'json',
+        beforeSend: function() {
+        },
+        success: function(msg) {
+          console.log(msg);
+          $('.loading').html('Submit').attr('disabled', false)
+          
+          if(msg.status == 'success'){
+              setTimeout(function() {
+                  swal({
+                      title: "Sukses",
+                      text: msg.message,
+                      type:"success",
+                      html: true
+                  }, function() {
+                      // $('#main-table').DataTable().ajax.reload(null, false);
+                      $('#add-modal').modal('hide');
+                      window.location.replace("{{url('/booking-page')}}");
+                  });
+              }, 500);
+          } else {
+              swal({
+                  title: "Gagal",
+                  text: msg.message,
+                  showConfirmButton: true,
+                  confirmButtonColor: '#0760ef',
+                  type:"error",
+                  html: true
+              });
+          }
+        },
+        error : function(jqXHR, textStatus, errorThrown){
+          $('.loading').html('Submit').attr('disabled', false)
+        }
+      })
+  });
+
   // $('#input-payment-type').on('change', function() {
     
   //   var payment_type = $(this).val();
@@ -185,53 +237,6 @@
 
   
 
-  $('form#update-form').submit( function( e ) {
-    e.preventDefault();
-    var loading_text = $('.loading').data('loading-text');
-        $('.loading').html(loading_text).attr('disabled', true);
-    var form_data = new FormData( this );
-
-    $.ajax({
-      type: 'post',
-      url: BASE_URL+'/bookings',
-      data: form_data,
-      cache: false,
-      contentType: false,
-      processData: false,
-      dataType: 'json',
-      beforeSend: function() {
-      },
-      success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
-        
-        if(msg.status == 'success'){
-            setTimeout(function() {
-                swal({
-                    title: "Sukses",
-                    text: msg.message,
-                    type:"success",
-                    html: true
-                }, function() {
-                    // $('#main-table').DataTable().ajax.reload(null, false);
-                    $('#add-modal').modal('hide');
-                    window.location.replace("{{url('/booking-page')}}");
-                });
-            }, 500);
-        } else {
-            swal({
-                title: "Gagal",
-                text: msg.message,
-                showConfirmButton: true,
-                confirmButtonColor: '#0760ef',
-                type:"error",
-                html: true
-            });
-        }
-      },
-      error : function(jqXHR, textStatus, errorThrown){
-        $('.loading').html('Submit').attr('disabled', false)
-      }
-    })
-  });
+ 
 </script>
 @endsection

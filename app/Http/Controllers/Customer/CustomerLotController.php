@@ -4,11 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Models\Cluster\Lot;
-use App\Http\Models\Customer\Customer;
-use App\Http\Models\Customer\CustomerCost;
-use App\Http\Models\Customer\CustomerLot;
-use App\Http\Models\Customer\CustomerPayment;
-use App\Http\Models\Customer\CustomerTerm;
+use App\Http\Models\Customer\{Customer, CustomerCost, CustomerLot, CustomerPayment, CustomerTerm};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
