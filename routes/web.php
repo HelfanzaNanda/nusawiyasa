@@ -78,7 +78,7 @@ Route::group([
 
 	Route::get('/city_by_province/{province_id}', ['as' => 'show.city', 'uses' => 'Ref\CityController@cityByProvince']);
 
-	Route::get('/ref/term_purchasing_customers/{id}', ['as' => 'ref.term_purchasing_customers', 'uses' => 'Ref\RefTermPurchasingCustomerController@get']);
+	Route::get('/ref/term_purchasing_customers/{id?}', ['as' => 'ref.term_purchasing_customers', 'uses' => 'Ref\RefTermPurchasingCustomerController@get']);
 
 	Route::group(['namespace' => 'Ref'], function () {
 		Route::get('/customer-cost', 'RefTermPurchasingCustomerController@index_customer_cost');

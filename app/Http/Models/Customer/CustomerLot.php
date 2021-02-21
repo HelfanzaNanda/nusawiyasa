@@ -3,12 +3,14 @@
 namespace App\Http\Models\Customer;
 
 use App\Http\Models\Cluster\Cluster;
-use File;
+use App\Http\Models\Cluster\Lot;
 use App\Http\Models\Customer\CustomerCost;
 use App\Http\Models\Customer\CustomerTerm;
-use DB;
-use Illuminate\Database\Eloquent\Model;
 use App\Http\Models\Ref\RefGeneralStatuses;
+use App\Http\Models\Ref\RefTermPurchasingCustomer;
+use DB;
+use File;
+use Illuminate\Database\Eloquent\Model;
 use Redirect;
 
 class CustomerLot extends Model
@@ -293,8 +295,14 @@ class CustomerLot extends Model
         $insert = self::create($customer_lot);
 
         if ($insert) {
+            $exception_empty_account = [];
+
             if (isset($params['customer_costs']) && count($params['customer_costs']) > 0) {
                 foreach($params['customer_costs'] as $key => $customer_cost) {
+                    $query_customer_cost = RefTermPurchasingCustomer::where('id', $key)->first();
+                    if (empty($query_customer_cost['account'])) {
+                        $exception_empty_account[] = $query_customer_cost['name'];
+                    }
                     CustomerCost::create([
                         'customer_id' => $params['customer_id'],
                         'ref_term_purchasing_customer_id' => $key,
@@ -303,6 +311,13 @@ class CustomerLot extends Model
                         'lot_id' => $params['lot_id']
                     ]);
                 }
+            }
+
+            if (count($exception_empty_account) > 0) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Anda Belum Melakukan Setting Akun Pada '.implode(', ', $exception_empty_account).'. <br/><b>Harap Menuju Menu Master Biaya!</b>'
+                ]);
             }
 
             if ($request->file('customer_terms')) {
@@ -343,15 +358,12 @@ class CustomerLot extends Model
                         ]);
                     }
                 }
-
-                DB::commit();
-
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Data Berhasil Disimpan'
-                ]);
             }
         }
+
+        Lot::where('id', $params['lot_id'])->update([
+            'lot_status' => 2
+        ]);
 
         DB::commit();
 
