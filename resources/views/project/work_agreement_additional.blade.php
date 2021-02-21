@@ -184,7 +184,7 @@ $(document).ready(function(){
 
         swal({
             title: 'Apakah kamu yakin untuk menghapus?',
-            text: "Data ini tidak bisa dikebalikan lagi",
+            text: "Data ini tidak bisa dikembalikan lagi",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

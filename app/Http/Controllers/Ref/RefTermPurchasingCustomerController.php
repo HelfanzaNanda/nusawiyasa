@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Ref;
 
 use App\Http\Controllers\Controller;
+use App\Http\Models\Accounting\AccountingMaster;
 use App\Http\Models\Customer\Customer;
 use App\Http\Models\Ref\RefTermPurchasingCustomer;
 use Illuminate\Http\Request;
@@ -10,9 +11,16 @@ use Illuminate\Support\Facades\DB;
 
 class RefTermPurchasingCustomerController extends Controller
 {
-    public function index()
+    public function index_customer_cost()
     {
-        return view('customer.index');
+        $coa = AccountingMaster::getChildrenCOA();
+
+        return view('ref.customer_cost.index', compact('coa'));
+    }
+
+    public function index_customer_term()
+    {
+        return view('ref.customer_term.index');
     }
 
     public function create()
@@ -23,7 +31,7 @@ class RefTermPurchasingCustomerController extends Controller
     public function insertData(Request $request)
     {
         $params = $request->all();
-        return MOP::createOrUpdate($params, $request->method(), $request);
+        return RefTermPurchasingCustomer::createOrUpdate($params, $request->method(), $request);
     }
 
     public function edit($id)
@@ -33,14 +41,20 @@ class RefTermPurchasingCustomerController extends Controller
 
     public function datatables(Request $request)
     {
-        $_user_id = session()->get('_id');
-        $_role_id = session()->get('_role_id');
+        $session = [
+            '_login' => session()->get('_login'),
+            '_id' => session()->get('_id'),
+            '_name' => session()->get('_name'),
+            '_email' => session()->get('_email'),
+            '_username' => session()->get('_username'),
+            '_phone' => session()->get('_phone'),
+            '_role_id' => session()->get('_role_id'),
+            '_role_name' => session()->get('_role_name'),
+            '_cluster_id' => session()->get('_cluster_id')
+        ];
 
         $columns = [
-            0 => 'mop.id',
-            1 => 'mop.update_date',
-            2 => 'mop.project_name',
-            4 => 'mop.status'
+            0 => 'ref_term_purchasing_customers.id'
         ];
 
         $dataOrder = [];
@@ -62,22 +76,31 @@ class RefTermPurchasingCustomerController extends Controller
 
         $search = $request->search['value'];
 
-        $filter = $request->only(['sDate', 'eDate']);
+        $filter = $request->only(['sDate', 'eDate', 'terms_type']);
 
-        $purchases = MOP::datatables($start, $limit, $order, $dir, $search, $filter);
+        $res = RefTermPurchasingCustomer::datatables($start, $limit, $order, $dir, $search, $filter, $session);
 
         $data = [];
 
-        if (!empty($purchases['data'])) {
-            foreach ($purchases['data'] as $row) {
-                $target_version = Version::where('id', $row['target_version'])->first();
-
+        if (!empty($res['data'])) {
+            foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
-                $nestedData['update_date'] = $row['update_date'];
-                $nestedData['project_name'] = $row['project_name'];
-                $nestedData['target_version'] = $target_version['name'];
-                $nestedData['status'] = $row['status'];
+                $nestedData['name'] = $row['name'];
+                $nestedData['payment_type'] = $row['payment_type'];
+                $nestedData['terms_type'] = $row['terms_type'];
+                $nestedData['type'] = $row['type'];
+                $nestedData['account_name'] = $row['account_name'];
+                $nestedData['account_type'] = $row['account_type'];
+                $nestedData['is_active'] = $row['is_active'];
+                $nestedData['is_deleted'] = $row['is_deleted'];
                 $nestedData['action'] = '';
+                $nestedData['action'] .='        <div class="dropdown dropdown-action">';
+                $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';
+                $nestedData['action'] .='            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(159px, 32px, 0px);">';
+                $nestedData['action'] .='                <a class="dropdown-item" href="#" id="edit" data-id="'.$row['id'].'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
+                $nestedData['action'] .='                <a class="dropdown-item" href="#" id="delete" data-id="'.$row['id'].'"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
+                $nestedData['action'] .='            </div>';
+                $nestedData['action'] .='        </div>';
 
                 $data[] = $nestedData;
             }
@@ -85,8 +108,8 @@ class RefTermPurchasingCustomerController extends Controller
 
         $json_data = [
             'draw'  => intval($request->draw),
-            'recordsTotal'  => intval($purchases['totalData']),
-            'recordsFiltered' => intval($purchases['totalFiltered']),
+            'recordsTotal'  => intval($res['totalData']),
+            'recordsFiltered' => intval($res['totalFiltered']),
             'data'  => $data,
             'order' => $order
         ];
@@ -112,5 +135,15 @@ class RefTermPurchasingCustomerController extends Controller
         }
 
         return $res;
+    }
+
+    public function delete($id, Request $request)
+    {
+        RefTermPurchasingCustomer::where('id', $id)->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data Sukses Dihapus'
+        ]);
     }
 }

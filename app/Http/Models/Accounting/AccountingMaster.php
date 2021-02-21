@@ -51,4 +51,26 @@ class AccountingMaster extends Model
             'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string'],
         ];
     }
+
+    public static function getChildrenCOA()
+    {
+        $coa = self::get();
+
+        $collect = collect($coa);
+        $children = [];
+        $res_coa = [];
+
+        foreach($coa as $row) {
+            $children[$row['coa']] = $row['name'];
+        }
+
+        foreach($children as $key => $child) {
+            $check = $collect->where('sub_coa', $key)->first();
+            if (!$check) {
+                $res_coa[$key] = $child;
+            }
+        }
+
+        return $res_coa;
+    }
 }

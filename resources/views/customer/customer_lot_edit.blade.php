@@ -61,13 +61,12 @@
           <hr>
           <h4 class="text-primary">Biaya</h4>
           <div class="row" id="cost">
-            {{-- {{ dd($customer_costs) }} --}}
             @foreach ($customer_costs as $cost)
               <div class="col-md-6 mt-2">
                 <label>{{ $cost->key_name }}</label>
                 <input class="form-control" type="number" 
                 name="customer_costs[{{ $cost->ref_term_purchasing_customer_id }}]" 
-                value="{{ number_format(floatval($cost->value)) }}">
+                value="{{ floatval($cost->value) }}">
               </div>
             @endforeach
           </div>

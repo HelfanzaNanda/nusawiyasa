@@ -194,27 +194,6 @@
             </li>
         @endif
     @endif
-
-    @if($user->hasAnyPermission(['user', 'user-permissions', 'roles']))
-        <li class="menu-title">
-            <span>Pengaturan </span>
-        </li>
-        @if ($user->can('user'))
-            <li {{ (request()->segment(1) == 'user') ? 'class=active' : '' }}>
-                <a href="{{url('/user')}}"><i class="la la-file-alt"></i> <span>Pengguna</span></a>
-            </li>
-        @endif
-        @if ($user->can('user-permissions'))
-        <li {{ (request()->segment(1) == 'user-permissions') ? 'class=active' : '' }}>
-            <a href="{{url('/user-permissions')}}"><i class="la la-wrench"></i> <span>Izin Pengguna</span></a>
-        </li>
-        @endif
-        @if ($user->can('roles'))
-        <li {{ (request()->segment(1) == 'roles') ? 'class=active' : '' }}>
-            <a href="{{url('/roles')}}"><i class="la la-gears"></i> <span>Hak Akses</span></a>
-        </li>
-        @endif
-    @endif
     
     @if($user->hasAnyPermission(['debt', 'accounting-master', 'accounting-general-ledger', 
         'accounting-ledger', 'accounting-profit-loss', 'accounting-balance-sheet']))
@@ -266,5 +245,36 @@
         <li {{ (request()->segment(1) == 'slf-template') ? 'class=active' : '' }}>
             <a href="{{url('/slf-template')}}"><i class="la la-file-alt"></i> <span>SLF Template</span></a>
         </li>
+    @endif
+
+    @if($user->hasAnyPermission(['user', 'user-permissions', 'roles', 'customer-cost', 'customer-term']))
+        <li class="menu-title">
+            <span>Pengaturan </span>
+        </li>
+        @if ($user->can('user'))
+            <li {{ (request()->segment(1) == 'user') ? 'class=active' : '' }}>
+                <a href="{{url('/user')}}"><i class="la la-file-alt"></i> <span>Pengguna</span></a>
+            </li>
+        @endif
+        @if ($user->can('user-permissions'))
+        <li {{ (request()->segment(1) == 'user-permissions') ? 'class=active' : '' }}>
+            <a href="{{url('/user-permissions')}}"><i class="la la-wrench"></i> <span>Izin Pengguna</span></a>
+        </li>
+        @endif
+        @if ($user->can('roles'))
+        <li {{ (request()->segment(1) == 'roles') ? 'class=active' : '' }}>
+            <a href="{{url('/roles')}}"><i class="la la-gears"></i> <span>Hak Akses</span></a>
+        </li>
+        @endif
+        @if ($user->can('customer-cost'))
+        <li {{ (request()->segment(1) == 'customer-cost') ? 'class=active' : '' }}>
+            <a href="{{url('/customer-cost')}}"><i class="la la-gears"></i> <span>Master Biaya</span></a>
+        </li>
+        @endif
+        @if ($user->can('customer-term'))
+        <li {{ (request()->segment(1) == 'customer-term') ? 'class=active' : '' }}>
+            <a href="{{url('/customer-term')}}"><i class="la la-gears"></i> <span>Master Persyaratan</span></a>
+        </li>
+        @endif
     @endif
 </ul>

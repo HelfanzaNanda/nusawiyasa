@@ -78,7 +78,19 @@ Route::group([
 
 	Route::get('/city_by_province/{province_id}', ['as' => 'show.city', 'uses' => 'Ref\CityController@cityByProvince']);
 
-	Route::get('/ref/term_purchasing_customers', ['as' => 'ref.term_purchasing_customers', 'uses' => 'Ref\RefTermPurchasingCustomerController@get']);
+	Route::get('/ref/term_purchasing_customers/{id}', ['as' => 'ref.term_purchasing_customers', 'uses' => 'Ref\RefTermPurchasingCustomerController@get']);
+
+	Route::group(['namespace' => 'Ref'], function () {
+		Route::get('/customer-cost', 'RefTermPurchasingCustomerController@index_customer_cost');
+		Route::get('/customer-term', 'RefTermPurchasingCustomerController@index_customer_term');
+
+
+		Route::post('/ref-customer-cost-term', 'RefTermPurchasingCustomerController@insertData');
+		Route::post('/ref-customer-cost-term-datatables', 'RefTermPurchasingCustomerController@datatables');
+		Route::get('/ref-customer-cost-term/{id:}', 'RefTermPurchasingCustomerController@get');
+		Route::get('/ref-customer-cost-term-detail/{id:}', 'RefTermPurchasingCustomerController@detail');
+		Route::delete('/ref-customer-cost-term/{id:}', 'RefTermPurchasingCustomerController@delete');
+	});
 
 	Route::get('/spk-project', 'Project\SPKProjectController@index');
 	Route::get('/spk-project-pdf/{id}', 'Project\SPKProjectController@generatePdf');
@@ -315,11 +327,8 @@ Route::group([
         });
 	});
 
-
 	Route::get('slf-template', 'Slf\SlfTemplateController@index');
-	Route::post('slf-template-store', 'Slf\SlfTemplateController@store');
-
-	
+	Route::post('slf-template-store', 'Slf\SlfTemplateController@store');	
 });
 
 Route::get('number/generate', 'NumberGenerateController@generate');
