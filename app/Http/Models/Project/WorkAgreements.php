@@ -2,9 +2,10 @@
 
 namespace App\Http\Models\Project;
 
+use App\Http\Models\Customer\CustomerLot;
 use File;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @property string     $number
@@ -267,6 +268,18 @@ class WorkAgreements extends Model
         return $this->hasMany(WorkAgreementAdditionals::class, 'spk_worker_id');
     }
 
+    public function customerLot()
+    {
+        return $this->belongsTo(CustomerLot::class);
+    }
+    
+    public static function getById($id, $params = null)
+    {
+        $data = self::where('id', $id)->with('customerLot.lot')
+                    ->first();
+
+        return response()->json($data);
+    }
     // Scopes...
 
     // Functions ...

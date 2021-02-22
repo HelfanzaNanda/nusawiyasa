@@ -121,6 +121,7 @@ Route::group([
 	Route::post('/work-agreement-datatables', 'Project\WorkAgreementController@datatables');
 	Route::get('/work-agreement/{id}/delete', 'Project\WorkAgreementController@delete');
 	Route::get('/work-agreement/{id}', 'Project\WorkAgreementController@get');
+	Route::get('/work_agreements/{id?}', 'Project\WorkAgreementController@get');
 
 	Route::get('/work-agreement/{spk_worker_id}/additional', 'Project\WorkAgreementAdditionalsController@index');
 	Route::post('/work-agreement/{spk_worker_id}/additional', 'Project\WorkAgreementAdditionalsController@insertData');

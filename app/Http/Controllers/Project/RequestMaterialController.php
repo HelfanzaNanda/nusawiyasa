@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Project;
 
 use App\Http\Controllers\Controller;
-use App\Http\Models\Project\RequestMaterials;
-use App\Http\Models\Project\SpkProjects;
 use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Cluster\Lot;
 use App\Http\Models\Project\RequestMaterialItems;
+use App\Http\Models\Project\RequestMaterials;
+use App\Http\Models\Project\SpkProjects;
+use App\Http\Models\Project\WorkAgreements;
 use App\Http\Models\Ref\Province;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade as PDF;
 
 class RequestMaterialController extends Controller
 {
@@ -22,7 +23,8 @@ class RequestMaterialController extends Controller
 
     public function create()
     {
-        $spk = SpkProjects::get();
+        // $spk = SpkProjects::get();
+        $spk = WorkAgreements::get();
         $clusters = Cluster::selectClusterBySession();
         return view('project.request_material_create', compact('spk', 'clusters'));
     }
@@ -36,7 +38,7 @@ class RequestMaterialController extends Controller
 
     public function edit($id)
     {
-        $spk = SpkProjects::all();
+        $spk = WorkAgreements::get();
         $clusters = Cluster::selectClusterBySession();
         $lots = Lot::all();
 

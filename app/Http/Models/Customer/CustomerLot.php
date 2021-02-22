@@ -300,7 +300,7 @@ class CustomerLot extends Model
             if (isset($params['customer_costs']) && count($params['customer_costs']) > 0) {
                 foreach($params['customer_costs'] as $key => $customer_cost) {
                     $query_customer_cost = RefTermPurchasingCustomer::where('id', $key)->first();
-                    if (empty($query_customer_cost['account'])) {
+                    if (empty($query_customer_cost['income_account']) && empty($query_customer_cost['receivable_account']) && $query_customer_cost['account_type'] != 'discount') {
                         $exception_empty_account[] = $query_customer_cost['name'];
                     }
                     CustomerCost::create([

@@ -429,7 +429,7 @@
     e.preventDefault();
     let id = $(this).val();
     $.ajax({
-      url: BASE_URL+'/spk_projects/'+id,
+      url: BASE_URL+'/work_agreements/'+id,
       type: "GET",
       dataType: "json",
       beforeSend: function() {

@@ -89,9 +89,6 @@ class CustomerLotController extends Controller
                 $nestedData['action'] .='                <a class="dropdown-item" href="'.url('/bookings/edit/'.$row['id']).'"><i class="fa fa-info m-r-5"></i> Edit</a>';
                 $nestedData['action'] .='                <a class="dropdown-item" href="'.url('/bookings/detail/'.$row['id']).'"><i class="fa fa-info m-r-5"></i> Detail</a>';
                 $nestedData['action'] .='                <button class="dropdown-item" id="delete-data" data-id="'.$row['id'].'"><i class="fa fa-info m-r-5"></i> Hapus</button>';
-                if ($row['payment_type'] == 'cash_in_stages') {
-                    $nestedData['action'] .='                <button class="dropdown-item" id="booking-installment" data-id="'.$row['id'].'"><i class="fa fa-info m-r-5"></i> Cicilan Cash</button>';
-                }
                 if ($row['payment_type'] == 'credit') {
                     $nestedData['action'] .='                <button class="dropdown-item" id="update-bank-status" data-id="'.$row['id'].'"><i class="fa fa-info m-r-5"></i> Update Status Bank</button>';
                 }

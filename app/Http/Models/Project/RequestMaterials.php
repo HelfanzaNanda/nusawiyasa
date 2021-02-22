@@ -113,8 +113,8 @@ class RequestMaterials extends Model
             $_select[] = $select['alias'];
         }
 
-        $qry = self::select($_select)->addSelect('spk_projects.number as spk_number')
-                    ->leftJoin('spk_projects', 'spk_projects.id', '=', 'request_materials.spk_id');
+        $qry = self::select($_select)->addSelect('spk_workers.number as spk_number')
+                    ->leftJoin('spk_workers', 'spk_workers.id', '=', 'request_materials.spk_id');
         
         if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6, 10])) && isset($session['_cluster_id'])) {
             $qry->where('cluster_id', $session['_cluster_id']);
@@ -247,8 +247,8 @@ class RequestMaterials extends Model
             $_select[] = $select['alias'];
         }
 
-        $db = self::select($_select)->addSelect('spk_projects.number as spk_number')
-                    ->join('spk_projects', 'spk_projects.id', '=', 'request_materials.spk_id');
+        $db = self::select($_select)->addSelect('spk_workers.number as spk_number')
+                    ->join('spk_workers', 'spk_workers.id', '=', 'request_materials.spk_id');
 
         if ($params) {
             foreach (array($params) as $k => $v) {
@@ -316,8 +316,8 @@ class RequestMaterials extends Model
             $_select[] = $select['alias'];
         }
 
-        $db = self::select($_select)->addSelect('spk_projects.number as spk_number')
-                    ->join('spk_projects', 'spk_projects.id', '=', 'request_materials.spk_id');
+        $db = self::select($_select)->addSelect('spk_workers.number as spk_number')
+                    ->join('spk_workers', 'spk_workers.id', '=', 'request_materials.spk_id');
 
         if ($params) {
             foreach (array($params) as $k => $v) {

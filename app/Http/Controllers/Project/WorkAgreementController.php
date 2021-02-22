@@ -124,9 +124,19 @@ class WorkAgreementController extends Controller
         return json_encode($json_data);
     }
 
-    public function get($id)
+    public function get($id, Request $request)
     {
-        return WorkAgreements::findOrFail($id);
+        $request = $request->all();
+
+        if ($id != null) {
+            $res = WorkAgreements::getById($id, $request);
+        } else if (isset($request['all']) && $request['all']) {
+            $res = WorkAgreements::getAllResult($request);
+        } else {
+            $res = WorkAgreements::getPaginatedResult($request);
+        }
+
+        return $res;
     }
 
     public function delete($id)
