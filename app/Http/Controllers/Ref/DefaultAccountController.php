@@ -5,22 +5,17 @@ namespace App\Http\Controllers\Ref;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Accounting\AccountingMaster;
 use App\Http\Models\Customer\Customer;
-use App\Http\Models\Ref\RefTermPurchasingCustomer;
+use App\Http\Models\Ref\DefaultAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class RefTermPurchasingCustomerController extends Controller
+class DefaultAccountController extends Controller
 {
-    public function index_customer_cost()
+    public function index()
     {
         $coa = AccountingMaster::getChildrenCOA();
 
-        return view('ref.customer_cost.index', compact('coa'));
-    }
-
-    public function index_customer_term()
-    {
-        return view('ref.customer_term.index');
+        return view('ref.default_account.'.__FUNCTION__, compact('coa'));
     }
 
     public function create()
@@ -31,7 +26,7 @@ class RefTermPurchasingCustomerController extends Controller
     public function insertData(Request $request)
     {
         $params = $request->all();
-        return RefTermPurchasingCustomer::createOrUpdate($params, $request->method(), $request);
+        return DefaultAccount::createOrUpdate($params, $request->method(), $request);
     }
 
     public function edit($id)
@@ -54,7 +49,7 @@ class RefTermPurchasingCustomerController extends Controller
         ];
 
         $columns = [
-            0 => 'ref_term_purchasing_customers.id'
+            0 => 'default_accounts.id'
         ];
 
         $dataOrder = [];
@@ -76,9 +71,9 @@ class RefTermPurchasingCustomerController extends Controller
 
         $search = $request->search['value'];
 
-        $filter = $request->only(['sDate', 'eDate', 'terms_type']);
+        $filter = $request->only(['sDate', 'eDate']);
 
-        $res = RefTermPurchasingCustomer::datatables($start, $limit, $order, $dir, $search, $filter, $session);
+        $res = DefaultAccount::datatables($start, $limit, $order, $dir, $search, $filter, $session);
 
         $data = [];
 
@@ -86,20 +81,14 @@ class RefTermPurchasingCustomerController extends Controller
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
                 $nestedData['name'] = $row['name'];
-                $nestedData['payment_type'] = $row['payment_type'];
-                $nestedData['terms_type'] = $row['terms_type'];
-                $nestedData['type'] = $row['type'];
-                $nestedData['income'] = $row['income_account_code'].' | '.$row['income_account_name'];
-                $nestedData['receivable'] = $row['receivable_account_code'].' | '.$row['receivable_account_name'];
-                $nestedData['account_type'] = $row['account_type'];
-                $nestedData['is_active'] = $row['is_active'];
-                $nestedData['is_deleted'] = $row['is_deleted'];
+                $nestedData['note'] = $row['note'];
+                $nestedData['account_name'] = $row['account_name'];
+                $nestedData['account_code'] = $row['account_code'];
                 $nestedData['action'] = '';
                 $nestedData['action'] .='        <div class="dropdown dropdown-action">';
                 $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';
                 $nestedData['action'] .='            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(159px, 32px, 0px);">';
                 $nestedData['action'] .='                <a class="dropdown-item" href="#" id="edit" data-id="'.$row['id'].'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
-                $nestedData['action'] .='                <a class="dropdown-item" href="#" id="delete" data-id="'.$row['id'].'"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
                 $nestedData['action'] .='            </div>';
                 $nestedData['action'] .='        </div>';
 
@@ -128,11 +117,11 @@ class RefTermPurchasingCustomerController extends Controller
         $request = $request->all();
 
         if ($id != null) {
-            $res = RefTermPurchasingCustomer::getById($id, $request);
+            $res = DefaultAccount::getById($id, $request);
         } else if (isset($request['all']) && $request['all']) {
-            $res = RefTermPurchasingCustomer::getAllResult($request);
+            $res = DefaultAccount::getAllResult($request);
         } else {
-            $res = RefTermPurchasingCustomer::getPaginatedResult($request);
+            $res = DefaultAccount::getPaginatedResult($request);
         }
 
         return $res;
@@ -140,7 +129,7 @@ class RefTermPurchasingCustomerController extends Controller
 
     public function delete($id, Request $request)
     {
-        RefTermPurchasingCustomer::where('id', $id)->delete();
+        DefaultAccount::where('id', $id)->delete();
 
         return response()->json([
             'status' => 'success',

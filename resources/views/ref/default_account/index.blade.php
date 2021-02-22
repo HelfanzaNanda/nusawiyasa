@@ -1,20 +1,20 @@
 @extends('layouts.main')
 
-@section('title', 'Customer')
+@section('title', 'Default Akun')
 
 @section('content')
 <!-- Page Header -->
 <div class="page-header">
   <div class="row align-items-center">
     <div class="col">
-      <h3 class="page-title">Data Master Biaya Konsumen</h3>
+      <h3 class="page-title">Data Default Akun</h3>
       <ul class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index-2.html">Master Biaya Konsumen</a></li>
-        <li class="breadcrumb-item active">Data Master Biaya Konsumen</li>
+        <li class="breadcrumb-item"><a href="index-2.html">Default Akun</a></li>
+        <li class="breadcrumb-item active">Data Default Akun</li>
       </ul>
     </div>
     <div class="col-auto float-right ml-auto">
-      <a href="#" class="btn add-btn" id="show-add-modal"><i class="fa fa-plus"></i> Tambah Master Biaya Konsumen</a>
+      
     </div>
   </div>
 </div>
@@ -24,7 +24,7 @@
   <div class="col-md-12 d-flex">
     <div class="card card-table flex-fill">
       <div class="card-header">
-        <h3 class="card-title mb-0">Data Master Biaya Konsumen</h3>
+        <h3 class="card-title mb-0">Data Default Akun</h3>
       </div>
       <div class="card-body ml-3 mt-3 mr-3 mb-3">
         <div class="table-responsive">
@@ -33,11 +33,9 @@
               <tr>
                 <th>#</th>
                 <th>Nama</th>
-                <th>Tipe Pembayaran</th>
-                <th>Tipe Input</th>
-                <th>Akun Penerimaan</th>
-                <th>Akun Piutang</th>
-                <th>Tipe</th>
+                <th>Deskripsi</th>
+                <th>Kode Akun</th>
+                <th>Nama Akun</th>
                 <th class="text-right" width="10%">Aksi</th>
               </tr>
             </thead>
@@ -56,7 +54,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Tambah Master Biaya Konsumen</h5>
+        <h5 class="modal-title">Tambah Default Akun</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -65,59 +63,21 @@
         <form id="add-form" method="POST" action="#">
           {!! csrf_field() !!}
           <input type="hidden" name="id" id="id">
-          <input type="hidden" name="terms_type" value="cost">
           <div class="row"> 
             <div class="col-sm-12"> 
               <div class="form-group">
-                <label>Nama</label>
-                <input class="form-control" type="text" name="name" id="name">
+                <label>Nama : <span id="account-name"></span></label>
               </div>
               <div class="form-group">
-                <label>Tipe Pembayaran</label>
-                <select name="payment_type" id="payment-type" class="form-control">
-                  <option value=""> - Pilih Tipe Pembayaran - </option>
-                  <option value="cash">Tunai</option>
-                  <option value="cash_in_stages">Tunai Bertahap</option>
-                  <option value="credit">Kredit</option>
-                </select>
+                <label>Deskripsi : <span id="description"></span></label>
               </div>
               <div class="form-group">
-                <label>Tipe Input</label>
-                <select name="type" id="type" class="form-control">
-                  <option value=""> - Pilih Tipe Input - </option>
-                  <option value="currency">Nominal Uang</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Akun Penerimaan</label>
-                <select name="income_account" id="income-account" class="form-control">
-                  <option value=""> - Pilih Akun Yang Penerimaan - </option>
+                <label>Akun Berelasi</label>
+                <select name="value" id="value" class="form-control">
+                  <option value=""> - Pilih Akun Yang Berelasi - </option>
                   @foreach($coa as $key => $val)
-                    @if(substr($key, 0 , 1) == 4)
                     <option value="{{$key}}">{{$key}} | {{$val}}</option>
-                    @endif
                   @endforeach
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Akun Piutang</label>
-                <select name="receivable_account" id="receivable-account" class="form-control">
-                  <option value=""> - Pilih Akun Yang Piutang - </option>
-                  @foreach($coa as $key => $val)
-                    @if(substr($key, 0 , 1) == 1)
-                    <option value="{{$key}}">{{$key}} | {{$val}}</option>
-                    @endif
-                  @endforeach
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Tipe Akun</label>
-                <select name="account_type" id="account-type" class="form-control">
-                  <option value=""> - Pilih Tipe Akun - </option>
-                  <option value="cash">Penjualan Tunai</option>
-                  <option value="receivable">Piutang</option>
-                  <option value="discount">Diskon</option>
-                  <option value="tax">Pajak</option>
                 </select>
               </div>
             </div>
@@ -157,7 +117,7 @@
       // "searching": false,
       // "ordering": false,
       "ajax":{
-          "url": BASE_URL+"/ref-customer-cost-term-datatables",
+          "url": BASE_URL+"/default-account-datatables",
           "dataType": "json",
           "type": "POST",
           "data":function(d) { 
@@ -168,11 +128,9 @@
       "columns": [
           {data: 'id', name: 'id', width: '5%', "visible": false},
           {data: 'name', name: 'name'},
-          {data: 'payment_type', name: 'payment_type'},
-          {data: 'type', name: 'type'},
-          {data: 'income', name: 'income'},
-          {data: 'receivable', name: 'receivable'},
-          {data: 'account_type', name: 'account_type'},
+          {data: 'note', name: 'note'},
+          {data: 'account_code', name: 'account_code'},
+          {data: 'account_name', name: 'account_name'},
           {data: 'action', name: 'action', className: 'text-right'},
       ],
   });
@@ -193,7 +151,7 @@
     }, function(){
       $.ajax({
         type: 'delete',
-        url: BASE_URL+'/ref-customer-cost-term/'+id,
+        url: BASE_URL+'/default-account/'+id,
         data: {
             '_token' : "{{csrf_token()}}"
         },
@@ -236,7 +194,7 @@
       $('#update-modal').modal('show')
       
       $.ajax({
-        url : BASE_URL+'/ref/term_purchasing_customers/'+id,
+        url : BASE_URL+'/default_accounts/'+id,
         type : 'GET',
         dataType: "json",
         beforeSend: function() {
@@ -244,12 +202,9 @@
         },
         success: function(data) {
           $('#id').val(data.id)
-          $('#name').val(data.name);
-          $('#payment-type').val(data.payment_type).trigger('change');
-          $('#type').val(data.type).trigger('change');
-          $('#income-account').val(data.income_account).trigger('change');
-          $('#receivable-account').val(data.receivable_account).trigger('change');
-          $('#account-type').val(data.account_type).trigger('change');
+          $('#account-name').text(data.name);
+          $('#description').text(data.note);
+          $('#value').val(data.value).trigger('change');
           $('#add-modal').modal('show');
           // $('#input-province-update').select2()
           // $('#input-province-update').val(data.province)
@@ -267,23 +222,7 @@
       $('#add-modal').modal('show');
   });
 
-  $('#payment-type').select2({
-    width: '100%'
-  });
-
-  $('#type').select2({
-    width: '100%'
-  });
-
-  $('#income-account').select2({
-    width: '100%'
-  });
-
-  $('#receivable-account').select2({
-    width: '100%'
-  });
-
-  $('#account-type').select2({
+  $('#value').select2({
     width: '100%'
   });
 
@@ -295,7 +234,7 @@
     
     $.ajax({
       type: 'post',
-      url: BASE_URL+'/ref-customer-cost-term',
+      url: BASE_URL+'/default-account',
       data: form_data,
       cache: false,
       contentType: false,

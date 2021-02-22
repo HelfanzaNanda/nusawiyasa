@@ -247,7 +247,7 @@
         </li>
     @endif
 
-    @if($user->hasAnyPermission(['user', 'user-permissions', 'roles', 'customer-cost', 'customer-term']))
+    @if($user->hasAnyPermission(['user', 'user-permissions', 'roles', 'customer-cost', 'customer-term', 'default-account']))
         <li class="menu-title">
             <span>Pengaturan </span>
         </li>
@@ -274,6 +274,11 @@
         @if ($user->can('customer-term'))
         <li {{ (request()->segment(1) == 'customer-term') ? 'class=active' : '' }}>
             <a href="{{url('/customer-term')}}"><i class="la la-gears"></i> <span>Master Persyaratan</span></a>
+        </li>
+        @endif
+        @if ($user->can('default-account'))
+        <li {{ (request()->segment(1) == 'default-account') ? 'class=active' : '' }}>
+            <a href="{{url('/default-account')}}"><i class="la la-gears"></i> <span>Default Akun</span></a>
         </li>
         @endif
     @endif

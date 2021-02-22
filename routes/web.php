@@ -90,6 +90,13 @@ Route::group([
 		Route::get('/ref-customer-cost-term/{id:}', 'RefTermPurchasingCustomerController@get');
 		Route::get('/ref-customer-cost-term-detail/{id:}', 'RefTermPurchasingCustomerController@detail');
 		Route::delete('/ref-customer-cost-term/{id:}', 'RefTermPurchasingCustomerController@delete');
+
+		Route::get('/default-account', 'DefaultAccountController@index');
+		Route::post('/default-account', 'DefaultAccountController@insertData');
+		Route::post('/default-account-datatables', 'DefaultAccountController@datatables');
+		Route::get('/default-account-detail/{id:}', 'DefaultAccountController@detail');
+		Route::delete('/default-account/{id:}', 'DefaultAccountController@delete');
+		Route::get('/default_accounts/{id?}', 'DefaultAccountController@get');
 	});
 
 	Route::get('/spk-project', 'Project\SPKProjectController@index');

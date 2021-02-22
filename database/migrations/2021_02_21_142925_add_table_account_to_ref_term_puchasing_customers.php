@@ -14,7 +14,8 @@ class AddTableAccountToRefTermPuchasingCustomers extends Migration
     public function up()
     {
         Schema::table('ref_term_purchasing_customers', function (Blueprint $table) {
-            $table->string('account')->nullable();
+            $table->string('income_account')->nullable();
+            $table->string('receivable_account')->nullable();
             $table->string('account_type')->nullable();
         });
     }
@@ -27,7 +28,8 @@ class AddTableAccountToRefTermPuchasingCustomers extends Migration
     public function down()
     {
         Schema::table('ref_term_purchasing_customers', function (Blueprint $table) {
-            $table->dropColumn('account');
+            $table->dropColumn('income_account');
+            $table->dropColumn('receivable_account');
             $table->dropColumn('account_type');
         });
     }

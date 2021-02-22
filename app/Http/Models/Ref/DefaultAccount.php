@@ -6,20 +6,15 @@ use DB;
 use Redirect;
 use Illuminate\Database\Eloquent\Model;
 
-class RefTermPurchasingCustomer extends Model
+class DefaultAccount extends Model
 {
-	protected $table = 'ref_term_purchasing_customers';
+	protected $table = 'default_accounts';
 
 	protected $fillable = [
-		'name',
-		'payment_type',
-		'terms_type',
-		'type',
-		'is_active',
-		'is_deleted',
-        'income_account',
-        'receivable_account',
-        'account_type',
+        'name',
+        'key',
+        'value',
+        'note'
     ];
 
     private $operators = [
@@ -38,15 +33,10 @@ class RefTermPurchasingCustomer extends Model
 
         return [
             'id' => ['alias' => $model->table.'.id', 'type' => 'int'],
-			'name' => ['alias' => $model->table.'.name', 'type' => 'string'],
-			'payment_type' => ['alias' => $model->table.'.payment_type', 'type' => 'string'],
-			'terms_type' => ['alias' => $model->table.'.terms_type', 'type' => 'string'],
-			'type' => ['alias' => $model->table.'.type', 'type' => 'string'],
-			'is_active' => ['alias' => $model->table.'.is_active', 'type' => 'int'],
-			'is_deleted' => ['alias' => $model->table.'.is_deleted', 'type' => 'int'],
-            'income_account' => ['alias' => $model->table.'.income_account', 'type' => 'string'],
-            'receivable_account' => ['alias' => $model->table.'.receivable_account', 'type' => 'string'],
-            'account_type' => ['alias' => $model->table.'.account_type', 'type' => 'string'],
+            'name' => ['alias' => $model->table.'.name', 'type' => 'string'],
+            'key' => ['alias' => $model->table.'.key', 'type' => 'string'],
+            'value' => ['alias' => $model->table.'.value', 'type' => 'string'],
+            'note' => ['alias' => $model->table.'.note', 'type' => 'string'],
 			'created_at' => ['alias' => $model->table.'.created_at', 'type' => 'string'],
 			'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string'],
         ];
@@ -195,17 +185,7 @@ class RefTermPurchasingCustomer extends Model
             $_select[] = $select['alias'];
         }
 
-        $qry = self::select($_select)
-                        ->addSelect('a.name as income_account_name')
-                        ->addSelect('a.accounting_code as income_account_code')
-                        ->addSelect('b.name as receivable_account_name')
-                        ->addSelect('b.accounting_code as receivable_account_code')
-                        ->leftJoin('accounting_masters as a', 'a.coa', '=', 'ref_term_purchasing_customers.income_account')
-                        ->leftJoin('accounting_masters as b', 'b.coa', '=', 'ref_term_purchasing_customers.receivable_account');
-        
-        if (isset($filter['terms_type']) && $filter['terms_type']) {
-            $qry->where('terms_type', $filter['terms_type']);
-        }
+        $qry = self::select($_select)->addSelect('accounting_masters.name as account_name')->addSelect('accounting_masters.accounting_code as account_code')->leftJoin('accounting_masters', 'accounting_masters.coa', '=', 'default_accounts.value');
 
         $totalFiltered = $qry->count();
         
