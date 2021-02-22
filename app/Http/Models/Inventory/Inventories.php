@@ -356,4 +356,23 @@ class Inventories extends Model
                     ->join('clusters', 'clusters.id', 'inventories.cluster_id')
                     ->where('inventories.cluster_id', '=', $cluster)->get();
     }
+
+    public static function getByCluster($params)
+    {
+        
+        $_select = [];
+        foreach(array_values(self::mapSchema()) as $select) {
+            $_select[] = $select['alias'];
+        }
+
+        $db = self::select($_select)
+                ->addSelect('inventory_units.name as unit_name')
+                ->join('inventory_units', 'inventory_units.id', '=', 'inventories.unit_id')
+                ->where('inventories.cluster_id', $params['cluster_id'])->where('inventories.name', 'like', '%'. $params['name'] .'%');
+
+        //$data = self::where('cluster_id', $params['cluster_id'])->where('name', 'like', '%'. $params['name'] .'%')->get();
+        return response()->json([
+            'data' => $db->get()
+        ]);
+    }
 }

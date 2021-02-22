@@ -97,6 +97,11 @@
     width: '100%'
   });
 
+  var cluster_id = '';
+  $(document).on('change', '#input-cluster', function(){
+    cluster_id = $(this).val()
+  });
+
   $("#item").select2({
     width: '100%',
     minimumInputLength: 2,
@@ -107,6 +112,7 @@
       type: "GET",
       data: function (params) {
         var queryParameters = {
+          cluster_id: cluster_id,
           name: params.term
         }
         return queryParameters

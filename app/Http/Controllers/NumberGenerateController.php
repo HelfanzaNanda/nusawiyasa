@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Models\Accounting\AccountingJournal;
+use App\Http\Models\Accounting\Debt;
 use App\Http\Models\GeneralAdmin\WageSubmission;
 use App\Http\Models\Inventory\DeliveryOrders;
 use App\Http\Models\Inventory\ReceiptOfGoodsRequest;
@@ -100,6 +101,12 @@ class NumberGenerateController extends Controller
                     'field' => 'number',
                     'prefix' => $pref
                 ];
+            }else if($pref == 'DE'){
+                $data = [
+                    'class' => Debt::class,
+                    'field' => 'number',
+                    'prefix' => $pref
+                ];
             }else{
                 return response()->json([
                     'status' => 'error',
@@ -170,7 +177,10 @@ class NumberGenerateController extends Controller
         } else if ($pref == 'PU') {
             $data = WageSubmission::where('number' ,$request->number)->first();
             $params = ($data == null) ? $success : $error;
-        } else{
+        } else if ($pref == 'DE') {
+            $data = Debt::where('number' ,$request->number)->first();
+            $params = ($data == null) ? $success : $error;
+        }else{
             $params = [
                 'status' => 'error',
                 'message' => 'prefix tidak ditemukan'

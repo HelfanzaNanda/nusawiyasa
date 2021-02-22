@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Purchase;
 
+use App\Http\Models\Accounting\Debt;
 use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Cluster\Lot;
 use App\Http\Models\Inventory\Suppliers;
@@ -44,7 +45,7 @@ class PurchaseOrders extends Model
      * @var array
      */
     protected $fillable = [
-        'number', 'supplier_id', 'date', 'status', 'created_at', 'updated_at', 'fpp_number', 'type', 'note', 'subtotal', 'tax', 'delivery', 'other', 'total', 'approved_user_id', 'known_user_id', 'created_user_id', 'cluster_id', 'lot_id'
+        'number', 'supplier_id', 'date', 'status', 'created_at', 'updated_at', 'fpp_number', 'payment_type', 'type', 'note', 'subtotal', 'tax', 'delivery', 'other', 'total', 'approved_user_id', 'known_user_id', 'created_user_id', 'cluster_id', 'lot_id'
     ];
 
     /**
@@ -111,6 +112,7 @@ class PurchaseOrders extends Model
             'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string'],
             'fpp_number' => ['alias' => $model->table.'.fpp_number', 'type' => 'string'],
             'type' => ['alias' => $model->table.'.type', 'type' => 'string'],
+            'payment_type' => ['alias' => $model->table.'.payment_type', 'type' => 'string'],
             'note' => ['alias' => $model->table.'.note', 'type' => 'string'],
             'subtotal' => ['alias' => $model->table.'.subtotal', 'type' => 'string'],
             'tax' => ['alias' => $model->table.'.tax', 'type' => 'string'],
@@ -282,6 +284,7 @@ class PurchaseOrders extends Model
         $purchase_order['status'] = 4;
         $purchase_order['fpp_number'] = $params['fpp_number'];
         $purchase_order['type'] = $params['type'];
+        $purchase_order['payment_type'] = $params['payment_type'];
         $purchase_order['note'] = $params['note'];
         $purchase_order['subtotal'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['subtotal']));
         $purchase_order['tax'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['tax']));
@@ -295,10 +298,21 @@ class PurchaseOrders extends Model
         $purchase_order['known_user_id'] = 0;
         $purchase_order['created_user_id'] = session()->get('_id');
         $purchase_order['lot_id'] = $params['lot_id'];
+        $debt['number'] = $params['number_debt'] ?? 0;
+        $debt['supplier_id'] = $params['item_supplier_id'];
+        $debt['total'] = $params['total'];
+        $debt['date'] = $params['date'];
+        $debt['payment_plan_date'] = $params['payment_plan_date'] ?? now();
+        $debt['description'] = $params['note'];
         if (isset($params['id']) && $params['id']) {
             $id = $params['id'];
             unset($params['id']);
             $update = self::where('id', $id)->update($purchase_order);
+            if ($params['payment_type'] == 'credit') {
+                $tb_debt = Debt::whereId($params['id_debt'])->first();
+                $tb_debt->update($debt);
+            }
+            //Debt::upda
             self::adjustPOStatus($id);
 
             PurchaseOrderItems::where('purchase_order_id', $id)->delete();
@@ -329,6 +343,11 @@ class PurchaseOrders extends Model
         $insert = self::create($purchase_order);
 
         if ($insert) {
+            $debt['purchase_order_id'] = $insert->id;
+            if ($params['payment_type'] == 'credit') {
+                Debt::create($debt);
+            }
+
             foreach ($params['item_inventory_id'] as $key => $val) {
                 if ($params['checkbox'][$key] == "1") {
                     PurchaseOrderItems::create([

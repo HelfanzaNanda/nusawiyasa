@@ -141,11 +141,13 @@ $(document).ready(function() {
                   term += 'name="customer_terms['+value.id+']" >'
                   term += '<img id="preview-img-'+key+'" width="100" height="100"'
                   term += 'src="'+filtered_terms[0].filepath+'/'+filtered_terms[0].filename+'" >'
+                  term += '<a class="mt-2" id="preview-pdf-'+key+'" target="_blank" style="display:none">lihat pdf</a>'
                   // term += '<input class="form-control" type="file" name="customer_terms['+value.id+']">';
               }else{
                   term += '<input class="form-control mb-2"  onchange="readURL(this, '+key+');" type="file"'
                   term += 'name="customer_terms['+value.id+']" >'
                   term += '<img id="preview-img-'+key+'" width="100"  height="100" style="visibility: hidden;">'
+                  term += '<a class="mt-2" id="preview-pdf-'+key+'" target="_blank" style="display:none">lihat pdf</a>'
               }
               term += '</div>';
             }
@@ -164,15 +166,22 @@ $(document).ready(function() {
   function readURL(input, key) {
       var termId = input.getAttribute('data-id');
       if (input.files && input.files[0]) {
+        if (input.files[0].type == "application/pdf") {
+          $('#preview-pdf-'+key).show()
+          $('#preview-pdf-'+key).attr("href", URL.createObjectURL(event.target.files[0]))
+          $('#preview-img-'+key).hide()
+        }else{
           var reader = new FileReader();
           reader.onload = function (e) {
+              $('#preview-pdf-'+key).hide()
               $('#preview-img-'+key).attr('src', e.target.result).attr('style', "visibility: ''");
               $('#id_new_img-'+key).val(termId);
           };
           reader.readAsDataURL(input.files[0]);
-          
+        }
       }
   }
+
 
   $('#input-customer').select2({
     width: '100%'

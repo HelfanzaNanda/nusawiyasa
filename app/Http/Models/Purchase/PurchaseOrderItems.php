@@ -130,7 +130,7 @@ class PurchaseOrderItems extends Model
                 'date' => Carbon::parse($val->purchaseOrder->date)->translatedFormat('d F Y'),
                 'po_number' => $val->purchaseOrder->number,
                 'fpp_number' => $val->purchaseOrder->fpp_number,
-                'isRap' => $val->type == 'rap' ? true : false,
+                'isRap' => $val->purchaseOrder->type == 'rap' ? true : false,
                 //'receiver' => 'ini gatau',
                 'supplier_name' => $val->purchaseOrder->supplier ? $val->purchaseOrder->supplier->name : '-',
                 'supplier_address' => $val->purchaseOrder->supplier ? $val->purchaseOrder->supplier->address : '-',

@@ -16,6 +16,8 @@
             <label class="col-form-label col-md-2">No. PO</label>
             <div class="col-md-10">
               <input class="form-control floating" type="text" id="input-number" name="number" value="{{ $purchase->number }}">
+              <input class="form-control floating" type="hidden" id="input-number-debt" name="number_debt" value="{{ $debt ? $debt->number : '' }}">
+              <input class="form-control floating" type="hidden" name="id_debt" value="{{ $debt ? $debt->id : '' }}">
               <input type="hidden" name="id" value="{{ $purchase->id }}">
             </div>
           </div>
@@ -86,6 +88,20 @@
                 </label>
               </div>
 
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">Pembayaran</label>
+            <div class="col-md-10">
+              <input class="form-control floating" type="text" readonly name="payment_type" value="{{ $purchase->payment_type }}">            
+            </div>
+          </div>
+
+          <div class="form-group row payment-plan-date" style="display: {{ !$debt ? 'none' : '' }}">
+            <label class="col-form-label col-md-2">Rencana Pembayaran</label>
+            <div class="col-md-10">
+              <input class="form-control floating" type="text" id="input-payment-plan-date" name="payment_plan_date" value="{{ $debt? $debt->payment_plan_date : '' }}">
             </div>
           </div>
 
@@ -248,6 +264,28 @@
       }
     });
   }
+
+  if($('#input-payment-plan-date').length > 0) {
+    $('#input-payment-plan-date').datetimepicker({
+      format: 'YYYY-MM-DD',
+      icons: {
+        up: "fa fa-angle-up",
+        down: "fa fa-angle-down",
+        next: 'fa fa-angle-right',
+        previous: 'fa fa-angle-left'
+      }
+    });
+  }
+
+  $(document).on('change', '.payment-type', function() {
+      value = $(this).val();
+      console.log(value);
+      if (value == 'credit') {
+         $('.payment-plan-date').attr("style", "display : ")
+      }else{
+        $('.payment-plan-date').attr("style", "display : ")
+      }
+  })
 
   $("#item").select2({
     width: '100%',

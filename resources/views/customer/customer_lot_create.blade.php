@@ -131,7 +131,9 @@
             } else {
               term += '<div class="col-md-6 mt-2">';
               term += '<label>'+value.name+'</label>';
-              term += '<input class="form-control" type="file" name="customer_terms['+value.id+']">';
+              term += '<input class="form-control" type="file" onchange="readURL(this, '+key+');"  name="customer_terms['+value.id+']">';
+              term += '<img id="preview-img-'+key+'" width="100"  height="100" style="visibility: hidden;">'
+              term += '<a class="mt-2" id="preview-pdf-'+key+'" target="_blank" style="display:none">lihat pdf</a>'
               term += '</div>';
             }
           });
@@ -144,6 +146,26 @@
         // $('#city').empty();
     }
   });
+
+  function readURL(input, key) {
+      var termId = input.getAttribute('data-id');
+      if (input.files && input.files[0]) {
+        if (input.files[0].type == "application/pdf") {
+          $('#preview-pdf-'+key).show()
+          $('#preview-pdf-'+key).attr("href", URL.createObjectURL(event.target.files[0]))
+          $('#preview-img-'+key).hide()
+        }else{
+          var reader = new FileReader();
+          reader.onload = function (e) {
+              $('#preview-pdf-'+key).hide()
+              $('#preview-img-'+key).attr('src', e.target.result).attr('style', "visibility: ''");
+              $('#id_new_img-'+key).val(termId);
+          };
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+  }
+
 
   $('form#add-form').submit( function( e ) {
     e.preventDefault();
@@ -192,3 +214,4 @@
   });
 </script>
 @endsection
+
