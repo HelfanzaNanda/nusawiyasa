@@ -168,6 +168,6 @@ class EmployeController extends Controller
         ->loadview('employe.pdf', [
             'data' => $data
         ]);
-        return $pdf->download('Data diri '.$data['fullname'].'-'.Carbon::now().'.pdf');
+        return $pdf->download('Data diri '.$data['number'].'-'.Carbon::now().'.pdf');
     }
 }

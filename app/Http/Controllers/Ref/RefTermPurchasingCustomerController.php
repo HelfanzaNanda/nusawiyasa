@@ -8,6 +8,7 @@ use App\Http\Models\Customer\Customer;
 use App\Http\Models\Ref\RefTermPurchasingCustomer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Models\Ref\Province;
 
 class RefTermPurchasingCustomerController extends Controller
 {
@@ -20,7 +21,8 @@ class RefTermPurchasingCustomerController extends Controller
 
     public function index_customer_term()
     {
-        return view('ref.customer_term.index');
+        $coa = AccountingMaster::getChildrenCOA();
+        return view('ref.customer_term.index', compact(['coa']));
     }
 
     public function create()
