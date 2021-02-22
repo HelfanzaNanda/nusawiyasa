@@ -66,7 +66,7 @@ class FinancialSubmissionController extends Controller
                 $nestedData['action'] .='            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(159px, 32px, 0px);">';
                 $nestedData['action'] .='                <a class="dropdown-item" href="'.route('financial.edit', $row['id']).'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
                 $nestedData['action'] .='                <a class="dropdown-item" id="delete" href="#" data-toggle="modal" data-target="#delete_approve" data-id="'.$row['id'].'"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
-                $nestedData['action'] .='                <a class="dropdown-item" id="detail" href="'.route('employe.detail', $row['id']).'"><i class="fa fa-info m-r-5"></i> Detail</a>';
+                $nestedData['action'] .='                <a class="dropdown-item"href="'.route('financial.pdf', $row['id']).'"><i class="fa fa-info m-r-5"></i> Cetak</a>';
                 $nestedData['action'] .='            </div>';
                 $nestedData['action'] .='        </div>';
                 $data[] = $nestedData;
