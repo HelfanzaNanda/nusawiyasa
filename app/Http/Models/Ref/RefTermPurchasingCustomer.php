@@ -16,7 +16,9 @@ class RefTermPurchasingCustomer extends Model
 		'terms_type',
 		'type',
 		'is_active',
-		'is_deleted'
+		'is_deleted',
+        'account',
+        'account_type'
     ];
 
     private $operators = [
@@ -41,6 +43,8 @@ class RefTermPurchasingCustomer extends Model
 			'type' => ['alias' => $model->table.'.type', 'type' => 'string'],
 			'is_active' => ['alias' => $model->table.'.is_active', 'type' => 'int'],
 			'is_deleted' => ['alias' => $model->table.'.is_deleted', 'type' => 'int'],
+            'account' => ['alias' => $model->table.'.account', 'type' => 'string'],
+            'account_type' => ['alias' => $model->table.'.account_type', 'type' => 'string'],
 			'created_at' => ['alias' => $model->table.'.created_at', 'type' => 'string'],
 			'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string'],
         ];
@@ -178,5 +182,63 @@ class RefTermPurchasingCustomer extends Model
             'status' => 'success',
             'message' => 'Data Berhasil Disimpan'
         ]);
+    }
+
+    public static function datatables($start, $length, $order, $dir, $search, $filter = '')
+    {
+        $totalData = self::count();
+
+        $_select = [];
+        foreach(array_values(self::mapSchema()) as $select) {
+            $_select[] = $select['alias'];
+        }
+
+        $qry = self::select($_select)->addSelect('accounting_masters.name as account_name')->leftJoin('accounting_masters', 'accounting_masters.coa', '=', 'ref_term_purchasing_customers.account');
+        
+        if (isset($filter['terms_type']) && $filter['terms_type']) {
+            $qry->where('terms_type', $filter['terms_type']);
+        }
+
+        $totalFiltered = $qry->count();
+        
+        if (empty($search)) {
+            
+            if ($length > 0) {
+                $qry->skip($start)
+                    ->take($length);
+            }
+
+            foreach ($order as $row) {
+                $qry->orderBy($row['column'], $row['dir']);
+            }
+
+        } else {
+            foreach (array_values(self::mapSchema()) as $key => $val) {
+                if ($key < 1) {
+                    $qry->whereRaw('('.$val['alias'].' LIKE \'%'.$search.'%\'');
+                } else if (count(array_values(self::mapSchema())) == ($key + 1)) {
+                    $qry->orWhereRaw($val['alias'].' LIKE \'%'.$search.'%\')');
+                } else {
+                    $qry->orWhereRaw($val['alias'].' LIKE \'%'.$search.'%\'');
+                }
+            }
+
+            $totalFiltered = $qry->count();
+
+            if ($length > 0) {
+                $qry->skip($start)
+                    ->take($length);
+            }
+
+            foreach ($order as $row) {
+                $qry->orderBy($row['column'], $row['dir']);
+            }
+        }
+
+        return [
+            'data' => $qry->get(),
+            'totalData' => $totalData,
+            'totalFiltered' => $totalFiltered
+        ];
     }
 }

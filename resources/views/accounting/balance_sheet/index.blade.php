@@ -115,8 +115,23 @@
 		        </div><!-- table-responsive -->
 		      </div><!-- card -->
 		    </div><!-- col-6 -->
-      		
       	</div>
+		  <div class="row row-sm mg-t-20">
+		    <div class="col-lg-6">
+		      <div class="card card-table">
+		        <div class="card-header">
+		          <h4 class="slim-card-title" style="text-align: right;">Total Harta <span id="aktiva-total"></span></h4>
+		        </div><!-- card-header -->
+		      </div><!-- card -->
+		    </div><!-- col-6 -->
+		    <div class="col-lg-6 mg-t-20 mg-lg-t-0">
+		      <div class="card card-table">
+		        <div class="card-header">
+		          <h4 class="slim-card-title" style="text-align: right;">Total Kewajiban dan Modal <span id="pasiva-total"></span></h4>
+		        </div><!-- card-header -->
+		      </div><!-- card -->
+		    </div><!-- col-6 -->
+		  </div>
       </div>
     </div>
   </div>
@@ -240,7 +255,7 @@ function buildData(params) {
 	        "<tr>"+
 	          "<td style='text-align:right;'>"+item.accounting_code+"</td>"+
 	          "<td>"+item.name+"</td>"+
-	          "<td>"+item.total+"</td>"+
+	          "<td>"+addSeparator(item.total, '.', '.', ',')+"</td>"+
 	          "<td></td>"+
 	        "</tr>"
 	    );
@@ -252,7 +267,7 @@ function buildData(params) {
 	      "<td></td>"+
 	      "<td style='text-align:right;'><b>Total Aktiva</b></td>"+
 	      "<td></td>"+
-	      "<td><b>"+assetsTotal+"</b></td>"+
+	      "<td><b>"+addSeparator(assetsTotal, '.', '.', ',')+"</b></td>"+
 	    "</tr>"
 	);
 
@@ -266,7 +281,7 @@ function buildData(params) {
 	        "<tr>"+
 	          "<td style='text-align:right;'>"+item.accounting_code+"</td>"+
 	          "<td>"+item.name+"</td>"+
-	          "<td>"+item.total+"</td>"+
+	          "<td>"+addSeparator(item.total, '.', '.', ',')+"</td>"+
 	          "<td></td>"+
 	        "</tr>"
 	    );
@@ -278,7 +293,7 @@ function buildData(params) {
 	      "<td></td>"+
 	      "<td style='text-align:right;'><b>Total Pasiva</b></td>"+
 	      "<td></td>"+
-	      "<td><b>"+liabiliesTotal+"</b></td>"+
+	      "<td><b>"+addSeparator(liabiliesTotal, '.', '.', ',')+"</b></td>"+
 	    "</tr>"
 	);
 
@@ -293,7 +308,7 @@ function buildData(params) {
 	          "<tr>"+
 	            "<td style='text-align:right;'>"+item.accounting_code+"</td>"+
 	            "<td>"+item.name+"</td>"+
-	            "<td>"+params.profitLoss+"</td>"+
+	            "<td>"+addSeparator(params.profitLoss, '.', '.', ',')+"</td>"+
 	            "<td></td>"+
 	          "</tr>"
 	      );
@@ -303,7 +318,7 @@ function buildData(params) {
 	          "<tr>"+
 	            "<td style='text-align:right;'>"+item.accounting_code+"</td>"+
 	            "<td>"+item.name+"</td>"+
-	            "<td>"+item.total+"</td>"+
+	            "<td>"+addSeparator(item.total, '.', '.', ',')+"</td>"+
 	            "<td></td>"+
 	          "</tr>"
 	      );
@@ -322,8 +337,8 @@ function buildData(params) {
 	assetsTotalFinal = parseInt(assetsTotal);
 	pasivaEquityTotalFinal = parseInt(liabiliesTotal) + (parseInt(equityTotal) + parseInt(accmEquityTotal));
 
-	$('#aktiva-total').text(assetsTotalFinal);
-	$('#pasiva-total').text(pasivaEquityTotalFinal);
+	$('#aktiva-total').text(addSeparator(assetsTotalFinal, '.', '.', ','));
+	$('#pasiva-total').text(addSeparator(pasivaEquityTotalFinal, '.', '.', ','));
 }
 
 </script>

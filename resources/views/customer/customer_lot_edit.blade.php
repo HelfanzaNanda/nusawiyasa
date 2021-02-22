@@ -66,7 +66,7 @@
                 <label>{{ $cost->key_name }}</label>
                 <input class="form-control" type="number" 
                 name="customer_costs[{{ $cost->ref_term_purchasing_customer_id }}]" 
-                value="{{ number_format(floatval($cost->value)) }}">
+                value="{{ floatval($cost->value) }}">
               </div>
             @endforeach --}}
           </div>
