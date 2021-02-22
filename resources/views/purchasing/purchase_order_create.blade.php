@@ -16,6 +16,7 @@
             <label class="col-form-label col-md-2">No. PO</label>
             <div class="col-md-10">
               <input class="form-control floating" type="text" id="input-number" name="number">
+              <input class="form-control floating" type="hidden" id="input-number-debt" name="number_debt">
             </div>
           </div>
           <div class="form-group row">
@@ -81,14 +82,34 @@
                 Non RAP
                 </label>
               </div>
-{{--               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="type" id="disposition" value="disposition">
-                <label class="form-check-label" for="disposition">
-                Disposisi
-                </label>
-              </div> --}}
             </div>
           </div>
+          
+          <div class="form-group row">
+            <label class="col-form-label col-md-2">Pembayaran</label>
+            <div class="col-md-10">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input payment-type" type="radio" name="payment_type" id="cash" value="cash" checked="">
+                <label class="form-check-label" for="cash">
+                Tunai
+                </label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input payment-type" type="radio" name="payment_type" id="credit" value="credit">
+                <label class="form-check-label" for="credit">
+                Kredit
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row payment-plan-date" style="display: none">
+            <label class="col-form-label col-md-2">Rencana Pembayaran</label>
+            <div class="col-md-10">
+              <input class="form-control floating" type="text" id="input-payment-plan-date" name="payment_plan_date">
+            </div>
+          </div>
+
 
           <div class="form-group row">
             <label class="col-form-label col-md-2">Keterangan</label>
@@ -122,14 +143,6 @@
                             <option value=""> Pilih </option>
                           </select>
                         </th>
-                        {{-- <th>
-                          <select id="input-supplier"> 
-                            <option value="0"> - Pilih Supplier - </option>
-                            @foreach($suppliers as $supplier)
-                              <option value="{{$supplier['id']}}">{{$supplier['name']}}</option>
-                            @endforeach
-                          </select>
-                        </th> --}}
                         <th><input type="text" class="form-control add-item" id="input-item-qty" placeholder="qty" onkeyup="addItemCalc()"></th>
                         <th><input type="text" class="form-control add-item" id="input-item-unit" placeholder="Satuan"></th>
                         <th><input type="text" class="form-control add-item" id="input-item-price" placeholder="Harga" onkeyup="addItemCalc()"></th>
@@ -194,6 +207,15 @@
         $('#input-number').val(data.number)
       }
     })
+
+    $.ajax({
+      type: 'GET',
+      url: url+'number/generate?prefix=DE',
+      success: function(data){
+        $('#input-number-debt').val(data.number)
+      }
+    })
+
   })
 
   $('#input-supplier').select2({
@@ -211,6 +233,27 @@
   $('#input-fpp').select2({
     width: '100%'
   });
+
+  $(document).on('change', '.payment-type', function() {
+      value = $(this).val();
+      if (value == 'credit') {
+         $('.payment-plan-date').show()
+      }else{
+        $('.payment-plan-date').hide()
+      }
+  })
+
+  if($('#input-payment-plan-date').length > 0) {
+    $('#input-payment-plan-date').datetimepicker({
+      format: 'YYYY-MM-DD',
+      icons: {
+        up: "fa fa-angle-up",
+        down: "fa fa-angle-down",
+        next: 'fa fa-angle-right',
+        previous: 'fa fa-angle-left'
+      }
+    });
+  }
 
   if($('#input-date').length > 0) {
     $('#input-date').datetimepicker({
@@ -407,6 +450,10 @@
     var loading_text = $('.loading').data('loading-text');
     $('.loading').html(loading_text).attr('disabled', true);
     var form_data = new FormData( this );
+
+    var url = '{{ asset('') }}'
+
+
     $.ajax({
       type: 'GET',
       url: '{{asset('')}}'+'number/validate?prefix=PO&number='+$('#input-number').val(),

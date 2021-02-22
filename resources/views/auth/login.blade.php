@@ -71,8 +71,12 @@
                                     <input class="form-control" type="password" name="password">
                                 </div>
                                 <div class="form-group text-center">
-                                    <button class="btn btn-primary account-btn" type="submit">Login</button>
+                                    <button type="submit" class="btn-primary account-btn submit-btn loading" 
+                                    data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                                        Login
+                                    </button>
                                 </div>
+                                
                                 <div class="account-footer">
                                     {{-- <p>Don't have an account yet? <a href="register.html">Register</a></p> --}}
                                 </div>
@@ -112,6 +116,8 @@
 
             $( 'form#main-form' ).submit( function( e ) {
                 e.preventDefault();
+                var loading_text = $('.loading').data('loading-text');
+                $('.loading').html(loading_text).attr('disabled', true);
                 var form_data   = new FormData( this );
                 $.ajax({
                     type: 'post',
@@ -125,8 +131,10 @@
                         $('#fail').hide();
                     },
                     success: function(data) {
+                    
                       if(data.status == 'success'){
                         setTimeout(function() {
+                        $('.loading').html('Submit').attr('disabled', false)
                           swal({
                             title: "Sukses",
                             text: data.message,
@@ -137,6 +145,7 @@
                           });
                         }, 200);
                       } else {
+                        $('.loading').html('Login').attr('disabled', false)
                         $('.loading-area').hide();
                         swal({
                           title: "Gagal",
@@ -151,5 +160,6 @@
                 })
             });
         </script>
+
     </body>
 </html>

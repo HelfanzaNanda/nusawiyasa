@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Purchasing;
 
 use App\Http\Controllers\Controller;
+use App\Http\Models\Accounting\Debt;
 use App\Http\Models\Cluster\Lot;
 use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Inventory\Suppliers;
@@ -47,6 +48,7 @@ class PurchaseOrderController extends Controller
         $request_materials = RequestMaterials::selectClusterBySession();
         $purchase = PurchaseOrders::whereId($id)->first();
         $lots = Lot::whereClusterId($purchase->cluster_id)->get();
+        $debt = Debt::where('purchase_order_id' , $id)->first();
 
         if($purchase){
             $purchase->subtotal = self::withoutCurency($purchase->subtotal);
@@ -57,7 +59,7 @@ class PurchaseOrderController extends Controller
         }
         $no = 1;
 
-        return view('purchasing.purchase_order_update', compact('suppliers', 'lots', 'clusters', 'request_materials', 'purchase', 'no'));
+        return view('purchasing.purchase_order_update', compact('suppliers', 'lots', 'clusters', 'request_materials', 'purchase', 'no', 'debt'));
     }
 
     private static function withoutCurency($data){

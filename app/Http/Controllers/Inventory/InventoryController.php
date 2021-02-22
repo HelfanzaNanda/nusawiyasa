@@ -125,9 +125,12 @@ class InventoryController extends Controller
     {
         $request = $request->all();
 
+        //return $request;
         if ($id != null) {
             $res = Inventories::getById($id, $request);
-        } else if (isset($request['all']) && $request['all']) {
+        } else if (isset($request['cluster_id']) && isset($request['name']) && $request['cluster_id'] && $request['name']) {
+            $res = Inventories::getByCluster($request);
+        }else if (isset($request['all']) && $request['all']) {
             $res = Inventories::getAllResult($request);
         } else {
             $res = Inventories::getPaginatedResult($request);

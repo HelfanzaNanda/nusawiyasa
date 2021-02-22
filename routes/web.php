@@ -152,6 +152,7 @@ Route::group([
 	Route::get('/inventory', 'Inventory\InventoryController@index');
 	Route::post('/inventory', 'Inventory\InventoryController@insertData');
 	Route::post('/inventory-datatables', 'Inventory\InventoryController@datatables');
+	//Route::get('/inventories/{clusterId}/cluster', 'Inventory\InventoryController@getByCluster');
 	Route::get('/inventories/{id?}', 'Inventory\InventoryController@get');
 	Route::get('/inventories/{id?}/delete', 'Inventory\InventoryController@delete');
 
