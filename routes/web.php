@@ -329,6 +329,14 @@ Route::group([
 
 	Route::get('slf-template', 'Slf\SlfTemplateController@index');
 	Route::post('slf-template-store', 'Slf\SlfTemplateController@store');	
+
+	Route::get('financial-submission', 'Financial\FinancialSubmissionController@index')->name('financial.index');
+	Route::post('financial-submission/datatable', 'Financial\FinancialSubmissionController@datatable')->name('financial.datatable');
+	Route::get('financial-submission/create', 'Financial\FinancialSubmissionController@create')->name('financial.create');
+	Route::get('financial-submission/edit/{id}', 'Financial\FinancialSubmissionController@edit')->name('financial.edit');
+	Route::post('financial-submission/store', 'Financial\FinancialSubmissionController@store')->name('financial.store');
+	Route::delete('financial-submission/delete/{id}', 'Financial\FinancialSubmissionController@delete')->name('financial.delete');
+	Route::get('financial-submission/pdf/{id}', 'Financial\FinancialSubmissionController@pdf')->name('financial.pdf');
 });
 
 Route::get('number/generate', 'NumberGenerateController@generate');
