@@ -425,6 +425,6 @@ $(document).ready(function(){
 
 function readURL(input) {
     $('.custom-file-label').text(input.files[0].name);
-  }
+}
 </script>
 @endsection
