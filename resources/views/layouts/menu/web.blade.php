@@ -87,11 +87,6 @@
                 <a href="{{url('/request-material')}}"><i class="la la-dolly-flatbed"></i> <span>Pengajuan Bahan</span></a>
             </li>
         @endif
-        @if($user->can('request-material'))
-            <li {{ (request()->segment(1) == 'financial-submission') ? 'class=active' : '' }}>
-                <a href="{{url('/financial-submission')}}"><i class="la la-dolly-flatbed"></i> <span>Pengajuan Keuangan</span></a>
-            </li>
-        @endif
 
         @if($user->can('development-progress'))
             <li {{ (request()->segment(1) == 'development-progress') ? 'class=active' : '' }}>

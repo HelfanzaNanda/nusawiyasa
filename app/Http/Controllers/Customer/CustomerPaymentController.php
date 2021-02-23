@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Models\Accounting\AccountingMaster;
 use App\Http\Models\Cluster\Lot;
 use App\Http\Models\Customer\Customer;
 use App\Http\Models\Customer\CustomerCost;
@@ -124,6 +125,8 @@ class CustomerPaymentController extends Controller
 
     public function detail($id)
     {
+        $coa = AccountingMaster::getChildrenCOA();
+
         $data = CustomerLot::select('customer_lots.*')->where('customer_lots.id', $id)
                     ->addSelect('customers.user_id as user_id')
                     ->addSelect('customers.id as customer_id')
@@ -143,9 +146,9 @@ class CustomerPaymentController extends Controller
 
         $customer_costs = CustomerCost::select('customer_costs.*')->addSelect('ref_term_purchasing_customers.name as key_name')->where('customer_id', $data['customer_id'])->where('lot_id', $data['lot_id'])->join('ref_term_purchasing_customers', 'ref_term_purchasing_customers.id', '=', 'customer_costs.ref_term_purchasing_customer_id')->get();
 
-        $customer_payments = CustomerPayment::where('customer_lot_id', $id)->get();
+        $customer_payments = CustomerPayment::select('customer_payments.*')->addSelect('accounting_masters.name as account_name')->where('customer_lot_id', $id)->leftJoin('accounting_masters', 'accounting_masters.coa', '=', 'customer_payments.payment_type')->get();
 
-        return view('customer.customer_payment_detail', compact('data', 'customer_terms', 'customer_costs', 'id', 'customer_payments'));
+        return view('customer.customer_payment_detail', compact('data', 'customer_terms', 'customer_costs', 'id', 'customer_payments', 'coa'));
     }
 
     public function get($id=null, Request $request)

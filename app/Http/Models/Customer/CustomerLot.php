@@ -2,10 +2,14 @@
 
 namespace App\Http\Models\Customer;
 
+use App\Helper\GlobalHelper;
+use App\Http\Models\Accounting\AccountingJournal;
 use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Cluster\Lot;
+use App\Http\Models\Customer\Customer;
 use App\Http\Models\Customer\CustomerCost;
 use App\Http\Models\Customer\CustomerTerm;
+use App\Http\Models\Ref\DefaultAccount;
 use App\Http\Models\Ref\RefGeneralStatuses;
 use App\Http\Models\Ref\RefTermPurchasingCustomer;
 use DB;
@@ -295,7 +299,12 @@ class CustomerLot extends Model
         $insert = self::create($customer_lot);
 
         if ($insert) {
+            $total = 0;
+
             $exception_empty_account = [];
+            $accounting_params = [];
+            $credit = [];
+            $debit = [];
 
             if (isset($params['customer_costs']) && count($params['customer_costs']) > 0) {
                 foreach($params['customer_costs'] as $key => $customer_cost) {
@@ -310,7 +319,13 @@ class CustomerLot extends Model
                         'status' => 1,
                         'lot_id' => $params['lot_id']
                     ]);
+                    $total += $customer_cost;
+                    $debit[$query_customer_cost['receivable_account']] = (isset($debit[$query_customer_cost['receivable_account']]) ? $debit[$query_customer_cost['receivable_account']] : 0) + $customer_cost;
                 }
+
+                $sales_default_account = DefaultAccount::where('key', 'sales')->value('value');
+
+                $credit[$sales_default_account] = $total;
             }
 
             if (count($exception_empty_account) > 0) {
@@ -318,6 +333,24 @@ class CustomerLot extends Model
                     'status' => 'error',
                     'message' => 'Anda Belum Melakukan Setting Akun Pada '.implode(', ', $exception_empty_account).'. <br/><b>Harap Menuju Menu Master Biaya!</b>'
                 ]);
+            }
+
+            //TODO DISCOUNT
+            
+            if (count($credit) > 0 && count($debit) > 0) {
+                $lot = Lot::where('id', $params['lot_id'])->first();
+                $cluster = Cluster::where('id', $lot['cluster_id'])->first();
+                $customer = Customer::where('id', $params['customer_id'])->with('user')->first();
+
+                $accounting_params['ref'] = GlobalHelper::generate('JU');
+                $accounting_params['description'] = 'Penjualan Unit '.$cluster['name'].' Blok '.$lot['block'].' No '.$lot['unit_number'].' Pada '.$customer['user']['name'];
+                $accounting_params['type'] = 1;
+                $accounting_params['date'] = $params['booking_date'];
+                $accounting_params['total'] = $total;
+                $accounting_params['cluster_id'] = $cluster['id'];
+                $accounting_params['details']['debit'] = $debit;
+                $accounting_params['details']['credit'] = $credit;
+                AccountingJournal::journalPosting($accounting_params);
             }
 
             if ($request->file('customer_terms')) {

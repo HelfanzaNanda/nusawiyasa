@@ -14,7 +14,6 @@ class AccountingLedger extends Model
 	protected $table = 'accounting_ledgers';
 
 	protected $fillable = [
-        'id',
         'accounting_journal_id',
         'coa',
         'debit',

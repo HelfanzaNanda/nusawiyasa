@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Accounting;
 
-use DB;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Accounting\AccountingJournal;
 use App\Http\Models\Accounting\AccountingMaster;
+use App\Http\Models\Ref\DefaultAccount;
+use DB;
 use Illuminate\Http\Request;
 
 class BalanceSheetController extends Controller
@@ -25,6 +26,8 @@ class BalanceSheetController extends Controller
                         'accounting_masters.accounting_code AS accounting_code'
                     )
                     ->get();
+
+        $default_profit_loss_account = DefaultAccount::where('key', 'profit_loss')->value('value');
 
         $journalData = [];
         $journalData2 = [];
@@ -63,6 +66,7 @@ class BalanceSheetController extends Controller
                         $realBalance = $balanceRev < 0 ? abs($balanceRev) : $balanceRev;
                     }
 
+                    $journalParam['coa'] = $val['coa'];
                     $journalParam['sub_coa'] = $splitCOA[0];
                     $journalParam['name'] = $val['name'];
                     $journalParam['accounting_code'] = $val['accounting_code'];
@@ -130,6 +134,7 @@ class BalanceSheetController extends Controller
             'status' => 'success',
             'data' => $journalData,
             'profitLoss' => $profitLossSum > 0 ? abs($profitLossSum) : (-1 * abs($profitLossSum)),
+            'default_profit_loss_account' => $default_profit_loss_account
         ]);
     }
 }

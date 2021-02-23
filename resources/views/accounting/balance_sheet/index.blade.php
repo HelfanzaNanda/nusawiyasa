@@ -299,11 +299,11 @@ function buildData(params) {
 
 	//Menghitung Pendapatan
 	var equityTotal = 0;
-	var accmEquityTotal = params.profitLoss;
 
 	params.data.forEach(function(item) {
 	  if (item.sub_coa == 3) {
-	    if (item.accounting_code == '3.03') {
+	    if (item.coa == params.default_profit_loss_account) {
+	    	equityTotal += params.profitLoss;
 	      $("#equity-table tbody").append(
 	          "<tr>"+
 	            "<td style='text-align:right;'>"+item.accounting_code+"</td>"+
@@ -329,13 +329,13 @@ function buildData(params) {
 	$("#equity-table tbody").append(
 	    "<tr>"+
 	      "<td></td>"+
-	      "<td style='text-align:right;'><b>Total Pasiva</b></td>"+
+	      "<td style='text-align:right;'><b>Total Ekuitas</b></td>"+
 	      "<td></td>"+
-	      "<td><b>"+equityTotal+"</b></td>"+
+	      "<td><b>"+addSeparator(equityTotal, '.', '.', ',')+"</b></td>"+
 	    "</tr>"
 	);
 	assetsTotalFinal = parseInt(assetsTotal);
-	pasivaEquityTotalFinal = parseInt(liabiliesTotal) + (parseInt(equityTotal) + parseInt(accmEquityTotal));
+	pasivaEquityTotalFinal = parseInt(liabiliesTotal) + (parseInt(equityTotal));
 
 	$('#aktiva-total').text(addSeparator(assetsTotalFinal, '.', '.', ','));
 	$('#pasiva-total').text(addSeparator(pasivaEquityTotalFinal, '.', '.', ','));

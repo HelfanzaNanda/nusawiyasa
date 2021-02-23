@@ -2,6 +2,14 @@
 
 namespace App\Http\Models\Customer;
 
+use App\Helper\GlobalHelper;
+use App\Http\Models\Accounting\AccountingJournal;
+use App\Http\Models\Cluster\Cluster;
+use App\Http\Models\Cluster\Lot;
+use App\Http\Models\Customer\Customer;
+use App\Http\Models\Customer\CustomerCost;
+use App\Http\Models\Customer\CustomerLot;
+use App\Http\Models\Ref\RefTermPurchasingCustomer;
 use DB;
 use File;
 use Illuminate\Database\Eloquent\Model;
@@ -100,6 +108,46 @@ class CustomerPayment extends Model
         }
 
         $insert = self::create($params);
+
+        if ($insert) {
+            $total = $params['value'];
+
+            $exception_empty_account = [];
+            $accounting_params = [];
+            $credit = [];
+            $debit = [];
+
+            $ref_customer_term_cost_key = CustomerCost::where('id', $params['customer_cost_id'])->value('ref_term_purchasing_customer_id');
+            $query_customer_cost = RefTermPurchasingCustomer::where('id', $ref_customer_term_cost_key)->first();
+
+            $credit = [
+                $query_customer_cost['receivable_account'] => $total
+            ];
+
+            $debit = [
+                $params['payment_type'] => $total
+            ];
+
+            //TODO DISCOUNT
+            
+            if (count($credit) > 0 && count($debit) > 0) {
+                $customer_lot = CustomerLot::where('id', $params['customer_lot_id'])->first();
+                $lot = Lot::where('id', $customer_lot['lot_id'])->first();
+                $cluster = Cluster::where('id', $lot['cluster_id'])->first();
+                $customer = Customer::where('id', $customer_lot['customer_id'])->with('user')->first();
+
+                $accounting_params['ref'] = GlobalHelper::generate('JU');
+                $accounting_params['description'] = 'Pembayaran Piutang '.$query_customer_cost['name'].' Unit '.$cluster['name'].' Blok '.$lot['block'].' No '.$lot['unit_number'].' Pada '.$customer['user']['name'];
+                $accounting_params['type'] = 1;
+                $accounting_params['date'] = $params['date'];
+                $accounting_params['total'] = $total;
+                $accounting_params['cluster_id'] = $cluster['id'];
+                $accounting_params['details']['debit'] = $debit;
+                $accounting_params['details']['credit'] = $credit;
+
+                AccountingJournal::journalPosting($accounting_params);
+            }
+        }
 
         DB::commit();
         return response()->json([

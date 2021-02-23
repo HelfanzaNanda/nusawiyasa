@@ -64,7 +64,7 @@
                           <tr>
                             <td>{{date('d M Y', strtotime(($customer_payment['date'])))}}</td>
                             <td>Rp {{number_format($customer_payment['value'])}}</td>
-                            <td>{{strtoupper($customer_payment['payment_type'])}}</td>
+                            <td>{{strtoupper($customer_payment['account_name'])}}</td>
                             <td>{{$customer_payment['note']}}</td>
                             {{-- <td>{{ pathinfo($customer_payment['filename'], PATHINFO_EXTENSION) }}</td> --}}
                             <td><button data-payment="{{ $customer_payment }}" data-id="{{ $customer_payment['id'] }}" data-ext="{{ pathinfo($customer_payment['filename'], PATHINFO_EXTENSION) }}" type="button" class="btn-view btn btn-success btn-sm">View</button>&nbsp;<button type="button" data-payment="{{ $customer_payment }}" class="btn edit-payment-button btn-primary btn-sm">Edit</button>&nbsp;<button id="delete" data-id={{ $customer_payment['id'] }} type="button" class="btn btn-danger btn-sm">Delete</button>
@@ -121,8 +121,11 @@
                 <label>Tipe Pembayaran</label>
                 <select class="form-control" id="input-payment-type" name="payment_type">
                   <option> - Pilih Tipe - </option>
-                  <option value="transfer">Transfer</option>
-                  <option value="cash">Cash</option>
+                  @foreach($coa as $key => $val)
+                    @if(substr($key, 0 , 1) == 1)
+                    <option value="{{$key}}">{{$key}} | {{$val}}</option>
+                    @endif
+                  @endforeach
                 </select>
               </div>
               <div class="form-group">
@@ -175,8 +178,11 @@
                 <label>Tipe Pembayaran</label>
                 <select class="form-control" id="edit-input-payment-type" name="payment_type">
                   <option> - Pilih Tipe - </option>
-                  <option value="transfer">Transfer</option>
-                  <option value="cash">Cash</option>
+                  @foreach($coa as $key => $val)
+                    @if(substr($key, 0 , 1) == 1)
+                    <option value="{{$key}}">{{$key}} | {{$val}}</option>
+                    @endif
+                  @endforeach
                 </select>
               </div>
               <div class="form-group">

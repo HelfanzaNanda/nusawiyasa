@@ -2,9 +2,10 @@
 
 namespace App\Http\Models\Accounting;
 
+use App\Http\Models\Accounting\AccountingLedger;
 use DB;
-use Redirect;
 use Illuminate\Database\Eloquent\Model;
+use Redirect;
 
 class AccountingJournal extends Model
 {
@@ -117,22 +118,30 @@ class AccountingJournal extends Model
         return $this->hasMany(AccountingLedger::class);
     }
 
-    public static function journalPosting($oarams)
+    public static function journalPosting($params)
     {
-        $journal['ref'] = $params['ref'];
-        $journal['description'] = $params['description'];
-        $journal['date'] = $params['date'];
-        $journal['total'] = $params['total'];
-
-        $insertJournal = self::create($journal);
+        DB::beginTransaction();
+        $details = $params['details'];
+        unset($params['details']);
+        $insertJournal = self::create($params);
 
         if ($insertJournal) {
-            if (isset($params['items']) && count($params['items']) > 0) {
-                foreach($params['items'] as $row) {
-                    
+            if (count($details) > 0) {
+                foreach($details as $type => $values) {
+                    foreach($values as $coa => $value) {
+                        AccountingLedger::create([
+                            'accounting_journal_id' => $insertJournal->id,
+                            'coa' => $coa,
+                            'debit' => $type == 'debit' ? $value : 0,
+                            'credit' => $type == 'credit' ? $value : 0,
+                            'cluster_id' => $params['cluster_id'],
+                        ]);
+                    }
                 }
             }
         }
+
+        DB::commit();
     }
     
 }
