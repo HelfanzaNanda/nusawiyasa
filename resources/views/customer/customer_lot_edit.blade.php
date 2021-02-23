@@ -149,6 +149,7 @@ $(document).ready(function() {
       var termId = input.getAttribute('data-id');
       if (input.files && input.files[0]) {
         $('.preview-'+key).attr("href", URL.createObjectURL(event.target.files[0]));  
+        $('#id_new_img-'+key).val(termId);
         if (input.files[0].type == "application/pdf") {
           $('.preview-'+key).text('Lihat Pdf');
         }else{
