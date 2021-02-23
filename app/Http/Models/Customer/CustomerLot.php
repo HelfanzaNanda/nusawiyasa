@@ -230,8 +230,8 @@ class CustomerLot extends Model
             }
 
             $params_terms_id = [];
-            if (isset($params['terms_ids']) && count($params['terms_ids']) > 0) {
-                $params_terms_id = $params['terms_ids'];
+            if (isset($params['term_ids']) && count($params['term_ids']) > 0) {
+                $params_terms_id = $params['term_ids'];
                 unset($params['term_ids']);
             }
 
