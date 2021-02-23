@@ -24,7 +24,8 @@ class Customer extends Model
         'address',
         'occupation',
         'is_active',
-        'is_deleted'
+        'is_deleted',
+        'cluster_id'
     ];
 
     private $operators = [
@@ -57,6 +58,7 @@ class Customer extends Model
             'subdistrict' => ['alias' => $model->table.'.subdistrict', 'type' => 'string'],
             'address' => ['alias' => $model->table.'.address', 'type' => 'string'],
             'occupation' => ['alias' => $model->table.'.occupation', 'type' => 'string'],
+            'cluster_id' => ['alias' => $model->table.'.cluster_id', 'type' => 'int'],
             'is_active' => ['alias' => $model->table.'.is_active', 'type' => 'int'],
             'is_deleted' => ['alias' => $model->table.'.is_deleted', 'type' => 'int'],
             'created_at' => ['alias' => $model->table.'.created_at', 'type' => 'string'],
