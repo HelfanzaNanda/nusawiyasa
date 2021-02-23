@@ -318,7 +318,7 @@ class CustomerLot extends Model
         $customer_lot['status'] = 1;
         $customer_lot['booking_date'] = $params['booking_date'];
         $customer_lot['payment_type'] = $params['payment_type'];
-        $customer_lot['bank_status'] = 1;
+        $customer_lot['bank_status'] = 0;
 
         $insert = self::create($customer_lot);
 
