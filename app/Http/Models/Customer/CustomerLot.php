@@ -217,21 +217,26 @@ class CustomerLot extends Model
 
         if (isset($params['id']) && $params['id']) {
             $id = $params['id'];
+            $params_customer_cost = $params['customer_costs'];
+            $params_customer_term = $params['customer_terms'];
             unset($params['id']);
-            $customer_lot = self::where('id', $id)->first();
+            unset($params['customer_costs']);
+            unset($params['customer_terms']);
+            $update = self::where('id', $id)->update($params);
 
-            $customer_lot_update['customer_id'] = $params['customer_id'];
-            $customer_lot_update['lot_id'] = $params['lot_id'];
-            $customer_lot_update['status'] = 1;
-            $customer_lot_update['booking_date'] = $params['booking_date'];
-            $customer_lot_update['payment_type'] = $params['payment_type'];
-            $customer_lot_update['bank_status'] = 1;
-            $update = $customer_lot->update($customer_lot_update);
+            // $customer_lot_update['customer_id'] = $params['customer_id'];
+            // $customer_lot_update['lot_id'] = $params['lot_id'];
+            // $customer_lot_update['status'] = 1;
+            // $customer_lot_update['booking_date'] = $params['booking_date'];
+            // $customer_lot_update['payment_type'] = $params['payment_type'];
+            // $customer_lot_update['bank_status'] = 1;
+
+            // $update = $customer_lot->update($customer_lot_update);
 
             if ($update) {
-                if (isset($params['customer_costs']) && count($params['customer_costs']) > 0) {
+                if (count($params_customer_cost) > 0) {
                     CustomerCost::where('customer_id', $customer_lot['customer_id'])->where('lot_id', $customer_lot['lot_id'])->delete();
-                    foreach($params['customer_costs'] as $key => $customer_cost) {
+                    foreach($params_customer_cost as $key => $customer_cost) {
                         CustomerCost::create([
                             'customer_id' => $params['customer_id'],
                             'ref_term_purchasing_customer_id' => $key,
