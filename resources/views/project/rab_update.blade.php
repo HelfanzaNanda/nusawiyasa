@@ -131,6 +131,9 @@
   });
 
   var cluster_id = '';
+  $(document).ready(function() {
+      cluster_id = $('#input-cluster').val();
+  })
   $(document).on('change', '#input-cluster', function(){
     cluster_id = $(this).val()
   });

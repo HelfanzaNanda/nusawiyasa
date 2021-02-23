@@ -160,15 +160,15 @@
                       </tr>
                       <tr>
                         <td colspan="5" style="text-align: right;">Pajak</td>
-                        <td><input type="text" name="tax" id="input-tax" class="form-control" onkeyup="totalCalc()"></td>
+                        <td><input type="text" name="tax" id="input-tax" class="form-control" value="0" onkeyup="totalCalc()"></td>
                       </tr>
                       <tr>
                         <td colspan="5" style="text-align: right;">Pengiriman</td>
-                        <td><input type="text" name="delivery" id="input-delivery" class="form-control" onkeyup="totalCalc()"></td>
+                        <td><input type="text" name="delivery" id="input-delivery" class="form-control" value="0" onkeyup="totalCalc()"></td>
                       </tr>
                       <tr>
                         <td colspan="5" style="text-align: right;">Lain - Lain</td>
-                        <td><input type="text" name="other" id="input-other" class="form-control" onkeyup="totalCalc()"></td>
+                        <td><input type="text" name="other" id="input-other" class="form-control" value="0" onkeyup="totalCalc()"></td>
                       </tr>
                       <tr>
                         <td colspan="5" style="text-align: right;">Total</td>
@@ -571,11 +571,11 @@
 
 
         $("#general_comments_tbody").html('');
-        $('#input-subtotal').val('');
-        $('#input-tax').val('');
-        $('#input-delivery').val('');
-        $('#input-other').val('');
-        $('#input-total').val('');
+        // $('#input-subtotal').val('');
+        // $('#input-tax').val('');
+        // $('#input-delivery').val('');
+        // $('#input-other').val('');
+        // $('#input-total').val('');
         let cols = '';
         
 
@@ -608,6 +608,7 @@
         $('.select-supplier').select2({
           width: '100%'
         });
+        calculateTotal();
       }
     });
   });

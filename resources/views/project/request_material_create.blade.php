@@ -438,6 +438,7 @@
         // $("select#input-lot").append('<option value="0"> - Pilih Kavling - </option>');
       },
       success: function(res) {
+        console.log(res);
         $('#input-cluster').val(res.customer_lot.lot.cluster_id).trigger('change');
 
         setTimeout(function(){ 
