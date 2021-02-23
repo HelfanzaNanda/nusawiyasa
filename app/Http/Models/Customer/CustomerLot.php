@@ -256,40 +256,42 @@ class CustomerLot extends Model
                     }
                 }
 
-                $files = $request->file('customer_terms');
-                foreach ($files as $keyFile => $file) {
-                    if ($params['term_ids'][$keyFile] != null) {
-                        $responseImage = self::uploadImage($file, 'customer_terms');
-                        if ($responseImage['status']) {
-                            $cust_term = CustomerTerm::findOrfail($params['term_ids'][$keyFile]);
-                            $cust_term->update([
-                                'customer_id' => $params['customer_id'],
-                                'ref_term_purchasing_customer_id' => $keyFile,
-                                'filename' => $responseImage['filename'],
-                                'filepath' => '/storage/media/customer_terms/'.$responseImage['month_year_pfx'],
-                                'filetype' => $responseImage['filetype'],
-                                'status' => 1,
-                                'lot_id' => $params['lot_id']
-                            ]);
+                if ($request->has('customer_terms')) {
+                    $files = $request->file('customer_terms');
+                    foreach ($files as $keyFile => $file) {
+                        if ($params['term_ids'][$keyFile] != null) {
+                            $responseImage = self::uploadImage($file, 'customer_terms');
+                            if ($responseImage['status']) {
+                                $cust_term = CustomerTerm::findOrfail($params['term_ids'][$keyFile]);
+                                $cust_term->update([
+                                    'customer_id' => $params['customer_id'],
+                                    'ref_term_purchasing_customer_id' => $keyFile,
+                                    'filename' => $responseImage['filename'],
+                                    'filepath' => '/storage/media/customer_terms/'.$responseImage['month_year_pfx'],
+                                    'filetype' => $responseImage['filetype'],
+                                    'status' => 1,
+                                    'lot_id' => $params['lot_id']
+                                ]);
+                            }else{
+                                DB::rollBack();
+                                return response()->json([
+                                    'status' => 'error',
+                                    'message' => 'Only upload jpg, png, and pdf'
+                                ]);
+                            }
                         }else{
-                            DB::rollBack();
-                            return response()->json([
-                                'status' => 'error',
-                                'message' => 'Only upload jpg, png, and pdf'
-                            ]);
-                        }
-                    }else{
-                        $responseImage = self::uploadImage($file, 'customer_terms');
-                        if ($responseImage['status']) {
-                            CustomerTerm::create([
-                                'customer_id' => $params['customer_id'],
-                                'ref_term_purchasing_customer_id' => $keyFile,
-                                'filename' => $responseImage['filename'],
-                                'filepath' => '/storage/media/customer_terms/'.$responseImage['month_year_pfx'],
-                                'filetype' => $responseImage['filetype'],
-                                'status' => 1,
-                                'lot_id' => $params['lot_id']
-                            ]);
+                            $responseImage = self::uploadImage($file, 'customer_terms');
+                            if ($responseImage['status']) {
+                                CustomerTerm::create([
+                                    'customer_id' => $params['customer_id'],
+                                    'ref_term_purchasing_customer_id' => $keyFile,
+                                    'filename' => $responseImage['filename'],
+                                    'filepath' => '/storage/media/customer_terms/'.$responseImage['month_year_pfx'],
+                                    'filetype' => $responseImage['filetype'],
+                                    'status' => 1,
+                                    'lot_id' => $params['lot_id']
+                                ]);
+                            }
                         }
                     }
                 }
