@@ -217,10 +217,19 @@ class CustomerLot extends Model
 
         if (isset($params['id']) && $params['id']) {
             $id = $params['id'];
-            $params_customer_cost = $params['customer_costs'];
-            $params_customer_term = $params['customer_terms'];
+            $params_customer_cost = [];
+            if (isset($params['customer_costs']) && count($params['customer_costs']) > 0) {
+                $params_customer_cost = $params['customer_costs'];
+                unset($params['customer_costs']);
+            }
+
+            $params_customer_term = [];
+            if (isset($params['customer_terms']) && count($params['customer_terms']) > 0) {
+                $params_customer_term = $params['customer_terms'];
+                unset($params['customer_terms']);
+            }
             unset($params['id']);
-            unset($params['customer_costs']);
+            
             unset($params['customer_terms']);
             $update = self::where('id', $id)->update($params);
 
