@@ -229,8 +229,7 @@ class CustomerLot extends Model
                 unset($params['customer_terms']);
             }
             unset($params['id']);
-            
-            unset($params['customer_terms']);
+            unset($params['term_ids']);
             $update = self::where('id', $id)->update($params);
 
             // $customer_lot_update['customer_id'] = $params['customer_id'];
