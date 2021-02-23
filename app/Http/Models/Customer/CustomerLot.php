@@ -230,7 +230,10 @@ class CustomerLot extends Model
             }
             unset($params['id']);
             unset($params['term_ids']);
-            $customer_lot = self::where('id', $id)->update($params)->first();
+            
+            $customer_lot = self::where('id', $id)->first();
+
+            $update = self::where('id', $id)->update($params);
 
             // $customer_lot_update['customer_id'] = $params['customer_id'];
             // $customer_lot_update['lot_id'] = $params['lot_id'];
@@ -241,7 +244,7 @@ class CustomerLot extends Model
 
             // $update = $customer_lot->update($customer_lot_update);
 
-            if ($customer_lot) {
+            if ($update) {
                 if (count($params_customer_cost) > 0) {
                     CustomerCost::where('customer_id', $customer_lot['customer_id'])->where('lot_id', $customer_lot['lot_id'])->delete();
                     foreach($params_customer_cost as $key => $customer_cost) {
