@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Purchase;
 
+use App\Helper\GlobalHelper;
 use App\Http\Models\Accounting\Debt;
 use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Cluster\Lot;
@@ -300,7 +301,7 @@ class PurchaseOrders extends Model
         $purchase_order['lot_id'] = $params['lot_id'];
         $debt['number'] = $params['number_debt'] ?? 0;
         $debt['supplier_id'] = $params['item_supplier_id'];
-        $debt['total'] = $params['total'];
+        $debt['total'] = GlobalHelper::convertSeparator($params['total']);
         $debt['date'] = $params['date'];
         $debt['payment_plan_date'] = $params['payment_plan_date'] ?? now();
         $debt['description'] = $params['note'];

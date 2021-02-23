@@ -19,17 +19,6 @@
               <input type="hidden" name="id" value="{{ $rap->id }}">
             </div>
           </div>
-{{--           <div class="form-group row">
-            <label class="col-form-label col-md-2">Kapling</label>
-            <div class="col-md-10">
-              <select id="input-lot" name="lot_id"> 
-                <option value="0"> - Pilih Kapling - </option>
-                @foreach($lots as $lot)
-                  <option value="{{$lot['id']}}">{{$lot['name']}} - {{$lot['block']}} / {{$lot['unit_number']}}</option>
-                @endforeach
-              </select>
-            </div>
-          </div> --}}
           <div class="form-group row">
             <label class="col-form-label col-md-2">Perumahan/Cluster</label>
             <div class="col-md-10">
@@ -142,6 +131,9 @@
   });
 
   var cluster_id = '';
+  $(document).ready(function() {
+      cluster_id = $('#input-cluster').val();
+  })
   $(document).on('change', '#input-cluster', function(){
     cluster_id = $(this).val()
   });

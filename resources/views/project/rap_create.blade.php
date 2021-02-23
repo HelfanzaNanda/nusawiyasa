@@ -18,17 +18,6 @@
               <input class="form-control floating" type="text" id="input-title" name="title">
             </div>
           </div>
-{{--           <div class="form-group row">
-            <label class="col-form-label col-md-2">Kapling</label>
-            <div class="col-md-10">
-              <select id="input-lot" name="lot_id"> 
-                <option value="0"> - Pilih Kapling - </option>
-                @foreach($lots as $lot)
-                  <option value="{{$lot['id']}}">{{$lot['name']}} - {{$lot['block']}} / {{$lot['unit_number']}}</option>
-                @endforeach
-              </select>
-            </div>
-          </div> --}}
           <div class="form-group row">
             <label class="col-form-label col-md-2">Perumahan/Cluster</label>
             <div class="col-md-10">

@@ -59,33 +59,10 @@
           </div>
           <hr>
           <h4 class="text-primary">Biaya</h4>
-          <div class="row" id="cost">
-            {{-- {{ dd($customer_costs) }} --}}
-            {{-- @foreach ($customer_costs as $cost)
-              <div class="col-md-6 mt-2">
-                <label>{{ $cost->key_name }}</label>
-                <input class="form-control" type="number" 
-                name="customer_costs[{{ $cost->ref_term_purchasing_customer_id }}]" 
-                value="{{ floatval($cost->value) }}">
-              </div>
-            @endforeach --}}
-          </div>
+          <div class="row" id="cost"></div>
           <hr>
           <h4 class="text-primary">Persyatan Dokumen</h4>
-          <div class="row" id="term"> 
-            {{-- @foreach ($customer_terms as $key => $term)
-                <div class="col-md-6 mt-2">                      
-                  <label >{{ $term->key_name }}</label>
-                  <input type="hidden" name="term_ids[{{ $term->ref_term_purchasing_customer_id }}]" id="id_new_img-{{ $key }}">
-                  <input class="form-control mb-2" data-id={{ $term->id }} onchange="readURL(this, {{ $key }});"
-                   type="file" 
-                  name="customer_terms[{{ $term->ref_term_purchasing_customer_id }}]" 
-                  value="{{ $term->filepath.'/'.$term->filename }}">
-                  <img id="preview-img-{{ $key }}" width="100" height="100"
-                  src="{{ $term->filepath.'/'.$term->filename }}" >
-                </div>                
-            @endforeach --}}
-          </div>
+          <div class="row" id="term"> </div>
         </div>
         <div class="card-footer">
           <div class="col-auto float-right ml-auto pb-2">
@@ -139,15 +116,20 @@ $(document).ready(function() {
               if (filtered_terms.length > 0) {
                   term += '<input class="form-control mb-2" data-id='+filtered_terms[0].id+' onchange="readURL(this, '+key+');" type="file"'
                   term += 'name="customer_terms['+value.id+']" >'
-                  term += '<img id="preview-img-'+key+'" width="100" height="100"'
-                  term += 'src="'+filtered_terms[0].filepath+'/'+filtered_terms[0].filename+'" >'
-                  term += '<a class="mt-2" id="preview-pdf-'+key+'" target="_blank" style="display:none">lihat pdf</a>'
-                  // term += '<input class="form-control" type="file" name="customer_terms['+value.id+']">';
+                  if (filtered_terms[0].filetype == 'pdf') {
+                      term += '<a href="'+filtered_terms[0].filepath+'/'+filtered_terms[0].filename+'"'
+                      term += 'class="mt-2 preview-'+key+'" target="_blank" >Lihat Pdf</a>'
+                  }else{
+                      term += '<a href="'+filtered_terms[0].filepath+'/'+filtered_terms[0].filename+'"'
+                      term += 'class="mt-2 preview-'+key+'" target="_blank" >Lihat Image</a>'
+                  }
               }else{
                   term += '<input class="form-control mb-2"  onchange="readURL(this, '+key+');" type="file"'
                   term += 'name="customer_terms['+value.id+']" >'
-                  term += '<img id="preview-img-'+key+'" width="100"  height="100" style="visibility: hidden;">'
-                  term += '<a class="mt-2" id="preview-pdf-'+key+'" target="_blank" style="display:none">lihat pdf</a>'
+                  
+                  // term += '<img class="preview-img-'+key+'" width="100"  height="100" style="visibility: hidden;">'
+                  // term += '<a class="mt-2 preview-pdf-'+key+'" target="_blank" style="display:none">lihat pdf</a>'
+                  term += '<a class="mt-2 preview-'+key+'" target="_blank" ></a>'
               }
               term += '</div>';
             }
@@ -166,18 +148,11 @@ $(document).ready(function() {
   function readURL(input, key) {
       var termId = input.getAttribute('data-id');
       if (input.files && input.files[0]) {
+        $('.preview-'+key).attr("href", URL.createObjectURL(event.target.files[0]));  
         if (input.files[0].type == "application/pdf") {
-          $('#preview-pdf-'+key).show()
-          $('#preview-pdf-'+key).attr("href", URL.createObjectURL(event.target.files[0]))
-          $('#preview-img-'+key).hide()
+          $('.preview-'+key).text('Lihat Pdf');
         }else{
-          var reader = new FileReader();
-          reader.onload = function (e) {
-              $('#preview-pdf-'+key).hide()
-              $('#preview-img-'+key).attr('src', e.target.result).attr('style', "visibility: ''");
-              $('#id_new_img-'+key).val(termId);
-          };
-          reader.readAsDataURL(input.files[0]);
+          $('.preview-'+key).text('Lihat Image');
         }
       }
   }
