@@ -228,8 +228,14 @@ class CustomerLot extends Model
                 $params_customer_term = $params['customer_terms'];
                 unset($params['customer_terms']);
             }
+
+            $params_terms_id = [];
+            if (isset($params['terms_ids']) && count($params['terms_ids']) > 0) {
+                $params_terms_id = $params['terms_ids'];
+                unset($params['term_ids']);
+            }
+
             unset($params['id']);
-            unset($params['term_ids']);
             
             $customer_lot = self::where('id', $id)->first();
 
@@ -261,10 +267,10 @@ class CustomerLot extends Model
                 if ($request->has('customer_terms')) {
                     $files = $request->file('customer_terms');
                     foreach ($files as $keyFile => $file) {
-                        if ($params['term_ids'][$keyFile] != null) {
+                        if ($params_terms_id[$keyFile] != null) {
                             $responseImage = self::uploadImage($file, 'customer_terms');
                             if ($responseImage['status']) {
-                                $cust_term = CustomerTerm::findOrfail($params['term_ids'][$keyFile]);
+                                $cust_term = CustomerTerm::findOrfail($params_terms_id[$keyFile]);
                                 $cust_term->update([
                                     'customer_id' => $params['customer_id'],
                                     'ref_term_purchasing_customer_id' => $keyFile,
