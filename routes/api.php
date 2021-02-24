@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 Route::group(['namespace' => 'API'], function() {
     Route::group(['middleware' => 'auth:api'], function () {
-        Route::group(['namespace' => 'User'], function () {
-            Route::get('customers/{customer_id}/total_receivables/{lot_id?}', 'UserController@totalReceivable');
+        Route::group(['namespace' => 'Customer'], function () {
+            Route::get('customers/{customer_id}/total_receivables/{lot_id?}', 'CustomerController@totalReceivable');
         });
     }); 
 });

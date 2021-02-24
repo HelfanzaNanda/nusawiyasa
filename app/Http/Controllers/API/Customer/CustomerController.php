@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\API\User;
+namespace App\Http\Controllers\API\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Models\Customer\CustomerCost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class UserController extends Controller
+class CustomerController extends Controller
 {
     public function totalReceivable($customer_id, $lot_id = 0, Request $request)
     {   
