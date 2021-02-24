@@ -109,9 +109,12 @@ $(document).ready(function() {
               }
               cost += '</div>';
             } else {
-              var filtered_terms = filterItems(cus_terms, value.id);
+              var filtered_terms = filterItems(cus_terms, value.name);
+              //console.log(filtered_terms);
               term += '<div class="col-md-6 mt-2">';
               term += '<label>'+value.name+'</label>';
+              // console.log(cus_terms);
+              console.log(value);
               term += '<input type="hidden" name="term_ids['+value.id+']" id="id_new_img-'+key+'">'
               if (filtered_terms.length > 0) {
                   term += '<input class="form-control mb-2" data-id='+filtered_terms[0].id+' onchange="readURL(this, '+key+');" type="file"'
@@ -126,9 +129,6 @@ $(document).ready(function() {
               }else{
                   term += '<input class="form-control mb-2"  onchange="readURL(this, '+key+');" type="file"'
                   term += 'name="customer_terms['+value.id+']" >'
-                  
-                  // term += '<img class="preview-img-'+key+'" width="100"  height="100" style="visibility: hidden;">'
-                  // term += '<a class="mt-2 preview-pdf-'+key+'" target="_blank" style="display:none">lihat pdf</a>'
                   term += '<a class="mt-2 preview-'+key+'" target="_blank" ></a>'
               }
               term += '</div>';
@@ -149,6 +149,7 @@ $(document).ready(function() {
       var termId = input.getAttribute('data-id');
       if (input.files && input.files[0]) {
         $('.preview-'+key).attr("href", URL.createObjectURL(event.target.files[0]));  
+        $('#id_new_img-'+key).val(termId);
         if (input.files[0].type == "application/pdf") {
           $('.preview-'+key).text('Lihat Pdf');
         }else{

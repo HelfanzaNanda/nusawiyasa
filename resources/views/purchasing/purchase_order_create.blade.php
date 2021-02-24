@@ -356,7 +356,7 @@
 
     $("td#total").each(function() {
         var value = detectFloat($(this).text());
-        // add only if the value is number
+        //add only if the value is number
         if(!isNaN(value) && value.length != 0) {
           total += value;
         }
@@ -367,20 +367,27 @@
   }
 
   $(document).on('click', '.checkbox', function() {
-    const total = $(this).parent().parent().parent().children('td#total')
+    const total = $(this).parent().parent().parent().find('td#total')
     const input_checkbox = $(this).parent().children('input.input-checkbox')
     const value = detectFloat(total.text())
     const subtotal = $("#input-subtotal").val();
+    //calculateTotal()
     if (!$(this).is(':checked')) {
+        $(this).parent().parent().parent().find('td > .item-calc').attr('disabled', true)
         input_checkbox.val("0")
-        $("#input-subtotal").val((detectFloat(subtotal) - value).toFixed(2), '.', '.', ',');
-        totalCalc();
+        $("#input-subtotal").val(addSeparator((detectFloat(subtotal) - value).toFixed(2), '.', '.', ','));
+        //calculateTotal();
+        totalCalc()
+        //calculateTotal();
       }else{
-        
+        $(this).parent().parent().parent().find('td > .item-calc').attr('disabled', false)
         input_checkbox.val("1")
-        $("#input-subtotal").val((detectFloat(subtotal) + value).toFixed(2), '.', '.', ',');
-        totalCalc();
+        //calculateTotal()
+        $("#input-subtotal").val(addSeparator((detectFloat(subtotal) + value).toFixed(2), '.', '.', ','));
+        //calculateTotal();
+        totalCalc()
       }
+      
   });
   
 
