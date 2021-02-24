@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::group(['namespace' => 'API'], function() {
+    Route::group(['middleware' => 'auth:api'], function () {
+        Route::group(['namespace' => 'User'], function () {
+            Route::get('customers/{customer_id}/total_receivables/{lot_id?}', 'UserController@totalReceivable');
+        });
+    }); 
+});
+
 Route::group(['namespace' => 'User'], function () {
     Route::post('login', 'AuthController@login');
     Route::group(['middleware' => 'auth:api'], function () {
@@ -21,7 +29,6 @@ Route::group(['namespace' => 'User'], function () {
         Route::get('logout', 'AuthController@logout');
     }); 
 });
-
 
 Route::group(['namespace' => 'Cluster'], function () {
     Route::get('clusters/{id?}', ['as' => 'get.cluster', 'uses' => 'ClusterController@get']);
