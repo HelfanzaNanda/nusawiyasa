@@ -52,6 +52,7 @@ class AuthController extends Controller
                 $status = ($generalStatus->key == 'approved') ? 'accept' : 'decline';
             }
         }
+
         $user['submission'] = $status;
         // if($user->customer->developmentProgress->count() == 0){
         //     $user['submission'] = "await";
