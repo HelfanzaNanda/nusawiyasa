@@ -38,14 +38,7 @@
         </div>
         <hr/>
         <h4 class="text-primary">Persyatan Dokumen</h4>
-        <div class="row"> 
-          @foreach($customer_terms as $customer_term)
-            <div class="col-md-6">
-              <label>{{$customer_term['key_name']}}</label><br>
-              <img src="{{env('APP_URL').$customer_term['filepath'].'/'.$customer_term['filename']}}" width="350px">
-            </div>
-          @endforeach
-        </div>
+        <div id="term" class="row"></div>
       </div>
     </div>
   </div>
@@ -62,5 +55,67 @@
   $('#input-city').select2({
     width: '100%'
   });
+
+  $(document).ready(function() {
+    var cus_terms = {!! $customer_terms !!}
+    var cus_costs = {!! $customer_costs !!}
+    var data = {!! $data !!}
+    var payment_type = data.payment_type
+    $.ajax({
+        url: BASE_URL+'/ref/term_purchasing_customers?all=true&payment_type='+payment_type+'&is_deleted=0',
+        type: "GET",
+        dataType: "json",
+        beforeSend: function() {
+          //$("#cost").empty();
+          $("#term").empty(); 
+        },
+        success: function(res) {
+          let cost = '';
+          let term = '';
+          $.each(res.data, function(key, value) {
+            var filtered_costs = filterItems(cus_costs, value.id);
+            if (value.terms_type == 'term') {
+              var filtered_terms = filterItems(cus_terms, value.name);
+              //console.log(filtered_terms);
+              term += '<div class="col-md-6 mt-2">';
+              term += '<label>'+value.name+'</label>'
+              term += '<br/>';
+              if (filtered_terms.length > 0) {
+                  if (filtered_terms[0].filetype == 'pdf') {
+                      term += '<a href="'+filtered_terms[0].filepath+'/'+filtered_terms[0].filename+'"'
+                      term += 'class="mt-2 preview-'+key+'" target="_blank" >Lihat Pdf</a>'
+                  }else{
+                      term += '<a href="'+filtered_terms[0].filepath+'/'+filtered_terms[0].filename+'"'
+                      term += 'class="mt-2 preview-'+key+'" target="_blank" >Lihat Image</a>'
+                  }
+              }else{
+                  term += '<p style="font-size: small">Belum Upload Persyaratan</p>'
+              }
+              term += '</div>';
+            }
+          });
+
+          //$("#cost").append(cost);
+          $("#term").append(term); 
+        }
+      });
+})
+
+  function filterItems(items, searchVal) {
+    return items.filter((item) => Object.values(item).includes(searchVal));
+  }
+
+  function readURL(input, key) {
+      var termId = input.getAttribute('data-id');
+      if (input.files && input.files[0]) {
+        $('.preview-'+key).attr("href", URL.createObjectURL(event.target.files[0]));  
+        $('#id_new_img-'+key).val(termId);
+        if (input.files[0].type == "application/pdf") {
+          $('.preview-'+key).text('Lihat Pdf');
+        }else{
+          $('.preview-'+key).text('Lihat Image');
+        }
+      }
+  }
 </script>
 @endsection
