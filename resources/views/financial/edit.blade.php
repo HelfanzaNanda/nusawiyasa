@@ -34,7 +34,7 @@
                         <div class="form-group row">
                             <label class="col-form-label col-md-2">Tanggal</label>
                             <div class="col-md-10">
-                                <input class="form-control floating" type="date" value="{{ $financial->date }}" id="input-date" name="date">
+                                <input class="form-control floating" type="text" value="{{ $financial->date }}" id="input-date" name="date">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -72,7 +72,12 @@
                                                         <input type="number" id="input-item-qty" class="form-control add-item" placeholder="Jumlah">
                                                     </th>
                                                     <th>
-                                                        <input type="text" id="input-item-unit" class="form-control add-item" placeholder="Satuan">
+                                                        <select id="input-item-unit">
+                                                            <option value="">Pilih Satuan</option>
+                                                            @foreach ($units as $item)
+                                                                <option value="{{$item->name}}">{{$item->name}}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </th>
                                                     <th>
                                                         <input type="number" id="input-item-price" oninput="getTotalPrice()" class="form-control add-item" placeholder="Harga">
@@ -144,6 +149,21 @@
 
 @section('additionalScriptJS')
     <script type="text/javascript">
+        if($('#input-date').length > 0) {
+            $('#input-date').datetimepicker({
+                format: 'YYYY-MM-DD',
+                icons: {
+                    up: "fa fa-angle-up",
+                    down: "fa fa-angle-down",
+                    next: 'fa fa-angle-right',
+                    previous: 'fa fa-angle-left'
+                }
+            });
+        }
+        $('#input-item-unit').select2({
+            width: '100%'
+        });
+        
         $('#input-cluster').select2({
             width: '100%'
         });

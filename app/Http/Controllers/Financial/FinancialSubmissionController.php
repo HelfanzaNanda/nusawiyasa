@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Financial;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Models\Financial\FinancialSubmission;
+use App\Http\Models\Inventory\InventoryUnits;
 use App\Http\Models\Cluster\Cluster;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
@@ -87,7 +88,8 @@ class FinancialSubmissionController extends Controller
     public function create(Request $request){
         $id = session()->get('_id');
         $clusters = Cluster::all();
-        return view('financial.create', compact('clusters', 'id'));
+        $units = InventoryUnits::where('is_active', true)->get();
+        return view('financial.create', compact('clusters', 'id', 'units'));
     }
 
     public function store(Request $request){
@@ -96,11 +98,12 @@ class FinancialSubmissionController extends Controller
     }
 
     public function edit(Request $request, $id){
-        $id = session()->get('_id');
+        //$id = session()->get('_id');
         $financial = FinancialSubmission::where('id', $id)->first();
         $clusters = Cluster::all();
+        $units = InventoryUnits::where('is_active', true)->get();
         $no = 1;
-        return view('financial.edit', compact(['financial', 'id', 'clusters', 'no']));
+        return view('financial.edit', compact(['financial', 'id', 'clusters', 'no', 'units']));
     }
 
     public function delete(Request $request, $id){
