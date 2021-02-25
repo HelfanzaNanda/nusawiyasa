@@ -84,7 +84,9 @@
                 <label>Tipe Input</label>
                 <select name="type" id="type" class="form-control">
                   <option value=""> - Pilih Tipe Input - </option>
-                  <option value="currency">Nominal Uang</option>
+                  {{-- <option value="currency">Nominal Uang</option> --}}
+                  <option value="file">File</option>
+                  <option value="text">Teks</option>
                 </select>
               </div>
               {{-- <div class="form-group">

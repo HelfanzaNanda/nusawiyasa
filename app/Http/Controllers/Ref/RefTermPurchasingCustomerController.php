@@ -88,7 +88,15 @@ class RefTermPurchasingCustomerController extends Controller
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
                 $nestedData['name'] = $row['name'];
-                $nestedData['payment_type'] = $row['payment_type'];
+                if($row['payment_type'] == 'cash')
+                    $nestedData['payment_type'] = 'Cash Keras';
+                else if($row['payment_type'] == 'cash_in_stages')
+                    $nestedData['payment_type'] = 'Cash Bertahap';
+                else if($row['payment_type'] == 'credit')
+                    $nestedData['payment_type'] = 'KPR';
+                else
+                $nestedData['payment_type'] = '-';
+                // $nestedData['payment_type'] = $row['payment_type'];
                 $nestedData['terms_type'] = $row['terms_type'];
                 $nestedData['type'] = $row['type'];
                 $nestedData['income'] = $row['income_account_code'].' | '.$row['income_account_name'];
