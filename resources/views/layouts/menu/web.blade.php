@@ -282,5 +282,11 @@
             <a href="{{url('/default-account')}}"><i class="la la-gears"></i> <span>Default Akun</span></a>
         </li>
         @endif
+
+        @if ($user->can('general-setting'))
+        <li {{ (request()->segment(1) == 'general-setting') ? 'class=active' : '' }}>
+            <a href="{{url('/general-setting')}}"><i class="la la-gears"></i> <span>Pengaturan Umum</span></a>
+        </li>
+        @endif
     @endif
 </ul>

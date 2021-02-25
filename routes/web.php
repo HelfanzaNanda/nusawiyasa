@@ -247,6 +247,9 @@ Route::group([
 	Route::post('roles-update', 'Role\RoleController@update');
 	Route::get('roles-delete/{id}', 'Role\RoleController@delete');
 
+	Route::get('general-setting', 'GeneraSetting\GeneraSettingController@index');
+	Route::post('general-setting', 'GeneraSetting\GeneraSettingController@update');
+
 	Route::get('employe', 'Hr\EmployeController@index');
 	Route::post('/employe', 'Hr\EmployeController@insertData');
 	Route::post('/employe-datatables', 'Hr\EmployeController@datatables');
