@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Models\Customer\Customer;
 use App\Http\Models\Customer\CustomerLot;
 use App\Http\Models\Project\WorkAgreements;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class WorkAgreementController extends Controller
 {
@@ -31,7 +32,9 @@ class WorkAgreementController extends Controller
         }
 
         return view('project.work_agreement', [
-            'lots' => $lots->get()
+            'lots' => $lots->get(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
         ]);
     }
 

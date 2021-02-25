@@ -29,13 +29,13 @@
       <div class="card-body ml-3 mt-3 mr-3 mb-3">
         <form action="" method="POST" id="edit-form">
             @csrf
-            @foreach ($datas as $data)
+            @foreach ($datas as $key => $data)
                 <div class="row align-items-center form-group">
                     <div class="col-md-2"><label for="{{ $data->name }}">{{ $data->name }}</label></div>
                     <div class="col-md-10">
                         @if ($data->type == 'file')
-                        <input type="file" class="form-control " id="{{ $data->name }}" name="{{ $data->key }}">
-                        <img width="50" height="50" class="mt-3" src="{{ asset('storage/'.$data->value) }}" alt="{{ $data->name }}">
+                        <input type="file" onchange="readURL(this, {{ $key }})" class="form-control " id="{{ $data->name }}" name="{{ $data->key }}">
+                        <img id="preview-img-{{ $key }}" width="50" height="50" class="mt-3" src="{{ asset('storage/'.$data->value) }}" alt="{{ $data->name }}">
                         @else
                         <input type="text" class="form-control" id="{{ $data->name }}" name="{{ $data->key }}" value="{{ $data->value ?? '-' }}">
                         @endif
@@ -102,7 +102,17 @@
                 }
             }
         })
-  });
+    });
+
+      function readURL(input, key) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#preview-img-'+key).attr('src', e.target.result).attr('style', "display: ''");
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+      }
 
 </script>
 @endsection

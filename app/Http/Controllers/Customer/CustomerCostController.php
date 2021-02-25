@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers\Customer;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Customer\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Models\Customer\Customer;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class CustomerCostController extends Controller
 {
     public function index()
     {
-        return view('customer.customer_cost');
+        return view('customer.customer_cost', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()

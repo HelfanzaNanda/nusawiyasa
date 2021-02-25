@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Project;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\NumberGenerateController;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 use App\Http\Models\Project\WorkAgreementAdditionals;
-use Illuminate\Http\Request;
 
 class WorkAgreementAdditionalsController extends Controller
 {
@@ -13,7 +14,9 @@ class WorkAgreementAdditionalsController extends Controller
     {
         return view('project.work_agreement_additional', [
             'spk_worker_id' => $spk_worker_id,
-            'spk_worker_adtts' => WorkAgreementAdditionals::where('spk_worker_id', $spk_worker_id)->get()
+            'spk_worker_adtts' => WorkAgreementAdditionals::where('spk_worker_id', $spk_worker_id)->get(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
         ]);
     }
 

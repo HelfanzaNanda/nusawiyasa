@@ -2,26 +2,30 @@
 
 namespace App\Http\Controllers\Purchasing;
 
+use Illuminate\Http\Request;
+use App\Http\Models\Cluster\Lot;
+use App\Http\Models\Ref\Province;
+use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Accounting\Debt;
-use App\Http\Models\Cluster\Lot;
 use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Inventory\Suppliers;
+use App\Http\Models\Inventory\Inventories;
+use App\Http\Models\Ref\RefGeneralStatuses;
 use App\Http\Models\Purchase\PurchaseOrders;
 use App\Http\Models\Project\RequestMaterials;
-use App\Http\Models\Inventory\Inventories;
-use App\Http\Models\Ref\Province;
-use App\Http\Models\Ref\RefGeneralStatuses;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Models\Purchase\PurchaseOrderItems;
-use Barryvdh\DomPDF\Facade as PDF;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class PurchaseOrderController extends Controller
 {
     public function index()
     {
-        return view('purchasing.purchase_order');
+        return view('purchasing.purchase_order', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()
@@ -30,8 +34,10 @@ class PurchaseOrderController extends Controller
         $lots = Lot::selectClusterBySession();
         $clusters = Cluster::selectClusterBySession();
         $request_materials = RequestMaterials::selectClusterBySession();
+        $company_logo = GeneralSetting::getCompanyLogo();
+        $company_name = GeneralSetting::getCompanyName();
 
-        return view('purchasing.purchase_order_create', compact('suppliers', 'lots', 'clusters', 'request_materials'));
+        return view('purchasing.purchase_order_create', compact('suppliers', 'lots', 'clusters', 'request_materials', 'company_logo', 'company_name'));
     }
 
     public function insertData(Request $request)
@@ -59,7 +65,10 @@ class PurchaseOrderController extends Controller
         }
         $no = 1;
 
-        return view('purchasing.purchase_order_update', compact('suppliers', 'lots', 'clusters', 'request_materials', 'purchase', 'no', 'debt'));
+        $company_logo = GeneralSetting::getCompanyLogo();
+        $company_name = GeneralSetting::getCompanyName();
+
+        return view('purchasing.purchase_order_update', compact('suppliers', 'lots', 'clusters', 'request_materials', 'purchase', 'no', 'debt', 'company_logo', 'company_name'));
     }
 
     private static function withoutCurency($data){
@@ -197,18 +206,6 @@ class PurchaseOrderController extends Controller
 
     public function delete($id)
     {
-        // $items = PurchaseOrderItems::where('purchase_order_id', $id)->get();
-
-        // foreach ($items as $item) {
-        //     $latest_qty = $item->inventory->stock;
-        //     Inventories::whereId($item->inventory_id)
-        //         ->update(
-        //             [
-        //                 'stock' => ($latest_qty + $item->qty)
-        //             ]
-        //         );
-        //         PurchaseOrderItems::where('purchase_order_id', $id)->delete();
-        // }
         PurchaseOrders::destroy($id);
         return response()->json([
             'message' => 'data berhasil dihapus',
@@ -218,14 +215,13 @@ class PurchaseOrderController extends Controller
 
     public function generatePdf($id)
     {
-        //return json_encode(PurchaseOrderItems::generatePdf($id));
-        // return view('purchasing.purchase_order_pdf', [
-        //     'data' => PurchaseOrderItems::generatePdf($id)
-        // ]);
-
         $pdf = PDF::setOptions(['isRemoteEnabled' => true])
         ->loadview('purchasing.purchase_order_pdf', [
-            'data' => PurchaseOrderItems::generatePdf($id)
+            'data' => PurchaseOrderItems::generatePdf($id),
+            'header' => GeneralSetting::getPdfHeaderImage(),
+            'footer' => GeneralSetting::getPdfFooterImage(),
+            'company_name' => GeneralSetting::getCompanyName(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
         ]);
         return $pdf->download('Purchase Order.pdf');
     }

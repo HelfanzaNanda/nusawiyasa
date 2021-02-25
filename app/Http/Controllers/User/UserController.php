@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
 use App\Http\Models\Role;
 use App\Http\Models\Users;
-use App\Http\Models\Cluster\Cluster;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Models\Cluster\Cluster;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class UserController extends Controller
 {
@@ -15,12 +16,20 @@ class UserController extends Controller
     {
         $roles = Role::get();
         $clusters = Cluster::get();
-        return view('setting.user.'.__FUNCTION__, compact('roles', 'clusters'));
+        return view('setting.user.'.__FUNCTION__, [
+            'clusters' => $clusters,
+            'roles' => $roles,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()
     {
-        return view('setting.user.'.__FUNCTION__);
+        return view('setting.user.'.__FUNCTION__, [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function insertData(Request $request)

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Project;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Customer\CustomerLot;
-use App\Http\Models\Project\SpkProjects;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Models\Project\SpkProjects;
+use App\Http\Models\Customer\CustomerLot;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class SPKProjectController extends Controller
 {
@@ -44,7 +45,11 @@ class SPKProjectController extends Controller
 
         $lots = $lots->get();
 
-        return view('project.spk_project', compact('lots'));
+        return view('project.spk_project', [
+            'lots' => $lots,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()
@@ -162,14 +167,40 @@ class SPKProjectController extends Controller
 
     public function generatePdf($id)
     {
-        //return json_encode(SpkProjects::generatePdf($id));
         // return view('project.spk_project_pdf', [
-        //     'data' => SpkProjects::generatePdf($id)
+        //     'data' => SpkProjects::generatePdf($id),
+        //     'header' => GeneralSetting::getPdfHeaderImage(),
+        //     'footer' => GeneralSetting::getPdfFooterImage(),
+        //     'company_name' => GeneralSetting::getCompanyName(),
+        //     'company_logo' => GeneralSetting::getCompanyLogo(),
         // ]);
+
+        // $contxt = stream_context_create([
+        //     'ssl' => [
+        //         'verify_peer' => FALSE,
+        //         'verify_peer_name' => FALSE,
+        //         'allow_self_signed'=> TRUE
+        //     ]
+        // ]);
+
+        // $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
+        // ->loadview('project.spk_project_pdf', [
+        //     'data' => SpkProjects::generatePdf($id),
+        //     'header' => GeneralSetting::getPdfHeaderImage(),
+        //     'footer' => GeneralSetting::getPdfFooterImage(),
+        //     'company_name' => GeneralSetting::getCompanyName(),
+        //     'company_logo' => GeneralSetting::getCompanyLogo(),
+        // ]);
+
+        //$pdf->getDomPDF()->setHttpContext($contxt)
 
         $pdf = PDF::setOptions(['isRemoteEnabled' => true])
         ->loadview('project.spk_project_pdf', [
-            'data' => SpkProjects::generatePdf($id)
+            'data' => SpkProjects::generatePdf($id),
+            'header' => GeneralSetting::getPdfHeaderImage(),
+            'footer' => GeneralSetting::getPdfFooterImage(),
+            'company_name' => GeneralSetting::getCompanyName(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
         ]);
         return $pdf->download('Surat Perintah Kerja.pdf');
     }

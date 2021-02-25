@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\Role;
 
-use App\Http\Controllers\Controller;
 use App\Http\Models\Role;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class RoleController extends Controller
 {
     public function index()
     {
-        return view('setting.role.role');
+        return view('setting.role.role', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function store(Request $request)

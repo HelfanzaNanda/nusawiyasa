@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers\Project;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Cluster\Lot;
-use App\Http\Models\Cluster\Cluster;
-use App\Http\Models\Project\Rap;
 use Illuminate\Http\Request;
+use App\Http\Models\Cluster\Lot;
+use App\Http\Models\Project\Rap;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Models\Cluster\Cluster;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class RAPController extends Controller
 {
     public function index()
     {
-        return view('project.rap');
+        return view('project.rap', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()
@@ -21,7 +25,12 @@ class RAPController extends Controller
         $lots = Lot::selectClusterBySession();
         $clusters = Cluster::selectClusterBySession();
 
-        return view('project.rap_create', compact('lots', 'clusters'));
+        return view('project.rap_create', [
+            'clusters' => $clusters,
+            'lots' => $lots,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function insertData(Request $request)

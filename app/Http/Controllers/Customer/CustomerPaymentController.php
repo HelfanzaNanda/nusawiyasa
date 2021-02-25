@@ -2,23 +2,27 @@
 
 namespace App\Http\Controllers\Customer;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Accounting\AccountingMaster;
-use App\Http\Models\Cluster\Lot;
-use App\Http\Models\Customer\Customer;
-use App\Http\Models\Customer\CustomerCost;
-use App\Http\Models\Customer\CustomerLot;
-use App\Http\Models\Customer\CustomerPayment;
-use App\Http\Models\Customer\CustomerTerm;
-use App\Http\Models\Project\DevelopmentProgress;
 use Illuminate\Http\Request;
+use App\Http\Models\Cluster\Lot;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Models\Customer\Customer;
+use App\Http\Models\Customer\CustomerLot;
+use App\Http\Models\Customer\CustomerCost;
+use App\Http\Models\Customer\CustomerTerm;
+use App\Http\Models\Customer\CustomerPayment;
+use App\Http\Models\Accounting\AccountingMaster;
+use App\Http\Models\Project\DevelopmentProgress;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class CustomerPaymentController extends Controller
 {
     public function index()
     {
-        return view('customer.customer_payment');
+        return view('customer.customer_payment', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function insertData(Request $request)

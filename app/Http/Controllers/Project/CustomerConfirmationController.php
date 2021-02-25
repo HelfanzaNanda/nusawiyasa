@@ -2,26 +2,33 @@
 
 namespace App\Http\Controllers\Project;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Customer\CustomerLot;
-use App\Http\Models\Project\CustomerConfirmations;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Models\Customer\CustomerLot;
+use App\Http\Models\GeneralSetting\GeneralSetting;
+use App\Http\Models\Project\CustomerConfirmations;
 
 class CustomerConfirmationController extends Controller
 {
     public function index()
     {
-        return view('project.customer_confirmation');
+        return view('project.customer_confirmation', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function detail($id)
     {
         $customer = CustomerLot::where('id', $id)->with('customer.user')->first();
-
         $records = CustomerConfirmations::where('customer_id', $customer['customer_id'])->where('lot_id', $customer['lot_id'])->get();
-
-        return view('project.customer_confirmation_detail', compact('customer', 'records'));
+        return view('project.customer_confirmation_detail', [
+            'records' => $records,
+            'customer' => $customer,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()

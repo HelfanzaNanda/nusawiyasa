@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Surat Jalan</title>
+    <title>Development Progress</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <style>
@@ -89,7 +89,7 @@
 <body>
 
     <footer>
-        <img src="{{ env("SITE_FOOTER_PDF_URL") }}" width="100%" height="100%"/>
+        <img src="{{ asset('storage/'.($footer ?? '') ) }}" width="100%" height="100%"/>
     </footer>
         <p style="text-align: right;line-height: 16px;">
             {{ $data['cluster']['address'] }}

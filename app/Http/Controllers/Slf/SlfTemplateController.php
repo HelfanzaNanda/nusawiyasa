@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers\Slf;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Models\SLF\SLFTemplate;
-use Illuminate\Http\Request;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class SlfTemplateController extends Controller
 {
     public function index()
     {
         $tabs = ['BAB I', 'BAB II', 'BAB III', 'BAB IV', 'BAB V'];
-        //$datas = SLFTemplate::all();
         $results = [];
         for ($i=0; $i < count($tabs); $i++) { 
             $data = SLFTemplate::where('name', $tabs[$i])->first();
             array_push($results, [$data, $tabs[$i]]);
         }
 
-        //dd($results);
         return view('slf.slf_template', [
-            'slfTemplates' => $results
-            //'tabs' => ['BAB I', 'BAB II', 'BAB III', 'BAB IV', 'BAB V']
+            'slfTemplates' => $results,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
         ]);
     }
 

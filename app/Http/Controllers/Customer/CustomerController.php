@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers\Customer;
 
+use Illuminate\Http\Request;
+use App\Http\Models\Ref\Province;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Customer\Customer;
-use App\Http\Models\Ref\Province;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class CustomerController extends Controller
 {
     public function index()
     {
-        $provinces = Province::get();
-        return view('customer.index', compact('provinces'));
+        return view('customer.index', [
+            'provinces' => Province::get(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()

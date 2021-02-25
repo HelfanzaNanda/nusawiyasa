@@ -7,14 +7,17 @@ use App\Http\Models\Ref\Province;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Cluster\Cluster;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class ClusterController extends Controller
 {
     public function index()
     {
-        $provinces = Province::get();
-
-        return view('cluster.cluster', compact('provinces'));
+        return view('cluster.cluster', [
+            'provinces' => Province::get(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()

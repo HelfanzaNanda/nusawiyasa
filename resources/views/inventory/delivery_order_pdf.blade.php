@@ -83,15 +83,15 @@
 
 <body>
     <header>
-        <img src="{{ env("SITE_HEADER_PDF_URL") }}" width="100%" height="100%"/>
+        <img src="{{ asset('storage/'.($header ?? '') ) }}" width="100%" height="100%"/>
     </header>
 
     <footer>
-        <img src="{{ env("SITE_FOOTER_PDF_URL") }}" width="100%" height="100%"/>
+        <img src="{{ asset('storage/'.($footer ?? '') ) }}" width="100%" height="100%"/>
     </footer>
     <div style="padding: 2rem">
         <div style="padding: 1rem; display: flex">
-            <div><img src="{{ env("SITE_LOGO_URL") }}" style="width: 100px; height: auto;"></div>
+            <div><img src="{{ asset('storage/'.($company_logo ?? '') ) }}" style="width: 100px; height: auto;"></div>
             <h3 style="width: 100%; text-align: center;"><b> SURAT JALAN </b></h3>
         </div>
         <div class="content">

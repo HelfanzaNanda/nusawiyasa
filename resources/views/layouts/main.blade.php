@@ -331,6 +331,7 @@
                 }
             }
         }
+        
       </script>
       @yield('additionalScriptJS')
 

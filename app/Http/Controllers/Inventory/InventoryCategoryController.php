@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Inventory;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Inventory\InventoryCategories;
-use App\Http\Models\Ref\Province;
 use Illuminate\Http\Request;
+use App\Http\Models\Ref\Province;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Models\GeneralSetting\GeneralSetting;
+use App\Http\Models\Inventory\InventoryCategories;
 
 class InventoryCategoryController extends Controller
 {
     public function index()
     {
-        return view('inventory.inventory_category');
+        return view('inventory.inventory_category', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()

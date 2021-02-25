@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Ref;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Accounting\AccountingMaster;
-use App\Http\Models\Customer\Customer;
-use App\Http\Models\Ref\DefaultAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Models\Customer\Customer;
+use App\Http\Models\Ref\DefaultAccount;
+use App\Http\Models\Accounting\AccountingMaster;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class DefaultAccountController extends Controller
 {
@@ -15,7 +16,11 @@ class DefaultAccountController extends Controller
     {
         $coa = AccountingMaster::getChildrenCOA();
 
-        return view('ref.default_account.'.__FUNCTION__, compact('coa'));
+        return view('ref.default_account.'.__FUNCTION__, [
+            'coa' => $coa,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()

@@ -2,29 +2,37 @@
 
 namespace App\Http\Controllers\Inventory;
 
+use Illuminate\Http\Request;
+use App\Http\Models\Ref\Province;
+use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Inventory\Suppliers;
+use App\Http\Models\Inventory\Inventories;
+use App\Http\Models\Purchase\PurchaseOrders;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 use App\Http\Models\Purchase\PurchaseOrderDeliveries;
 use App\Http\Models\Purchase\PurchaseOrderDeliveryItems;
-use App\Http\Models\Purchase\PurchaseOrders;
-use App\Http\Models\Ref\Province;
-use Illuminate\Http\Request;
-use App\Http\Models\Inventory\Inventories;
-use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade as PDF;
 
 class ReceiptOfGoodsController extends Controller
 {
     public function index()
     {
-        return view('inventory.receipt_of_goods');
+        return view('inventory.receipt_of_goods', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()
     {
         $purchase_orders = PurchaseOrders::whereIn('status', [4, 5])->get();
 
-        return view('inventory.receipt_of_goods_create', compact('purchase_orders'));
+        return view('inventory.receipt_of_goods_create', [
+            'purchase_orders' => $purchase_orders,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function insertData(Request $request)
@@ -37,10 +45,14 @@ class ReceiptOfGoodsController extends Controller
     public function edit($id)
     {
         $delivery = PurchaseOrderDeliveries::whereId($id)->first();
-
         $purchase_orders = PurchaseOrders::whereIn('status', [4, 5])->get();
-        $no = 1;
-        return view('inventory.receipt_of_goods_update', compact('purchase_orders', 'delivery', 'no'));
+        return view('inventory.receipt_of_goods_update',  [
+            'delivery' => $delivery,
+            'no' => 1,
+            'purchase_orders' => $purchase_orders,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function datatables(Request $request)
@@ -144,11 +156,12 @@ class ReceiptOfGoodsController extends Controller
 
     public function generatePdf($id)
     {
-        // return view('inventory.receipt_of_goods_pdf', [
-        //     'data' => PurchaseOrderDeliveryItems::generatePdf($id)
-        // ]);
         $pdf = PDF::setOptions(['isRemoteEnabled' => true])->loadview('inventory.receipt_of_goods_pdf', [
-            'data' => PurchaseOrderDeliveryItems::generatePdf($id)
+            'data' => PurchaseOrderDeliveryItems::generatePdf($id),
+            'header' => GeneralSetting::getPdfHeaderImage(),
+            'footer' => GeneralSetting::getPdfFooterImage(),
+            'company_name' => GeneralSetting::getCompanyName(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
         ]);
         return $pdf->download('bukti penerimaan barang.pdf');
     }

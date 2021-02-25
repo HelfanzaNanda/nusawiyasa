@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Inventory;
 
+use Illuminate\Http\Request;
+use App\Http\Models\Ref\Province;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Inventory\Inventories;
-use App\Http\Models\Inventory\InventoryCategories;
 use App\Http\Models\Inventory\InventoryUnits;
-use App\Http\Models\Ref\Province;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Http\Models\GeneralSetting\GeneralSetting;
+use App\Http\Models\Inventory\InventoryCategories;
 
 class InventoryController extends Controller
 {
@@ -18,8 +19,10 @@ class InventoryController extends Controller
         $units = InventoryUnits::where('is_deleted', 0)->get();
         $categories = InventoryCategories::where('is_deleted', 0)->get();
         $clusters = Cluster::selectClusterBySession();
+        $company_logo = GeneralSetting::getCompanyLogo();
+        $company_name = GeneralSetting::getCompanyName();
 
-        return view('inventory.inventory', compact('units', 'categories', 'clusters'));
+        return view('inventory.inventory', compact('units', 'categories', 'clusters', 'company_logo', 'company_name'));
     }
 
     public function create()

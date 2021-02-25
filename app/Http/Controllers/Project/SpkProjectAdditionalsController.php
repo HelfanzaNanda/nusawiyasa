@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Project;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Project\SpkProjectAdditionals;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Models\GeneralSetting\GeneralSetting;
+use App\Http\Models\Project\SpkProjectAdditionals;
 
 class SpkProjectAdditionalsController extends Controller
 {
@@ -12,6 +13,8 @@ class SpkProjectAdditionalsController extends Controller
     {
         return view('project.spk_project_additional', [
             'spk_project_id' => $spk_project_id,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName(),
             'spk_project_adtts' => SpkProjectAdditionals::where('spk_project_id', $spk_project_id)->get()
         ]);
     }

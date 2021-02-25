@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers\Hr;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Http\Models\Ref\Province;
-use App\Http\Models\Hr\Employe;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use App\Http\Models\Hr\Employe;
+use App\Http\Models\Ref\Province;
 use Barryvdh\DomPDF\Facade as PDF;
+use App\Http\Controllers\Controller;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class EmployeController extends Controller
 {
     public function index(){
-        $provinces = Province::get();
-        return view('employe.index', compact('provinces'));
+        return view('employe.index', [
+            'provinces' => Province::get(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function datatables(Request $request)
@@ -131,7 +135,9 @@ class EmployeController extends Controller
         }
         $provinces = Province::get();
         
-        return view('employe.detail', compact(['employee', 'provinces']));
+        $company_logo = GeneralSetting::getCompanyLogo();
+        $company_name = GeneralSetting::getCompanyName();
+        return view('employe.detail', compact(['employee', 'provinces', 'company_logo', 'company_name']));
     }
 
     public function pdf($id){
@@ -166,7 +172,10 @@ class EmployeController extends Controller
             'setPaper' => $customPaper
         ])
         ->loadview('employe.pdf', [
-            'data' => $data
+            'data' => $data,
+            'header' => GeneralSetting::getPdfHeaderImage(),
+            'footer' => GeneralSetting::getPdfFooterImage()
+            
         ]);
         return $pdf->download('Data diri '.$data['number'].'-'.Carbon::now().'.pdf');
     }

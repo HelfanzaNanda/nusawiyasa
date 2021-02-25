@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Surat Jalan</title>
+    <title>Purchase Order</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <style>
@@ -109,17 +109,17 @@
 
 <body>
     <header>
-        <img src="{{ env("SITE_HEADER_PDF_URL") }}" width="100%" height="100%"/>
+        <img src="{{ asset('storage/'.($header ?? '') ) }}" width="100%" height="100%"/>
     </header>
 
     <footer>
-        <img src="{{ env("SITE_FOOTER_PDF_URL") }}" width="100%" height="100%"/>
+        <img src="{{ asset('storage/'.($footer ?? '') ) }}" width="100%" height="100%"/>
     </footer>
     <div>
         <table class="header">
             <tr>
-                <td style="width: 10%"><img src="{{ env("SITE_LOGO_URL") }}" width="80px"></td>
-                <td style=" vertical-align: bottom;"><h3 style="display: inline"><b> PT Nusa Wiyasa PropertIndo</b></h3></td>
+                <td style="width: 10%"><img src="{{ asset('storage/'.($company_logo ?? '') ) }}" width="80px"></td>
+                <td style=" vertical-align: bottom;"><h3 style="display: inline"><b> {{ $company_name }}</b></h3></td>
                 <td id="purchase-order">PURCHASE ORDER</td>
             </tr>
         </table>

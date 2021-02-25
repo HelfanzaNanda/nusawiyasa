@@ -1,7 +1,7 @@
 <!-- Logo -->
 <div class="header-left">
     <a href="index-2.html" class="logo">
-      <img src="{{ asset('template/assets/img/logo.png') }}" width="40" height="40" alt="">
+      <img id="#logo" src="{{ asset('storage/'.($company_logo ?? '') ) }}" width="40" height="40" alt="">
     </a>
 </div>
 <!-- /Logo -->
@@ -16,7 +16,7 @@
 
 <!-- Header Title -->
 <div class="page-title-box">
-    <h3>Nusa Wiyasa Propertindo</h3>
+    <h3>{{ $company_name ?? '' }}</h3>
 </div>
 <!-- /Header Title -->
 

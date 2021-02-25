@@ -5,13 +5,18 @@ namespace App\Http\Controllers\Accounting;
 use DB;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Accounting\AccountingMaster;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 use Illuminate\Http\Request;
 
 class AccountingMasterController extends Controller
 {
     public function index()
     {
-        return view('accounting.master.'.__FUNCTION__);
+
+        return view('accounting.master.'.__FUNCTION__, [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function initTree()

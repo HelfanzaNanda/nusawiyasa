@@ -2,22 +2,25 @@
 
 namespace App\Http\Controllers\Cluster;
 
+use Illuminate\Http\Request;
+use App\Http\Models\Cluster\Lot;
+use App\Http\Models\Ref\Province;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Cluster\Cluster;
-use App\Http\Models\Cluster\Lot;
 use App\Http\Models\Cluster\LotGallery;
-use App\Http\Models\Ref\Province;
 use App\Http\Models\Ref\RefLotStatuses;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class LotController extends Controller
 {
     public function index()
-    {
-        $clusters = Cluster::get();
-        
-        return view('cluster.lot', compact('clusters'));
+    {   
+        return view('cluster.lot', [
+            'clusters' => Cluster::get(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()

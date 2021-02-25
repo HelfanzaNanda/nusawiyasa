@@ -2,25 +2,33 @@
 
 namespace App\Http\Controllers\Inventory;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Cluster\Lot;
-use App\Http\Models\Inventory\ReceiptOfGoodsRequest;
-use App\Http\Models\Ref\Province;
 use Illuminate\Http\Request;
+use App\Http\Models\Cluster\Lot;
+use App\Http\Models\Ref\Province;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Models\GeneralSetting\GeneralSetting;
+use App\Http\Models\Inventory\ReceiptOfGoodsRequest;
 
 class ReceiptOfGoodsRequestController extends Controller
 {
     public function index()
     {
-        return view('inventory.receipt_of_goods_request');
+        return view('inventory.receipt_of_goods_request', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()
     {
         $lots = Lot::selectClusterBySession();
 
-        return view('inventory.receipt_of_goods_request_create', compact('lots'));
+        return view('inventory.receipt_of_goods_request_create',  [
+            'lots' => $lots,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function insertData(Request $request)
@@ -33,11 +41,15 @@ class ReceiptOfGoodsRequestController extends Controller
     public function edit($id)
     {
         $receipt = ReceiptOfGoodsRequest::whereId($id)->first();
-        
         $lots = Lot::selectClusterBySession();
-        $no = 1;
 
-        return view('inventory.receipt_of_goods_request_update', compact('lots', 'receipt', 'no'));
+        return view('inventory.receipt_of_goods_request_update', [
+            'no' => 1,
+            'receipt' => $receipt,
+            'lots' => $lots,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function datatables(Request $request)

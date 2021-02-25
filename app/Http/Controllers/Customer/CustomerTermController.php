@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Customer;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Customer\Customer;
 use App\Http\Models\Customer\CustomerTerm;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class CustomerTermController extends Controller
 {
     public function index()
     {
-        return view('customer.customer_term');
+        return view('customer.customer_term', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()

@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers\Accounting;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Accounting\AccountingJournal;
-use App\Http\Models\Accounting\AccountingMaster;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Models\Accounting\AccountingMaster;
+use App\Http\Models\Accounting\AccountingJournal;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class ProfitLossController extends Controller
 {
     public function index()
     {
-        return view('accounting.profit_loss.'.__FUNCTION__);
+        return view('accounting.profit_loss.'.__FUNCTION__, [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function get(Request $request)

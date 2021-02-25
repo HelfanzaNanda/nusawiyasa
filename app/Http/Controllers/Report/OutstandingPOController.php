@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Report;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Models\Ref\Province;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Customer\Customer;
 use App\Http\Models\Ref\RefGeneralStatuses;
 use App\Http\Models\Purchase\PurchaseOrders;
-use Barryvdh\DomPDF\Facade as PDF;
-use Carbon\Carbon;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class OutstandingPOController extends Controller
 {
@@ -19,6 +20,8 @@ class OutstandingPOController extends Controller
     {
         return view('report.outstanding_po',[
             'clusters' => Cluster::selectClusterBySession(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
         ]);
     }
 
@@ -125,9 +128,6 @@ class OutstandingPOController extends Controller
 
     public function generatePdf(Request $request)
     {
-        // return view('report.outstanding_po_pdf', [
-        //     'datas' => PurchaseOrders::generatePdf($request)
-        // ]);
         $data = PurchaseOrders::generatePdfOutStanding($request);
         $startDate = Carbon::parse($data['startDate'])->format('d-m-Y');
         $endDate = Carbon::parse($data['endDate'])->format('d-m-Y');
@@ -136,7 +136,11 @@ class OutstandingPOController extends Controller
         $pdf = PDF::setOptions(['isRemoteEnabled' => true])
         ->loadview('report.outstanding_po_pdf', [
             'datas' => $data['purchases'],
-            'title' => $filename
+            'title' => $filename,
+            'header' => GeneralSetting::getPdfHeaderImage(),
+            'footer' => GeneralSetting::getPdfFooterImage(),
+            'company_name' => GeneralSetting::getCompanyName(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
         ]);
         return $pdf->download($filename.'.pdf');
     }

@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers\Accounting;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Accounting\Debt;
 use App\Http\Models\Inventory\Suppliers;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class DebtController extends Controller
 {
     public function index()
     {
-        $suppliers = Suppliers::get();
-        return view('accounting.debt.index', compact('suppliers'));
+        return view('accounting.debt.index', [
+            'suppliers' => Suppliers::get(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function insertData(Request $request)

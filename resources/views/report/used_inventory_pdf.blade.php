@@ -80,13 +80,11 @@
 
 <body>
     <header>
-        <img src="{{ env("SITE_HEADER_PDF_URL") }}" width="100%" height="100%"/>
-        {{-- <img src="https://i.ibb.co/QKFwyrZ/Picture-1-header.png" width="100%" height="100%"/> --}}
+        <img src="{{ asset('storage/'.($header ?? '') ) }}" width="100%" height="100%"/>
     </header>
 
     <footer>
-        <img src="{{ env("SITE_FOOTER_PDF_URL") }}" width="100%" height="100%"/>
-        {{-- <img src="https://i.ibb.co/mhvmQvt/Picture-1-footer.png" width="100%" height="100%"/> --}}
+        <img src="{{ asset('storage/'.($footer ?? '') ) }}" width="100%" height="100%"/>
     </footer>
     <h3 class="title">{{ $title }}</h3>
 

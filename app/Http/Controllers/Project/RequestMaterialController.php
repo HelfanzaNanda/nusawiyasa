@@ -2,23 +2,27 @@
 
 namespace App\Http\Controllers\Project;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Cluster\Cluster;
+use Illuminate\Http\Request;
 use App\Http\Models\Cluster\Lot;
-use App\Http\Models\Project\RequestMaterialItems;
-use App\Http\Models\Project\RequestMaterials;
-use App\Http\Models\Project\SpkProjects;
-use App\Http\Models\Project\WorkAgreements;
 use App\Http\Models\Ref\Province;
 use Barryvdh\DomPDF\Facade as PDF;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Models\Cluster\Cluster;
+use App\Http\Models\Project\SpkProjects;
+use App\Http\Models\Project\WorkAgreements;
+use App\Http\Models\Project\RequestMaterials;
+use App\Http\Models\Project\RequestMaterialItems;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class RequestMaterialController extends Controller
 {
     public function index()
     {
-        return view('project.request_material');
+        return view('project.request_material', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()
@@ -26,7 +30,12 @@ class RequestMaterialController extends Controller
         // $spk = SpkProjects::get();
         $spk = WorkAgreements::get();
         $clusters = Cluster::selectClusterBySession();
-        return view('project.request_material_create', compact('spk', 'clusters'));
+        return view('project.request_material_create', [
+            'spk' => $spk,
+            'clusters' => $clusters,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function insertData(Request $request)
@@ -44,8 +53,10 @@ class RequestMaterialController extends Controller
 
         $material = RequestMaterials::whereId($id)->first();
         $no = 1;
+        $company_logo = GeneralSetting::getCompanyLogo();
+        $company_name = GeneralSetting::getCompanyName();
 
-        return view('project.request_material_update', compact('spk', 'clusters', 'material', 'lots', 'no'));
+        return view('project.request_material_update', compact('spk', 'clusters', 'material', 'lots', 'no', 'company_logo', 'company_name'));
     }
 
     public function datatables(Request $request)
@@ -183,14 +194,13 @@ class RequestMaterialController extends Controller
 
     public function generatePdf($id)
     {
-        //return json_encode(RequestMaterialItems::generatePdf($id));
-        // return view('project.request_material_pdf', [
-        //     'data' => RequestMaterialItems::generatePdf($id)
-        // ]);
-
         $pdf = PDF::setOptions(['isRemoteEnabled' => true])
         ->loadview('project.request_material_pdf', [
-            'data' => RequestMaterialItems::generatePdf($id)
+            'data' => RequestMaterialItems::generatePdf($id),
+            'header' => GeneralSetting::getPdfHeaderImage(),
+            'footer' => GeneralSetting::getPdfFooterImage(),
+            'company_name' => GeneralSetting::getCompanyName(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
         ]);
         return $pdf->download('Requesition Material Form.pdf');
     }

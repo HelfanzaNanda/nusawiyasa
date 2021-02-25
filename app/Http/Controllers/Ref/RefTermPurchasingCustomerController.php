@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Ref;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Accounting\AccountingMaster;
-use App\Http\Models\Customer\Customer;
-use App\Http\Models\Ref\RefTermPurchasingCustomer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Models\Ref\Province;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Models\Customer\Customer;
+use App\Http\Models\Accounting\AccountingMaster;
+use App\Http\Models\GeneralSetting\GeneralSetting;
+use App\Http\Models\Ref\RefTermPurchasingCustomer;
 
 class RefTermPurchasingCustomerController extends Controller
 {
@@ -16,13 +17,21 @@ class RefTermPurchasingCustomerController extends Controller
     {
         $coa = AccountingMaster::getChildrenCOA();
 
-        return view('ref.customer_cost.index', compact('coa'));
+        return view('ref.customer_cost.index', [
+            'coa' => $coa,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function index_customer_term()
     {
         $coa = AccountingMaster::getChildrenCOA();
-        return view('ref.customer_term.index', compact(['coa']));
+        return view('ref.customer_term.index', [
+            'coa' => $coa,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()

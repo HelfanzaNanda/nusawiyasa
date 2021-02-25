@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Customer;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Cluster\Lot;
-use App\Http\Models\Customer\{Customer, CustomerCost, CustomerLot, CustomerPayment, CustomerTerm};
 use Illuminate\Http\Request;
+use App\Http\Models\Cluster\Lot;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Models\GeneralSetting\GeneralSetting;
+use App\Http\Models\Customer\{Customer, CustomerCost, CustomerLot, CustomerPayment, CustomerTerm};
 
 class CustomerLotController extends Controller
 {
     public function index()
     {
-        return view('customer.customer_lot');
+        return view('customer.customer_lot', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create($lot_id = 0)
@@ -191,7 +195,9 @@ class CustomerLotController extends Controller
             'lots' => $lots,
             'data' => $data,
             'customer_terms' => $customer_terms,
-            'customer_costs' => $customer_costs
+            'customer_costs' => $customer_costs,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
         ]);
     }
 }

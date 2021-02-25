@@ -6,10 +6,11 @@ use App\Http\Models\Users;
 use Facade\FlareClient\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use App\Http\Models\Permission\Permissions;
-use Spatie\Permission\Models\Role;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class PermissionsController extends Controller
 {
@@ -52,7 +53,9 @@ class PermissionsController extends Controller
         //dd($attrs);
         return view('setting.permissions.permissions', [
             'roles' => $roles,
-            'permissions' => $result
+            'permissions' => $result,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
         ]);
     }
 

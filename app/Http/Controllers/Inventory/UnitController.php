@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Inventory;
 
+use Illuminate\Http\Request;
+use App\Http\Models\Ref\Province;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Inventory\InventoryUnits;
-use App\Http\Models\Ref\Province;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class UnitController extends Controller
 {
     public function index()
     {
-        return view('inventory.unit');
+        return view('inventory.unit', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()

@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\Accounting;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Accounting\AccountingLedger;
-use Illuminate\Http\Request;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class LedgerController extends Controller
 {
     public function index()
     {
-        return view('accounting.ledger.'.__FUNCTION__);
+        return view('accounting.ledger.'.__FUNCTION__, [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function datatables(Request $request)

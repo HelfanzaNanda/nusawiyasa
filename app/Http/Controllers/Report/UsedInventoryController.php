@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Report;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade as PDF;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Cluster\Cluster;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 use App\Http\Models\Inventory\ReceiptOfGoodsRequest;
-use Barryvdh\DomPDF\Facade as PDF;
-use Carbon\Carbon;
 
 class UsedInventoryController extends Controller
 {
@@ -15,6 +16,8 @@ class UsedInventoryController extends Controller
     {
         return view('report.used_inventory', [
             'clusters' => Cluster::selectClusterBySession(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
         ]);
     }
 
@@ -94,16 +97,15 @@ class UsedInventoryController extends Controller
         $startDate = Carbon::parse($data['startDate'])->format('d-m-Y');
         $endDate = Carbon::parse($data['endDate'])->format('d-m-Y');
         $filename = 'Used Inventory per '.$startDate. ' - '. $endDate;
-        
-        //return json_encode(ReceiptOfGoodsRequest::generatePdf($request));
-        // return view('report.used_inventory_pdf', [
-        //     'datas' => ReceiptOfGoodsRequest::generatePdf($request),
-        //     'title' => $filename
-        // ]);
+ 
         $pdf = PDF::setOptions(['isRemoteEnabled' => true])
         ->loadview('report.used_inventory_pdf', [
             'datas' => $data['receipts'],
-            'title' => $filename
+            'title' => $filename,
+            'header' => GeneralSetting::getPdfHeaderImage(),
+            'footer' => GeneralSetting::getPdfFooterImage(),
+            'company_name' => GeneralSetting::getCompanyName(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
         ]);
         return $pdf->download($filename.'.pdf');
     }

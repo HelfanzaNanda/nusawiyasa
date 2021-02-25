@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers\GeneralAdmin;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\GeneralAdmin\WageSubmission;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 use App\Http\Models\GeneralAdmin\WageSubmissionDetail;
-use Illuminate\Http\Request;
 
 class WageSubmissionController extends Controller
 {
     public function index()
     {
-        $clusters = Cluster::selectClusterBySession();
-
-        return view('general_admin.wage_submission.'.__FUNCTION__, compact('clusters'));
+        return view('general_admin.wage_submission.'.__FUNCTION__, [
+            'clusters' => Cluster::selectClusterBySession(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function store(Request $request)

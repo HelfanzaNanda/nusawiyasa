@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Report;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Models\Ref\Province;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Customer\Customer;
-use App\Http\Models\Purchase\PurchaseOrderItems;
 use App\Http\Models\Ref\RefGeneralStatuses;
 use App\Http\Models\Purchase\PurchaseOrders;
-use Barryvdh\DomPDF\Facade as PDF;
-use Carbon\Carbon;
+use App\Http\Models\Purchase\PurchaseOrderItems;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class InventoryPurchaseController extends Controller
 {
@@ -20,6 +21,8 @@ class InventoryPurchaseController extends Controller
     {
         return view('report.inventory_purchase', [
             'clusters' => Cluster::selectClusterBySession(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
         ]);
     }
 
@@ -125,11 +128,6 @@ class InventoryPurchaseController extends Controller
 
     public function generatePdf(Request $request)
     {
-        //$filename = 'Inventory Purchase per '.$request->daterange_pdf;
-        // return view('report.inventory_purchase_pdf', [
-        //     'title' => $filename,
-        //     'datas' => PurchaseOrders::generatePdf($request)
-        // ]);
         $data = PurchaseOrders::generatePdfInventoryPurchase($request);
         $startDate = Carbon::parse($data['startDate'])->format('d-m-Y');
         $endDate = Carbon::parse($data['endDate'])->format('d-m-Y');
@@ -138,7 +136,11 @@ class InventoryPurchaseController extends Controller
         $pdf = PDF::setOptions(['isRemoteEnabled' => true])
         ->loadview('report.inventory_purchase_pdf', [
             'datas' => $data['purchases'],
-            'title' => $filename
+            'title' => $filename,
+            'header' => GeneralSetting::getPdfHeaderImage(),
+            'footer' => GeneralSetting::getPdfFooterImage(),
+            'company_name' => GeneralSetting::getCompanyName(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
         ]);
         return $pdf->download($filename.'.pdf');
     }

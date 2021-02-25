@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use Session;
 use App\Http\Models\Users;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Session;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class LoginController extends Controller
 {
@@ -20,7 +21,10 @@ class LoginController extends Controller
 
     public function index()
     {
-        return view('auth.login');
+        return view('auth.login', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function login(Request $request)

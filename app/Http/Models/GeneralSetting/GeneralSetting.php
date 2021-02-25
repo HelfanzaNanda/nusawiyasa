@@ -80,4 +80,24 @@ class GeneralSetting extends Model
             ];
         }
     }
+
+    public static function getCompanyName()
+    {
+        return self::where('key', 'company_name')->pluck('value')->first();
+    }
+
+    public static function getCompanyLogo()
+    {
+        return self::where('key', 'logo')->pluck('value')->first();
+    }
+
+    public static function getPdfHeaderImage()
+    {
+        return self::where('key', 'pdf_header_image')->pluck('value')->first();
+    }
+
+    public static function getPdfFooterImage()
+    {
+        return self::where('key', 'pdf_footer_image')->pluck('value')->first();
+    }
 }

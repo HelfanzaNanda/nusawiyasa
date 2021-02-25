@@ -11,7 +11,9 @@ class GeneraSettingController extends Controller
     public function index()
     {
         return view('setting.general_setting.index', [
-            'datas' => GeneralSetting::all()
+            'datas' => GeneralSetting::all(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
         ]);
     }
 

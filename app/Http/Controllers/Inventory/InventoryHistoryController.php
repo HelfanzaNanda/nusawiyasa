@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers\Inventory;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Inventory\InventoryHistories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Models\Inventory\InventoryHistories;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class InventoryHistoryController extends Controller
 {
     public function index()
     {
-        return view('inventory.inventory_history');
+        return view('inventory.inventory_history',[
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()

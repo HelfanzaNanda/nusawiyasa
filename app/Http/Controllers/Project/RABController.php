@@ -7,6 +7,7 @@ use App\Http\Models\Cluster\Lot;
 use App\Http\Models\Project\Rab;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Cluster\Cluster;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class RABController extends Controller
 {
@@ -20,7 +21,12 @@ class RABController extends Controller
         $lots = Lot::selectClusterBySession();
         $clusters = Cluster::selectClusterBySession();
 
-        return view('project.rab_create', compact('lots', 'clusters'));
+        return view('project.rab_create', [
+            'clusters' => $clusters,
+            'lots' => $lots,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function insertData(Request $request)
@@ -36,7 +42,13 @@ class RABController extends Controller
         $lots = Lot::selectClusterBySession();
         $clusters = Cluster::selectClusterBySession();
         $rab->total = explode('.', $rab->total)[0];
-        return view('project.rab_update', compact('rab' ,'lots', 'clusters'));
+        return view('project.rab_update', [
+            'rab' => $rab,
+            'lot'=> $lots, 
+            'clusters' => $clusters,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function datatables(Request $request)

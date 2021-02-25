@@ -7,14 +7,17 @@ use App\Http\Controllers\Controller;
 use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Accounting\AccountingLedger;
 use App\Http\Models\Accounting\AccountingJournal;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class FinancialSubmissionController extends Controller
 {
     public function index()
     {
-        $clusters = Cluster::selectClusterBySession();
-
-        return view('accounting.financial_submission.'.__FUNCTION__, compact('clusters'));
+        return view('accounting.financial_submission.'.__FUNCTION__, [
+            'clusters' => Cluster::selectClusterBySession(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function datatables(Request $request)

@@ -2,23 +2,30 @@
 
 namespace App\Http\Controllers\Inventory;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Inventory\DeliveryOrderItems;
-use App\Http\Models\Inventory\DeliveryOrders;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Models\Inventory\DeliveryOrders;
+use App\Http\Models\Inventory\DeliveryOrderItems;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class DeliveryOrderController extends Controller
 {
     public function index()
     {
-        return view('inventory.delivery_order');
+        return view('inventory.delivery_order', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()
     {
-        return view('inventory.delivery_order_create');
+        return view('inventory.delivery_order_create', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function insertData(Request $request)
@@ -30,9 +37,11 @@ class DeliveryOrderController extends Controller
 
     public function edit($id)
     {
-        $order = DeliveryOrders::whereId($id)->first();
-
-        return view('inventory.delivery_order_update', compact('order'));
+        return view('inventory.delivery_order_update', [
+            'order' => DeliveryOrders::whereId($id)->first(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
 
     }
 
@@ -123,12 +132,13 @@ class DeliveryOrderController extends Controller
 
     public function generatePdf($id)
     {
-        // return view('inventory.delivery_order_pdf', [
-        //     'data' => DeliveryOrderItems::generatePdf($id),
-        // ]);
         $pdf = PDF::setOptions(['isRemoteEnabled' => true])->loadview('inventory.delivery_order_pdf', [
             'data' => DeliveryOrderItems::generatePdf($id),
+            'header' => GeneralSetting::getPdfHeaderImage(),
+            'footer' => GeneralSetting::getPdfFooterImage(),
+            'company_name' => GeneralSetting::getCompanyName(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
         ]);
-        return $pdf->download('surat jalan.pdf');
+        return $pdf->download('Delivery Order.pdf');
     }
 }

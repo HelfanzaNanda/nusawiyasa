@@ -2,30 +2,38 @@
 
 namespace App\Http\Controllers\Project;
 
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use App\Http\Models\Ref\Province;
+use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Customer\CustomerLot;
 use App\Http\Models\Project\DevelopmentProgress;
-use App\Http\Models\Project\DevelopmentProgressFiles;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 use App\Http\Models\Project\DevelopmentProgressJobs;
+use App\Http\Models\Project\DevelopmentProgressFiles;
 use App\Http\Models\Project\DevelopmentProgressMaterials;
-use App\Http\Models\Ref\Province;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade as PDF;
 
 class DevelopmentProgressController extends Controller
 {
     public function index()
     {
-        return view('project.development_progress');
+        return view('project.development_progress', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()
     {
         $lots = CustomerLot::bookingLotBySession();
 
-        return view('project.development_progress_create', compact('lots'));
+        return view('project.development_progress_create', [
+            'lots' => $lots,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function insertData(Request $request)
@@ -123,8 +131,9 @@ class DevelopmentProgressController extends Controller
         $files = DevelopmentProgressFiles::where('development_progress_id', $id)->get();
         $jobs = DevelopmentProgressJobs::where('development_progress_id', $id)->get();
         $materials = DevelopmentProgressMaterials::select(['inventories.name as inventory_name', 'development_progress_materials.qty as qty', 'development_progress_materials.type as type', 'inventory_units.name as inventory_unit'])->join('inventories', 'inventories.id', '=', 'development_progress_materials.inventory_id')->join('inventory_units', 'inventory_units.id', '=', 'inventories.unit_id')->where('development_progress_materials.development_progress_id', $id)->get();
-
-        return view('project.development_progress_detail', compact('data', 'files', 'jobs', 'materials'));
+        $company_logo = GeneralSetting::getCompanyLogo();
+        $company_name = GeneralSetting::getCompanyName();
+        return view('project.development_progress_detail', compact('data', 'files', 'jobs', 'materials', 'company_logo', 'company_name'));
     }
 
     public function pdf($id){
@@ -161,11 +170,13 @@ class DevelopmentProgressController extends Controller
         $customPaper = array(0,0,360,360);
         $pdf = PDF::setOptions(['isRemoteEnabled' => true, 'isHtml5ParserEnabled' => true, 'setPaper' => $customPaper])
         ->loadview('project.development_progress_pdf', [
-            'data' => $dev
+            'data' => $dev,
+            'header' => GeneralSetting::getPdfHeaderImage(),
+            'footer' => GeneralSetting::getPdfFooterImage(),
+            'company_name' => GeneralSetting::getCompanyName(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
         ]);
         return $pdf->download('Development progress '.$dev['date'].'.pdf');
-        // $data = $dev;
-        // return view('project.development_progress_pdf', compact('data'));
         
     }
 

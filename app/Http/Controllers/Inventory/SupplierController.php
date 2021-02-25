@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Inventory;
 
+use Illuminate\Http\Request;
+use App\Http\Models\Ref\City;
+use App\Http\Models\Ref\Province;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Inventory\Suppliers;
-use App\Http\Models\Ref\Province;
-use App\Http\Models\Ref\City;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class SupplierController extends Controller
 {
@@ -15,7 +16,11 @@ class SupplierController extends Controller
     {
         $provinces = Province::get();
         
-        return view('inventory.supplier', compact('provinces'));
+        return view('inventory.supplier', [
+            'provinces' => $provinces,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()

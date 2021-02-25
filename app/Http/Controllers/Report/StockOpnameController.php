@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Report;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade as PDF;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Inventory\Inventories;
-use Barryvdh\DomPDF\Facade as PDF;
-use Carbon\Carbon;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class StockOpnameController extends Controller
 {
@@ -15,6 +16,8 @@ class StockOpnameController extends Controller
     {
         return view('report.stock_opname', [
             'clusters' => Cluster::selectClusterBySession(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
         ]);
     }
 
@@ -96,7 +99,11 @@ class StockOpnameController extends Controller
         $pdf = PDF::setOptions(['isRemoteEnabled' => true])
         ->loadview('report.stock_opname_pdf', [
             'data' => Inventories::generatePdf($cluster),
-            'title' => $filename
+            'title' => $filename,
+            'header' => GeneralSetting::getPdfHeaderImage(),
+            'footer' => GeneralSetting::getPdfFooterImage(),
+            'company_name' => GeneralSetting::getCompanyName(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
         ]);
         return $pdf->download($filename.'.pdf');
     }

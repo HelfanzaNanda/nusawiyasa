@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers\Accounting;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Accounting\AccountingJournal;
-use App\Http\Models\Accounting\AccountingLedger;
-use App\Http\Models\Cluster\Cluster;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Models\Cluster\Cluster;
+use App\Http\Models\Accounting\AccountingLedger;
+use App\Http\Models\Accounting\AccountingJournal;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class GeneralLedgerController extends Controller
 {
     public function index()
     {
-        $clusters = Cluster::selectClusterBySession();
-
-        return view('accounting.general_ledger.'.__FUNCTION__, compact('clusters'));
+        return view('accounting.general_ledger.'.__FUNCTION__, [
+            'clusters' => Cluster::selectClusterBySession(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function datatables(Request $request)

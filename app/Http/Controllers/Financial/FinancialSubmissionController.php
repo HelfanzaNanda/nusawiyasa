@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\Financial;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Http\Models\Financial\FinancialSubmission;
-use App\Http\Models\Cluster\Cluster;
-use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade as PDF;
+use App\Http\Controllers\Controller;
+use App\Http\Models\Cluster\Cluster;
+use App\Http\Models\Financial\FinancialSubmission;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class FinancialSubmissionController extends Controller
 {
     public function index(){
-        return view('financial.index');
+        return view('financial.index', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function datatable(Request $request){
@@ -85,9 +89,12 @@ class FinancialSubmissionController extends Controller
     }
 
     public function create(Request $request){
-        $id = session()->get('_id');
-        $clusters = Cluster::all();
-        return view('financial.create', compact('clusters', 'id'));
+        return view('financial.create',  [
+            'id' => session()->get('_id'),
+            'clusters' => Cluster::all(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function store(Request $request){
@@ -100,7 +107,9 @@ class FinancialSubmissionController extends Controller
         $financial = FinancialSubmission::where('id', $id)->first();
         $clusters = Cluster::all();
         $no = 1;
-        return view('financial.edit', compact(['financial', 'id', 'clusters', 'no']));
+        $company_logo =  GeneralSetting::getCompanyLogo();
+        $company_name =  GeneralSetting::getCompanyName();
+        return view('financial.edit', compact(['financial', 'id', 'clusters', 'no', 'company_name', 'company_logo']));
     }
 
     public function delete(Request $request, $id){
@@ -121,7 +130,9 @@ class FinancialSubmissionController extends Controller
             'setPaper' => $customPaper
         ])
         ->loadview('financial.pdf', [
-            'data' => $data
+            'data' => $data,
+            'header' => GeneralSetting::getPdfHeaderImage(),
+            'footer' => GeneralSetting::getPdfFooterImage()
         ]);
         return $pdf->stream($data['number'].'-'.Carbon::now().'.pdf');
     }
