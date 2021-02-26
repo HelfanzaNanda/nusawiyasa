@@ -17,8 +17,7 @@ class RefTermPurchasingCustomer extends Model
 		'type',
 		'is_active',
 		'is_deleted',
-        'income_account',
-        'receivable_account',
+        'account',
         'account_type',
     ];
 
@@ -44,8 +43,8 @@ class RefTermPurchasingCustomer extends Model
 			'type' => ['alias' => $model->table.'.type', 'type' => 'string'],
 			'is_active' => ['alias' => $model->table.'.is_active', 'type' => 'int'],
 			'is_deleted' => ['alias' => $model->table.'.is_deleted', 'type' => 'int'],
-            'income_account' => ['alias' => $model->table.'.income_account', 'type' => 'string'],
-            'receivable_account' => ['alias' => $model->table.'.receivable_account', 'type' => 'string'],
+            'account' => ['alias' => $model->table.'.account', 'type' => 'string'],
+            //'receivable_account' => ['alias' => $model->table.'.receivable_account', 'type' => 'string'],
             'account_type' => ['alias' => $model->table.'.account_type', 'type' => 'string'],
 			'created_at' => ['alias' => $model->table.'.created_at', 'type' => 'string'],
 			'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string'],
@@ -196,12 +195,12 @@ class RefTermPurchasingCustomer extends Model
         }
 
         $qry = self::select($_select)
-                        ->addSelect('a.name as income_account_name')
-                        ->addSelect('a.accounting_code as income_account_code')
+                        ->addSelect('a.name as account_name')
+                        ->addSelect('a.accounting_code as account_code')
                         ->addSelect('b.name as receivable_account_name')
                         ->addSelect('b.accounting_code as receivable_account_code')
-                        ->leftJoin('accounting_masters as a', 'a.coa', '=', 'ref_term_purchasing_customers.income_account')
-                        ->leftJoin('accounting_masters as b', 'b.coa', '=', 'ref_term_purchasing_customers.receivable_account');
+                        ->leftJoin('accounting_masters as a', 'a.coa', '=', 'ref_term_purchasing_customers.account')
+                        ->leftJoin('accounting_masters as b', 'b.coa', '=', 'ref_term_purchasing_customers.account');
         
         if (isset($filter['terms_type']) && $filter['terms_type']) {
             $qry->where('terms_type', $filter['terms_type']);

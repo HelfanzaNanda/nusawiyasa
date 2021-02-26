@@ -403,7 +403,7 @@ class DevelopmentProgress extends Model
                 'prevPage' => $prevPage,
                 'totalPage' => $totalPage
             ],
-            'data' => $db->get()
+            'data' => $db->orderBy('percentage', 'DESC')->get()
         ]);
     }
 
@@ -452,7 +452,7 @@ class DevelopmentProgress extends Model
             }
         }
 
-        return response()->json($db->get());
+        return response()->json($db->orderBy('percentage', 'DESC')->get());
     }
 
     public function cluster(){

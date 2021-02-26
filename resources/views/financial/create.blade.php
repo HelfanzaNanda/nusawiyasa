@@ -33,7 +33,7 @@
                         <div class="form-group row">
                             <label class="col-form-label col-md-2">Tanggal</label>
                             <div class="col-md-10">
-                                <input class="form-control floating" type="date" id="input-date" name="date">
+                                <input class="form-control floating" type="text" id="input-date" name="date">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -71,7 +71,12 @@
                                                         <input type="number" id="input-item-qty" class="form-control add-item" placeholder="Jumlah">
                                                     </th>
                                                     <th>
-                                                        <input type="text" id="input-item-unit" class="form-control add-item" placeholder="Satuan">
+                                                        <select id="input-item-unit">
+                                                            <option value="">Pilih Satuan</option>
+                                                            @foreach ($units as $item)
+                                                                <option value="{{$item->name}}">{{$item->name}}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </th>
                                                     <th>
                                                         <input type="number" id="input-item-price" oninput="getTotalPrice()" class="form-control add-item" placeholder="Harga">
@@ -110,6 +115,31 @@
 
 @section('additionalScriptJS')
     <script type="text/javascript">
+        if($('#input-date').length > 0) {
+            $('#input-date').datetimepicker({
+                format: 'YYYY-MM-DD',
+                icons: {
+                    up: "fa fa-angle-up",
+                    down: "fa fa-angle-down",
+                    next: 'fa fa-angle-right',
+                    previous: 'fa fa-angle-left'
+                }
+            });
+        }
+        $('#input-item-unit').select2({
+            width: '100%'
+        });
+        $(document).ready(function(){
+            var url = '{{ asset('') }}'
+            
+            $.ajax({
+            type: 'GET',
+            url: url+'number/generate?prefix=FS',
+            success: function(data){
+                $('#input-number').val(data.number)
+            }
+            })
+        })
         $('#input-cluster').select2({
             width: '100%'
         });
@@ -122,9 +152,12 @@
 
             $('#input-item-value').val('')
             $('#input-item-qty').val('0')
-            $('#input-item-unit').val('')
+           // $('#input-item-unit').val('')
             $('#input-item-price').val('0')
             $('#input-item-total-price').val('0')
+            //$("select#input-item-unit").val('0'); 
+            //$('#select').selectmenu("refresh", true);
+            $('#input-item-unit').prop('selectedIndex', 0).change();
             calculateTotal();
         });
 
@@ -135,7 +168,8 @@
 
             var value = $('#input-item-value').val()
             var qty = $('#input-item-qty').val()
-            var unit = $('#input-item-unit').val()
+            var unit = $('#input-item-unit').find(':selected').val()
+            //console.log($('#input-item-unit').val())
             var price = addSeparator($('#input-item-price').val(), '.', '.', ',');
             var totalPrice = addSeparator($('#input-item-total-price').val(), '.', '.', ',');
             var note = ($('#input-item-note').val() == "") ? '-' : $('#input-item-note').val()
@@ -186,43 +220,62 @@
 
             var form_data = new FormData( this );
             $.ajax({
-                type: 'post',
-                url: BASE_URL+'/financial-submission/store',
-                data: form_data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                dataType: 'json',
-                beforeSend: function() {
-                    
-                },
-                success: function(msg) {
-                    $('.loading').html('Submit').attr('disabled', false)
-                    if(msg.status == 'success'){
-                        setTimeout(function() {
-                            swal({
-                                title: "Sukses",
-                                text: msg.message,
-                                type:"success",
-                                html: true
-                            }, function() {
-                                // $('#main-table').DataTable().ajax.reload(null, false);
-                                $('#add-modal').modal('hide');
-                                window.location.replace("{{url('/financial-submission')}}");
-                            });
-                        }, 500);
-                    } else {
+                type: 'GET',
+                url: '{{asset('')}}'+'number/validate?prefix=FS&number='+$('#input-number').val(),
+                success: function(data){
+                    if(data.status == 'error'){
+                        $('.loading').html('Submit').attr('disabled', false)
                         swal({
                             title: "Gagal",
-                            text: msg.message,
+                            text: "Maaf, Nomor surat pengajuan keuangan telah digunakan,",
                             showConfirmButton: true,
                             confirmButtonColor: '#0760ef',
                             type:"error",
                             html: true
                         });
+                    }else{
+                        $.ajax({
+                            type: 'post',
+                            url: BASE_URL+'/financial-submission/store',
+                            data: form_data,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            dataType: 'json',
+                            beforeSend: function() {
+                                
+                            },
+                            success: function(msg) {
+                                $('.loading').html('Submit').attr('disabled', false)
+                                if(msg.status == 'success'){
+                                    setTimeout(function() {
+                                        swal({
+                                            title: "Sukses",
+                                            text: msg.message,
+                                            type:"success",
+                                            html: true
+                                        }, function() {
+                                            // $('#main-table').DataTable().ajax.reload(null, false);
+                                            $('#add-modal').modal('hide');
+                                            window.location.replace("{{url('/financial-submission')}}");
+                                        });
+                                    }, 500);
+                                } else {
+                                    swal({
+                                        title: "Gagal",
+                                        text: msg.message,
+                                        showConfirmButton: true,
+                                        confirmButtonColor: '#0760ef',
+                                        type:"error",
+                                        html: true
+                                    });
+                                }
+                            }
+                        });
                     }
                 }
-                });
+            })
+            
         })
     </script>
 @endsection

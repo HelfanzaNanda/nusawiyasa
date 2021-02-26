@@ -14,6 +14,7 @@ use App\Http\Models\Project\WorkAgreementAdditionals;
 use App\Http\Models\Project\WorkAgreements;
 use App\Http\Models\Purchase\PurchaseOrderDeliveries;
 use App\Http\Models\Purchase\PurchaseOrders;
+use App\Http\Models\Financial\FinancialSubmission;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -107,6 +108,12 @@ class NumberGenerateController extends Controller
                     'field' => 'number',
                     'prefix' => $pref
                 ];
+            }else if($pref == 'FS'){
+                $data = [
+                    'class' => FinancialSubmission::class,
+                    'field' => 'number',
+                    'prefix' => $pref
+                ];
             }else{
                 return response()->json([
                     'status' => 'error',
@@ -179,6 +186,9 @@ class NumberGenerateController extends Controller
             $params = ($data == null) ? $success : $error;
         } else if ($pref == 'DE') {
             $data = Debt::where('number' ,$request->number)->first();
+            $params = ($data == null) ? $success : $error;
+        }else if($pref == 'FS'){
+            $data = FinancialSubmission::where('number' ,$request->number)->first();
             $params = ($data == null) ? $success : $error;
         }else{
             $params = [

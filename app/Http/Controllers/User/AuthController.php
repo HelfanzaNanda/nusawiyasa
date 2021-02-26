@@ -49,7 +49,12 @@ class AuthController extends Controller
         if($customerLot != null){
             $generalStatus = $customerLot->generalStatus;
             if($generalStatus != null){
-                $status = ($generalStatus->key == 'approved') ? 'accept' : 'decline';
+                if($generalStatus->key == 'submission'){
+                    $status = 'submission';
+                }else{
+                    $status = ($generalStatus->key == 'approved') ? 'accept' : 'decline';
+                }
+                
             }
         }
 
