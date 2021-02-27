@@ -23,4 +23,11 @@ class GeneraSettingController extends Controller
         //return $params;
         return GeneralSetting::updateData($params, $request);
     }
+
+    public function apiGet(Request $request){
+        return response()->json([
+            'logo' => ((GeneralSetting::getCompanyLogo() != null) ? asset('storage/'.GeneralSetting::getCompanyLogo()) : null),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
+    }
 }

@@ -73,3 +73,5 @@ Route::get('banner', function(){
     ];
     return response()->json($banner);
 });
+
+Route::get('setting', 'GeneraSetting\GeneraSettingController@apiGet');
