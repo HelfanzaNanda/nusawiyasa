@@ -8,7 +8,7 @@
         <meta name="keywords" content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects">
         <meta name="author" content="Dreamguys - Bootstrap Admin Template">
         <meta name="robots" content="noindex, nofollow">
-        <title>Login - Nusa Wiyasa Propertindo</title>
+        <title>Login - {{ $company_name ?? '' }}</title>
         
         <!-- Favicon -->
         <link rel="shortcut icon" type="image/x-icon" href="{{ asset('template/assets/img/favicon.png') }}">
@@ -41,7 +41,7 @@
                 
                     <!-- Account Logo -->
                     <div class="account-logo">
-                        <a href="index-2.html"><img src="{{ asset('template/assets/img/logo.png') }}" alt="Dreamguy's Technologies"></a>
+                        <a href="index-2.html"><img src="{{ asset('storage/'.($company_logo ?? '') ) }}" alt="Dreamguy's Technologies"></a>
                     </div>
                     <!-- /Account Logo -->
                     
