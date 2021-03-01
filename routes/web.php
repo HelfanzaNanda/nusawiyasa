@@ -21,8 +21,12 @@ Route::group([
     'middleware' => ['auth.primary']
 ], function () {
 	Route::get('/', 'Dashboard\DashboardController@index');
-
-	Route::get('/dashboard/{type}', 'ASD@asd');
+	
+	Route::group(['namespace' => 'Dashboard', 'prefix' => 'dashboard'], function () {
+		Route::get('/lot_sold', 'DashboardController@lotSold');
+		Route::get('/lot_progress', 'DashboardController@lotProgressStep');
+	});
+	// Route::get('/dashboard/{type}', 'ASD@asd');
 
 	Route::get('/customers', 'Customer\CustomerController@index');
 	Route::post('/customers', 'Customer\CustomerController@insertData');

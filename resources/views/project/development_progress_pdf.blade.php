@@ -87,19 +87,22 @@
 </head>
 
 <body>
+    <header>
+        <img src="{{ asset('storage/'.($header ?? '') ) }}"width="100%" height="100%"/>
+    </header>
 
     <footer>
         <img src="{{ asset('storage/'.($footer ?? '') ) }}" width="100%" height="100%"/>
     </footer>
-        <p style="text-align: right;line-height: 16px;">
-            {{ $data['cluster']['address'] }}
-            <br>
-            Kelurahan {{ $data['cluster']['subdistrict'] }}
-            <br>
-            Kec. {{ $data['cluster']['district'] }}, {{ $data['cluster']['city'] }}
-            <br>
-            Telp. {{ $data['cluster']['phone'] }}
-        </p>
+    <p style="text-align: right;line-height: 16px;">
+        {{ $data['cluster']['address'] }}
+        <br>
+        Kelurahan {{ $data['cluster']['subdistrict'] }}
+        <br>
+        Kec. {{ $data['cluster']['district'] }}, {{ $data['cluster']['city'] }}
+        <br>
+        Telp. {{ $data['cluster']['phone'] }}
+    </p>
     <div style="">
         <center>
             <h4 style="line-height: 20px">
@@ -128,7 +131,7 @@
         </table></b>
     </div>
     <center>
-        <h4>Documentasi</h4>
+        <h4>Dokumentasi</h4>
     </center>
     <br>
     <div class="img">    
@@ -176,17 +179,19 @@
                 <th>TENAGA KERJA</th>
                 <th>JUMLAH</th>
             </tr>
-            @foreach ($data['eq'] as $item)
-                <tr>
-                    <td>{{$item['no']}}</td>
-                    <td>{{$item['material_name']}}</td>
-                    <td>{{$item['material_qty']}}</td>
-                    <td>{{$item['tool_name']}}</td>
-                    <td>{{$item['tool_qty']}}</td>
-                    <td>{{$item['service_name']}}</td>
-                    <td>{{$item['service_qty']}}</td>
-                </tr>
-            @endforeach
+            @if(isset($data['eq']))
+                @foreach ($data['eq'] as $item)
+                    <tr>
+                        <td>{{$item['no']}}</td>
+                        <td>{{$item['material_name']}}</td>
+                        <td>{{$item['material_qty']}}</td>
+                        <td>{{$item['tool_name']}}</td>
+                        <td>{{$item['tool_qty']}}</td>
+                        <td>{{$item['service_name']}}</td>
+                        <td>{{$item['service_qty']}}</td>
+                    </tr>
+                @endforeach
+            @endif
         </table>
         <br>
         <table>

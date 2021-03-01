@@ -220,7 +220,14 @@ class DevelopmentProgress extends Model
     public static function createOrUpdate($params, $method, $request)
     {
         $_id = session()->get('_id');
-        // dd($params);
+
+        if (isset($params['percentage']) && $params['percentage'] > 100) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Persentase Maksimal 100%!'
+            ]);
+        }
+
         DB::beginTransaction();
         $filename = null;
 
@@ -240,7 +247,7 @@ class DevelopmentProgress extends Model
             ]);
         }
 
-        $customer_lot = CustomerLot::select(['customer_lots.customer_id', 'clusters.id as cluster_id'])
+        $customer_lot = CustomerLot::select(['customer_lots.customer_id', 'clusters.id as cluster_id', 'customer_lots.status'])
                             ->join('lots', 'lots.id', '=', 'customer_lots.lot_id')
                             ->join('clusters', 'clusters.id', '=', 'lots.cluster_id')
                             ->where('customer_lots.lot_id', $params['lot_id'])
@@ -260,6 +267,23 @@ class DevelopmentProgress extends Model
         $insert = self::create($development_progress);
 
         if ($insert) {
+            $status = 6;
+            if ($params['percentage'] > 98) {
+                $status = 7;
+            }
+
+            if ($customer_lot['status'] < $status) {
+                //Update Status Booking
+                CustomerLot::where('lot_id', $params['lot_id'])->update([
+                    'status' => $status
+                ]);
+
+                //Update Status Lot
+                Lot::where('id', $params['lot_id'])->update([
+                    'lot_status' => $status
+                ]);
+            }
+
             if (isset($params['job_work']) && is_array($params['job_work'])) {
                 foreach($params['job_work'] as $k_job => $jobs) {
                     DevelopmentProgressJobs::create([

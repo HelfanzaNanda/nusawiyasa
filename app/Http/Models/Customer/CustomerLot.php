@@ -252,9 +252,9 @@ class CustomerLot extends Model
 
             if ($update) {
                 if (count($params_customer_cost) > 0) {
-                    CustomerCost::where('customer_id', $customer_lot['customer_id'])->where('lot_id', $customer_lot['lot_id'])->delete();
+                    // CustomerCost::where('customer_id', $customer_lot['customer_id'])->where('lot_id', $customer_lot['lot_id'])->delete();
                     foreach($params_customer_cost as $key => $customer_cost) {
-                        CustomerCost::create([
+                        CustomerCost::where('customer_id', $customer_lot['customer_id'])->where('lot_id', $params['lot_id'])->where('ref_term_purchasing_customer_id', $key)->update([
                             'customer_id' => $params['customer_id'],
                             'ref_term_purchasing_customer_id' => $key,
                             'value' => $customer_cost,
@@ -280,14 +280,14 @@ class CustomerLot extends Model
                                     'status' => 1,
                                     'lot_id' => $params['lot_id']
                                 ]);
-                            }else{
+                            } else {
                                 DB::rollBack();
                                 return response()->json([
                                     'status' => 'error',
                                     'message' => 'Only upload jpg, png, and pdf'
                                 ]);
                             }
-                        }else{
+                        } else {
                             $responseImage = self::uploadImage($file, 'customer_terms');
                             if ($responseImage['status']) {
                                 CustomerTerm::create([

@@ -97,6 +97,11 @@
                     @endforeach
                 </select>
               </div>
+              <div class="form-group">
+                <label>Total Perjanjian Upah</label>
+                <input class="form-control" type="text" name="wage" id="wage">
+                <span class="text-danger error"></span>
+              </div>
             </div>
           </div>
           <div class="submit-section">
@@ -159,6 +164,11 @@
                       <option value="{{$lot['id']}}">{{$lot['cluster_name']}} - {{$lot['unit_block']}} / {{$lot['unit_number']}} ({{$lot['customer_name']}})</option>
                     @endforeach
                 </select>
+              </div>
+              <div class="form-group">
+                <label>Total Perjanjian Upah</label>
+                <input class="form-control" type="text" name="wage" id="wage-edit">
+                <span class="text-danger error"></span>
               </div>
             </div>
           </div>
@@ -300,6 +310,7 @@ $(document).ready(function(){
                 $('#id').val(data.id)
                 $('#number-edit').val(data.number);
                 $('#title-edit').val(data.title);
+                $('#wage-edit').val(parseFloat(data.wage));
                 $('#date-edit').val(formatDate(data.date));
                 $('#customer-lot-id-edit').val(data.customer_lot_id).trigger('change');
                 $('#label-img-edit').text(data.filename)

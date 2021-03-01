@@ -245,7 +245,7 @@
         <table id="tfooter">
             <tr>
                 <td class="ttd" style="width: 20%;">Setujui Oleh,</td>
-                <td class="ttd" style="width: 20%;">Diterima Oleh,</td>
+                <td class="ttd" style="width: 20%;">Diketahui Oleh,</td>
                 <td class="ttd" style="width: 15%">Dibuat Oleh,</td>
             </tr>
             <tr id="ttb">

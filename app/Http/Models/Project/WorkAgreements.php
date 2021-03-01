@@ -39,7 +39,7 @@ class WorkAgreements extends Model
      * @var array
      */
     protected $fillable = [
-        'number', 'title', 'date', 'filepath', 'filename', 'customer_lot_id', 'create_by_user_id', 'approved_by_user_id', 'received_by_user_id', 'created_at', 'updated_at'
+        'number', 'title', 'date', 'filepath', 'filename', 'customer_lot_id', 'create_by_user_id', 'approved_by_user_id', 'received_by_user_id', 'created_at', 'updated_at', 'wage'
     ];
 
     /**
@@ -186,6 +186,7 @@ class WorkAgreements extends Model
                         'customer_lot_id' => $params['customer_lot_id'],
                         'filepath' => '/storage/media/work-agreement/'.$month_year_pfx,
                         'filename' => $filename,
+                        'wage' => $params['wage']
                     ]);
                 } else {
                     DB::rollBack();
@@ -209,6 +210,7 @@ class WorkAgreements extends Model
                 'number' => $params['number'],
                 'date' => $params['date'],
                 'customer_lot_id' => $params['customer_lot_id'],
+                'wage' => $params['wage']
             ]);
             
             DB::commit();
@@ -238,6 +240,7 @@ class WorkAgreements extends Model
                     'customer_lot_id' => $params['customer_lot_id'],
                     'filepath' => '/storage/media/work-agreement/'.$month_year_pfx,
                     'filename' => $filename,
+                    'wage' => $params['wage']
                 ]);
             } else {
                 DB::rollBack();
@@ -258,8 +261,8 @@ class WorkAgreements extends Model
 
         DB::commit();
         return response()->json([
-            'status' => 'success',
-            'message' => 'Data Berhasil Disimpan'
+            'status' => 'error',
+            'message' => 'Silahkan Upload File'
         ]);
     }
 

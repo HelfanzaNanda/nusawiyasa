@@ -2,6 +2,7 @@
 
 namespace App\Http\Models\Project;
 
+use App\Http\Models\Cluster\Lot;
 use App\Http\Models\Customer\CustomerLot;
 use Carbon\Carbon;
 use DB;
@@ -196,6 +197,19 @@ class SpkProjects extends Model
         $params['received_by_user_id'] = 0;
         $insert = self::create($params);
 
+        if ($insert) {
+            //Update Status Booking
+            CustomerLot::where('id', $params['customer_lot_id'])->update([
+                'status' => 5
+            ]);
+
+            $lot_id = CustomerLot::where('id', $params['customer_lot_id'])->value('lot_id');
+            //Update Status Lot
+            Lot::where('id', $lot_id)->update([
+                'lot_status' => 5
+            ]);
+        }
+
         DB::commit();
         return response()->json([
             'status' => 'success',
@@ -320,7 +334,7 @@ class SpkProjects extends Model
             'building_area' => $spkProject->customerLot->lot->building_area,
             'surface_area' => $spkProject->customerLot->lot->surface_area,
             'note' => $spkProject->note,
-            'status' => 'lorem ipsum',
+            'status' => $spkProject->customerLot->generalStatus->note,
         ];
 
         return $item;
