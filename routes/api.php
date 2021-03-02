@@ -44,7 +44,7 @@ Route::get('banner', function(){
     $address = $_SERVER['REMOTE_ADDR'];
     $port      = $_SERVER['REMOTE_PORT'];
 
-    if (!in_array($ipAddress, $without_port)) {
+    if (!in_array($address, $without_port)) {
         $address = $address.':'.$port;
     }
     $banner = [
