@@ -43,32 +43,32 @@ Route::get('banner', function(){
         [
             'id' => '1',
             'name' => 'Perumahan nyaman',
-            'image' => 'http://157.230.250.8/banner/1.jpg'
+            'image' => 'http://'.$_SERVER['SERVER_NAME'].'/banner/1.jpg'
         ],
         [
             'id' => '2',
             'name' => 'Perumahan nyaman',
-            'image' => 'http://157.230.250.8/banner/2.jpg'
+            'image' => 'http://'.$_SERVER['SERVER_NAME'].'/banner/2.jpg'
         ],
         [
             'id' => '3',
             'name' => 'Perumahan nyaman',
-            'image' => 'http://157.230.250.8/banner/3.jpg'
+            'image' => 'http://'.$_SERVER['SERVER_NAME'].'/banner/3.jpg'
         ],
         [
             'id' => '4',
             'name' => 'Perumahan nyaman',
-            'image' => 'http://157.230.250.8/banner/4.jpg'
+            'image' => 'http://'.$_SERVER['SERVER_NAME'].'/banner/4.jpg'
         ],
         [
             'id' => '5',
             'name' => 'Perumahan nyaman',
-            'image' => 'http://157.230.250.8/banner/5.jpg'
+            'image' => 'http://'.$_SERVER['SERVER_NAME'].'/banner/5.jpg'
         ],
-               [
+        [
             'id' => '6',
             'name' => 'Perumahan nyaman',
-            'image' => 'http://157.230.250.8/banner/6.jpg'
+            'image' => 'http://'.$_SERVER['SERVER_NAME'].'/banner/6.jpg'
         ], 
     ];
     return response()->json($banner);
