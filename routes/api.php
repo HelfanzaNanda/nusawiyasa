@@ -39,36 +39,44 @@ Route::group(['namespace' => 'Project'], function () {
     Route::get('development_progress/{id?}', ['as' => 'get.development.progress', 'uses' => 'DevelopmentProgressController@get']);
 });
 Route::get('banner', function(){
+    $without_port = ['157.230.250.8', '127.0.0.1', 'localhost'];
+
+    $address = $_SERVER['REMOTE_ADDR'];
+    $port      = $_SERVER['REMOTE_PORT'];
+
+    if (!in_array($ipAddress, $without_port)) {
+        $address = $address.':'.$port;
+    }
     $banner = [
         [
             'id' => '1',
             'name' => 'Perumahan nyaman',
-            'image' => 'http://'.$_SERVER['SERVER_NAME'].'/banner/1.jpg'
+            'image' => 'http://'.$address.'/banner/1.jpg'
         ],
         [
             'id' => '2',
             'name' => 'Perumahan nyaman',
-            'image' => 'http://'.$_SERVER['SERVER_NAME'].'/banner/2.jpg'
+            'image' => 'http://'.$address.'/banner/2.jpg'
         ],
         [
             'id' => '3',
             'name' => 'Perumahan nyaman',
-            'image' => 'http://'.$_SERVER['SERVER_NAME'].'/banner/3.jpg'
+            'image' => 'http://'.$address.'/banner/3.jpg'
         ],
         [
             'id' => '4',
             'name' => 'Perumahan nyaman',
-            'image' => 'http://'.$_SERVER['SERVER_NAME'].'/banner/4.jpg'
+            'image' => 'http://'.$address.'/banner/4.jpg'
         ],
         [
             'id' => '5',
             'name' => 'Perumahan nyaman',
-            'image' => 'http://'.$_SERVER['SERVER_NAME'].'/banner/5.jpg'
+            'image' => 'http://'.$address.'/banner/5.jpg'
         ],
         [
             'id' => '6',
             'name' => 'Perumahan nyaman',
-            'image' => 'http://'.$_SERVER['SERVER_NAME'].'/banner/6.jpg'
+            'image' => 'http://'.$address.'/banner/6.jpg'
         ], 
     ];
     return response()->json($banner);
