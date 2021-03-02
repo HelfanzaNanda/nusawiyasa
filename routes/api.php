@@ -41,8 +41,8 @@ Route::group(['namespace' => 'Project'], function () {
 Route::get('banner', function(){
     $without_port = ['157.230.250.8', '127.0.0.1', 'localhost'];
 
-    $address = $_SERVER['REMOTE_ADDR'];
-    $port      = $_SERVER['REMOTE_PORT'];
+    $address = $_SERVER['SERVER_NAME'];
+    $port      = $_SERVER['SERVER_PORT'];
 
     if (!in_array($address, $without_port)) {
         $address = $address.':'.$port;
