@@ -160,8 +160,12 @@ class CustomerLotController extends Controller
         CustomerPayment::where('customer_lot_id', $customer_lot['id'])->delete();
 
         CustomerTerm::where('customer_id', $customer_lot['customer_id'])->where('lot_id', $customer_lot['lot_id'])->delete();
+
+        Lot::where('id', $customer_lot['lot_id'])->update([
+            'lot_status' => 1
+        ]);
         
-        $cluster = CustomerLot::destroy($id);
+        CustomerLot::destroy($id);
         
         return response()->json([
             'message' => 'data berhasil dihapus',
