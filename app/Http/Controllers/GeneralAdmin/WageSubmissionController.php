@@ -8,6 +8,8 @@ use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\GeneralAdmin\WageSubmission;
 use App\Http\Models\GeneralSetting\GeneralSetting;
 use App\Http\Models\GeneralAdmin\WageSubmissionDetail;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class WageSubmissionController extends Controller
 {
@@ -23,7 +25,7 @@ class WageSubmissionController extends Controller
     public function store(Request $request)
     {
         $params = $request->all();
-
+        //return $params;
         return WageSubmission::createOrUpdate($params, $request->method(), $request);
     }
 
@@ -91,7 +93,8 @@ class WageSubmissionController extends Controller
                 $nestedData['action'] .='<div class="dropdown dropdown-action">';
                 $nestedData['action'] .='<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';
                 $nestedData['action'] .='<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(159px, 32px, 0px);">';
-                $nestedData['action'] .='<a href="#" data-journal="'.$row.'" class="dropdown-item" id="edit" data-id="'.$row['id'].'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
+                $nestedData['action'] .='<a href="#" data-wage="'.$row.'" class="dropdown-item" id="edit" data-id="'.$row['id'].'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
+                $nestedData['action'] .='<a href="'.url('/salary-submission/cetak/'.$row['id']).'" target="_blank" class="dropdown-item" id="print" ><i class="fa fa-print m-r-5"></i> Cetak</a>';
                 $nestedData['action'] .='<a href="#" class="dropdown-item" id="delete" data-id="'.$row['id'].'"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
                 $nestedData['action'] .='</div>';
                 $nestedData['action'] .='</div>';
@@ -108,5 +111,32 @@ class WageSubmissionController extends Controller
         ];
 
         return json_encode($json_data);
+    }
+
+    public function edit($id)
+    {
+        return WageSubmission::getData($id);
+    }
+
+    public function generatePdf($id)
+    {
+        
+        // return view('general_admin.wage_submission.pdf', [
+        //     'data' => WageSubmission::getData($id),
+        //     'header' => GeneralSetting::getPdfHeaderImage(),
+        //     'footer' => GeneralSetting::getPdfFooterImage(),
+        //     'company_name' => GeneralSetting::getCompanyName(),
+        //     'company_logo' => GeneralSetting::getCompanyLogo(),
+        // ]);
+
+        $pdf = PDF::setOptions(['isRemoteEnabled' => true])
+        ->loadview('general_admin.wage_submission.pdf', [
+            'data' => WageSubmission::getData($id),
+            'header' => GeneralSetting::getPdfHeaderImage(),
+            'footer' => GeneralSetting::getPdfFooterImage(),
+            'company_name' => GeneralSetting::getCompanyName(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+        ]);
+        return $pdf->download('DIPOSISI PENGAJUAN UPAH BORONGAN.pdf');
     }
 }

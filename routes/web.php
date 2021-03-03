@@ -285,7 +285,7 @@ Route::group([
 			Route::get('/', ['as' => 'general-admin.salary-submission.index', 'uses' => 'WageSubmissionController@index']);
 	        Route::post('/datatables', ['as' => 'general-admin.salary-submission.datatable', 'uses' => 'WageSubmissionController@datatables']);
 	        Route::post('/store', ['as' => 'general-admin.salary-submission.store', 'uses' => 'WageSubmissionController@store']);
-	        Route::post('/update/{id}', ['as' => 'general-admin.salary-submission.update', 'uses' => 'WageSubmissionController@update']);
+	        Route::get('/cetak/{id}', ['as' => 'general-admin.salary-submission.print', 'uses' => 'WageSubmissionController@generatePdf']);
 	        Route::get('/delete/{id}', ['as' => 'general-admin.salary-submission.delete', 'uses' => 'WageSubmissionController@delete']);
 	        Route::get('/{id}', ['as' => 'general-admin.salary-submission.edit', 'uses' => 'WageSubmissionController@edit']);
 	    });
