@@ -2,13 +2,24 @@
 
 namespace App\Http\Controllers\Cluster;
 
-use App\Http\Controllers\Controller;
-use App\Http\Models\Cluster\LotGallery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Models\Cluster\Lot;
+use App\Http\Models\Cluster\LotGallery;
+use App\Http\Models\GeneralSetting\GeneralSetting;
 
 class LotGalleryController extends Controller
 {
+    public function index($lotId)
+    {
+        return view('cluster.lot_galleries', [
+            'lot' => Lot::whereId($lotId)->first(),
+            'galleries' => LotGallery::where('lot_id', $lotId)->get(),
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
+    }
     public function insertData(Request $request)
     {
         $params = $request->all();
