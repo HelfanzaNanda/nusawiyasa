@@ -67,10 +67,11 @@
             <div class="col-md-12"> 
 				<label>No. Ref</label>
 				<div class="form-group">
+					<input type="hidden" name="id" id="id" value="0">
 					<input type="text" class="form-control ref-number" placeholder="KD0001" name="number" id="ref">
 				</div><!-- form-group -->
 				<div class="form-group">
-				<label>Cluster/Perumahan</label>
+					<label>Cluster/Perumahan</label>
 					<select id="input-cluster" name="cluster_id" required=""> 
 					  <option value="0"> - Pilih Cluster - </option>
 					  @foreach($clusters as $cluster)
@@ -78,28 +79,28 @@
 					  @endforeach
 					</select>
 				</div>
-				<label>Tanggal</label>
 				<div class="form-group">
+					<label>Tanggal</label>
 					<input type="text" class="form-control" name="date" id="journal_date" value="{{date('Y-m-d')}}" autocomplete="off">
 				</div>
 
 				<div class="form-group">
-				<table id="myTable" class="table display responsive nowrap">
-				  <thead>
-				    <tr>
-				    	<th width="25%">Uraian</th>
-				        <th width="25%">Kapling</th>
-				        <th width="25%">Upah SPK</th>
-				        <th width="10%">%</th>
-				        <th width="15%">Upah Persentase</th>
-				        <th width="25%">Keterangan</th>
-				        <th width="5%"> 
-				          <button type="button" id="addrow" class="btn btn-info"><i class="fa fa-plus"></i></button>
-				        </th>
-				    </tr>
-				  </thead>
-				   <tbody id="journal_detail"></tbody>
-				</table> 
+					<table id="myTable" class="table display responsive nowrap">
+						<thead>
+							<tr>
+								<th width="25%">Uraian</th>
+								<th width="25%">Kapling</th>
+								<th width="25%">Upah SPK</th>
+								<th width="10%">%</th>
+								<th width="15%">Upah Persentase</th>
+								<th width="25%">Keterangan</th>
+								<th width="5%"> 
+								<button type="button" id="addrow" class="btn btn-info"><i class="fa fa-plus"></i></button>
+								</th>
+							</tr>
+						</thead>
+						<tbody id="journal_detail"></tbody>
+					</table> 
 				</div>
 				<input type="hidden" id="typePost">
 				<input type="hidden" id="id">
@@ -111,10 +112,6 @@
               Submit
             </button>
           </div>
-          {{-- <div class="submit-section">
-          	<span id="balance"></span><br>
-            <button class="btn btn-primary submit-btn" id="submit_button"><i class="fa fa-refresh fa-spin loading-area"></i>Submit</button>
-          </div> --}}
         </form>
       </div>
     </div>
@@ -226,7 +223,7 @@
 				} else {
 					$.ajax({
 						type: 'post',
-						url: $('#typePost').val() === 'edit' ? URL_UPDATE + '/' + $('#id').val() : URL_ADD,
+						url: URL_ADD,
 						data: form_data,
 						cache: false,
 						contentType: false,
@@ -236,6 +233,7 @@
 							$('.loading-area').show();
 						},
 						success: function(msg) {
+							//console.log(msg);
 							if(msg.status == 'success'){
 								setTimeout(function() {
 									swal({
@@ -383,6 +381,7 @@
 	    var cols = "";
 	    cols += '<td><input type="text" class="form-control" name="description[]" id="description_'+jj+'"></td>';
 	    cols += '<td><input type="hidden" name="wage_submission[]" id="wage_submission_'+jj+'">';
+	    cols += '<input type="hidden" name="wage_submission_detail[]" id="wage_submission_detail_'+jj+'">';
 	    cols += '<select id="customer_lot_'+jj+'" class="form-control" name="customer_lot_id[]" style="width: 100%;">';
 	    cols += '<option value"">Pilih</option>';
 	    cols += '</select></td>';
@@ -412,36 +411,28 @@
 				},
 			dataType: 'JSON',
 			success: function(data, textStatus, jqXHR) {
-					$('#ref').val(data.ref);
-					$('#journal_date').val(data.date);
-					$('#description').val(data.description);
-					$.each( data.accounting_ledgers, function( key, accounting_ledger ) {
+					$('#ref').val(data[0].number);
+					$('#id').val(data[0].id);
+					$('#input-cluster').val(data[0].cluster_id).trigger('change');
+					$('#journal_date').val(data[0].date);
+					$.each( data[1], function( key, detail ) {
 						addRow()
-						searchCustomerLot()
+						searchCustomerLot(jj)
 						selectDk()
-						var option = $("<option selected></option>").val(accounting_ledger.coa).text(`${accounting_ledger.accounting_master.accounting_code} | ${accounting_ledger.accounting_master.name}`);
-						$(`#coa_${jj}`).append(option).change();
-						if (parseInt(accounting_ledger.debit) === 0) {
-							$(`#dk_${jj} option[value='1']`).attr('selected','selected');
-							$(`#debit_${jj}`).prop('readonly', true);
-							$(`#credit_${jj}`).prop('readonly', false);
-						}else if(parseInt(accounting_ledger.credit) === 0){
-							$(`#dk_${jj} option[value='2']`).attr('selected','selected');
-							$(`#debit_${jj}`).prop('readonly', false);
-							$(`#credit_${jj}`).prop('readonly', true);
-						}
-						$(`#debit_${jj}`).val(parseInt(accounting_ledger.debit))
-						$(`#credit_${jj}`).val(parseInt(accounting_ledger.credit))
-						$(`#accounting_ledger_${jj}`).val(parseInt(accounting_ledger.id))
-						console.log(jj);
+						$('#description_'+jj).val(detail.description)
+						var newOption = new Option(detail.lot, detail.customer_lot_id, true, true);
+						$('#customer_lot_'+jj).append(newOption).change();
+						$('#wage_submission_'+jj).val(detail.wage_submission_id)
+						$('#wage_submission_detail_'+jj).val(detail.id)
+						$('#spk_cost_'+jj).val(parseFloat(detail.spk_cost))
+						$('#weekly_cost_'+jj).val(parseFloat(detail.weekly_cost))
+						$('#weekly_percentage_'+jj).val(detail.weekly_percentage)
+						$('#note_'+jj).val(detail.note)
 						jj++
 						
 					});
 					
 					$('#main-modal').modal('show');
-			},
-			error: function(jqXHR, textStatus, errorThrown){
-
 			},
 		});    
 	});

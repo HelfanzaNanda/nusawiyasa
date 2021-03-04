@@ -103,7 +103,7 @@ class LotController extends Controller
                 }
                 $nestedData['action'] .='<a href="#" class="dropdown-item" id="edit" data-id="'.$row['id'].'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
                 $nestedData['action'] .='<a href="#" class="dropdown-item" id="delete" data-id="'.$row['id'].'"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
-                $nestedData['action'] .='<a href="#" class="dropdown-item" id="lot-gallery" data-id="'.$row['id'].'"><i class="fa fa-info m-r-5"></i> Gallery</a>';
+                $nestedData['action'] .='<a href="'.url('/lot_galleries/'. $row['id']).'" class="dropdown-item"><i class="fa fa-info m-r-5"></i> Gallery</a>';
 
                 $nestedData['action'] .='</div>';
                 $nestedData['action'] .='</div>';
