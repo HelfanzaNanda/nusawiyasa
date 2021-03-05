@@ -353,22 +353,26 @@
 	          }
 	          return queryParameters
 	        },
+			beforeSend : function()    {           
+        		$('#customer_lot_'+number).empty()
+    		},
 	        processResults: function (data) {
-	          return {
-	            results: $.map(data, function (item) {
-	              return {
-	                text: item.block + '-' + item.unit_number,
-	                id: item.id,
-	                wage: item.wage,
-	                percentage: item.percentage
-	              }
-	            })
-	          }
-	        }
+				return {
+					results: $.map(data, function (item) {
+						return {
+							text: item.block + '-' + item.unit_number,
+							id: item.id,
+							wage: item.wage,
+							percentage: item.percentage
+						}
+					})
+				}
+			}
 	      }
 	    });
 
 		$("#customer_lot_"+number).on('change', function(e) {
+			console.log(parseFloat($(this).select2('data')[0]['wage']));
 		    $('#spk_cost_'+number).val(parseFloat($(this).select2('data')[0]['wage']));
 		    $('#weekly_percentage_'+number).val($(this).select2('data')[0]['percentage']);
 		    $('#weekly_cost_'+number).val(parseFloat($(this).select2('data')[0]['wage']) * ($(this).select2('data')[0]['percentage']/100));
