@@ -119,8 +119,8 @@
               </div>
               <div class="form-group">
                 <label>Tipe Pembayaran</label>
-                <select class="form-control" id="input-payment-type" name="payment_type">
-                  <option> - Pilih Tipe - </option>
+                <select class="form-control" id="input-payment-type" name="payment_type" required>
+                  <option value=""> - Pilih Tipe - </option>
                   @foreach($coa as $key => $val)
                     @if(substr($key, 0 , 1) == 1)
                     <option value="{{$key}}">{{$key}} | {{$val}}</option>

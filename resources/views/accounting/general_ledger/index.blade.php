@@ -526,7 +526,7 @@
 						addRow()
 						searchCoa()
 						selectDk()
-						var option = $("<option selected></option>").val(accounting_ledger.coa).text(`${accounting_ledger.accounting_master.accounting_code} | ${accounting_ledger.accounting_master.name}`);
+						var option = $("<option selected></option>").val(accounting_ledger.coa).text(`${accounting_ledger.accounting_master ? accounting_ledger.accounting_master.accounting_code : 0} | ${accounting_ledger.accounting_master ? accounting_ledger.accounting_master.name : 0}`);
 						$(`#coa_${jj}`).append(option).change();
 						if (parseInt(accounting_ledger.debit) === 0) {
 							$(`#dk_${jj} option[value='1']`).attr('selected','selected');
