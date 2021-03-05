@@ -93,9 +93,24 @@
             border: 1px solid black;
         }
 
+        #tfooter{
+            position: absolute;
+            top: 80%;
+            left: 10%;
+        }
+
     </style>
 </head>
 <body>
+    <header>
+        <img src="{{ asset('storage/'.($header ?? '') ) }}" width="100%" height="100%"/>
+        {{-- <img src="https://images.unsplash.com/photo-1533167649158-6d508895b680?ixid=MXwxMjA3fDB8MHxzZWFyY2h8M3x8c3BsYXNofGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" width="100%" height="100%"/> --}}
+    </header>
+
+    <footer>
+        <img src="{{ asset('storage/'.($footer ?? '') ) }}" width="100%" height="100%"/>
+        {{-- <img src="https://images.unsplash.com/photo-1533167649158-6d508895b680?ixid=MXwxMjA3fDB8MHxzZWFyY2h8M3x8c3BsYXNofGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" width="100%" height="100%"/> --}}
+    </footer>
     <center><h2>DISPOSISI PENGAJUAN KEUANGAN</h2></center>
     <br>
     <h4>Nomor Pengajuan : {{$data['number']}}</h4>
@@ -143,7 +158,7 @@
         </tfoot>
     </table>
 
-    <table  style="width: 100%">
+    <table id="tfooter" style="width: 100%">
         <tr style="margin-bottom: 100px">
             <td style="width: 33%"><center>Disetujui Oleh</center></td>
             <td style="width: 33%"><center>Diketahui Oleh</center></td>

@@ -97,11 +97,13 @@
 
 <body>
     <header>
-        {{-- <img src="{{ asset('storage/'.($header ?? '') ) }}" width="100%" height="100%"/> --}}
+        <img src="{{ asset('storage/'.($header ?? '') ) }}" width="100%" height="100%"/>
+        {{-- <img src="https://images.unsplash.com/photo-1533167649158-6d508895b680?ixid=MXwxMjA3fDB8MHxzZWFyY2h8M3x8c3BsYXNofGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" width="100%" height="100%"/> --}}
     </header>
 
     <footer>
-        {{-- <img src="{{ asset('storage/'.($footer ?? '') ) }}" width="100%" height="100%"/> --}}
+        <img src="{{ asset('storage/'.($footer ?? '') ) }}" width="100%" height="100%"/>
+        {{-- <img src="https://images.unsplash.com/photo-1533167649158-6d508895b680?ixid=MXwxMjA3fDB8MHxzZWFyY2h8M3x8c3BsYXNofGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" width="100%" height="100%"/> --}}
     </footer>
     <div>
         <table class="header">
