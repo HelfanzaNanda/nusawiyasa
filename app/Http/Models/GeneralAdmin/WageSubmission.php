@@ -2,9 +2,11 @@
 
 namespace App\Http\Models\GeneralAdmin;
 
+use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\GeneralAdmin\WageSubmissionDetail;
 use DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Redirect;
 
 class WageSubmission extends Model
@@ -20,6 +22,8 @@ class WageSubmission extends Model
         'approved_by_user_id',
         'received_by_user_id'
     ];
+
+    protected $date = ['date'];
 
     private $operators = [
         "\$gt" => ">",
@@ -114,11 +118,42 @@ class WageSubmission extends Model
             unset($params['_token']);
         }
 
-        if (isset($params['id']) && $params['id']) {
+        if ($params['id'] != '0') {
             $id = $params['id'];
             unset($params['id']);
 
-            $update = self::where('id', $id)->update($params);
+            $total = 0;
+
+            if (isset($params['weekly_cost'])) {
+                foreach($params['weekly_cost'] as $weekly_cost) {
+                    $total += $weekly_cost;
+                }
+            }
+
+            $update = self::whereId($id)->first();
+            $update->update([
+                'number' => $params['number'],
+                'cluster_id' => $params['cluster_id'],
+                'date' => $params['date'],
+                'total' => $total,
+                'created_by_user_id' => session()->get('_id'),
+            ]);
+
+            if ($update) {
+                if (isset($params['description'])) {
+                    WageSubmissionDetail::where('wage_submission_id', $update->id)->delete();
+                    foreach($params['description'] as $key => $val) {
+                        WageSubmissionDetail::create([
+                            'wage_submission_id' => $update->id,
+                            'customer_lot_id' => $params['customer_lot_id'][$key],
+                            'description' => $val,
+                            'note' => $params['note'][$key],
+                            'weekly_percentage' => $params['weekly_percentage'][$key],
+                            'weekly_cost' => $params['weekly_cost'][$key],
+                        ]);
+                    }
+                }
+            }
 
             DB::commit();
 
@@ -164,5 +199,28 @@ class WageSubmission extends Model
             'status' => 'success',
             'message' => 'Data Berhasil Disimpan'
         ]);
+    }
+
+    public function wage_submission_detail()
+    {
+        return $this->hasMany(WageSubmissionDetail::class);
+    }
+
+
+    public static function getData($id)
+    {
+        $wage = WageSubmission::whereId($id)->first();
+        $wageDetails = WageSubmissionDetail::select('wage_submission_details.*')
+        ->addSelect(DB::raw('CONCAT(lots.block, "-" ,lots.unit_number) as lot'))
+        ->addSelect('spk_workers.wage as spk_cost')
+        ->join('customer_lots', 'customer_lots.id' , '=', 'wage_submission_details.customer_lot_id')
+        ->join('spk_workers', 'spk_workers.customer_lot_id' , '=', 'wage_submission_details.customer_lot_id')
+        ->join('lots', 'lots.id', '=', 'customer_lots.lot_id')
+        ->where('wage_submission_details.wage_submission_id', $id)
+        ->get();
+        $cluster = Cluster::select('clusters.name as cluster_name')->where('id', $wage->cluster_id)->first();
+        return [
+            $wage, $wageDetails, $cluster
+        ];
     }
 }
