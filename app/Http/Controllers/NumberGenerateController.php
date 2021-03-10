@@ -15,6 +15,8 @@ use App\Http\Models\Project\WorkAgreements;
 use App\Http\Models\Purchase\PurchaseOrderDeliveries;
 use App\Http\Models\Purchase\PurchaseOrders;
 use App\Http\Models\Financial\FinancialSubmission;
+use App\Http\Models\Project\RequestOfOtherMaterialItems;
+use App\Http\Models\Project\RequestOfOtherMaterials;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -33,6 +35,12 @@ class NumberGenerateController extends Controller
             if($pref == 'PB'){
                 $data = [
                     'class' => RequestMaterials::class,
+                    'field' => 'number',
+                    'prefix' => $pref
+                ];
+            }else if($pref == 'PBO'){
+                $data = [
+                    'class' => RequestOfOtherMaterials::class,
                     'field' => 'number',
                     'prefix' => $pref
                 ];
@@ -160,6 +168,9 @@ class NumberGenerateController extends Controller
             $data = RequestMaterials::whereNumber($request->number)->first();
             $params = ($data == null) ? $success : $error;
             
+        } else if ($pref == 'PBO') {
+            $data = RequestOfOtherMaterials::whereNumber($request->number)->first();
+            $params = ($data == null) ? $success : $error;
         } else if ($pref == 'SPK') {
             $data = SpkProjects::whereNumber($request->number)->first();
             $params = ($data == null) ? $success : $error;

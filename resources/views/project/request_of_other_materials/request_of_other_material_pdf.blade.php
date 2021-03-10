@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Pengajuan Bahan Bangunan</title>
+    <title>Pengajuan Bahan Lainnya</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <style>
@@ -80,11 +80,11 @@
 
 <body>
     <header>
-        <img src="{{ asset('storage/'.($header ?? '') ) }}"width="100%" height="100%"/>
+        {{-- <img src="{{ asset('storage/'.($header ?? '') ) }}"width="100%" height="100%"/> --}}
     </header>
 
     <footer>
-        <img src="{{ asset('storage/'.($footer ?? '') ) }}" width="100%" height="100%"/>
+        {{-- <img src="{{ asset('storage/'.($footer ?? '') ) }}" width="100%" height="100%"/> --}}
     </footer>
 
     <div style="margin-top: 20px;">

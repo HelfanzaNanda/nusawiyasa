@@ -1,20 +1,20 @@
 @extends('layouts.main')
 
-@section('title', 'Pengajuan Bahan Bangunan')
+@section('title', 'Pengajuan Bahan Lainnya')
 
 @section('content')
 <!-- Page Header -->
 <div class="page-header">
   <div class="row align-items-center">
     <div class="col">
-      <h3 class="page-title">Data Pengajuan Bahan Bangunan</h3>
+      <h3 class="page-title">Data Pengajuan Bahan Lainnya</h3>
       <ul class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index-2.html">Pengajuan Bahan Bangunan</a></li>
-        <li class="breadcrumb-item active">Data Pengajuan Bahan Bangunan</li>
+        <li class="breadcrumb-item"><a href="index-2.html">Pengajuan Bahan Lainnya</a></li>
+        <li class="breadcrumb-item active">Data Pengajuan Bahan Lainnya</li>
       </ul>
     </div>
     <div class="col-auto float-right ml-auto">
-      <a href="{{url('/')}}/create-request-material" class="btn add-btn"><i class="fa fa-plus"></i> Tambah Pengajuan Bahan</a>
+      <a href="{{url('/')}}/create-request-of-other-material" class="btn add-btn"><i class="fa fa-plus"></i> Tambah Pengajuan Bahan Lainnya</a>
     </div>
   </div>
 </div>
@@ -24,7 +24,7 @@
   <div class="col-md-12 d-flex">
     <div class="card card-table flex-fill">
       <div class="card-header">
-        <h3 class="card-title mb-0">Pengajuan Bahan Bangunan</h3>
+        <h3 class="card-title mb-0">Pengajuan Bahan Lainnya</h3>
       </div>
       <div class="card-body ml-3 mt-3 mr-3 mb-3">
         <div class="table-responsive">
@@ -58,7 +58,7 @@
       "processing": true,
       "serverSide": true,
       "ajax":{
-          "url": BASE_URL+"/request-material-datatables",
+          "url": BASE_URL+"/request-of-other-material-datatables",
           "dataType": "json",
           "type": "POST",
           "data":function(d) { 
@@ -92,7 +92,7 @@
         }, function(){
           $.ajax({
             type: 'get',
-            url: BASE_URL+'/request-material/'+id+'/delete',
+            url: BASE_URL+'/request-of-other-material/'+id+'/delete',
             cache: false,
             contentType: false,
             processData: false,

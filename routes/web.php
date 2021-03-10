@@ -155,6 +155,15 @@ Route::group([
 	Route::get('/update-request-material/{id}', 'Project\RequestMaterialController@edit')->name('request_material.edit');
 	Route::get('/request-material/{id}/delete', 'Project\RequestMaterialController@delete');
 
+	Route::get('/request-of-other-material', 'Project\RequestOfOtherMaterialController@index');
+	Route::get('/request-of-other-material-pdf/{id}', 'Project\RequestOfOtherMaterialController@generatePdf');
+	Route::get('/create-request-of-other-material', 'Project\RequestOfOtherMaterialController@create');
+	Route::post('/request-of-other-material', 'Project\RequestOfOtherMaterialController@insertData');
+	Route::post('/request-of-other-material-datatables', 'Project\RequestOfOtherMaterialController@datatables');
+	Route::get('/request_materials/{id?}', 'Project\RequestOfOtherMaterialController@get');
+	Route::get('/update-request-of-other-material/{id}', 'Project\RequestOfOtherMaterialController@edit')->name('request__of_other_material.edit');
+	Route::get('/request-of-other-material/{id}/delete', 'Project\RequestOfOtherMaterialController@delete');
+
 	Route::get('/development-progress', 'Project\DevelopmentProgressController@index');
 	Route::get('/development-progress/detail/{id}', 'Project\DevelopmentProgressController@detail');
 	Route::get('/create-development-progress', 'Project\DevelopmentProgressController@create');

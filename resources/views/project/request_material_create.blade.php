@@ -1,13 +1,13 @@
 @extends('layouts.main')
 
-@section('title', 'Tambah Pengajuan Bahan')
+@section('title', 'Tambah Pengajuan Bahan Bangunan')
 
 @section('content')
 <div class="row">
   <div class="col-lg-12">
     <div class="card">
       <div class="card-header">
-        <h4 class="card-title mb-0">Tambah Pengajuan Bahan</h4>
+        <h4 class="card-title mb-0">Tambah Pengajuan Bahan Bangunan</h4>
       </div>
       <form id="add-form" method="POST" action="#">
         <div class="card-body">
@@ -91,8 +91,8 @@
           </div>
           <section class="review-section">
             <div class="review-header text-center">
-              <h3 class="review-title">Item Pengajuan Bahan</h3>
-              <p class="text-muted">Silahkan masukkan poin - poin Pengajuan Bahan</p>
+              <h3 class="review-title">Item Pengajuan Bahan Bangunan</h3>
+              <p class="text-muted">Silahkan masukkan poin - poin Pengajuan Bahan Bangunan</p>
             </div>
             <div class="row">
               <div class="col-md-12">

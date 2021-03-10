@@ -1,13 +1,13 @@
 @extends('layouts.main')
 
-@section('title', 'Tambah Pengajuan Bahan Bangunan')
+@section('title', 'Update Pengajuan Bahan Lainnya')
 
 @section('content')
 <div class="row">
   <div class="col-lg-12">
     <div class="card">
       <div class="card-header">
-        <h4 class="card-title mb-0">Update Pengajuan Bahan Bangunan</h4>
+        <h4 class="card-title mb-0">Update Pengajuan Bahan Lainnya</h4>
       </div>
       <form id="add-form" method="POST" action="#">
         <div class="card-body">
@@ -79,12 +79,6 @@
                 Non RAP
                 </label>
               </div>
-{{--               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="type" id="disposition" value="disposition" {{ ($material->type == 'disposition')? 'checked' : '' }}>
-                <label class="form-check-label" for="disposition">
-                Disposisi
-                </label>
-              </div> --}}
             </div>
           </div>
           <div class="form-group row">
@@ -95,8 +89,8 @@
           </div>
           <section class="review-section">
             <div class="review-header text-center">
-              <h3 class="review-title">Item Pengajuan Bahan Bangunan</h3>
-              <p class="text-muted">Silahkan masukkan poin - poin Pengajuan Bahan Bangunan</p>
+              <h3 class="review-title">Item Pengajuan Bahan Lainnya</h3>
+              <p class="text-muted">Silahkan masukkan poin - poin Pengajuan Bahan Lainnya</p>
             </div>
             <div class="row">
               <div class="col-md-12">
@@ -113,13 +107,9 @@
                       </tr>
                       <tr>
                         <th style="width:40px;">#</th>
-                        <th>
-                          <select id="item" class="form-control" style="z-index: 9999;">
-                            <option value=""> Pilih </option>
-                          </select>
-                        </th>
+                        <th><input type="text" class="form-control add-item" id="input-item-inventory-name" placeholder="name"></th>
                         <th><input type="text" class="form-control add-item" id="input-item-qty" placeholder="qty"></th>
-                        <th><input type="text" class="form-control add-item" id="input-item-unit" placeholder="Satuan" readonly></th>
+                        <th><input type="text" class="form-control add-item" id="input-item-unit" placeholder="Satuan"></th>
                         <th><input type="text" class="form-control add-item" id="input-item-brand" placeholder="Merk"></th>
                         <th style="width: 64px;"><button type="button" class="btn btn-primary btn-add-row"><i class="fa fa-plus"></i></button></th>
                       </tr>
@@ -129,17 +119,16 @@
                         <tr>
                             <td>{{ $no++ }}</td>
                             <td>
-                                {{ $item->inventory->name }}
-                                <input type="hidden" name="item_inventory_id[]" value="{{ $item->inventory->id }}">
-                                <input type="hidden" name="item_name[]" value="{{ $item->inventory->name }}">
+                              {{ $item->inventory_name }}
+                              <input type="hidden" name="item_name[]" value="{{ $item->inventory_name }}">
                             </td>
                             <td>
                                 {{ $item->qty }}
                                 <input type="hidden" name="item_qty[]" value="{{ $item->qty }}">
                             </td>
                             <td>
-                                {{ $item->inventory->unit->name }}
-                                <input type="hidden" name="item_unit[]" value="{{ $item->inventory->unit->name }}">
+                              {{ $item->unit }}
+                              <input type="hidden" name="item_unit[]" value="{{ $item->unit }}">
                             </td>
                             <td>
                                 {{ $item->brand }}
@@ -222,71 +211,13 @@
     });
   });
 
-  $("#item").select2({
-    // tags: true,
-    width: '100%',
-    minimumInputLength: 2,
-    minimumResultsForSearch: '',
-    ajax: {
-      url: BASE_URL+"/inventories",
-      dataType: "json",
-      type: "GET",
-      data: function (params) {
-        var queryParameters = {
-          name: params.term
-        }
-        return queryParameters
-      },
-      processResults: function (data) {
-        return {
-          results: $.map(data.data, function (item) {
-            return {
-              text: item.name,
-              id: item.id,
-              brand: item.brand,
-              unit: item.unit_name
-            }
-          })
-        }
-      }
-    },
-    // createTag: function (params) {
-    //   return {
-    //     id: params.term,
-    //     text: params.term,
-    //     brand: "Isikan Merk...",
-    //     unit: "Isikan Unit...",
-    //     newOption: true
-    //   }
-    // },
-    // templateResult: function (data) {
-    //   var $result = $("<span></span>");
-
-    //   $result.text(data.text);
-
-    //   if (data.newOption) {
-    //     $result.append(" <em>(new)</em>");
-    //   }
-
-    //   return $result;
-    // }
-  });
-
-  $("#item").on('change', function(e) {
-      // $("#input-qty").val(addSeparator($(this).select2('data')[0]['brand']));
-      $("#input-item-unit").val(addSeparator($(this).select2('data')[0]['unit'], '.', '.', ','));
-      $("#input-item-brand").val($(this).select2('data')[0]['brand']);
-      // $("#input-total").val(addSeparator($(this).select2('data')[0]['price']));
-  });
-
   $(document).on("click", '.btn-add-row', function () {
-    var inventoryId = $('#item :selected').val();
-    var inventoryName = $('#item :selected').text();
+    var inventoryName = $('#input-item-inventory-name').val();
     var inventoryQty = $('#input-item-qty').val();
     var inventoryUnit = $('#input-item-unit').val();
     var inventoryBrand = $('#input-item-brand').val();
 
-    if (inventoryId == '' || 
+    if (inventoryName == '' || 
         inventoryQty == '' ||
         inventoryUnit == '') {
       swal({
@@ -305,8 +236,6 @@
     div.html(GetDynamicTextBox(id));
     $("#"+id+"_tbody").append(div);
 
-    $("select#item").select2("open");
-
   });
 
   $(document).on("click", "#comments_remove", function () {
@@ -315,18 +244,17 @@
   });
 
   function GetDynamicTextBox(table_id) {
-    $('#comments_remove').remove();
+    //$('#comments_remove').remove();
     var rowsLength = document.getElementById(table_id).getElementsByTagName("tbody")[0].getElementsByTagName("tr").length+1;
     let cols = '';
 
-    var inventoryId = $('#item :selected').val();
-    var inventoryName = $('#item :selected').text();
+    var inventoryName = $('#input-item-inventory-name').val();
     var inventoryQty = $('#input-item-qty').val();
     var inventoryUnit = $('#input-item-unit').val();
     var inventoryBrand = $('#input-item-brand').val();
 
     cols += '<td>'+rowsLength+'</td>';
-    cols += '<td>'+inventoryName+'<input type="hidden" name="item_inventory_id[]" value='+ inventoryId +'> <input type="hidden" name="item_name[]" value='+ inventoryName +'></td>';
+    cols += '<td>'+inventoryName+'<input type="hidden" name="item_name[]" value='+ inventoryName +'></td>';
     cols += '<td>'+inventoryQty+'<input type="hidden" name="item_qty[]" value='+ inventoryQty +'></td>';
     cols += '<td>'+inventoryUnit+'<input type="hidden" name="item_unit[]" value='+ inventoryUnit +'></td>';
     cols += '<td>'+inventoryBrand+'<input type="hidden" name="item_brand[]" value='+ inventoryBrand +'></td>';
@@ -337,13 +265,12 @@
 
   $('.add-item').keypress(function (e) {
     if (e.which == 13) {
-      var inventoryId = $('#item :selected').val();
-      var inventoryName = $('#item :selected').text();
+      var inventoryName = $('#input-item-inventory-name').val();
       var inventoryQty = $('#input-item-qty').val();
       var inventoryUnit = $('#input-item-unit').val();
       var inventoryBrand = $('#input-item-brand').val();
 
-      if (inventoryId == '' || 
+      if (inventoryName == '' || 
           inventoryQty == '' ||
           inventoryUnit == '') {
         swal({
@@ -363,8 +290,6 @@
       div.html(GetDynamicTextBox(id));
       $("#"+id+"_tbody").append(div);
 
-      $("select#item").select2("open");
-
       return false;    //<---- Add this line
     }
   });
@@ -372,7 +297,7 @@
   $('form#add-form').submit( function( e ) {
     e.preventDefault();
     var loading_text = $('.loading').data('loading-text');
-        $('.loading').html(loading_text).attr('disabled', true);
+    $('.loading').html(loading_text).attr('disabled', true);
     var form_data = new FormData( this );
     var rowsLength = document.getElementById("general_comments").getElementsByTagName("tbody")[0].getElementsByTagName("tr").length+1;
     if (rowsLength < 2) {
@@ -389,7 +314,7 @@
     }
     $.ajax({
       type: 'post',
-      url: BASE_URL+'/request-material',
+      url: BASE_URL+'/request-of-other-material',
       data: form_data,
       cache: false,
       contentType: false,
@@ -410,7 +335,7 @@
                 }, function() {
                     // $('#main-table').DataTable().ajax.reload(null, false);
                     $('#add-modal').modal('hide');
-                    window.location.replace("{{url('/request-material')}}");
+                    window.location.replace("{{url('/request-of-other-material')}}");
                 });
             }, 500);
         } else {
