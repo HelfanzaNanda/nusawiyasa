@@ -39,7 +39,7 @@ class SPKProjectController extends Controller
                     ->join('clusters', 'clusters.id', '=', 'lots.cluster_id');
 
 
-        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6, 10])) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
             $lots->where('lots.cluster_id', $session['_cluster_id']);
         }
 
@@ -116,7 +116,7 @@ class SPKProjectController extends Controller
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
                 $nestedData['number'] = $row['number'];
-                $nestedData['date'] = $row['date'];
+                $nestedData['date'] = date('d M Y', strtotime($row['date']));
                 $nestedData['cluster_name'] = $row['cluster_name'];
                 $nestedData['unit_number'] = $row['unit_number'];
                 $nestedData['unit_block'] = $row['unit_block'];

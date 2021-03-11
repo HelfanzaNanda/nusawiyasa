@@ -104,7 +104,7 @@ class RequestOfOtherMaterialController extends Controller
                 $nestedData['number'] = $row['number'];
                 $nestedData['title'] = $row['title'];
                 $nestedData['subject'] = $row['subject'];
-                $nestedData['date'] = $row['date'];
+                $nestedData['date'] = date('d M Y', strtotime($row['date']));
                 $nestedData['spk_number'] = $row['spk_number'];
                 if ($row['type'] == 'rap') {
                     $type = 'RAP';

@@ -21,7 +21,9 @@ class Lot extends Model
 		'is_active',
 		'is_deleted',
         'lot_status',
-        'description'
+        'description',
+        'type',
+        'type_name'
     ];
 
     private $operators = [
@@ -66,6 +68,8 @@ class Lot extends Model
 			'is_active' => ['alias' => $model->table.'.is_active', 'type' => 'string'],
 			'is_deleted' => ['alias' => $model->table.'.is_deleted', 'type' => 'string'],
             'description' => ['alias' => $model->table.'.description', 'type' => 'string'],
+            'type' => ['alias' => $model->table.'.type', 'type' => 'string'],
+            'type_name' => ['alias' => $model->table.'.type_name', 'type' => 'string'],
 			'created_at' => ['alias' => $model->table.'.created_at', 'type' => 'string'],
 			'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string'],
         ];
@@ -214,7 +218,7 @@ class Lot extends Model
                 ->join('clusters', 'clusters.id', '=', 'lots.cluster_id')
                 ->leftJoin('customer_lots', 'customer_lots.lot_id', '=', 'lots.id');
 
-        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6, 10])) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
             $qry->where('lots.cluster_id', $session['_cluster_id']);
         }
 
@@ -278,7 +282,7 @@ class Lot extends Model
        $qry = self::select(['lots.id', 'clusters.name', 'lots.block', 'lots.unit_number'])
                 ->join('clusters', 'clusters.id', '=', 'lots.cluster_id');
 
-        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6, 10])) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
             $qry->where('lots.cluster_id', $session['_cluster_id']);
         }
 

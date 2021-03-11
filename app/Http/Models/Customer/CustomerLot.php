@@ -252,9 +252,21 @@ class CustomerLot extends Model
 
             if ($update) {
                 if (count($params_customer_cost) > 0) {
+                    // dd($params_customer_cost);
                     // CustomerCost::where('customer_id', $customer_lot['customer_id'])->where('lot_id', $customer_lot['lot_id'])->delete();
                     foreach($params_customer_cost as $key => $customer_cost) {
-                        CustomerCost::where('customer_id', $customer_lot['customer_id'])->where('lot_id', $params['lot_id'])->where('ref_term_purchasing_customer_id', $key)->update([
+                        // CustomerCost::where('customer_id', $customer_lot['customer_id'])->where('lot_id', $params['lot_id'])->where('ref_term_purchasing_customer_id', $key)->update([
+                        //     'customer_id' => $params['customer_id'],
+                        //     'ref_term_purchasing_customer_id' => $key,
+                        //     'value' => $customer_cost,
+                        //     'status' => 1,
+                        //     'lot_id' => $params['lot_id']
+                        // ]);
+                        CustomerCost::updateOrCreate([
+                            'customer_id' => $customer_lot['customer_id'],
+                            'lot_id' => $params['lot_id'],
+                            'ref_term_purchasing_customer_id' => $key
+                        ],[
                             'customer_id' => $params['customer_id'],
                             'ref_term_purchasing_customer_id' => $key,
                             'value' => $customer_cost,
@@ -452,7 +464,7 @@ class CustomerLot extends Model
                 ->leftJoin('lots', 'lots.id', '=', 'customer_lots.lot_id')
                 ->leftJoin('clusters', 'clusters.id', '=', 'lots.cluster_id');
 
-        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6, 10])) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
             $qry->where('lots.cluster_id', $session['_cluster_id']);
         }
 
@@ -519,7 +531,7 @@ class CustomerLot extends Model
                 ->join('customers', 'customers.id', '=', 'customer_lots.customer_id')
                 ->join('users', 'users.id', '=', 'customers.user_id');
 
-        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6, 10])) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
             $qry->where('lots.cluster_id', $session['_cluster_id']);
         }
 

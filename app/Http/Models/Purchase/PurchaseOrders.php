@@ -224,7 +224,7 @@ class PurchaseOrders extends Model
         // $qry = self::select($_select)->addSelect('request_materials.number as request_number')
         //         ->leftJoin('request_materials', 'request_materials.id', '=', 'purchase_orders.fpp_number');
 
-        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6, 10])) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
             $qry->where('cluster_id', $session['_cluster_id']);
         }
 

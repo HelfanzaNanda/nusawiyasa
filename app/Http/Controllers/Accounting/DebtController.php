@@ -72,8 +72,8 @@ class DebtController extends Controller
                 $nestedData['id'] = $row['id'];
                 $nestedData['number'] = $row['number'];
                 $nestedData['total'] = $row['total'];
-                $nestedData['date'] = $row['date'];
-                $nestedData['payment_plan_date'] = $row['payment_plan_date'];
+                $nestedData['date'] = date('d M Y', strtotime($row['date']));
+                $nestedData['payment_plan_date'] = date('d M Y', strtotime($row['payment_plan_date']));
                 $nestedData['description'] = $row['description'];
                 $nestedData['supplier_name'] = $row['supplier_name'];
                 $nestedData['po_number'] = $row['po_number'];

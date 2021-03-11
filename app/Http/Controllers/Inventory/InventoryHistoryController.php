@@ -81,7 +81,7 @@ class InventoryHistoryController extends Controller
                 $nestedData['ref_number'] = $row['ref_number'];
                 $nestedData['qty'] = $row['qty'];
                 $nestedData['models'] = $row['models'];
-                $nestedData['date'] = $row['date'];
+                $nestedData['date'] = date('d M Y', strtotime($row['date']));
                 $nestedData['type'] = $row['type'];
                 $nestedData['inventory_name'] = $row['inventory_name'];
                 $nestedData['unit_name'] = $row['unit_name'];

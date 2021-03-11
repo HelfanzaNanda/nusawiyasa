@@ -198,10 +198,10 @@
 
     cols += '<td>'+rowsLength+'</td>';
     cols += '<td>'+inventoryCode+'</td>';
-    cols += '<td>'+inventoryName+'<input type="hidden" name="inventory_id[]" value='+ inventoryId +'></td>';
-    cols += '<td>'+inventoryQty+'<input type="hidden" name="qty[]" value='+ inventoryQty +'></td>';
+    cols += '<td>'+inventoryName+'<input type="hidden" name="inventory_id[]" value="'+ inventoryId +'"></td>';
+    cols += '<td>'+inventoryQty+'<input type="hidden" name="qty[]" value="'+ inventoryQty +'"></td>';
     cols += '<td>'+inventoryUnit+'</td>';
-    cols += '<td>'+inventoryNote+'<input type="hidden" name="note[]" value='+ inventoryNote +'></td>';
+    cols += '<td>'+inventoryNote+'<input type="hidden" name="note[]" value="'+ inventoryNote +'"></td>';
     cols += '<td><button type="button" class="btn btn-danger" id="comments_remove"><i class="fa fa-trash-o"></i></button></td>';
 
     return cols;

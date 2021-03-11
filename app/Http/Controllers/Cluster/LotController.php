@@ -93,6 +93,7 @@ class LotController extends Controller
                 $nestedData['total_floor'] = $row['total_floor'];
                 $nestedData['building_area'] = $row['building_area'];
                 $nestedData['surface_area'] = $row['surface_area'];
+                $nestedData['type'] = $row['type'] && $row['type'] != 'lot' ? ($row['type_name'].' ('.$row['type'].')') : 'Kapling';
                 $nestedData['status'] = $status_collection->where('id', $row['lot_status'])->values()[0]['name'];
                 $nestedData['action'] = '';
                 $nestedData['action'] .='<div class="dropdown dropdown-action">';

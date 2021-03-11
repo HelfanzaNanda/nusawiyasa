@@ -160,7 +160,7 @@ Route::group([
 	Route::get('/create-request-of-other-material', 'Project\RequestOfOtherMaterialController@create');
 	Route::post('/request-of-other-material', 'Project\RequestOfOtherMaterialController@insertData');
 	Route::post('/request-of-other-material-datatables', 'Project\RequestOfOtherMaterialController@datatables');
-	Route::get('/request_materials/{id?}', 'Project\RequestOfOtherMaterialController@get');
+	Route::get('/request_other_materials/{id?}', 'Project\RequestOfOtherMaterialController@get');
 	Route::get('/update-request-of-other-material/{id}', 'Project\RequestOfOtherMaterialController@edit')->name('request__of_other_material.edit');
 	Route::get('/request-of-other-material/{id}/delete', 'Project\RequestOfOtherMaterialController@delete');
 

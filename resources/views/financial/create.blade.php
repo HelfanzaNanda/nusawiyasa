@@ -175,12 +175,12 @@
             var note = ($('#input-item-note').val() == "") ? '-' : $('#input-item-note').val()
 
             cols += '<td>'+rowsLength+'</td>';
-            cols += '<td>'+value+'<input type="hidden" name="item_value[]" value='+ value +'></td>';
-            cols += '<td>'+qty+'<input type="hidden" name="item_qty[]" value='+ qty +'></td>';
-            cols += '<td>'+unit+'<input type="hidden" name="item_unit[]" value='+ unit +'></td>';
-            cols += '<td>'+price+'<input type="hidden" name="item_price[]" value='+ price +'></td>';
-            cols += '<td id="total">'+totalPrice+'<input type="hidden" name="item_total_price[]" value='+ totalPrice +'></td>';
-            cols += '<td>'+note+'<input type="hidden" name="item_note[]" value='+ note +'></td>';
+            cols += '<td>'+value+'<input type="hidden" name="item_value[]" value="'+ value +'"></td>';
+            cols += '<td>'+qty+'<input type="hidden" name="item_qty[]" value="'+ qty +'"></td>';
+            cols += '<td>'+unit+'<input type="hidden" name="item_unit[]" value="'+ unit +'"></td>';
+            cols += '<td>'+price+'<input type="hidden" name="item_price[]" value="'+ price +'"></td>';
+            cols += '<td id="total">'+totalPrice+'<input type="hidden" name="item_total_price[]" value="'+ totalPrice +'"></td>';
+            cols += '<td>'+note+'<input type="hidden" name="item_note[]" value="'+ note +'"></td>';
             cols += '<td><button type="button" class="btn btn-danger" id="comments_remove"><i class="fa fa-trash-o"></i></button></td>';
             return cols;
 

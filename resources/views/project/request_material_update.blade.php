@@ -326,10 +326,10 @@
     var inventoryBrand = $('#input-item-brand').val();
 
     cols += '<td>'+rowsLength+'</td>';
-    cols += '<td>'+inventoryName+'<input type="hidden" name="item_inventory_id[]" value='+ inventoryId +'> <input type="hidden" name="item_name[]" value='+ inventoryName +'></td>';
-    cols += '<td>'+inventoryQty+'<input type="hidden" name="item_qty[]" value='+ inventoryQty +'></td>';
-    cols += '<td>'+inventoryUnit+'<input type="hidden" name="item_unit[]" value='+ inventoryUnit +'></td>';
-    cols += '<td>'+inventoryBrand+'<input type="hidden" name="item_brand[]" value='+ inventoryBrand +'></td>';
+    cols += '<td>'+inventoryName+'<input type="hidden" name="item_inventory_id[]" value="'+ inventoryId +'"> <input type="hidden" name="item_name[]" value="'+ inventoryName +'"></td>';
+    cols += '<td>'+inventoryQty+'<input type="hidden" name="item_qty[]" value="'+ inventoryQty +'"></td>';
+    cols += '<td>'+inventoryUnit+'<input type="hidden" name="item_unit[]" value="'+ inventoryUnit +'"></td>';
+    cols += '<td>'+inventoryBrand+'<input type="hidden" name="item_brand[]" value="'+ inventoryBrand +'"></td>';
     cols += '<td><button type="button" class="btn btn-danger" id="comments_remove"><i class="fa fa-trash-o"></i></button></td>';
 
     return cols;

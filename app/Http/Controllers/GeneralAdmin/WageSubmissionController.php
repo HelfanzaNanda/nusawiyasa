@@ -86,7 +86,7 @@ class WageSubmissionController extends Controller
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
 				$nestedData['number'] = $row['number'];
-				$nestedData['date'] = $row['date'];
+				$nestedData['date'] = date('d M Y', strtotime($row['date']));
 				$nestedData['total'] = number_format(floatval($row['total']));
                 $nestedData['cluster_name'] = $row['cluster_name'];
                 $nestedData['action'] = '';

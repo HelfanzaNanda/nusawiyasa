@@ -340,13 +340,13 @@
     cols +=     '<input type="hidden" class="input-checkbox" name="checkbox[]" value="1" id="input-checkbox">';
     cols += '</div>';
     cols += '</td>';
-    cols += '<td>'+inventoryName+'<input type="hidden" name="item_inventory_id[]" value='+ inventoryId +'></td>';
+    cols += '<td>'+inventoryName+'<input type="hidden" name="item_inventory_id[]" value="'+ inventoryId +'"></td>';
     
-    // cols += '<td>'+inventorySupplierName+'<input type="hidden" name="item_supplier_id[]" value='+ inventorySupplierId +'></td>';
-    cols += '<td>'+inventoryQty+'<input type="hidden" name="item_qty[]" value='+ inventoryQty +'></td>';
+    // cols += '<td>'+inventorySupplierName+'<input type="hidden" name="item_supplier_id[]" value="'+ inventorySupplierId +'"></td>';
+    cols += '<td>'+inventoryQty+'<input type="hidden" name="item_qty[]" value="'+ inventoryQty +'"></td>';
     cols += '<td>'+inventoryUnit+'</td>';
-    cols += '<td>'+inventoryPrice+'<input type="hidden" name="item_price[]" value='+ inventoryPrice +'></td>';
-    cols += '<td id="total">'+subTotal+'<input type="hidden" name="item_total[]" value='+ subTotal +'></td>';
+    cols += '<td>'+inventoryPrice+'<input type="hidden" name="item_price[]" value="'+ inventoryPrice +'"></td>';
+    cols += '<td id="total">'+subTotal+'<input type="hidden" name="item_total[]" value="'+ subTotal +'"></td>';
     cols += '<td><button type="button" class="btn btn-danger" id="comments_remove"><i class="fa fa-trash-o"></i></button></td>';
     return cols;
   }
@@ -594,16 +594,16 @@
           cols +=     '<input type="hidden" class="input-checkbox" name="checkbox[]" value="1" id="input-checkbox">';
           cols += '</div>';
           cols += '</td>';
-          cols += '<td>'+value.inventory_name+'<input type="hidden" name="item_inventory_id[]" value='+ value.inventory_id +'></td>';
+          cols += '<td>'+value.inventory_name+'<input type="hidden" name="item_inventory_id[]" value="'+ value.inventory_id +'"></td>';
           // cols += '<td><select class="select-supplier" name="item_supplier_id[]"> ';
           // cols += '  <option value="0"> - Pilih Supplier - </option>';
           // @foreach($suppliers as $supplier)
           // cols += '    <option value="{{$supplier['id']}}">{{$supplier['name']}}</option>';
           // @endforeach
           // cols += '</select></td>';
-          cols += '<td id="qty-'+(key+1)+'">'+value.qty+'<input type="hidden" name="item_qty[]" value='+ value.qty +'></td>';
-          cols += '<td>'+value.inventory.unit.name+'<input type="hidden" name="item_total[]" id="input-total-'+(key+1)+'" value='+ (value.qty * value.inventory.purchase_price) +' class="form-control"></td>';
-          cols += '<td><input type="text" class="form-control item-calc" name="item_price[]" value='+ (value.inventory.purchase_price ? value.inventory.purchase_price : 0 ) +' data-id="'+(key+1)+'"></td>';
+          cols += '<td id="qty-'+(key+1)+'">'+value.qty+'<input type="hidden" name="item_qty[]" value="'+ value.qty +'"></td>';
+          cols += '<td>'+value.inventory.unit.name+'<input type="hidden" name="item_total[]" id="input-total-'+(key+1)+'" value="'+ (value.qty * value.inventory.purchase_price) +' class="form-control"></td>';
+          cols += '<td><input type="text" class="form-control item-calc" name="item_price[]" value="'+ (value.inventory.purchase_price ? value.inventory.purchase_price : 0 ) +' data-id="'+(key+1)+'"></td>';
           cols += '<td id="total" class="total-'+(key+1)+'">'+(value.qty * value.inventory.purchase_price)+'</td>';
           // cols += '<td><button type="button" class="btn btn-danger" id="comments_remove"><i class="fa fa-trash-o"></i></button></td>';
           cols += '<td></td>';

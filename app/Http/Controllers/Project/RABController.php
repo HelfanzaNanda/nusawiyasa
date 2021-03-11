@@ -13,7 +13,10 @@ class RABController extends Controller
 {
     public function index()
     {
-        return view('project.rab');
+        return view('project.rab', [
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function create()
@@ -98,7 +101,8 @@ class RABController extends Controller
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
                 $nestedData['title'] = $row['title'];
-                $nestedData['date'] = $row['date'];
+                $nestedData['type'] = $row['type'];
+                $nestedData['date'] = date('d M Y', strtotime($row['date']));
                 $nestedData['total'] = $row['total'];
                 $nestedData['action'] = '';
                 $nestedData['action'] .='        <div class="dropdown dropdown-action">';

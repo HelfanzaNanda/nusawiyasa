@@ -37,7 +37,7 @@ class Rap extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'date', 'cluster_id', 'lot_id', 'total', 'created_at', 'updated_at'
+        'title', 'date', 'cluster_id', 'lot_id', 'total', 'created_at', 'updated_at', 'type'
     ];
 
     /**
@@ -85,6 +85,7 @@ class Rap extends Model
             'cluster_id' => ['alias' => $model->table.'.cluster_id', 'type' => 'string'],
             'lot_id' => ['alias' => $model->table.'.lot_id', 'type' => 'string'],
             'total' => ['alias' => $model->table.'.total', 'type' => 'string'],
+            'type' => ['alias' => $model->table.'.type', 'type' => 'string'],
             'created_at' => ['alias' => $model->table.'.created_at', 'type' => 'string'],
             'updated_at' => ['alias' => $model->table.'.updated_at', 'type' => 'string']
         ];
@@ -106,7 +107,7 @@ class Rap extends Model
 
         $qry = self::select($_select);
         
-        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6, 10])) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
             $qry->where('cluster_id', $session['_cluster_id']);
         }
 
@@ -167,8 +168,9 @@ class Rap extends Model
             unset($params['id']);
 
             $rap_params['title'] = $params['title'];
-            $rap_params['date'] = date('Y-m-d');
+            // $rap_params['date'] = date('Y-m-d');
             $rap_params['cluster_id'] = $params['cluster_id'];
+            $rap_params['type'] = $params['type'];
             // $rap_params['lot_id'] = $params['lot_id'];
             $rap_params['total'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['total']));
 
@@ -196,6 +198,7 @@ class Rap extends Model
         $rap_params['date'] = date('Y-m-d');
         // $rap_params['cluster_id'] = isset($params['lot_id']) && $params['lot_id'] > 0 ? Lot::where('id', $params['lot_id'])->value('cluster_id') : 0;
         $rap_params['cluster_id'] = $params['cluster_id'];
+        $rap_params['type'] = $params['type'];
         // $rap_params['lot_id'] = $params['lot_id'];
         $rap_params['total'] = floatval(preg_replace('/[^\d\.\-]/', '', $params['total']));
 

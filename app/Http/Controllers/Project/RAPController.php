@@ -46,7 +46,13 @@ class RAPController extends Controller
         $lots = Lot::selectClusterBySession();
         $clusters = Cluster::selectClusterBySession();
         $rap->total = explode('.', $rap->total)[0];
-        return view('project.rap_update', compact('rap' ,'lots', 'clusters'));
+        return view('project.rap_update', [
+            'rap' => $rap,
+            'lot'=> $lots, 
+            'clusters' => $clusters,
+            'company_logo' => GeneralSetting::getCompanyLogo(),
+            'company_name' => GeneralSetting::getCompanyName()
+        ]);
     }
 
     public function datatables(Request $request)
@@ -96,7 +102,8 @@ class RAPController extends Controller
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
                 $nestedData['title'] = $row['title'];
-                $nestedData['date'] = $row['date'];
+                $nestedData['type'] = $row['type'];
+                $nestedData['date'] = date('d M Y', strtotime($row['date']));
                 $nestedData['total'] = $row['total'];
                 $nestedData['action'] = '';
                 $nestedData['action'] .='        <div class="dropdown dropdown-action">';

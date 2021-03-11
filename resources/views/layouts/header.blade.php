@@ -1,6 +1,6 @@
 <!-- Logo -->
 <div class="header-left">
-    <a href="index-2.html" class="logo">
+    <a href="{{url('/')}}" class="logo">
       <img id="#logo" src="{{ asset('storage/'.($company_logo ?? '') ) }}" width="40" height="40" alt="">
     </a>
 </div>

@@ -128,7 +128,7 @@
         $.each(res.items, function(key, value) {
           cols += '<tr>';
           cols += '<td>'+(key + 1)+'</td>';
-          cols += '<td>'+value.inventory.code+'<input type="hidden" name="inventory_id[]" value='+ value.inventory_id +'></td>';
+          cols += '<td>'+value.inventory.code+'<input type="hidden" name="inventory_id[]" value="'+ value.inventory_id +'"></td>';
           cols += '<td>'+value.inventory.name+'</td>';
           cols += '<td><input type="text" class="form-control" name="delivered_qty[]" value="0"></td>';
           cols += '<td>'+value.inventory.unit.name+'</td>';

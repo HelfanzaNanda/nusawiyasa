@@ -98,7 +98,7 @@ class DevelopmentProgressController extends Controller
                 $nestedData['cluster_name'] = $row['cluster_name'];
                 $nestedData['block'] = $row['block'];
                 $nestedData['unit_number'] = $row['unit_number'];
-                $nestedData['date'] = $row['date'];
+                $nestedData['date'] = date('d M Y', strtotime($row['date']));
                 $nestedData['percentage'] = $row['percentage'];
                 $nestedData['status'] = $row['status'];
                 $nestedData['action'] = '';

@@ -66,7 +66,7 @@ class AccountingJournal extends Model
         }
 
 
-        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6, 10])) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
             $qry->where('accounting_journals.cluster_id', $session['_cluster_id']);
         }
 

@@ -40,6 +40,7 @@
               <tr>
                 <th>#</th>
                 <th>Nama Cluster</th>
+                <th>Type</th>
                 <th>Blok</th>
                 <th>Nomor Unit</th>
                 <th>Jumlah Lantai</th>
@@ -120,6 +121,19 @@
                 </select>
               </div>
               <div class="form-group">
+                <label>Tipe Model</label>
+                <select id="input-type" name="type">
+                  <option value=""> - Pilih Tipe - </option>
+                  <option value="lot">Kapling</option>
+                  <option value="fasum">Fasum</option>
+                  <option value="fasos">Fasos</option>
+                </select>
+              </div>
+              <div class="form-group" id="type-name-group">
+                <label>Nama Fasilitas</label>
+                <input class="form-control" type="text" name="type_name" id="input-type-name">
+              </div>
+              <div class="form-group">
                 <label>Blok</label>
                 <input class="form-control" type="text" name="block">
               </div>
@@ -190,6 +204,19 @@
                 </select>
               </div>
               <div class="form-group">
+                <label>Tipe Model</label>
+                <select id="input-type-update" name="type">
+                  <option value=""> - Pilih Tipe - </option>
+                  <option value="lot">Kapling</option>
+                  <option value="fasum">Fasum</option>
+                  <option value="fasos">Fasos</option>
+                </select>
+              </div>
+              <div class="form-group" id="type-name-group-update">
+                <label>Nama Fasilitas</label>
+                <input class="form-control" type="text" name="type_name" id="type-name-update">
+              </div>
+              <div class="form-group">
                 <label>Blok</label>
                 <input class="form-control" type="text" name="block" id="block-update">
               </div>
@@ -237,6 +264,8 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+  $('#type-name-group').hide();
+
   $("#main-table").DataTable({
       "pageLength": 10,
       "processing": true,
@@ -254,6 +283,7 @@
       "columns": [
           {data: 'id', name: 'id', width: '5%', "visible": false},
           {data: 'cluster_name', name: 'cluster_name'},
+          {data: 'type', name: 'type'},
           {data: 'block', name: 'block'},
           {data: 'unit_number', name: 'unit_number'},
           {data: 'total_floor', name: 'total_floor'},
@@ -262,6 +292,7 @@
           {data: 'status', name: 'status'},
           {data: 'action', name: 'action', className: 'text-right'},
       ],
+      "order": [[ 0, "desc" ]]
   });
 
   $("#show-add-modal").on('click',function() {
@@ -269,6 +300,10 @@
   });
 
   $('#input-cluster').select2({
+    width: '100%'
+  });
+
+  $('#input-type').select2({
     width: '100%'
   });
 
@@ -338,6 +373,7 @@
           $('#input-cluster-update').select2({
             width: '100%'
           });
+          $('#input-type-update').select2({width: '100%'}).val(data.type).trigger('change');
 
           $('#block-update').val(data.block)
           $('#unit-update').val(data.unit_number)
@@ -347,6 +383,11 @@
           $('#price-update').val(data.price)
 
           $('#edit-description').summernote("code", data.description);
+
+          if (data.type_name) {
+            $('#type-name-update').val(data.type_name)
+            $('#type-name-group').show();
+          }
         }
       })
   });
@@ -512,6 +553,26 @@
 
   $('#edit-description').summernote({
     height: 200
+  });
+
+  $('#input-type').on('change', function() {
+    if (this.value == 'fasum' || this.value == 'fasos') {
+      $('#type-name-group').show();
+    } else {
+      $('#type-name-group').hide();
+    }
+
+    $('#input-type-name').val('');
+  });
+
+  $('#input-type-update').on('change', function() {
+    if (this.value == 'fasum' || this.value == 'fasos') {
+      $('#type-name-group-update').show();
+    } else {
+      $('#type-name-group-update').hide();
+    }
+
+    $('#type-name-update').val('');
   });
 </script>
 @endsection

@@ -89,7 +89,7 @@ class DeliveryOrderController extends Controller
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
                 $nestedData['number'] = $row['number'];
-                $nestedData['date'] = $row['date'];
+                $nestedData['date'] = date('d M Y', strtotime($row['date']));
                 $nestedData['dest_name'] = $row['dest_name'];
                 $nestedData['dest_address'] = $row['dest_address'];
                 $nestedData['action'] = '';

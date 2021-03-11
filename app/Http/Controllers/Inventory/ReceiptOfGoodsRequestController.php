@@ -98,7 +98,7 @@ class ReceiptOfGoodsRequestController extends Controller
         if (!empty($res['data'])) {
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
-                $nestedData['date'] = $row['date'];
+                $nestedData['date'] = date('d M Y', strtotime($row['date']));
                 $nestedData['number'] = $row['number'];
                 $nestedData['cluster_name'] = $row['cluster_name'];
                 $nestedData['block'] = $row['block'];

@@ -62,7 +62,7 @@ class WageSubmission extends Model
 
         $qry = self::select($_select)->addSelect('clusters.name as cluster_name')->join('clusters', 'clusters.id', '=', 'wage_submissions.cluster_id');
         
-        if ((isset($session['_role_id']) && in_array($session['_role_id'], [2, 3, 4, 5, 6, 10])) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
             $qry->where('wage_submissions.cluster_id', $session['_cluster_id']);
         }
 

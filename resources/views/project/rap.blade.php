@@ -33,6 +33,7 @@
               <tr>
                 <th>#</th>
                 <th width="40%">Judul</th>
+                <th>Type</th>
                 <th>Tanggal</th>
                 <th>Total</th>
                 <th class="text-right" width="10%">Aksi</th>
@@ -66,6 +67,7 @@
       "columns": [
           {data: 'id', name: 'id', width: '5%', "visible": false},
           {data: 'title', name: 'title'},
+          {data: 'type', name: 'type'},
           {data: 'date', name: 'date'},
           {data: 'total', name: 'total'},
           {data: 'action', name: 'action', className: 'text-right'},

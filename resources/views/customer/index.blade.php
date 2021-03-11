@@ -118,6 +118,15 @@
                 <label>Alamat</label>
                 <textarea class="form-control" name="address" rows="5"></textarea>
               </div>
+              <div class="form-group">
+                <label>Customer dari Perumahan/Cluster</label>
+                <select id="input-cluster" name="cluster_id">
+                  <option value="0"> - Pilih Perumahan/Cluster - </option>
+                  @foreach($clusters as $cluster)
+                    <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
+                  @endforeach
+                </select>
+              </div>
             </div>
           </div>
           <div class="submit-section">
@@ -196,11 +205,20 @@
               </div>
               <div class="form-group">
                 <label>Kelurahan</label>
-                <input class="form-control" type="text" name="subdistrict" id="sub-district-update" value="babi">
+                <input class="form-control" type="text" name="subdistrict" id="sub-district-update">
               </div>
               <div class="form-group">
                 <label>Alamat</label>
                 <textarea class="form-control" name="address" rows="5" id="address-update"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Customer dari Perumahan/Cluster</label>
+                <select id="input-cluster-update" name="cluster_id">
+                  <option value="0"> - Pilih Perumahan/Cluster - </option>
+                  @foreach($clusters as $cluster)
+                    <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
+                  @endforeach
+                </select>
               </div>
             </div>
           </div>
@@ -267,6 +285,7 @@
           {data: 'city', name: 'city', className: 'td-limit'},
           {data: 'action', name: 'action', className: 'text-right'},
       ],
+      "order": [[0, 'desc']]
   });
 
   $(document).on('click', '#delete', function(e){
@@ -355,6 +374,8 @@
             width: '100%'
           });
 
+          $('#input-cluster-update').select2({"width": '100%'}).val(data.cluster_id).trigger('change');
+
           var province_id = $("option:selected", '#input-province-update').data('province-code');
           city = data.city;
 
@@ -404,6 +425,14 @@
   });
 
   $('#input-city-update').select2({
+    width: '100%'
+  });
+
+  $('#input-cluster').select2({
+    width: '100%'
+  });
+
+  $('#input-cluster-update').select2({
     width: '100%'
   });
 

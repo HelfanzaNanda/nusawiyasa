@@ -24,7 +24,7 @@ class DashboardController extends Controller
     public function lotSold(Request $request)
     {
     	$res = [];
-    	$clusters = Cluster::get();
+    	$clusters = Cluster::selectClusterBySession();
 
     	foreach($clusters as $cluster) {
     		$total_credit = 0;
@@ -52,7 +52,7 @@ class DashboardController extends Controller
     public function lotProgressStep(Request $request)
     {
     	$res = [];
-    	$clusters = Cluster::get();
+    	$clusters = Cluster::selectClusterBySession();
     	$steps = RefLotStatuses::get();
 
     	foreach($clusters as $cluster) {
@@ -74,7 +74,7 @@ class DashboardController extends Controller
     // public function lotSold(Request $request)
     // {
     // 	$res = [];
-    // 	$clusters = Cluster::get();
+    // 	$clusters = Cluster::selectClusterBySession();
 
     // 	foreach($clusters as $cluster) {
     // 		$res[$cluster['name']][] = 0;

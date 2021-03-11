@@ -33,6 +33,17 @@
             </div>
           </div>
           <div class="form-group row">
+            <label class="col-form-label col-md-2">Type Model</label>
+            <div class="col-md-10">
+              <select id="input-type" name="type">
+                <option value=""> - Pilih Type - </option>
+                <option value="lot" {{$rab->type == 'lot' ? 'selected' : ''}}>Kapling</option>
+                <option value="fasum" {{$rab->type == 'fasum' ? 'selected' : ''}}>Fasum</option>
+                <option value="fasos" {{$rab->type == 'fasos' ? 'selected' : ''}}>Fasos</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
             <label class="col-form-label col-md-2">Total</label>
             <div class="col-md-10">
               <input class="form-control floating" type="text" id="input-total" name="total" readonly="" value="{{ number_format((int)str_replace('.', '', $rab->total), 2, '.', ',') }}">
@@ -130,6 +141,10 @@
     width: '100%'
   });
 
+  $('#input-type').select2({
+    width: '100%'
+  });
+  
   var cluster_id = '';
   $(document).ready(function() {
       cluster_id = $('#input-cluster').val();
@@ -202,11 +217,11 @@
     var subTotal = addSeparator($('#input-item-total').val(), '.', '.', ',');
 
     cols += '<td>'+rowsLength+'</td>';
-    cols += '<td>'+inventoryName+'<input type="hidden" name="item_inventory_id[]" value='+ inventoryId +'></td>';
-    cols += '<td>'+inventoryQty+'<input type="hidden" name="item_qty[]" value='+ inventoryQty +'></td>';
+    cols += '<td>'+inventoryName+'<input type="hidden" name="item_inventory_id[]" value="'+ inventoryId +'"></td>';
+    cols += '<td>'+inventoryQty+'<input type="hidden" name="item_qty[]" value="'+ inventoryQty +'"></td>';
     cols += '<td>'+inventoryUnit+'</td>';
-    cols += '<td>'+inventoryPrice+'<input type="hidden" name="item_price[]" value='+ inventoryPrice +'></td>';
-    cols += '<td id="total">'+subTotal+'<input type="hidden" name="item_total[]" value='+ subTotal +'></td>';
+    cols += '<td>'+inventoryPrice+'<input type="hidden" name="item_price[]" value="'+ inventoryPrice +'"></td>';
+    cols += '<td id="total">'+subTotal+'<input type="hidden" name="item_total[]" value="'+ subTotal +'"></td>';
     cols += '<td><button type="button" class="btn btn-danger" id="comments_remove"><i class="fa fa-trash-o"></i></button></td>';
 
     return cols;

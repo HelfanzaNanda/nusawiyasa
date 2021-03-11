@@ -98,7 +98,7 @@ class ReceiptOfGoodsController extends Controller
         if (!empty($res['data'])) {
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
-                $nestedData['date'] = $row['date'];
+                $nestedData['date'] = date('d M Y', strtotime($row['date']));
                 $nestedData['bpb_number'] = $row['bpb_number'];
                 $nestedData['invoice_number'] = $row['invoice_number'];
                 $nestedData['supplier_name'] = $row['supplier_name'];

@@ -30,6 +30,17 @@
             </div>
           </div>
           <div class="form-group row">
+            <label class="col-form-label col-md-2">Type Model</label>
+            <div class="col-md-10">
+              <select id="input-type" name="type">
+                <option value=""> - Pilih Type - </option>
+                <option value="lot">Kapling</option>
+                <option value="fasum">Fasum</option>
+                <option value="fasos">Fasos</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
             <label class="col-form-label col-md-2">Total</label>
             <div class="col-md-10">
               <input class="form-control floating" type="text" id="input-total" name="total" readonly="" value="0">
@@ -97,6 +108,10 @@
     width: '100%'
   });
 
+  $('#input-type').select2({
+    width: '100%'
+  });
+  
   var cluster_id = '';
   $(document).on('change', '#input-cluster', function(){
     cluster_id = $(this).val()
@@ -167,11 +182,11 @@
     var subTotal = addSeparator($('#input-item-total').val(), '.', '.', ',');
 
     cols += '<td>'+rowsLength+'</td>';
-    cols += '<td>'+inventoryName+'<input type="hidden" name="item_inventory_id[]" value='+ inventoryId +'></td>';
-    cols += '<td>'+inventoryQty+'<input type="hidden" name="item_qty[]" value='+ inventoryQty +'></td>';
+    cols += '<td>'+inventoryName+'<input type="hidden" name="item_inventory_id[]" value="'+ inventoryId +'"></td>';
+    cols += '<td>'+inventoryQty+'<input type="hidden" name="item_qty[]" value="'+ inventoryQty +'"></td>';
     cols += '<td>'+inventoryUnit+'</td>';
-    cols += '<td>'+inventoryPrice+'<input type="hidden" name="item_price[]" value='+ inventoryPrice +'></td>';
-    cols += '<td id="total">'+subTotal+'<input type="hidden" name="item_total[]" value='+ subTotal +'></td>';
+    cols += '<td>'+inventoryPrice+'<input type="hidden" name="item_price[]" value="'+ inventoryPrice +'"></td>';
+    cols += '<td id="total">'+subTotal+'<input type="hidden" name="item_total[]" value="'+ subTotal +'"></td>';
     cols += '<td><button type="button" class="btn btn-danger" id="comments_remove"><i class="fa fa-trash-o"></i></button></td>';
 
     return cols;

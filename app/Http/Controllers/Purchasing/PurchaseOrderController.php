@@ -137,7 +137,7 @@ class PurchaseOrderController extends Controller
                 }
 
                 $nestedData['type'] = $type;
-                $nestedData['date'] = $row['date'];
+                $nestedData['date'] = date('d M Y', strtotime($row['date']));
                 $nestedData['status'] = $status_collection->where('id', $row['status'])->values()[0]['name'];
                 $nestedData['total'] = number_format(floatval($row['total']));
                 $nestedData['action'] = '';

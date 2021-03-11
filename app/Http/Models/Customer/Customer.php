@@ -225,7 +225,7 @@ class Customer extends Model
         ]);
     }
 
-    public static function datatables($start, $length, $order, $dir, $search, $filter = '')
+    public static function datatables($start, $length, $order, $dir, $search, $filter = '', $session = [])
     {
         $totalData = self::count();
 
@@ -239,7 +239,11 @@ class Customer extends Model
                 ->addSelect('users.email')
                 ->addSelect('users.phone')
                 ->join('users', 'users.id', '=', 'customers.user_id');
-        
+
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+            $qry->where('cluster_id', $session['_cluster_id']);
+        }
+
         $totalFiltered = $qry->count();
         
         if (empty($search)) {

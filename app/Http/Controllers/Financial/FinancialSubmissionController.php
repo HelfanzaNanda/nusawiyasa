@@ -57,7 +57,7 @@ class FinancialSubmissionController extends Controller
         if (!empty($res['data'])) {
             foreach ($res['data'] as $row) {
                 $nestedData['id'] = $row['id'];
-                $nestedData['date'] = $row['date'];
+                $nestedData['date'] = date('d M Y', strtotime($row['date']));
                 $nestedData['number'] = $row['number'];
                 $nestedData['total'] = 'Rp.'.$row['total'];
                 $nestedData['cluster'] = $row['cluster']['name'];
