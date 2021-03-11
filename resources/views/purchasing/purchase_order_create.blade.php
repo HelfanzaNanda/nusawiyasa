@@ -373,14 +373,14 @@
     const subtotal = $("#input-subtotal").val();
     //calculateTotal()
     if (!$(this).is(':checked')) {
-        $(this).parent().parent().parent().find('td > .item-calc').attr('disabled', true)
+        $(this).parent().parent().parent().find('td > .item-calc').attr('readonly', true)
         input_checkbox.val("0")
         $("#input-subtotal").val(addSeparator((detectFloat(subtotal) - value).toFixed(2), '.', '.', ','));
         //calculateTotal();
         totalCalc()
         //calculateTotal();
       }else{
-        $(this).parent().parent().parent().find('td > .item-calc').attr('disabled', false)
+        $(this).parent().parent().parent().find('td > .item-calc').attr('readonly', false)
         input_checkbox.val("1")
         //calculateTotal()
         $("#input-subtotal").val(addSeparator((detectFloat(subtotal) + value).toFixed(2), '.', '.', ','));
