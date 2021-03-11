@@ -565,7 +565,7 @@
           // console.log($('#input-lot').val());
           $('#input-lot').val(res.lot_id).trigger('change');
           hideLoadSpinner($('#input-lot'));
-        }, 1000);
+        }, 2500);
 
         $("input[name=type][value=" + res.type + "]").prop('checked', true);
 

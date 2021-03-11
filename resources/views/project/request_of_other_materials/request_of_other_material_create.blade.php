@@ -362,7 +362,7 @@
         setTimeout(function(){ 
           $('#input-lot').val(res.customer_lot.lot_id).trigger('change');
           hideLoadSpinner($('#input-lot'));
-        }, 1000);
+        }, 2500);
       }
     });
   });
