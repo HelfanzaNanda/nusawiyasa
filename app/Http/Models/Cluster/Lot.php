@@ -147,6 +147,14 @@ class Lot extends Model
 
         $db = self::select(array_keys(self::mapSchema()))->with('galleries')->with('cluster');
 
+        if (isset($params['exclude'])) {
+            $excludes = explode(',', $params['exclude']);
+
+            foreach($excludes as $exclude) {
+                $db->without($exclude);
+            }
+        }
+
         if ($params) {
             foreach (array($params) as $k => $v) {
                 foreach (array_keys($v) as $key => $row) {

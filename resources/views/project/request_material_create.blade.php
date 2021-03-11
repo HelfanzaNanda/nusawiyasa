@@ -184,7 +184,7 @@
     e.preventDefault();
     let id = $(this).val();
     $.ajax({
-      url: BASE_URL+'/get_lots?all=true&cluster_id='+id,
+      url: BASE_URL+'/get_lots?all=true&exclude=galleries,cluster&cluster_id='+id,
       type: "GET",
       dataType: "json",
       beforeSend: function(xhr) {
@@ -438,7 +438,6 @@
         // $("select#input-lot").append('<option value="0"> - Pilih Kavling - </option>');
       },
       success: function(res) {
-        console.log(res);
         $('#input-cluster').val(res.customer_lot.lot.cluster_id).trigger('change');
 
         setTimeout(function(){ 

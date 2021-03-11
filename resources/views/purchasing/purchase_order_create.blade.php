@@ -523,7 +523,7 @@
     e.preventDefault();
     let id = $(this).val();
     $.ajax({
-      url: BASE_URL+'/get_lots?all=true&cluster_id='+id,
+      url: BASE_URL+'/get_lots?all=true&exclude=galleries,cluster&cluster_id='+id,
       //url: BASE_URL+'/get_lots?id='+id+'&all=true',
       type: "GET",
       dataType: "json",
