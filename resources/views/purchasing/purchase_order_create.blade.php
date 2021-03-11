@@ -602,8 +602,8 @@
           // @endforeach
           // cols += '</select></td>';
           cols += '<td id="qty-'+(key+1)+'">'+value.qty+'<input type="hidden" name="item_qty[]" value="'+ value.qty +'"></td>';
-          cols += '<td>'+value.inventory.unit.name+'<input type="hidden" name="item_total[]" id="input-total-'+(key+1)+'" value="'+ (value.qty * value.inventory.purchase_price) +' class="form-control"></td>';
-          cols += '<td><input type="text" class="form-control item-calc" name="item_price[]" value="'+ (value.inventory.purchase_price ? value.inventory.purchase_price : 0 ) +' data-id="'+(key+1)+'"></td>';
+          cols += '<td>'+value.inventory.unit.name+'<input type="hidden" name="item_total[]" id="input-total-'+(key+1)+'" value="'+ (value.qty * value.inventory.purchase_price) +'" class="form-control"></td>';
+          cols += '<td><input type="text" class="form-control item-calc" name="item_price[]" value="'+ (value.inventory.purchase_price ? value.inventory.purchase_price : 0 ) +'" data-id="'+(key+1)+'"></td>';
           cols += '<td id="total" class="total-'+(key+1)+'">'+(value.qty * value.inventory.purchase_price)+'</td>';
           // cols += '<td><button type="button" class="btn btn-danger" id="comments_remove"><i class="fa fa-trash-o"></i></button></td>';
           cols += '<td></td>';
