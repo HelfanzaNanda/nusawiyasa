@@ -80,11 +80,11 @@
 
 <body>
     <header>
-        {{-- <img src="{{ asset('storage/'.($header ?? '') ) }}"width="100%" height="100%"/> --}}
+        <img src="{{ asset('storage/'.($header ?? '') ) }}"width="100%" height="100%"/>
     </header>
 
     <footer>
-        {{-- <img src="{{ asset('storage/'.($footer ?? '') ) }}" width="100%" height="100%"/> --}}
+        <img src="{{ asset('storage/'.($footer ?? '') ) }}" width="100%" height="100%"/>
     </footer>
 
     <div style="margin-top: 20px;">
