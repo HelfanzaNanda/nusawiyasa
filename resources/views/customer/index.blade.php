@@ -67,11 +67,11 @@
             <div class="col-sm-6"> 
               <div class="form-group">
                 <label>Nama</label>
-                <input class="form-control" type="text" name="name">
+                <input class="form-control" type="text" name="name" required oninvalid="this.setCustomValidity('Harap Isikan Nama.')" onkeyup="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Email</label>
-                <input class="form-control" type="text" name="email">
+                <input class="form-control" type="email" name="email">
               </div>
               <div class="form-group">
                 <label>No. HP</label>
@@ -93,8 +93,8 @@
             <div class="col-sm-6">  
               <div class="form-group">
                 <label>Provinsi</label>
-                <select id="input-province" name="province"> 
-                  <option> - Pilih Provinsi - </option>
+                <select id="input-province" name="province" required oninvalid="this.setCustomValidity('Harap Isikan Provinsi.')" onchange="this.setCustomValidity('')"> 
+                  <option value=""> - Pilih Provinsi - </option>
                   @foreach($provinces as $province)
                     <option value="{{$province['name']}}" data-province-code="{{$province['code']}}">{{$province['name']}}</option>
                   @endforeach
@@ -302,7 +302,6 @@
             cancelButtonText: 'Batal',
             confirmButtonText: 'Hapus'
         }, function(){
-          console.log('ddd');
           $.ajax({
             type: 'get',
             url: BASE_URL+'/customers/'+id+'/delete',
@@ -396,13 +395,6 @@
               });
             }
           });
-
-          // $('#input-city-update').select2()
-          //     $('#input-city-update').val(data.city)
-          //     $('#input-city-update').select2().trigger('change');
-          //     $('#input-city-update').select2({
-          //       width: '100%'
-          //     });
         }
       })
     })
@@ -483,7 +475,7 @@
     e.preventDefault();
     var form_data = new FormData( this );
     var loading_text = $('.loading').data('loading-text');
-      $('.loading').html(loading_text).attr('disabled', true);
+    $('.loading').html(loading_text).attr('disabled', true);
     $.ajax({
       type: 'post',
       url: BASE_URL+'/customers',
@@ -496,7 +488,6 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
         if(msg.status == 'success'){
             setTimeout(function() {
               
@@ -520,8 +511,14 @@
                 html: true
             });
         }
+
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+        $('.loading').html('Submit').attr('disabled', false)
       }
-    })  
+    });  
+
   })
 
   $('form#add-form').submit(function(e){
@@ -542,10 +539,8 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
         if(msg.status == 'success'){
             setTimeout(function() {
-              
                 swal({
                     title: "Sukses",
                     text: msg.message,
@@ -566,6 +561,11 @@
                 html: true
             });
         }
+
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+        $('.loading').html('Submit').attr('disabled', false)
       }
     })  
   })
