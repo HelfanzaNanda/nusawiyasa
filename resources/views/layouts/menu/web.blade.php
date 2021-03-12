@@ -90,7 +90,7 @@
 
         @if($user->can('request-of-other-material'))
             <li {{ (request()->segment(1) == 'request-of-other-material') ? 'class=active' : '' }}>
-                <a href="{{url('/request-of-other-material')}}"><i class="la la-dolly-flatbed"></i> <span>Pengajuan Bahan Lainya</span></a>
+                <a href="{{url('/request-of-other-material')}}"><i class="la la-dolly-flatbed"></i> <span>Pengajuan Bahan Lainnya</span></a>
             </li>
         @endif
 

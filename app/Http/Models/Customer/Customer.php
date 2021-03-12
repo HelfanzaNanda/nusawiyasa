@@ -241,7 +241,7 @@ class Customer extends Model
                 ->join('users', 'users.id', '=', 'customers.user_id');
 
         if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
-            $qry->where('cluster_id', $session['_cluster_id']);
+            $qry->where('customers.cluster_id', $session['_cluster_id']);
         }
 
         $totalFiltered = $qry->count();
