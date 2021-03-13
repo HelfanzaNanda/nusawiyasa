@@ -252,7 +252,7 @@ $('.btn-close').on('click', function(){
             
           },
           success: function(msg) {
-            $('.loading').html('Submit').attr('disabled', false)
+            
             if(msg.status == 'success'){
                 setTimeout(function() {
                     swal({
@@ -276,7 +276,11 @@ $('.btn-close').on('click', function(){
                     html: true
                 });
             }
-          }
+            $('.loading').html('Submit').attr('disabled', false)
+          },
+          error: function(params) {
+                $('.loading').html('Submit').attr('disabled', false)
+            }
         });
       }
       $('.loading').html('Submit').attr('disabled', false)

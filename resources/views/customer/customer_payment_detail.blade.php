@@ -322,7 +322,7 @@
         
       },
       success: function(res) {
-        $('.loading').html('Submit').attr('disabled', false)
+       
         console.log(res);
         if(res.status == 'success'){
             setTimeout(function() {
@@ -345,7 +345,11 @@
                 html: true
             });
         }
-      }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+            $('.loading').html('Submit').attr('disabled', false)
+        }
     })
   });
 
