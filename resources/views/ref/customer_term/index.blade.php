@@ -69,11 +69,13 @@
             <div class="col-sm-12"> 
               <div class="form-group">
                 <label>Nama</label>
-                <input class="form-control" type="text" name="name" id="name">
+                <input class="form-control" type="text" name="name" id="name"
+                required oninvalid="this.setCustomValidity('Harap Isikan Nama.')" onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Tipe Pembayaran</label>
-                <select name="payment_type" id="payment-type" class="form-control">
+                <select name="payment_type" id="payment-type" class="form-control"
+                required oninvalid="this.setCustomValidity('Harap Isikan Tipe Pembayaran.')" onchange="this.setCustomValidity('')">
                   <option value=""> - Pilih Tipe Pembayaran - </option>
                   <option value="cash">Tunai</option>
                   <option value="cash_in_stages">Tunai Bertahap</option>
@@ -82,39 +84,24 @@
               </div>
               <div class="form-group">
                 <label>Tipe Input</label>
-                <select name="type" id="type" class="form-control">
+                <select name="type" id="type" class="form-control"
+                required oninvalid="this.setCustomValidity('Harap Isikan Tipe Input.')" onchange="this.setCustomValidity('')">
                   <option value=""> - Pilih Tipe Input - </option>
                   {{-- <option value="currency">Nominal Uang</option> --}}
                   <option value="file">File</option>
                   <option value="text">Teks</option>
                 </select>
               </div>
-              {{-- <div class="form-group">
-                <label>Akun Berelasi</label>
-                <select name="account" id="account" class="form-control">
-                  <option value=""> - Pilih Akun Yang Berelasi - </option>
-                  @foreach($coa as $key => $val)
-                    <option value="{{$key}}">{{$key}} | {{$val}}</option>
-                  @endforeach
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Tipe Biaya Konsumen</label>
-                <select name="account_type" id="account-type" class="form-control">
-                  <option value=""> - Pilih Tipe Biaya Konsumen - </option>
-                  <option value="cash">Penjualan Tunai</option>
-                  <option value="receivable">Piutang</option>
-                  <option value="discount">Diskon</option>
-                  <option value="tax">Pajak</option>
-                </select>
-              </div> --}}
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -249,6 +236,8 @@
   
 
   $("#show-add-modal").on('click',function() {
+    $('form#add-form').trigger('reset')
+            $('select').val('').trigger('change')
       $('#id').val('')
       $('#add-modal').modal('show');
   });
@@ -287,7 +276,7 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
+        
         if(msg.status == 'success'){
             setTimeout(function() {
               
@@ -311,6 +300,10 @@
                 html: true
             });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     })  
   })

@@ -67,26 +67,36 @@
             <div class="col-sm-6"> 
               <div class="form-group">
                 <label>Nama</label>
-                <input class="form-control" type="text" name="name">
+                <input class="form-control" type="text" name="name"
+                required oninvalid="this.setCustomValidity('Harap Isikan Nama.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>No. HP</label>
-                <input class="form-control" type="text" name="phone">
+                <input class="form-control" type="text" name="phone"
+                required oninvalid="this.setCustomValidity('Harap Isikan No HP.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Luas Tanah Total</label>
-                <input class="form-control" type="number" name="surface_area_total">
+                <input class="form-control" type="number" name="surface_area_total"
+                required oninvalid="this.setCustomValidity('Harap Isikan Luas Tanah.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Total Unit</label>
-                <input class="form-control" type="number" name="total_unit">
+                <input class="form-control" type="number" name="total_unit"
+                required oninvalid="this.setCustomValidity('Harap Isikan Total Unit.')" 
+                onchange="this.setCustomValidity('')">
               </div>
             </div>
             <div class="col-sm-6">  
               <div class="form-group">
                 <label>Provinsi</label>
-                <select id="input-province" name="province"> 
-                  <option> - Pilih Provinsi - </option>
+                <select id="input-province" name="province"
+                required oninvalid="this.setCustomValidity('Harap Isikan Provinsi.')" 
+                onchange="this.setCustomValidity('')"> 
+                  <option value=""> - Pilih Provinsi - </option>
                   @foreach($provinces as $province)
                     <option value="{{$province['name']}}" data-province-code="{{$province['code']}}">{{$province['name']}}</option>
                   @endforeach
@@ -94,29 +104,40 @@
               </div>
               <div class="form-group">
                 <label>Kota</label>
-                <select id="input-city" name="city"> 
-                  <option> - Pilih Kota - </option>
+                <select id="input-city" name="city"
+                required oninvalid="this.setCustomValidity('Harap Isikan Kota.')" 
+                onchange="this.setCustomValidity('')"> 
+                  <option value=""> - Pilih Kota - </option>
                 </select>
               </div>
               <div class="form-group">
                 <label>Kecamatan</label>
-                <input class="form-control" type="text" name="district">
+                <input class="form-control" type="text" name="district" 
+                required oninvalid="this.setCustomValidity('Harap Isikan Keterangan.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Kelurahan</label>
-                <input class="form-control" type="text" name="sub_district">
+                <input class="form-control" type="text" name="sub_district"
+                required oninvalid="this.setCustomValidity('Harap Isikan Kelurahan.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Alamat</label>
-                <textarea class="form-control" name="address" rows="5"></textarea>
+                <textarea class="form-control" name="address" rows="5"
+                required oninvalid="this.setCustomValidity('Harap Isikan Alamat.')" 
+                onchange="this.setCustomValidity('')"></textarea>
               </div>
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -230,6 +251,9 @@
   });
 
   $("#show-add-modal").on('click',function() {
+      $('form#add-form').trigger('reset')
+      $('#input-city').val('').trigger('change')
+      $('#input-province').val('').trigger('change')
       $('#add-modal').modal('show');
   });
 
@@ -265,7 +289,7 @@
   $('form#add-form').submit( function( e ) {
     e.preventDefault();
     var loading_text = $('.loading').data('loading-text');
-        $('.loading').html(loading_text).attr('disabled', true);
+    $('.loading').html(loading_text).attr('disabled', true);
     var form_data = new FormData( this );
 
     $.ajax({
@@ -280,7 +304,6 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
         if(msg.status == 'success'){
             setTimeout(function() {
                 swal({
@@ -304,6 +327,10 @@
                 html: true
             });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     })
   });

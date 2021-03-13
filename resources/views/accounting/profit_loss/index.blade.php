@@ -103,8 +103,9 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="">Tanggal</label>
-                            <input type="text" name="daterange" class="form-control" id="daterange" readonly
-                                style="background: white; cursor: pointer;" />
+                            <input type="text" name="daterange" class="form-control" 
+                            id="daterange" readonly style="background: white; cursor: pointer;" 
+                            />
                         </div>
                     </div>
                     <div class="submit-section">
@@ -141,6 +142,7 @@ $('#daterange').daterangepicker({
 
 $(document).on('click', '#show-filter-modal', function() {    
     $('.loading-area').hide();
+    $("#daterange").val('');
     $('#filter-modal').modal('show'); 
 });
 

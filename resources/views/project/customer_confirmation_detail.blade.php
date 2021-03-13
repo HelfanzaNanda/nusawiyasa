@@ -35,6 +35,7 @@
         </div>
         <div class="card-footer">
           <div class="col-auto float-right ml-auto pb-2">
+            <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
             <button type="submit" class="btn btn-primary float-right loading" 
             data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
               Submit
@@ -71,7 +72,7 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
+        
         if(msg.status == 'success'){
           setTimeout(function() {
             swal({
@@ -95,6 +96,10 @@
             html: true
           });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     })
   });

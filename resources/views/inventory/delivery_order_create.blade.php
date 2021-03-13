@@ -21,19 +21,22 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Tanggal</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-date" name="date">
+              <input class="form-control floating" type="text" id="input-date" name="date"
+              required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onchange="this.setCustomValidity('')">
             </div>
           </div>
           <div class="form-group row">
             <label class="col-form-label col-md-2">Nama Penerima</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-dest-name" name="dest_name">
+              <input class="form-control floating" type="text" id="input-dest-name" name="dest_name"
+              required oninvalid="this.setCustomValidity('Harap Isikan Nama Penerima.')" onchange="this.setCustomValidity('')">
             </div>
           </div>
           <div class="form-group row">
             <label class="col-form-label col-md-2">Alamat Penerima</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-dest-address" name="dest_address">
+              <input class="form-control floating" type="text" id="input-dest-address" name="dest_address"
+              required oninvalid="this.setCustomValidity('Harap Isikan Alamat Penerima.')" onchange="this.setCustomValidity('')">
             </div>
           </div>
           <section class="review-section">
@@ -80,10 +83,13 @@
         </div>
         <div class="card-footer">
           <div class="col-auto float-right ml-auto pb-2">
-            <button type="submit" class="btn btn-primary float-right loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Kembali</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </div>
       </form>
@@ -94,6 +100,9 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+$('.btn-close').on('click', function(){
+      window.location.replace('delivery-order')
+  })
   $(document).ready(function(){
     var url = '{{ asset('') }}'
     
@@ -270,7 +279,11 @@
           }
         });
       }
-    }
+      $('.loading').html('Submit').attr('disabled', false)
+    },
+    error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
+      }
   })
   });
 </script>

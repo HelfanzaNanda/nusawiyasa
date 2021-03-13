@@ -134,7 +134,7 @@
                     
                       if(data.status == 'success'){
                         setTimeout(function() {
-                        $('.loading').html('Submit').attr('disabled', false)
+                        
                           swal({
                             title: "Sukses",
                             text: data.message,
@@ -156,6 +156,10 @@
                           html: true
                         });
                       }
+                      $('.loading').html('Submit').attr('disabled', false)
+                    },
+                    error: function(params) {
+                        $('.loading').html('Submit').attr('disabled', false)
                     }
                 })
             });

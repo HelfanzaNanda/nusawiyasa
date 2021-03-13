@@ -125,7 +125,10 @@
     });
 
     $(document).on('click', '#show-filter-modal', function() {    
+      $('#input-debitur').val('').trigger('change');
         $('.loading-area').hide();
+        $('#input-coa').val('').trigger('change')
+        $("#daterange").val('');
         $('#filter-modal').modal('show'); 
     });
 

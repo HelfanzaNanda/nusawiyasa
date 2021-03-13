@@ -83,10 +83,13 @@
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -218,6 +221,8 @@
   
 
   $("#show-add-modal").on('click',function() {
+    $('form#add-form').trigger('reset')
+            $('select').val('').trigger('change')
       $('#id').val('')
       $('#add-modal').modal('show');
   });
@@ -244,7 +249,7 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
+        
         if(msg.status == 'success'){
             setTimeout(function() {
               
@@ -268,6 +273,10 @@
                 html: true
             });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     })  
   })

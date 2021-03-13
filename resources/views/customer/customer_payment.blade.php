@@ -111,7 +111,10 @@
               </div>
               <div class="form-group">
                 <label>No Ref Bank</label>
-                <input type="text" name="bank_status_number" class="form-control" id="input-bank-status-number">
+                <input type="text" name="bank_status_number" class="form-control" 
+                id="input-bank-status-number"
+                required oninvalid="this.setCustomValidity('Harap Isikan No Ref Bank.')" 
+                onchange="this.setCustomValidity('')">
               </div>
             </div>
           </div>
@@ -130,6 +133,8 @@
 
   $("#main-table").on('click', '#booking-installment', function() {
       let id = $(this).data('id');
+      $('form#add-form').trigger('reset')
+    $('#input-bank-status').val('').trigger('change')
       $('#installment-modal').modal('show');
   });
 
@@ -256,6 +261,10 @@
                 html: true
             });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     });
   });
