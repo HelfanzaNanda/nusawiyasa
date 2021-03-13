@@ -84,10 +84,13 @@
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -113,8 +116,10 @@
             <div class="col-sm-6"> 
               <div class="form-group">
                 <label>Cluster</label>
-                <select id="input-cluster" name="cluster_id"> 
-                  <option> - Pilih Cluster - </option>
+                <select id="input-cluster" name="cluster_id" 
+                required oninvalid="this.setCustomValidity('Harap Isikan Cluster.')" 
+                onchange="this.setCustomValidity('')"> 
+                  <option value=""> - Pilih Cluster - </option>
                   @foreach($clusters as $cluster)
                     <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
                   @endforeach
@@ -122,7 +127,9 @@
               </div>
               <div class="form-group">
                 <label>Tipe Model</label>
-                <select id="input-type" name="type">
+                <select id="input-type" name="type" 
+                required oninvalid="this.setCustomValidity('Harap Isikan Tipe Model.')" 
+                onchange="this.setCustomValidity('')">
                   <option value=""> - Pilih Tipe - </option>
                   <option value="lot">Kapling</option>
                   <option value="fasum">Fasum</option>
@@ -131,37 +138,53 @@
               </div>
               <div class="form-group" id="type-name-group">
                 <label>Nama Fasilitas</label>
-                <input class="form-control" type="text" name="type_name" id="input-type-name">
+                <input class="form-control" type="text" name="type_name" id="input-type-name"
+                required oninvalid="this.setCustomValidity('Harap Isikan Nama Fasilitas.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Blok</label>
-                <input class="form-control" type="text" name="block">
+                <input class="form-control" type="text" name="block"
+                required oninvalid="this.setCustomValidity('Harap Isikan Blok.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Nomor Unit</label>
-                <input class="form-control" type="text" name="unit_number">
+                <input class="form-control" type="text" name="unit_number" 
+                required oninvalid="this.setCustomValidity('Harap Isikan Nomor Unit.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Jumlah Lantai</label>
-                <input class="form-control" type="number" name="total_floor">
+                <input class="form-control" type="number" name="total_floor"
+                required oninvalid="this.setCustomValidity('Harap Isikan Jumlah Lantai.')" 
+                onchange="this.setCustomValidity('')">
               </div>
             </div>
             <div class="col-sm-6">
               <div class="form-group">
                 <label>Luas Tanah (m2)</label>
-                <input class="form-control" type="number" name="surface_area">
+                <input class="form-control" type="number" name="surface_area"
+                required oninvalid="this.setCustomValidity('Harap Isikan Luas Tanah (m2).')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Luas Bangunan (m2)</label>
-                <input class="form-control" type="number" name="building_area">
+                <input class="form-control" type="number" name="building_area"
+                required oninvalid="this.setCustomValidity('Harap Isikan Luas Bangunan (m2).')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Harga</label>
-                <input class="form-control" type="number" name="price">
+                <input class="form-control" type="number" name="price"
+                required oninvalid="this.setCustomValidity('Harap Isikan Harga.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Spesifikasi</label>
-                <textarea id="input-description" name="description"></textarea>
+                <textarea id="input-description" name="description"
+                required oninvalid="this.setCustomValidity('Harap Isikan Spesifikasi.')" 
+                onchange="this.setCustomValidity('')"></textarea>
               </div>
             </div>
           </div>
@@ -296,6 +319,9 @@
   });
 
   $("#show-add-modal").on('click',function() {
+    $('form#add-form').trigger('reset')
+    $('#input-type').val('').trigger('change')
+    $('#input-cluster').val('').trigger('change')
       $('#add-modal').modal('show');
   });
 
@@ -325,7 +351,6 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
         if(msg.status == 'success'){
             setTimeout(function() {
                 swal({
@@ -349,6 +374,7 @@
                 html: true
             });
         }
+        $('.loading').html('Submit').attr('disabled', false)
       }
     })
   });
@@ -396,7 +422,6 @@
     e.preventDefault();
     var loading_text = $('.loading').data('loading-text');
         $('.loading').html(loading_text).attr('disabled', true);
-    console.log('da');
     var form_data = new FormData( this );
 
     $.ajax({
@@ -411,7 +436,7 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
+        
         if(msg.status == 'success'){
             setTimeout(function() {
                 swal({
@@ -435,6 +460,10 @@
                 html: true
             });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     })
   });

@@ -15,8 +15,10 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">No. PO</label>
             <div class="col-md-10">
-              <select id="input-po" name="purchase_order_id"> 
-                <option value="0"> - Pilih PO - </option>
+              <select id="input-po" name="purchase_order_id"
+              required oninvalid="this.setCustomValidity('Harap Isikan No PO.')" onchange="this.setCustomValidity('')"  >
+                
+                <option value=""> - Pilih PO - </option>
                 @foreach($purchase_orders as $purchase_order)
                   <option value="{{$purchase_order['id']}}">{{$purchase_order['number']}}</option>
                 @endforeach
@@ -26,19 +28,22 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">No. BPB</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-bpb-number" name="bpb_number">
+              <input class="form-control floating" type="text" id="input-bpb-number" name="bpb_number"
+              required oninvalid="this.setCustomValidity('Harap Isikan No. BPB')" onchange="this.setCustomValidity('')" >
             </div>
           </div>
           <div class="form-group row">
             <label class="col-form-label col-md-2">Invoice Number</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-invoice-number" name="invoice_number">
+              <input class="form-control floating" type="text" id="input-invoice-number" name="invoice_number"
+              required oninvalid="this.setCustomValidity('Harap Isikan Invoice Number.')" onchange="this.setCustomValidity('')" >
             </div>
           </div>
           <div class="form-group row">
             <label class="col-form-label col-md-2">Tanggal</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-date" name="date">
+              <input class="form-control floating" type="text" id="input-date" name="date"
+              required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onchange="this.setCustomValidity('')" >
             </div>
           </div>
           <section class="review-section">
@@ -71,10 +76,13 @@
         </div>
         <div class="card-footer">
           <div class="col-auto float-right ml-auto pb-2">
-            <button type="submit" class="btn btn-primary float-right loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Kembali</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </div>
       </form>
@@ -85,6 +93,9 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+$('.btn-close').on('click', function(){
+      window.location.replace('receipt-of-goods')
+  })
   $(document).ready(function(){
     var url = '{{ asset('') }}'
     
@@ -151,7 +162,7 @@
     type: 'GET',
     url: '{{asset('')}}'+'number/validate?prefix=BkPB&number='+$('#input-bpb-number').val(),
     success: function(data){
-      $('.loading').html('Submit').attr('disabled', false)
+      
       if(data.status == 'error'){
         swal({
           title: "Gagal",
@@ -199,7 +210,11 @@
           }
         });
       }
-    }
+      $('.loading').html('Submit').attr('disabled', false)
+    },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
+      }
   })
   });
 </script>

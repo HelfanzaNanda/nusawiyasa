@@ -62,11 +62,15 @@
 	            </div><!-- input-group --><br>
 	            <label>Nama Akun</label>
 	            <div class="form-group">
-	              <input type="text" class="form-control" name="name" id="name">
+	              <input type="text" class="form-control" name="name" id="name"
+				  required oninvalid="this.setCustomValidity('Harap Isikan Nama Akun.')" 
+                onchange="this.setCustomValidity('')">
 	            </div><!-- form-group -->
 	            <label>Tipe</label>
 	            <div class="form-group">
-	              <select name="type" class="form-control" id="type">
+	              <select name="type" class="form-control" id="type"
+				  required oninvalid="this.setCustomValidity('Harap Isikan Tipe.')" 
+                onchange="this.setCustomValidity('')">
 	                  <option value="">D/K</option>
 	                  <option value="1">D</option>
 	                  <option value="2">K</option>
@@ -78,10 +82,13 @@
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+				<button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+				<button type="submit" class="btn btn-primary float-right loading" 
+				data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+				  Submit
+				</button>
+			  </div>
           </div>
         </form>
       </div>
@@ -200,7 +207,7 @@
 	          $('.loading-area').show();
 	        },
 	        success: function(msg) {
-				$('.loading').html('Submit').attr('disabled', false)
+				
 	          if(msg.status == 'success'){
 	              setTimeout(function() {
 	                  swal({
@@ -223,7 +230,11 @@
 	                  html: true
 	              });
 	          }
-	        }
+			  $('.loading').html('Submit').attr('disabled', false)
+	        },
+			error: function(params) {
+				$('.loading').html('Submit').attr('disabled', false)
+			}
 	  })
 	});    
 	</script>

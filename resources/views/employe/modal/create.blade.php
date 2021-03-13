@@ -15,22 +15,30 @@
                 <h5 class="col-md-12 modal-title">Data Pribadi</h5>
                 <div class="col-sm-6 form-group">
                   <label>Nama Lengkap</label>
-                  <input class="form-control" type="text" name="fullname">
+                  <input class="form-control" type="text" name="fullname"
+                  required oninvalid="this.setCustomValidity('Harap Isikan Nama.')" 
+                onchange="this.setCustomValidity('')">
                 </div>
 
                 <div class="col-sm-6 form-group">
                     <label>Tempat Lahir</label>
-                    <input class="form-control" type="text" name="place_birth">
+                    <input class="form-control" type="text" name="place_birth"
+                    required oninvalid="this.setCustomValidity('Harap Isikan Tempat.')" 
+                onchange="this.setCustomValidity('')">
                 </div>
 
                 <div class="col-sm-6 form-group">
                     <label>Tanggal Lahir</label>
-                    <input class="form-control" type="text" name="date_birth" id="input-dob">
+                    <input class="form-control" type="text" name="date_birth" id="input-dob"
+                    required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" 
+                onchange="this.setCustomValidity('')">
                 </div>
 
                 <div class="col-sm-6 form-group">
                     <label>Jenis Kelamin</label>
-                    <select name="gender" id="input-gender" class="form-control">
+                    <select name="gender" id="input-gender" class="form-control"
+                    required oninvalid="this.setCustomValidity('Harap Isikan Jenis.')" 
+                onchange="this.setCustomValidity('')">
                         <option value="-">Jenis Kelamin</option>
                         <option value="Pria">Pria</option>
                         <option value="Wanita">Wanita</option>
@@ -39,7 +47,8 @@
 
                 <div class="col-sm-6 form-group">
                     <label>Agama</label>
-                    <select name="religion" id="input-religion" class="form-control">
+                    <select name="religion" id="input-religion" class="form-control"
+                    >
                         <option value="-">Agama</option>
                         <option value="Islam">Islam</option>
                         <option value="Kristen">Kristen</option>
@@ -51,7 +60,8 @@
 
                 <div class="col-sm-6 form-group">
                     <label>Status Pernikahan</label>
-                    <select name="mariage_status" id="input-mariage" class="form-control">
+                    <select name="mariage_status" id="input-mariage" class="form-control"
+                    >
                         <option value="-">Status Pernikahan</option>
                         <option value="Menikah">Menikah</option>
                         <option value="Belum Menikah">Belum Menikah</option>
@@ -60,7 +70,8 @@
                 </div>
                 <div class="col-sm-6 form-group">
                     <label>Golongan Darah</label>
-                    <select name="blood_type" id="input-blood" class="form-control">
+                    <select name="blood_type" id="input-blood" class="form-control"
+                    >
                         <option value="-">Golongan Darah</option>
                         <option value="A">A</option>
                         <option value="AB">AB</option>
@@ -72,19 +83,26 @@
                 <h5 class="col-md-12 modal-title">Kontak</h5>
                 <div class="col-sm-6 form-group">
                     <label>Email</label>
-                    <input class="form-control" type="email" name="email">
+                    <input class="form-control" type="email" name="email"
+                    required oninvalid="this.setCustomValidity('Harap Isikan Email.')" 
+                onchange="this.setCustomValidity('')">
                 </div>
                 <div class="col-sm-6 form-group">
                     <label>Nomor Telpon</label>
-                    <input class="form-control" type="text" name="phone_number">
+                    <input class="form-control" type="text" name="phone_number"
+                    required oninvalid="this.setCustomValidity('Harap Isikan Nomor.')" 
+                onchange="this.setCustomValidity('')">
                 </div>
 
                 <div class="col-md-12"><hr></div>
                 <h5 class="col-md-12 modal-title">Data Alamat</h5>
                 <div class=" col-md-6 form-group">
                     <label>Provinsi</label>
-                    <select id="input-province" name="current_address_province"> 
-                        <option> - Pilih Provinsi - </option>
+                    <select id="input-province" name="current_address_province"
+                    required oninvalid="this.setCustomValidity('Harap Isikan Provinsi.')" 
+                onchange="this.setCustomValidity('')" >
+                        
+                        <option value=""> - Pilih Provinsi - </option>
                         @foreach($provinces as $province)
                         <option value="{{$province['name']}}" data-province-code="{{$province['code']}}">{{$province['name']}}</option>
                         @endforeach
@@ -92,44 +110,62 @@
                 </div>
                 <div class="col-md-6 form-group">
                     <label>Kota</label>
-                    <select id="input-city" name="current_address_city"> 
-                        <option> - Pilih Kota - </option>
+                    <select id="input-city" name="current_address_city"
+                    required oninvalid="this.setCustomValidity('Harap Isikan Kota.')" 
+                    onchange="this.setCustomValidity('')" >
+                        <option value=""> - Pilih Kota - </option>
                     </select>
                 </div>
                 <div class="col-sm-6 form-group">
                     <label>Kecamatan</label>
-                    <input class="form-control" type="text" name="current_address_kecamatan">
+                    <input class="form-control" type="text" name="current_address_kecamatan"
+                    required oninvalid="this.setCustomValidity('Harap Isikan Kecamatan.')" 
+                onchange="this.setCustomValidity('')">
                 </div>
                 <div class="col-sm-6 form-group">
                     <label>Kelurahan</label>
-                    <input class="form-control" type="text" name="current_address_kelurahan">
+                    <input class="form-control" type="text" name="current_address_kelurahan"
+                    required oninvalid="this.setCustomValidity('Harap Isikan Kelurahan.')" 
+                onchange="this.setCustomValidity('')">
                 </div>
                 <div class="col-sm-3 form-group">
                     <label>RT</label>
-                    <input class="form-control" type="text" name="current_address_rt">
+                    <input class="form-control" type="text" name="current_address_rt"
+                    required oninvalid="this.setCustomValidity('Harap Isikan RT.')" 
+                onchange="this.setCustomValidity('')">
                 </div>
                 <div class="col-sm-3 form-group">
                     <label>RW</label>
-                    <input class="form-control" type="text" name="current_address_rw">
+                    <input class="form-control" type="text" name="current_address_rw"
+                    required oninvalid="this.setCustomValidity('Harap Isikan RW.')" 
+                onchange="this.setCustomValidity('')">
                 </div>
                 <div class="col-sm-6 form-group">
                     <label>Jalan</label>
-                    <input class="form-control" type="text" name="current_address_street">
+                    <input class="form-control" type="text" name="current_address_street"
+                    required oninvalid="this.setCustomValidity('Harap Isikan Jalan.')" 
+                onchange="this.setCustomValidity('')">
                 </div>
 
                 <div class="col-md-12"><hr></div>
                 <h5 class="col-md-12 modal-title">Informasi Bank</h5>
                 <div class="col-sm-6 form-group">
                     <label>Nama Bank</label>
-                    <input class="form-control" type="text" name="bank_name">
+                    <input class="form-control" type="text" name="bank_name"
+                    required oninvalid="this.setCustomValidity('Harap Isikan Nama.')" 
+                onchange="this.setCustomValidity('')">
                 </div>
                 <div class="col-sm-6 form-group">
                     <label>Nomor Rekening</label>
-                    <input class="form-control" type="text" name="bank_account">
+                    <input class="form-control" type="text" name="bank_account"
+                    required oninvalid="this.setCustomValidity('Harap Isikan Nomor.')" 
+                onchange="this.setCustomValidity('')">
                 </div>
                 <div class="col-sm-6 form-group">
                     <label>Atas Nama No. Rekening</label>
-                    <input class="form-control" type="text" name="owner_bank_number">
+                    <input class="form-control" type="text" name="owner_bank_number"
+                    required oninvalid="this.setCustomValidity('Harap Isikan Atas.')" 
+                onchange="this.setCustomValidity('')">
                 </div>
 
                 <div class="col-md-12"><hr></div>
@@ -228,10 +264,13 @@
                 </div>
             </div>
             <div class="submit-section">
-                <button type="submit" class="btn btn-primary submit-btn loading" 
-                data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-                  Submit
-                </button>
+                <div class="col-auto float-right ml-auto pb-2">
+                    <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary float-right loading" 
+                    data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                      Submit
+                    </button>
+                  </div>
             </div>
           </form>
         </div>

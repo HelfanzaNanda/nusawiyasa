@@ -15,20 +15,23 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">No. Bon</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-number" name="number">
+              <input class="form-control floating" type="text" id="input-number" name="number"
+              required oninvalid="this.setCustomValidity('Harap Isikan No. Bon.')" onchange="this.setCustomValidity('')" >
             </div>
           </div>
           <div class="form-group row">
             <label class="col-form-label col-md-2">Tanggal</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-date" name="date">
+              <input class="form-control floating" type="text" id="input-date" name="date"
+              required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onchange="this.setCustomValidity('')" >
             </div>
           </div>
           <div class="form-group row">
             <label class="col-form-label col-md-2">Perumahan Yang Mengajukan</label>
             <div class="col-md-10">
-              <select id="input-lot" name="lot_id"> 
-                <option value="0"> - Pilih Kapling - </option>
+              <select id="input-lot" name="lot_id"
+              required oninvalid="this.setCustomValidity('Harap Isikan Perumahan Yang Mengajukan.')" onchange="this.setCustomValidity('')">
+                <option value=""> - Pilih Kapling - </option>
                 @foreach($lots as $lot)
                   <option value="{{$lot['id']}}">{{$lot['name']}} - {{$lot['block']}} / {{$lot['unit_number']}}</option>
                 @endforeach
@@ -79,6 +82,7 @@
         </div>
         <div class="card-footer">
           <div class="col-auto float-right ml-auto pb-2">
+            <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
             <button type="submit" class="btn btn-primary float-right loading" 
             data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
               Submit
@@ -93,6 +97,9 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+$('.btn-close').on('click', function(){
+      window.location.replace('receipt-of-goods-request')
+  })
   $(document).ready(function(){
     var url = '{{ asset('') }}'
     
@@ -244,7 +251,7 @@
       
     },
     success: function(msg) {
-      $('.loading').html('Submit').attr('disabled', false)
+      
       if(msg.status == 'success'){
           setTimeout(function() {
               swal({
@@ -268,7 +275,11 @@
               html: true
           });
       }
-    }
+      $('.loading').html('Submit').attr('disabled', false)
+    },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
+      }
   });
       }
     }

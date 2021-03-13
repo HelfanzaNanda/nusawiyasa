@@ -240,7 +240,10 @@ $("#submitFilter").click(function(){
 		$('#date-text').text($('#startDate').val()+' s/d '+$('#endDate').val());
 		$('#cover-spin').hide();
 		$('#filter-modal').modal('hide'); 
-    }
+    },
+	error: function(params) {
+		$('.loading').html('Submit').attr('disabled', false)
+	}
   });
 });
 

@@ -73,8 +73,10 @@
 				</div><!-- form-group -->
 				<div class="form-group">
 				<label>Cluster/Perumahan</label>
-					<select id="input-cluster" name="cluster_id" required=""> 
-					  <option value="0"> - Pilih Cluster - </option>
+					<select id="input-cluster" name="cluster_id" 
+					required oninvalid="this.setCustomValidity('Harap Isikan Cluster/Perumahan.')" 
+					onchange="this.setCustomValidity('')"> 
+					  <option value=""> - Pilih Cluster - </option>
 					  @foreach($clusters as $cluster)
 					    <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
 					  @endforeach
@@ -82,11 +84,16 @@
 				</div>
 				<label>Tanggal</label>
 				<div class="form-group">
-					<input type="text" class="form-control" name="date" id="journal_date" value="{{date('Y-m-d')}}" autocomplete="off">
+					<input type="text" class="form-control" name="date" id="journal_date" 
+					value="{{date('Y-m-d')}}" autocomplete="off"
+					required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" 
+                onchange="this.setCustomValidity('')">
 				</div><!-- form-group -->
 				<label>Keterangan</label>
 				<div class="form-group">
-					<textarea class="form-control" name="description" id="description"></textarea>
+					<textarea class="form-control" name="description" id="description"
+					required oninvalid="this.setCustomValidity('Harap Isikan Keterangan.')" 
+                onchange="this.setCustomValidity('')"></textarea>
 				</div><!-- form-group -->
 
 				<div class="form-group">
@@ -110,10 +117,13 @@
             </div>
           </div>
 		  <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+				<button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+				<button type="submit" class="btn btn-primary float-right loading" 
+				data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+				  Submit
+				</button>
+			  </div>
           </div>
           {{-- <div class="submit-section">
           	<span id="balance"></span><br>
@@ -266,57 +276,61 @@
 		type: 'GET',
 		url: '{{asset('')}}'+'number/validate?prefix=JU&number='+$('.ref-number').val(),
 		success: function(data){
-		$('.loading').html('Submit').attr('disabled', false)
-		if (data.status == 'error' && $('#typePost').val() != 'edit') {
-			swal({
-				title: "Gagal",
-				text: "Maaf, Nomor jurnal umum telah digunakan,",
-				showConfirmButton: true,
-				confirmButtonColor: '#0760ef',
-				type:"error",
-				html: true
-			});
-		} else {
-			$.ajax({
-				type: 'post',
-				url: $('#typePost').val() === 'edit' ? URL_UPDATE + '/' + $('#id').val() : URL_ADD,
-				data: form_data,
-				cache: false,
-				contentType: false,
-				processData: false,
-				dataType: 'json',
-				beforeSend: function() {
-				$('.loading-area').show();
-				},
-				success: function(msg) {
-				if(msg.status == 'success'){
-					setTimeout(function() {
+		
+			if (data.status == 'error' && $('#typePost').val() != 'edit') {
+				swal({
+					title: "Gagal",
+					text: "Maaf, Nomor jurnal umum telah digunakan,",
+					showConfirmButton: true,
+					confirmButtonColor: '#0760ef',
+					type:"error",
+					html: true
+				});
+			} else {
+				$.ajax({
+					type: 'post',
+					url: $('#typePost').val() === 'edit' ? URL_UPDATE + '/' + $('#id').val() : URL_ADD,
+					data: form_data,
+					cache: false,
+					contentType: false,
+					processData: false,
+					dataType: 'json',
+					beforeSend: function() {
+					$('.loading-area').show();
+					},
+					success: function(msg) {
+					if(msg.status == 'success'){
+						setTimeout(function() {
+							swal({
+								title: "Sukses",
+								text: msg.message,
+								type:"success",
+								html: true
+							}, function() {
+								$('#main-modal').modal('hide');
+								$("#main-table").DataTable().ajax.reload( null, false ); // user paging is not reset on reload
+							});
+						}, 200);
+					} else {
+						$('.loading-area').hide();
 						swal({
-							title: "Sukses",
+							title: "Gagal",
 							text: msg.message,
-							type:"success",
+							showConfirmButton: true,
+							confirmButtonColor: '#0760ef',
+							type:"error",
 							html: true
-						}, function() {
-							$('#main-modal').modal('hide');
-							$("#main-table").DataTable().ajax.reload( null, false ); // user paging is not reset on reload
 						});
-					}, 200);
-				} else {
-					$('.loading-area').hide();
-					swal({
-						title: "Gagal",
-						text: msg.message,
-						showConfirmButton: true,
-						confirmButtonColor: '#0760ef',
-						type:"error",
-						html: true
-					});
-				}
-				}
-			})
+					}
+					}
+				})
 
 
-		}
+			}
+			$('.loading').html('Submit').attr('disabled', false)
+		},
+		error: function(params) {
+			$('.loading').html('Submit').attr('disabled', false)
 		}
 	});
       });

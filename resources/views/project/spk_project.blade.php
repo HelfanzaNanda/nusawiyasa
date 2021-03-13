@@ -64,30 +64,22 @@
           {!! csrf_field() !!}
           <div class="row"> 
             <div class="col-md-12"> 
-{{--               <div class="form-group">
-                <label>Judul</label>
-                <input class="form-control" type="text" name="title">
-              </div> --}}
               <div class="form-group">
                 <label>No. SPK</label>
-                <input class="form-control number-input" type="text" name="number">
+                <input class="form-control number-input" type="text" name="number"
+                required oninvalid="this.setCustomValidity('Harap Isikan No. SPK.')" onchange="this.setCustomValidity('')">
               </div>
-{{--               <div class="form-group">
-                <label>Kepada</label>
-                <input class="form-control" type="text" name="dest_name">
-              </div> --}}
               <div class="form-group">
                 <label>Tanggal</label>
-                <input class="form-control" type="text" name="date" id="input-date">
+                <input class="form-control" type="text" name="date" id="input-date"
+                required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onchange="this.setCustomValidity('')">
               </div>
-{{--               <div class="form-group">
-                <label>Perihal</label>
-                <input class="form-control" type="text" name="subject">
-              </div> --}}
               <div class="form-group">
                 <label>Kapling</label>
-                <select id="input-customer-lot-id" name="customer_lot_id"> 
-                  <option> - Pilih Kapling - </option>
+                <select id="input-customer-lot-id" name="customer_lot_id"
+                required oninvalid="this.setCustomValidity('Harap Isikan Kapling.')" onchange="this.setCustomValidity('')" >
+                  
+                  <option value=""> - Pilih Kapling - </option>
                     @foreach($lots as $lot)
                       <option value="{{$lot['id']}}">{{$lot['cluster_name']}} - {{$lot['unit_block']}} / {{$lot['unit_number']}} ({{$lot['customer_name']}})</option>
                     @endforeach
@@ -95,15 +87,19 @@
               </div>
               <div class="form-group">
                 <label>Catatan</label>
-                <textarea class="form-control" name="note" rows="3"></textarea>
+                <textarea class="form-control" name="note" rows="3"
+                required oninvalid="this.setCustomValidity('Harap Isikan Catatan.')" onchange="this.setCustomValidity('')"></textarea>
               </div>
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -125,27 +121,14 @@
           {!! csrf_field() !!}
           <div class="row"> 
             <div class="col-md-12"> 
-{{--               <div class="form-group">
-                <label>Judul</label>
-                <input class="form-control" type="text" name="title" id="title">
-                <input type="hidden" name="id" id="id-update">
-              </div> --}}
               <div class="form-group">
                 <label>No. SPK</label>
                 <input class="form-control" type="text" name="number" id="number">
               </div>
-{{--               <div class="form-group">
-                <label>Kepada</label>
-                <input class="form-control" type="text" name="dest_name" id="dest_name">
-              </div> --}}
               <div class="form-group">
                 <label>Tanggal</label>
                 <input class="form-control" type="text" name="date" id="input-date-update" id="date">
               </div>
-{{--               <div class="form-group">
-                <label>Perihal</label>
-                <input class="form-control" type="text" name="subject" id="subject">
-              </div> --}}
               <div class="form-group">
                 <label>Kapling</label>
                 <select id="input-customer-lot-id-update" name="customer_lot_id"> 
@@ -201,6 +184,8 @@
   });
 
   $("#show-add-modal").on('click',function() {
+    $('form#add-form').trigger('reset')
+            $('select').val('').trigger('change')
     var url = '{{ asset('') }}'
       $.ajax({
         type: 'GET',
@@ -239,7 +224,7 @@
       type: 'GET',
       url: '{{asset('')}}'+'number/validate?prefix=SPK&number='+$('.number-input').val(),
       success: function(data){
-        $('.loading').html('Submit').attr('disabled', false)
+        
         if(data.status == 'error'){
           swal({
             title: "Gagal",
@@ -287,6 +272,10 @@
             }
           })
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     })
   });

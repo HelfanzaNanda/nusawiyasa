@@ -117,6 +117,8 @@
     });
 
     $("#show-filter-modal").on('click',function() {
+        $('form#add-form').trigger('reset')
+            $('select').val('').trigger('change')
         $('#filter-modal').modal('show');
     });
 

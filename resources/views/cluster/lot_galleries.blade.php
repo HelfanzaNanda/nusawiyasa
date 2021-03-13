@@ -50,7 +50,8 @@
                 <div class="form-group">
                   <label>Gambar</label>
                   <input class="form-control" type="hidden" name="lot_id" value="{{ $lot->id }}">
-                  <input class="form-control" type="file" name="files[]" id="input-image" onchange="preview_image();" multiple>
+                  <input class="form-control" type="file" name="files[]" id="input-image" 
+                  onchange="preview_image();" multiple>
                 </div>
               </div>
               <div class="col-md-8">
@@ -110,7 +111,6 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
         if(msg.status == 'success'){
             setTimeout(function() {
                 swal({
@@ -133,6 +133,10 @@
                 html: true
             });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     })
   });

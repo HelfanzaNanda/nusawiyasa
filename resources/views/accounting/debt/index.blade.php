@@ -76,8 +76,10 @@
               </div>
               <div class="form-group">
                 <label>Debitur</label>
-                <select class="form-control" id="input-debitur" name="supplier_id"> 
-                	<option> - Pilih Debitur - </option>
+                <select class="form-control" id="input-debitur" name="supplier_id"
+                required oninvalid="this.setCustomValidity('Harap Isikan Debitur.')" 
+                onchange="this.setCustomValidity('')"> 
+                	<option value=""> - Pilih Debitur - </option>
                 	@foreach($suppliers as $supplier)
                 	<option value="{{$supplier['id']}}">{{$supplier['name']}}</option>
                 	@endforeach
@@ -85,27 +87,38 @@
               </div>
               <div class="form-group">
                 <label>Tanggal</label>
-                <input class="form-control" type="text" name="date" id="input-date">
+                <input class="form-control" type="text" name="date" id="input-date"
+                required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Tanggal Bayar</label>
-                <input class="form-control" type="text" name="payment_plan_date" id="input-payment-plan-date">
+                <input class="form-control" type="text" name="payment_plan_date" id="input-payment-plan-date"
+                required oninvalid="this.setCustomValidity('Harap Isikan Tanggal Bayar.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Total</label>
-                <input class="form-control" type="number" name="total" id="input-total">
+                <input class="form-control" type="number" name="total" id="input-total"
+                required oninvalid="this.setCustomValidity('Harap Isikan Total.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Catatan</label>
-                <textarea class="form-control" id="input-description" name="description"></textarea>
+                <textarea class="form-control" id="input-description" name="description"
+                required oninvalid="this.setCustomValidity('Harap Isikan Catatan.')" 
+                onchange="this.setCustomValidity('')"></textarea>
               </div>
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -147,6 +160,8 @@ $("#main-table").DataTable({
 });
 
 $("#show-add-modal").on('click',function() {
+  $("form#add-form").trigger('reset');
+  $('#input-debitur').val('').trigger('change');
 	$('#add-modal').modal('show');
 });
 
@@ -196,7 +211,7 @@ $.ajax({
     
   },
   success: function(msg) {
-    $('.loading').html('Submit').attr('disabled', false)
+    
     if(msg.status == 'success'){
         setTimeout(function() {
             swal({
@@ -220,7 +235,11 @@ $.ajax({
             html: true
         });
     }
-  }
+    $('.loading').html('Submit').attr('disabled', false)
+  },
+	error: function(params) {
+		$('.loading').html('Submit').attr('disabled', false)
+	}
 })
 });
 </script>

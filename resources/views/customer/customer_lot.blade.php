@@ -78,10 +78,13 @@
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -106,23 +109,31 @@
             <div class="col-sm-12" id="installment-row">  
               <div class="form-group">
                 <label>Status Bank</label>
-                <select class="form-control" id="input-bank-status" name="bank_status">
-                  <option> - Pilih Status - </option>
+                <select class="form-control" id="input-bank-status" name="bank_status"
+                required oninvalid="this.setCustomValidity('Harap Isikan Status Bank.')" 
+                onchange="this.setCustomValidity('')">
+                  <option value=""> - Pilih Status - </option>
                   <option value="3">Ditolak</option>
                   <option value="2">Disetujui</option>
                 </select>
               </div>
               <div class="form-group">
                 <label>No Ref Bank</label>
-                <input type="text" name="bank_status_number" class="form-control" id="input-bank-status-number">
+                <input type="text" name="bank_status_number" class="form-control" 
+                id="input-bank-status-number"
+                required oninvalid="this.setCustomValidity('Harap Isikan No Ref Bank.')" 
+                onchange="this.setCustomValidity('')">
               </div>
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -136,6 +147,8 @@
 
   $("#main-table").on('click', '#booking-installment', function() {
       let id = $(this).data('id');
+      $('form#add-form').trigger('reset')
+    $('#input-bank-status').val('').trigger('change')
       $('#installment-modal').modal('show');
   });
 
@@ -241,7 +254,6 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
         if(msg.status == 'success'){
             setTimeout(function() {
                 swal({
@@ -265,6 +277,10 @@
                 html: true
             });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     });
   });

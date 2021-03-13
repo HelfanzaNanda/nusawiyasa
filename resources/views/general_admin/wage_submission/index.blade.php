@@ -72,8 +72,9 @@
 				</div><!-- form-group -->
 				<div class="form-group">
 					<label>Cluster/Perumahan</label>
-					<select id="input-cluster" name="cluster_id" required=""> 
-					  <option value="0"> - Pilih Cluster - </option>
+					<select id="input-cluster" name="cluster_id" 
+					required oninvalid="this.setCustomValidity('Harap Isikan Cluster.')" onchange="this.setCustomValidity('')> 
+					  <option value=""> - Pilih Cluster - </option>
 					  @foreach($clusters as $cluster)
 					    <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
 					  @endforeach
@@ -81,7 +82,8 @@
 				</div>
 				<div class="form-group">
 					<label>Tanggal</label>
-					<input type="text" class="form-control" name="date" id="journal_date" value="{{date('Y-m-d')}}" autocomplete="off">
+					<input type="text" class="form-control" name="date" id="journal_date" value="{{date('Y-m-d')}}" autocomplete="off"
+					required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onchange="this.setCustomValidity('')>
 				</div>
 
 				<div class="form-group">
@@ -107,10 +109,13 @@
             </div>
           </div>
 		  <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+				<button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+				<button type="submit" class="btn btn-primary float-right loading" 
+				data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+				  Submit
+				</button>
+			  </div>
           </div>
         </form>
       </div>
@@ -210,7 +215,6 @@
 			type: 'GET',
 			url: '{{asset('')}}'+'number/validate?prefix=PU&number='+$('.ref-number').val(),
 			success: function(data){
-				$('.loading').html('Submit').attr('disabled', false)
 				if (data.status == 'error' && $('#typePost').val() != 'edit') {
 					swal({
 						title: "Gagal",
@@ -260,6 +264,10 @@
 						}
 					})
 				}
+				$('.loading').html('Submit').attr('disabled', false)
+			},
+			error: function(params) {
+				$('.loading').html('Submit').attr('disabled', false)
 			}
 		});
 	});
