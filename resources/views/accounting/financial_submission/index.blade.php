@@ -86,7 +86,7 @@
 				<div class="form-group">
 					<input type="text" class="form-control" name="date" id="journal_date" value="{{date('Y-m-d')}}" autocomplete="off"
 					required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" 
-                onchange="this.setCustomValidity('')">
+                onblur="this.setCustomValidity('')">
 				</div><!-- form-group -->
 				<label>Keterangan</label>
 				<div class="form-group">

@@ -22,7 +22,7 @@
             <label class="col-form-label col-md-2">Tanggal</label>
             <div class="col-md-10">
               <input class="form-control floating" type="text" id="input-date" name="date"
-              required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onchange="this.setCustomValidity('')">
+              required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onblur="this.setCustomValidity('')">
             </div>
           </div>
           <div class="form-group row">

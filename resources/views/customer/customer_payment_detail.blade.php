@@ -113,7 +113,7 @@
                 <label>Tanggal</label>
                 <input class="form-control" type="text" name="date" id="input-date"
                 required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" 
-                onchange="this.setCustomValidity('')">
+                onblur="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Nominal</label>

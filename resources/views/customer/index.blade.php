@@ -93,7 +93,7 @@
                 <label>Tanggal Lahir</label>
                 <input class="form-control" type="text" name="date_of_birth" id="input-dob"
                 required oninvalid="this.setCustomValidity('Harap Isikan Tanggal Lahir.')" 
-                onchange="this.setCustomValidity('')">
+                onblur="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Pekerjaan</label>

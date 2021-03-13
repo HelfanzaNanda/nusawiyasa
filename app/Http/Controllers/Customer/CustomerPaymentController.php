@@ -152,7 +152,10 @@ class CustomerPaymentController extends Controller
 
         $customer_payments = CustomerPayment::select('customer_payments.*')->addSelect('accounting_masters.name as account_name')->where('customer_lot_id', $id)->leftJoin('accounting_masters', 'accounting_masters.coa', '=', 'customer_payments.payment_type')->get();
 
-        return view('customer.customer_payment_detail', compact('data', 'customer_terms', 'customer_costs', 'id', 'customer_payments', 'coa'));
+        $company_logo = GeneralSetting::getCompanyLogo();
+        $company_name = GeneralSetting::getCompanyName();
+
+        return view('customer.customer_payment_detail', compact('data', 'customer_terms', 'customer_costs', 'id', 'customer_payments', 'coa', 'company_logo', 'company_name'));
     }
 
     public function get($id=null, Request $request)
