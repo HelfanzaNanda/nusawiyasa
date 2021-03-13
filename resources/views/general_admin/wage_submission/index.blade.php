@@ -73,7 +73,7 @@
 				<div class="form-group">
 					<label>Cluster/Perumahan</label>
 					<select id="input-cluster" name="cluster_id" 
-					required oninvalid="this.setCustomValidity('Harap Isikan Cluster.')" onchange="this.setCustomValidity('')> 
+					required oninvalid="this.setCustomValidity('Harap Isikan Cluster.')" onchange="this.setCustomValidity('')"> 
 					  <option value=""> - Pilih Cluster - </option>
 					  @foreach($clusters as $cluster)
 					    <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
@@ -83,7 +83,7 @@
 				<div class="form-group">
 					<label>Tanggal</label>
 					<input type="text" class="form-control" name="date" id="journal_date" value="{{date('Y-m-d')}}" autocomplete="off"
-					required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onchange="this.setCustomValidity('')>
+					required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onblur="this.setCustomValidity('')">
 				</div>
 
 				<div class="form-group">

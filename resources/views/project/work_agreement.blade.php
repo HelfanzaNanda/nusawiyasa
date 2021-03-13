@@ -150,7 +150,7 @@
               <div class="form-group">
                 <label>Tanggal</label>
                 <input class="form-control date" type="text" name="date" id="date-edit"
-                required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onchange="this.setCustomValidity('')">
+                required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onblur="this.setCustomValidity('')">
                 <span class="text-danger error"></span>
               </div>
               <div class="form-group">
