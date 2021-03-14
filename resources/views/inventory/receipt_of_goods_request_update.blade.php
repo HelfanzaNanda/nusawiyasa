@@ -121,7 +121,7 @@
 @section('additionalScriptJS')
 <script type="text/javascript">
 $('.btn-close').on('click', function(){
-      window.location.replace('receipt-of-goods-request')
+      window.location.replace('/receipt-of-goods-request')
   })
   $('#input-lot').select2({
     width: '100%'

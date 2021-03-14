@@ -21,8 +21,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">SPK</label>
             <div class="col-md-10">
-              <select id="input-spk" name="spk_id">
-                required oninvalid="this.setCustomValidity('Harap Isikan Alamat.')" onchange="this.setCustomValidity('')" 
+              <select id="input-spk" name="spk_id"> 
                 <option value="0"> - Pilih SPK - </option>
                 @foreach($spk as $row)
                   <option value="{{$row['id']}}">{{$row['number']}}</option>
@@ -134,7 +133,7 @@
 @section('additionalScriptJS')
 <script type="text/javascript">
 $('.btn-close').on('click', function(){
-      window.location.replace('request-of-other-material')
+      window.location.replace('/request-of-other-material')
   })
   $(document).ready(function(){
     var url = '{{ asset('') }}'

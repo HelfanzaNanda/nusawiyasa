@@ -168,7 +168,7 @@
 @section('additionalScriptJS')
 <script type="text/javascript">
 $('.btn-close').on('click', function(){
-      window.location.replace('request-of-other-material')
+      window.location.replace('/request-of-other-material')
   })
   $('#input-spk').select2({
     width: '100%'

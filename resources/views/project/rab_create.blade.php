@@ -34,9 +34,8 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Tipe Model</label>
             <div class="col-md-10">
-              <select id="input-type" name="type"
-              required oninvalid="this.setCustomValidity('Harap Isikan Tipe Model.')" onchange="this.setCustomValidity('')">
-                <option value=""> - Pilih Tipe - </option>
+              <select id="input-type" name="type">
+                <option value="0"> - Pilih Tipe - </option>
                 <option value="lot">Kapling</option>
                 <option value="fasum">Fasum</option>
                 <option value="fasos">Fasos</option>
@@ -109,7 +108,7 @@
 @section('additionalScriptJS')
 <script type="text/javascript">
 $('.btn-close').on('click', function(){
-      window.location.replace('rab')
+      window.location.replace('/rab')
   })
   $('#input-cluster').select2({
     width: '100%'

@@ -62,7 +62,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="col-auto float-right ml-auto pb-2">
-                            <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+                            <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Kembali</button>
                             <button type="submit" class="btn btn-primary float-right loading" 
                             data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
                               Submit
@@ -99,7 +99,9 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
-
+$('.btn-close').on('click', function() {
+      window.location.replace('/work-agreement')
+  })
     function readURL(input) {
         $('.custom-file-label').text(input.files[0].name);
     }

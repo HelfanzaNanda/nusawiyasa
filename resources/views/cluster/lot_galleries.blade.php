@@ -59,10 +59,13 @@
               </div>
             </div>
             <div class="submit-section">
-              <button type="submit" class="btn btn-primary float-right loading" 
-              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-                Submit
-              </button>
+              <div class="col-auto float-right ml-auto pb-2">
+                <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Kembali</button>
+                <button type="submit" class="btn btn-primary float-right loading" 
+                data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                  Submit
+                </button>
+              </div>
             </div>
           </form>
       </div>
@@ -92,7 +95,9 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
-
+  $('.btn-close').on('click', function(){
+    window.location.replace('/lots')
+  })
   $('form#image-form').submit(function( e ) {
     e.preventDefault();
     var loading_text = $('.loading').data('loading-text');

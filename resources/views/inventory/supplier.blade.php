@@ -69,7 +69,8 @@
             <div class="col-sm-6"> 
               <div class="form-group">
                 <label>Nama Supplier</label>
-                <input class="form-control" type="text" name="name">
+                <input class="form-control" type="text" name="name"
+                required oninvalid="this.setCustomValidity('Harap Isikan Nama Supplier.')" onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Email Supplier</label>

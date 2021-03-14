@@ -7,7 +7,7 @@
 @endsection
 
 @section('content')
-<!-- Page Header -->
+<!-- Page Header --> 
 <div class="page-header">
   <div class="row align-items-center">
     <div class="col">
@@ -68,10 +68,8 @@
 	            </div><!-- form-group -->
 	            <label>Tipe</label>
 	            <div class="form-group">
-	              <select name="type" class="form-control" id="type"
-				  required oninvalid="this.setCustomValidity('Harap Isikan Tipe.')" 
-                onchange="this.setCustomValidity('')">
-	                  <option value="">D/K</option>
+	              <select name="type" class="form-control" id="type">
+	                  <option value="0">D/K</option>
 	                  <option value="1">D</option>
 	                  <option value="2">K</option>
 	              </select>

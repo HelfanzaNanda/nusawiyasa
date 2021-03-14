@@ -125,7 +125,7 @@
 @section('additionalScriptJS')
 <script type="text/javascript">
 $('.btn-close').on('click', function(){
-      window.location.replace('delivery-order')
+      window.location.replace('/delivery-order')
   })
   $('#input-lot').select2({
     width: '100%'

@@ -22,10 +22,8 @@
                         <div class="form-group row">
                             <label class="col-form-label col-md-2">Perumahan/Cluster</label>
                             <div class="col-md-10">
-                              <select id="input-cluster" name="cluster_id"
-                              required oninvalid="this.setCustomValidity('Harap Perumahan.')" 
-                              onchange="this.setCustomValidity('')">
-                                <option value=""> - Pilih Perumahan/Cluster - </option>
+                              <select id="input-cluster" name="cluster_id">
+                                <option value="0"> - Pilih Perumahan/Cluster - </option>
                                 @foreach($clusters as $cluster)
                                   <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
                                 @endforeach
@@ -120,7 +118,7 @@
 @section('additionalScriptJS')
     <script type="text/javascript">
     $('.btn-close').on('click', function(){
-      window.location.replace('financial-submission')
+      window.location.replace('/financial-submission')
   })
         if($('#input-date').length > 0) {
             $('#input-date').datetimepicker({

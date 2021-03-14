@@ -76,10 +76,8 @@
               </div>
               <div class="form-group">
                 <label>Debitur</label>
-                <select class="form-control" id="input-debitur" name="supplier_id"
-                required oninvalid="this.setCustomValidity('Harap Isikan Debitur.')" 
-                onchange="this.setCustomValidity('')"> 
-                	<option value=""> - Pilih Debitur - </option>
+                <select class="form-control" id="input-debitur" name="supplier_id"> 
+                	<option value="0"> - Pilih Debitur - </option>
                 	@foreach($suppliers as $supplier)
                 	<option value="{{$supplier['id']}}">{{$supplier['name']}}</option>
                 	@endforeach
@@ -105,9 +103,7 @@
               </div>
               <div class="form-group">
                 <label>Catatan</label>
-                <textarea class="form-control" id="input-description" name="description"
-                required oninvalid="this.setCustomValidity('Harap Isikan Catatan.')" 
-                onchange="this.setCustomValidity('')"></textarea>
+                <textarea class="form-control" id="input-description" name="description"></textarea>
               </div>
             </div>
           </div>

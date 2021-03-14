@@ -109,7 +109,7 @@
 @section('additionalScriptJS')
 <script type="text/javascript">
 $('.btn-close').on('click', function(){
-      window.location.replace('receipt-of-goods')
+      window.location.replace('/receipt-of-goods')
   })
   $('#input-po').select2({
     width: '100%'

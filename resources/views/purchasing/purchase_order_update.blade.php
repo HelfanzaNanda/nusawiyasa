@@ -238,7 +238,7 @@
 @section('additionalScriptJS')
 <script type="text/javascript">
  $('.btn-close').on('click', function(){
-      window.location.replace('purchase-order')
+      window.location.replace('/purchase-order')
   })
   $('#input-supplier').select2({
     width: '100%'

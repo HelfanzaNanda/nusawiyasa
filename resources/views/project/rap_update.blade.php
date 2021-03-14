@@ -139,7 +139,7 @@
 @section('additionalScriptJS')
 <script type="text/javascript">
 $('.btn-close').on('click', function(){
-      window.location.replace('rap')
+      window.location.replace('/rap')
   })
   $('#input-cluster').select2({
     width: '100%'

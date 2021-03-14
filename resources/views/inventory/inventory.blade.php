@@ -70,21 +70,14 @@
             <div class="col-md-12"> 
               <div class="form-group">
                 <label>Nama Barang</label>
-                <input class="form-control" type="text" name="name" required="">
+                <input class="form-control" type="text" name="name"
+                required oninvalid="this.setCustomValidity('Harap Isikan Nama Barang.')" onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Stok</label>
-                <input class="form-control" type="text" name="stock" required="">
+                <input class="form-control" type="text" name="stock" 
+                required oninvalid="this.setCustomValidity('Harap Isikan Stok.')" onchange="this.setCustomValidity('')">
               </div>
-{{--               <div class="form-group">
-                <label>Kategori</label>
-                <select id="input-category" name="category_id"> 
-                  <option> - Pilih Kategori - </option>
-                  @foreach($categories as $category)
-                    <option value="{{$category['id']}}">{{$category['name']}}</option>
-                  @endforeach
-                </select>
-              </div> --}}
               <div class="form-group">
                 <label>Unit</label>
                 <select id="input-unit" name="unit_id" required=""> 
@@ -109,8 +102,9 @@
               </div>
               <div class="form-group">
                 <label>Tipe</label>
-                <select id="input-type" name="type" required=""> 
-                  <option> - Pilih Unit - </option>
+                <select id="input-type" name="type" 
+                required oninvalid="this.setCustomValidity('Harap Isikan Tipe.')" onchange="this.setCustomValidity('')"> 
+                  <option value=""> - Pilih Unit - </option>
                   <option value="service">Jasa</option>
                   <option value="tools">Alat</option>
                   <option value="materials">Material</option>
@@ -206,10 +200,13 @@
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>

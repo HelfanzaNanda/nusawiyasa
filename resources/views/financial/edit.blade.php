@@ -151,7 +151,7 @@
 @section('additionalScriptJS')
     <script type="text/javascript">
     $('.btn-close').on('click', function(){
-      window.location.replace('financial-submission')
+      window.location.replace('/financial-submission')
   })
         if($('#input-date').length > 0) {
             $('#input-date').datetimepicker({

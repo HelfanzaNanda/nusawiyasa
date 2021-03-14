@@ -22,9 +22,8 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">SPK</label>
             <div class="col-md-10">
-              <select id="input-spk" name="spk_id"
-              required oninvalid="this.setCustomValidity('Harap Isikan SPK.')" onchange="this.setCustomValidity('')"> 
-                <option value=""> - Pilih SPK - </option>
+              <select id="input-spk" name="spk_id"> 
+                <option value="0"> - Pilih SPK - </option>
                 @foreach($spk as $row)
                   <option value="{{$row['id']}}">{{$row['number']}}</option>
                 @endforeach

@@ -15,30 +15,22 @@
                 <h5 class="col-md-12 modal-title">Data Pribadi</h5>
                 <div class="col-sm-6 form-group">
                   <label>Nama Lengkap</label>
-                  <input class="form-control" type="text" name="fullname"
-                  required oninvalid="this.setCustomValidity('Harap Isikan Nama.')" 
-                onchange="this.setCustomValidity('')">
+                  <input class="form-control" type="text" name="fullname">
                 </div>
 
                 <div class="col-sm-6 form-group">
                     <label>Tempat Lahir</label>
-                    <input class="form-control" type="text" name="place_birth"
-                    required oninvalid="this.setCustomValidity('Harap Isikan Tempat.')" 
-                onchange="this.setCustomValidity('')">
+                    <input class="form-control" type="text" name="place_birth">
                 </div>
 
                 <div class="col-sm-6 form-group">
                     <label>Tanggal Lahir</label>
-                    <input class="form-control" type="text" name="date_birth" id="input-dob"
-                    required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" 
-                onchange="this.setCustomValidity('')">
+                    <input class="form-control" type="text" name="date_birth" id="input-dob">
                 </div>
 
                 <div class="col-sm-6 form-group">
                     <label>Jenis Kelamin</label>
-                    <select name="gender" id="input-gender" class="form-control"
-                    required oninvalid="this.setCustomValidity('Harap Isikan Jenis.')" 
-                onchange="this.setCustomValidity('')">
+                    <select name="gender" id="input-gender" class="form-control">
                         <option value="-">Jenis Kelamin</option>
                         <option value="Pria">Pria</option>
                         <option value="Wanita">Wanita</option>
@@ -83,24 +75,18 @@
                 <h5 class="col-md-12 modal-title">Kontak</h5>
                 <div class="col-sm-6 form-group">
                     <label>Email</label>
-                    <input class="form-control" type="email" name="email"
-                    required oninvalid="this.setCustomValidity('Harap Isikan Email.')" 
-                onchange="this.setCustomValidity('')">
+                    <input class="form-control" type="email" name="email">
                 </div>
                 <div class="col-sm-6 form-group">
                     <label>Nomor Telpon</label>
-                    <input class="form-control" type="text" name="phone_number"
-                    required oninvalid="this.setCustomValidity('Harap Isikan Nomor.')" 
-                onchange="this.setCustomValidity('')">
+                    <input class="form-control" type="text" name="phone_number">
                 </div>
 
                 <div class="col-md-12"><hr></div>
                 <h5 class="col-md-12 modal-title">Data Alamat</h5>
                 <div class=" col-md-6 form-group">
                     <label>Provinsi</label>
-                    <select id="input-province" name="current_address_province"
-                    required oninvalid="this.setCustomValidity('Harap Isikan Provinsi.')" 
-                onchange="this.setCustomValidity('')" >
+                    <select id="input-province" name="current_address_province">
                         
                         <option value=""> - Pilih Provinsi - </option>
                         @foreach($provinces as $province)
@@ -110,62 +96,44 @@
                 </div>
                 <div class="col-md-6 form-group">
                     <label>Kota</label>
-                    <select id="input-city" name="current_address_city"
-                    required oninvalid="this.setCustomValidity('Harap Isikan Kota.')" 
-                    onchange="this.setCustomValidity('')" >
+                    <select id="input-city" name="current_address_city">
                         <option value=""> - Pilih Kota - </option>
                     </select>
                 </div>
                 <div class="col-sm-6 form-group">
                     <label>Kecamatan</label>
-                    <input class="form-control" type="text" name="current_address_kecamatan"
-                    required oninvalid="this.setCustomValidity('Harap Isikan Kecamatan.')" 
-                onchange="this.setCustomValidity('')">
+                    <input class="form-control" type="text" name="current_address_kecamatan">
                 </div>
                 <div class="col-sm-6 form-group">
                     <label>Kelurahan</label>
-                    <input class="form-control" type="text" name="current_address_kelurahan"
-                    required oninvalid="this.setCustomValidity('Harap Isikan Kelurahan.')" 
-                onchange="this.setCustomValidity('')">
+                    <input class="form-control" type="text" name="current_address_kelurahan">
                 </div>
                 <div class="col-sm-3 form-group">
                     <label>RT</label>
-                    <input class="form-control" type="text" name="current_address_rt"
-                    required oninvalid="this.setCustomValidity('Harap Isikan RT.')" 
-                onchange="this.setCustomValidity('')">
+                    <input class="form-control" type="text" name="current_address_rt">
                 </div>
                 <div class="col-sm-3 form-group">
                     <label>RW</label>
-                    <input class="form-control" type="text" name="current_address_rw"
-                    required oninvalid="this.setCustomValidity('Harap Isikan RW.')" 
-                onchange="this.setCustomValidity('')">
+                    <input class="form-control" type="text" name="current_address_rw">
                 </div>
                 <div class="col-sm-6 form-group">
                     <label>Jalan</label>
-                    <input class="form-control" type="text" name="current_address_street"
-                    required oninvalid="this.setCustomValidity('Harap Isikan Jalan.')" 
-                onchange="this.setCustomValidity('')">
+                    <input class="form-control" type="text" name="current_address_street">
                 </div>
 
                 <div class="col-md-12"><hr></div>
                 <h5 class="col-md-12 modal-title">Informasi Bank</h5>
                 <div class="col-sm-6 form-group">
                     <label>Nama Bank</label>
-                    <input class="form-control" type="text" name="bank_name"
-                    required oninvalid="this.setCustomValidity('Harap Isikan Nama.')" 
-                onchange="this.setCustomValidity('')">
+                    <input class="form-control" type="text" name="bank_name">
                 </div>
                 <div class="col-sm-6 form-group">
                     <label>Nomor Rekening</label>
-                    <input class="form-control" type="text" name="bank_account"
-                    required oninvalid="this.setCustomValidity('Harap Isikan Nomor.')" 
-                onchange="this.setCustomValidity('')">
+                    <input class="form-control" type="text" name="bank_account">
                 </div>
                 <div class="col-sm-6 form-group">
                     <label>Atas Nama No. Rekening</label>
-                    <input class="form-control" type="text" name="owner_bank_number"
-                    required oninvalid="this.setCustomValidity('Harap Isikan Atas.')" 
-                onchange="this.setCustomValidity('')">
+                    <input class="form-control" type="text" name="owner_bank_number">
                 </div>
 
                 <div class="col-md-12"><hr></div>

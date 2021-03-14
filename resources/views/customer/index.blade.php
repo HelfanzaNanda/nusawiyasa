@@ -85,28 +85,21 @@
               </div>
               <div class="form-group">
                 <label>Tempat Lahir</label>
-                <input class="form-control" type="text" name="place_of_birth"
-                required oninvalid="this.setCustomValidity('Harap Isikan Tempat Lahir.')" 
-                onchange="this.setCustomValidity('')">
+                <input class="form-control" type="text" name="place_of_birth">
               </div>
               <div class="form-group">
                 <label>Tanggal Lahir</label>
-                <input class="form-control" type="text" name="date_of_birth" id="input-dob"
-                required oninvalid="this.setCustomValidity('Harap Isikan Tanggal Lahir.')" 
-                onblur="this.setCustomValidity('')">
+                <input class="form-control" type="text" name="date_of_birth" id="input-dob">
               </div>
               <div class="form-group">
                 <label>Pekerjaan</label>
-                <input class="form-control" type="text" name="occupation"
-                required oninvalid="this.setCustomValidity('Harap Isikan Pekerjaan.')" 
-                onchange="this.setCustomValidity('')">
+                <input class="form-control" type="text" name="occupation">
               </div>
             </div>
             <div class="col-sm-6">  
               <div class="form-group">
                 <label>Provinsi</label>
-                <select id="input-province" name="province" required oninvalid="this.setCustomValidity('Harap Isikan Provinsi.')" onchange="this.setCustomValidity('')"> 
-                  <option value=""> - Pilih Provinsi - </option>
+                <select id="input-province" name="province">
                   @foreach($provinces as $province)
                     <option value="{{$province['name']}}" data-province-code="{{$province['code']}}">{{$province['name']}}</option>
                   @endforeach
@@ -114,35 +107,25 @@
               </div>
               <div class="form-group">
                 <label>Kota</label>
-                <select id="input-city" name="city"
-                required oninvalid="this.setCustomValidity('Harap Isikan Kota.')" 
-                onchange="this.setCustomValidity('')">
+                <select id="input-city" name="city">
                   <option> - Pilih Kota - </option>
                 </select>
               </div>
               <div class="form-group">
                 <label>Kecamatan</label>
-                <input class="form-control" type="text" name="district"
-                required oninvalid="this.setCustomValidity('Harap Isikan Kecamatan.')" 
-                onchange="this.setCustomValidity('')">
+                <input class="form-control" type="text" name="district">
               </div>
               <div class="form-group">
                 <label>Kelurahan</label>
-                <input class="form-control" type="text" name="subdistrict"
-                required oninvalid="this.setCustomValidity('Harap Isikan Kelurahan.')" 
-                onchange="this.setCustomValidity('')">
+                <input class="form-control" type="text" name="subdistrict">
               </div>
               <div class="form-group">
                 <label>Alamat</label>
-                <textarea class="form-control" name="address" rows="5"
-                required oninvalid="this.setCustomValidity('Harap Isikan Alamat.')" 
-                onchange="this.setCustomValidity('')"></textarea>
+                <textarea class="form-control" name="address" rows="5">
               </div>
               <div class="form-group">
                 <label>Customer dari Perumahan/Cluster</label>
-                <select id="input-cluster" name="cluster_id"
-                required oninvalid="this.setCustomValidity('Harap Isikan Customer dari Perumahan.')" 
-                onchange="this.setCustomValidity('')">
+                <select id="input-cluster" name="cluster_id">
                   <option value=""> - Pilih Perumahan/Cluster - </option>
                   @foreach($clusters as $cluster)
                     <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>

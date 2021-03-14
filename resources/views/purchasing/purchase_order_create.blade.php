@@ -22,10 +22,8 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">No. Pengajuan</label>
             <div class="col-md-10">
-              <select id="input-fpp" name="fpp_number"
-              required oninvalid="this.setCustomValidity('Harap Isikan No. Pengajuan.')" onchange="this.setCustomValidity('')">
-                 
-                <option value=""> - Pilih No FPP - </option>
+              <select id="input-fpp" name="fpp_number">
+                <option value="0"> - Pilih No FPP - </option>
                 @foreach($request_materials as $request_material)
                   <option value="{{$request_material['id']}}">{{$request_material['number']}}</option>
                 @endforeach
@@ -35,9 +33,8 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Perumahan/Cluster</label>
             <div class="col-md-10">
-              <select id="input-cluster" name="cluster_id"
-              required oninvalid="this.setCustomValidity('Harap Isikan Perumahan/Cluster.')" onchange="this.setCustomValidity('')"> 
-                <option value=""> - Pilih Perumahan/Cluster - </option>
+              <select id="input-cluster" name="cluster_id"> 
+                <option value="0"> - Pilih Perumahan/Cluster - </option>
                 @foreach($clusters as $cluster)
                   <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
                 @endforeach
@@ -47,8 +44,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Kavling</label>
             <div class="col-md-10">
-              <select id="input-lot" name="lot_id"
-              required oninvalid="this.setCustomValidity('Harap Isikan Kapling.')" onchange="this.setCustomValidity('')"> 
+              <select id="input-lot" name="lot_id"> 
                 <option value="0"> - Pilih Kavling - </option>
               </select>
             </div>
@@ -56,8 +52,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Supplier</label>
             <div class="col-md-10">
-              <select id="input-supplier" class="select-supplier" name="item_supplier_id"
-              required oninvalid="this.setCustomValidity('Harap Isikan Supplier.')" onchange="this.setCustomValidity('')">
+              <select id="input-supplier" class="select-supplier" name="item_supplier_id">
                 <option value="0"> - Pilih Supplier - </option>
                 @foreach($suppliers as $supplier)
                   <option value="{{$supplier['id']}}">{{$supplier['name']}}</option>

@@ -91,7 +91,7 @@
 @section('additionalScriptJS')
 <script type="text/javascript">
 $('.btn-close').on('click', function(){
-      window.location.replace('bookings')
+    window.location.replace('/booking-page')
   })
   $('#input-customer').select2({
     width: '100%'
