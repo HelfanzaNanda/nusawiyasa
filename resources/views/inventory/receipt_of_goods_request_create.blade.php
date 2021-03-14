@@ -240,48 +240,53 @@ $('.btn-close').on('click', function(){
         });
       }else{
         $.ajax({
-    type: 'post',
-    url: BASE_URL+'/receipt-of-goods-request',
-    data: form_data,
-    cache: false,
-    contentType: false,
-    processData: false,
-    dataType: 'json',
-    beforeSend: function() {
-      
-    },
-    success: function(msg) {
-      
-      if(msg.status == 'success'){
-          setTimeout(function() {
-              swal({
-                  title: "Sukses",
-                  text: msg.message,
-                  type:"success",
-                  html: true
-              }, function() {
-                  // $('#main-table').DataTable().ajax.reload(null, false);
-                  $('#add-modal').modal('hide');
-                  window.location.replace("{{url('/receipt-of-goods-request')}}");
-              });
-          }, 500);
-      } else {
-          swal({
-              title: "Gagal",
-              text: msg.message,
-              showConfirmButton: true,
-              confirmButtonColor: '#0760ef',
-              type:"error",
-              html: true
-          });
+          type: 'post',
+          url: BASE_URL+'/receipt-of-goods-request',
+          data: form_data,
+          cache: false,
+          contentType: false,
+          processData: false,
+          dataType: 'json',
+          beforeSend: function() {
+            
+          },
+          success: function(msg) {
+            
+            if(msg.status == 'success'){
+                setTimeout(function() {
+                    swal({
+                        title: "Sukses",
+                        text: msg.message,
+                        type:"success",
+                        html: true
+                    }, function() {
+                        // $('#main-table').DataTable().ajax.reload(null, false);
+                        $('#add-modal').modal('hide');
+                        window.location.replace("{{url('/receipt-of-goods-request')}}");
+                    });
+                }, 500);
+            } else {
+                swal({
+                    title: "Gagal",
+                    text: msg.message,
+                    showConfirmButton: true,
+                    confirmButtonColor: '#0760ef',
+                    type:"error",
+                    html: true
+                });
+            }
+            $('.loading').html('Submit').attr('disabled', false)
+          },
+            error: function(params) {
+                $('.loading').html('Submit').attr('disabled', false)
+            }
+        });
       }
       $('.loading').html('Submit').attr('disabled', false)
     },
-      error: function(params) {
-          $('.loading').html('Submit').attr('disabled', false)
-      }
-  });
-      }
+    error: function(params) {
+      $('.loading').html('Submit').attr('disabled', false)
+    }
     }
   })
   });

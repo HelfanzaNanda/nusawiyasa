@@ -209,7 +209,6 @@ $(document).ready(function() {
         },
         success: function(msg) {
           //console.log(msg);
-          $('.loading').html('Submit').attr('disabled', false)
           
           if(msg.status == 'success'){
               setTimeout(function() {

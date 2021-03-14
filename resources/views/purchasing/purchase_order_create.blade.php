@@ -518,6 +518,9 @@
                     });
                 }
                 $('.loading').html('Submit').attr('disabled', false)
+              },
+              error: function(params) {
+                  $('.loading').html('Submit').attr('disabled', false)
               }
             });
           }

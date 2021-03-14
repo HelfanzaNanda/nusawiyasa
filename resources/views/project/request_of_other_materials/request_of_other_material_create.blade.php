@@ -21,8 +21,9 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">SPK</label>
             <div class="col-md-10">
-              <select id="input-spk" name="spk_id"> 
-                <option value="0"> - Pilih SPK - </option>
+              <select id="input-spk" name="spk_id"
+              required oninvalid="this.setCustomValidity('Harap Isikan SPK.')" onchange="this.setCustomValidity('')"> 
+                <option value=""> - Pilih SPK - </option>
                 @foreach($spk as $row)
                   <option value="{{$row['id']}}">{{$row['number']}}</option>
                 @endforeach
@@ -34,7 +35,7 @@
             <div class="col-md-10">
               <select id="input-cluster" name="cluster_id"
               required oninvalid="this.setCustomValidity('Harap Isikan Perumahan/Cluster.')" onchange="this.setCustomValidity('')" >
-                <option value="0"> - Pilih Perumahan/Cluster - </option>
+                <option value=""> - Pilih Perumahan/Cluster - </option>
                 @foreach($clusters as $cluster)
                   <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
                 @endforeach
@@ -302,7 +303,7 @@ $('.btn-close').on('click', function(){
       url: '{{asset('')}}'+'number/validate?prefix=PBO&number='+$('#input-number').val(),
       success: function(data){
         if(data.status == 'error'){
-          $('.loading').html('Submit').attr('disabled', false)
+          
           swal({
             title: "Gagal",
             text: "Maaf, Nomor surat pengajuan bahan telah digunakan,",
@@ -351,6 +352,10 @@ $('.btn-close').on('click', function(){
             }
           });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params){
+        $('.loading').html('Submit').attr('disabled', false)
       }
     })
   });
