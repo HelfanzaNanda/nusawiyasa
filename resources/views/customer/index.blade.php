@@ -121,7 +121,7 @@
               </div>
               <div class="form-group">
                 <label>Alamat</label>
-                <textarea class="form-control" name="address" rows="5">
+                <textarea class="form-control" name="address" rows="5"></textarea>
               </div>
               <div class="form-group">
                 <label>Customer dari Perumahan/Cluster</label>

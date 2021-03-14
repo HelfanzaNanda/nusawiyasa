@@ -134,7 +134,7 @@
               </div>
               <div class="form-group">
                 <label>Catatan</label>
-                <textarea class="form-control" name="note" id="input-note"></textarea>
+                <textarea class="form-control" name="note" id="input-note"  ></textarea>
               </div>
             </div>
           </div>
