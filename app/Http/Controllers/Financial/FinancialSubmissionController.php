@@ -76,7 +76,7 @@ class FinancialSubmissionController extends Controller
                 $nestedData['action'] .='                <a class="dropdown-item" href="'.route('financial.edit', $row['id']).'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
                 $nestedData['action'] .='                <a class="dropdown-item" id="delete" href="#" data-toggle="modal" data-target="#delete_approve" data-id="'.$row['id'].'"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
                 $nestedData['action'] .='                <a class="dropdown-item" href="'.route('financial.pdf', $row['id']).'"><i class="fa fa-info m-r-5"></i> Cetak</a>';
-                if ($user->can('financial-submission-approval') && !$nestedData['approved_by_user_id']) {
+                if ($user->can('financial-submission-approval') && $nestedData['approved_by_user_id'] == '-') {
                     $nestedData['action'] .='                <a class="dropdown-item" href="#" id="approve-data" data-id="'.$row['id'].'"><i class="fa fa-check m-r-5"></i> Setujui</a>';
                 }
                 $nestedData['action'] .='            </div>';
