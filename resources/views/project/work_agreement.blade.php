@@ -163,7 +163,8 @@
                 <div class="custom-file">  
                   <input type="file" class="custom-file-input" id="file" name="file" accept="application/pdf" onchange="readURL(this)">
                   <label class="custom-file-label" id="label-img-edit" for="file">Choose file...</label>
-                  <div class="invalid-feedback">Example invalid custom file feedback</div>
+                  <div class="invalid-feedback"></div>
+                  <span id="download-spk-file"></span>
                 </div>
               </div>
               <div class="form-group">
@@ -333,7 +334,7 @@ $(document).ready(function(){
                 $('#date-edit').val(formatDate(data.date));
                 $('#customer-lot-id-edit').val(data.customer_lot_id).trigger('change');
                 $('#label-img-edit').text(data.filename)
-
+                $('#download-spk-file').html("<a href='{{url('/')}}"+data.filepath+"/"+data.filename+"'>Download File</a>");
             }
         })
   });

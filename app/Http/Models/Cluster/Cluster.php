@@ -194,7 +194,7 @@ class Cluster extends Model
 
         $qry = self::select($_select);
 
-        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && (isset($session['_cluster_id']) && $session['_cluster_id'] > 0)) {
             $qry->where('id', $session['_cluster_id']);
         }
         
@@ -257,7 +257,7 @@ class Cluster extends Model
 
         $qry = self::select('*');
 
-        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && (isset($session['_cluster_id']) && $session['_cluster_id'] > 0)) {
             $qry->where('id', $session['_cluster_id']);
         }
 

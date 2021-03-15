@@ -13,9 +13,9 @@
         <li class="breadcrumb-item active">Data Booking</li>
       </ul>
     </div>
-{{--     <div class="col-auto float-right ml-auto">
-      <a href="#" class="btn add-btn" id="show-add-modal"><i class="fa fa-plus"></i> Tambah Booking</a>
-    </div> --}}
+    <div class="col-auto float-right ml-auto">
+      <a href="#" class="btn btn-primary" id="show-filter-modal"><i class="fa fa-filter"></i> Filter</a>
+    </div>
   </div>
 </div>
 <!-- /Page Header -->
@@ -140,10 +140,82 @@
     </div>
   </div>
 </div>
+
+<div id="filter-modal" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Filter</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="filter-form" method="POST" action="#">
+                    {!! csrf_field() !!}
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Cluster/Perumahan</label>
+                            <select id="filter-cluster">
+                                <option value="0"> - Semua Cluster - </option>
+                                @foreach($clusters as $cluster)
+                                <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="filter-status">
+                                <option value="0"> - Semua Status - </option>
+                                @foreach($statuses as $status)
+                                <option value="{{$status['id']}}">{{$status['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="submit-section">
+                        <div class="col-auto float-right ml-auto pb-2">
+                            <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+                            <button type="submit" class="btn btn-primary float-right loading" 
+                            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                              Submit
+                            </button>
+                          </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+  $("#show-filter-modal").on('click',function() {
+      $('#filter-modal').modal('show');
+  });
+
+  $('#filter-cluster').select2({
+      width: '100%'
+  });
+
+  $('#filter-status').select2({
+      width: '100%'
+  });
+
+  $('form#filter-form').submit( function( e ) {
+      e.preventDefault();
+      $('#main-table').DataTable().ajax.reload(null, false);
+      $('#filter-modal').modal('hide');
+  });
+
+  $("#main-table").on('click', '#booking-installment', function() {
+      let id = $(this).data('id');
+      $('form#add-form').trigger('reset')
+      $('#input-bank-status').val('').trigger('change')
+      $('#installment-modal').modal('show');
+  });
 
   $("#main-table").on('click', '#booking-installment', function() {
       let id = $(this).data('id');
@@ -208,7 +280,11 @@
           "dataType": "json",
           "type": "POST",
           "data":function(d) { 
-            d._token = "{{csrf_token()}}"
+            d._token = "{{csrf_token()}}",
+            d.filter = {
+              "cluster_id" : $('#filter-cluster option:selected').val(),
+              "status_id" : $('#filter-status option:selected').val()
+            }
           },
       },
       "columns": [

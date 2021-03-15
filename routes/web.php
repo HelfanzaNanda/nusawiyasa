@@ -363,6 +363,7 @@ Route::group([
 	Route::post('financial-submission/store', 'Financial\FinancialSubmissionController@store')->name('financial.store');
 	Route::delete('financial-submission/delete/{id}', 'Financial\FinancialSubmissionController@delete')->name('financial.delete');
 	Route::get('financial-submission/pdf/{id}', 'Financial\FinancialSubmissionController@pdf')->name('financial.pdf');
+	Route::post('financial-submission/{id}/toggle-approval', 'Financial\FinancialSubmissionController@approval')->name('financial.approval');
 });
 
 Route::get('number/generate', 'NumberGenerateController@generate');
