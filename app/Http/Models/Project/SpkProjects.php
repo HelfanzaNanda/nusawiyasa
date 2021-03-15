@@ -335,7 +335,7 @@ class SpkProjects extends Model
             'building_area' => $spkProject->customerLot->lot->building_area,
             'surface_area' => $spkProject->customerLot->lot->surface_area,
             'note' => isset($spkProject->note) && $spkProject->note ? $spkProject->note : '-',
-            'status' => $spkProject->customerLot->generalStatus->name,
+            'status' => $spkProject->customerLot->generalStatus->name ? $spkProject->customerLot->generalStatus->name : '-',
         ];
 
         return $item;
