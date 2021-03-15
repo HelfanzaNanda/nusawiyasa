@@ -45,7 +45,7 @@
         </li>
         @if ($user->can('booking-page'))
             <li {{ (request()->segment(1) == 'booking-page') ? 'class=active' : '' }}>
-                <a href="{{url('/booking-page')}}"><i class="la la-hand-o-up"></i> <span>{{ __('permissions.customer-payments') }}</span></a>
+                <a href="{{url('/booking-page')}}"><i class="la la-hand-o-up"></i> <span>{{ __('permissions.booking-page') }}</span></a>
             </li>
         @endif
         @if ($user->can('spk-project'))
