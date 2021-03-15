@@ -324,7 +324,6 @@ class SpkProjects extends Model
     public static function generatePdf($id)
     {
         $spkProject = self::findOrFail($id);
-        dd($spkProject->customerLot->generalStatus);
         $item = [
             'number_project' => $spkProject->number,
             'from' => $spkProject->customerLot->lot->cluster->name,
