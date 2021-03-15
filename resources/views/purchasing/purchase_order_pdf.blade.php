@@ -118,8 +118,6 @@
     <div>
         <table class="header">
             <tr>
-                <td style="width: 10%"><img src="{{ asset('storage/'.($company_logo ?? '') ) }}" width="80px"></td>
-                <td style=" vertical-align: bottom;"><h3 style="display: inline"><b> {{ $company_name }}</b></h3></td>
                 <td id="purchase-order">PURCHASE ORDER</td>
             </tr>
         </table>

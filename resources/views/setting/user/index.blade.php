@@ -104,10 +104,13 @@
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -132,29 +135,36 @@
             <div class="col-md-12"> 
               <div class="form-group">
                 <label>Nama</label>
-                <input class="form-control" type="text" name="name" id="name">
+                <input class="form-control" type="text" name="name" id="name"
+                required oninvalid="this.setCustomValidity('Harap Isikan Nama.')" onchange="this.setCustomValidity('')">
                 <input type="hidden" name="id" id="id">
               </div>
               <div class="form-group">
                 <label>Email</label>
-                <input class="form-control" type="text" name="email" id="email">
+                <input class="form-control" type="text" name="email" id="email"
+                required oninvalid="this.setCustomValidity('Harap Isikan Email.')" onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>No HP</label>
-                <input class="form-control" type="text" name="phone" id="phone">
+                <input class="form-control" type="text" name="phone" id="phone"
+                required oninvalid="this.setCustomValidity('Harap Isikan No HP.')" onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Username</label>
-                <input class="form-control" type="text" name="username" id="username">
+                <input class="form-control" type="text" name="username" id="username"
+                required oninvalid="this.setCustomValidity('Harap Isikan Username.')" onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Password</label>
-                <input class="form-control" type="password" name="password" id="password">
+                <input class="form-control" type="password" name="password" id="password"
+                required oninvalid="this.setCustomValidity('Harap Isikan Password.')" onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Role</label>
-                <select id="role" name="role_id"> 
-                  <option> - Pilih Role - </option>
+                <select id="role" name="role_id"
+                required oninvalid="this.setCustomValidity('Harap Isikan Role.')" onchange="this.setCustomValidity('')"
+                > 
+                  <option value=""> - Pilih Role - </option>
                   @foreach($roles as $role)
                     <option value="{{$role['id']}}">{{$role['name']}}</option>
                   @endforeach
@@ -162,8 +172,10 @@
               </div>
               <div class="form-group">
                 <label>Perumahan/Cluster</label>
-                <select id="cluster" name="cluster_id"> 
-                  <option> - Pilih Perumahan/Cluster - </option>
+                <select id="cluster" name="cluster_id"
+                required oninvalid="this.setCustomValidity('Harap Isikan Perumahan/Cluster.')" onchange="this.setCustomValidity('')"
+                > 
+                  <option value=""> - Pilih Perumahan/Cluster - </option>
                   @foreach($clusters as $cluster)
                     <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
                   @endforeach
@@ -172,10 +184,13 @@
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -187,6 +202,8 @@
 @section('additionalScriptJS')
 <script type="text/javascript">
   $("#show-add-modal").on('click',function() {
+    $('form#add-form').trigger('reset')
+            $('select').val('').trigger('change')
       $('#add-modal').modal('show');
   });
   
@@ -237,7 +254,7 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
+        
         if(msg.status == 'success'){
           setTimeout(function() {
             swal({
@@ -261,6 +278,10 @@
             html: true
           });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     })
   });

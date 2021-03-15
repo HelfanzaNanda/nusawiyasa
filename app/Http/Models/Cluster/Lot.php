@@ -211,7 +211,7 @@ class Lot extends Model
         ]);
     }
 
-    public static function datatables($start, $length, $order, $dir, $search, $filter = '', $session = [])
+    public static function datatables($start, $length, $order, $dir, $search, $filter = [], $session = [])
     {
         $totalData = self::count();
 
@@ -226,8 +226,16 @@ class Lot extends Model
                 ->join('clusters', 'clusters.id', '=', 'lots.cluster_id')
                 ->leftJoin('customer_lots', 'customer_lots.lot_id', '=', 'lots.id');
 
-        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && (isset($session['_cluster_id']) && $session['_cluster_id'] > 0)) {
             $qry->where('lots.cluster_id', $session['_cluster_id']);
+        }
+
+        if (isset($filter['cluster_id']) && $filter['cluster_id'] > 0) {
+            $qry->where('lots.cluster_id', $filter['cluster_id']);      
+        }
+
+        if (isset($filter['status_id']) && $filter['status_id'] > 0) {
+            $qry->where('lots.lot_status', $filter['status_id']);      
         }
 
         $totalFiltered = $qry->count();
@@ -290,7 +298,7 @@ class Lot extends Model
        $qry = self::select(['lots.id', 'clusters.name', 'lots.block', 'lots.unit_number'])
                 ->join('clusters', 'clusters.id', '=', 'lots.cluster_id');
 
-        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && (isset($session['_cluster_id']) && $session['_cluster_id'] > 0)) {
             $qry->where('lots.cluster_id', $session['_cluster_id']);
         }
 

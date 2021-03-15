@@ -15,14 +15,16 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Judul</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-title" name="title">
+              <input class="form-control floating" type="text" id="input-title" name="title"
+              required oninvalid="this.setCustomValidity('Harap Isikan Judul.')" onchange="this.setCustomValidity('')">
             </div>
           </div>
           <div class="form-group row">
             <label class="col-form-label col-md-2">Perumahan/Cluster</label>
             <div class="col-md-10">
-              <select id="input-cluster" name="cluster_id">
-                <option value="0"> - Pilih Perumahan/Cluster - </option>
+              <select id="input-cluster" name="cluster_id"
+              required oninvalid="this.setCustomValidity('Harap Isikan Perumahan/Cluster.')" onchange="this.setCustomValidity('')">
+                <option value=""> - Pilih Perumahan/Cluster - </option>
                 @foreach($clusters as $cluster)
                   <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
                 @endforeach
@@ -33,7 +35,7 @@
             <label class="col-form-label col-md-2">Type Model</label>
             <div class="col-md-10">
               <select id="input-type" name="type">
-                <option value=""> - Pilih Type - </option>
+                <option value="0"> - Pilih Type - </option>
                 <option value="lot">Kapling</option>
                 <option value="fasum">Fasum</option>
                 <option value="fasos">Fasos</option>
@@ -90,6 +92,7 @@
         </div>
         <div class="card-footer">
           <div class="col-auto float-right ml-auto pb-2">
+            <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Kembali</button>
             <button type="submit" class="btn btn-primary float-right loading" 
             data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
               Submit
@@ -104,6 +107,9 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+  $('.btn-close').on('click', function(){
+      window.location.replace('/rap')
+  })
   $('#input-cluster').select2({
     width: '100%'
   });
@@ -272,7 +278,6 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
         if(msg.status == 'success'){
             setTimeout(function() {
                 swal({
@@ -296,6 +301,10 @@
                 html: true
             });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     });
   });

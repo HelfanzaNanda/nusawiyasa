@@ -2,24 +2,29 @@
 
 namespace App\Http\Controllers\Customer;
 
-use Illuminate\Http\Request;
-use App\Http\Models\Cluster\Lot;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Models\Customer\Customer;
-use App\Http\Models\Customer\CustomerLot;
-use App\Http\Models\Customer\CustomerCost;
-use App\Http\Models\Customer\CustomerTerm;
-use App\Http\Models\Customer\CustomerPayment;
 use App\Http\Models\Accounting\AccountingMaster;
-use App\Http\Models\Project\DevelopmentProgress;
+use App\Http\Models\Cluster\Cluster;
+use App\Http\Models\Cluster\Lot;
+use App\Http\Models\Customer\Customer;
+use App\Http\Models\Customer\CustomerCost;
+use App\Http\Models\Customer\CustomerLot;
+use App\Http\Models\Customer\CustomerPayment;
+use App\Http\Models\Customer\CustomerTerm;
+use App\Http\Models\GeneralAdmin\WageSubmissionDetail;
 use App\Http\Models\GeneralSetting\GeneralSetting;
+use App\Http\Models\Project\DevelopmentProgress;
+use App\Http\Models\Ref\RefLotStatuses;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CustomerPaymentController extends Controller
 {
     public function index()
     {
         return view('customer.customer_payment', [
+            'clusters' => Cluster::selectClusterBySession(),
+            'statuses' => RefLotStatuses::get(),
             'company_logo' => GeneralSetting::getCompanyLogo(),
             'company_name' => GeneralSetting::getCompanyName()
         ]);
@@ -89,11 +94,13 @@ class CustomerPaymentController extends Controller
 
         $search = $request->search['value'];
 
-        $filter = $request->only(['sDate', 'eDate']);
+        $filter = $request->filter;
 
         $res = CustomerLot::datatables($start, $limit, $order, $dir, $search, $filter, $session);
 
         $data = [];
+
+        $status_collection = RefLotStatuses::get();
 
         if (!empty($res['data'])) {
             foreach ($res['data'] as $row) {
@@ -104,7 +111,7 @@ class CustomerPaymentController extends Controller
                 $nestedData['unit_number'] = $row['unit_number'];
                 $nestedData['surface_area'] = $row['surface_area'];
                 $nestedData['building_area'] = $row['building_area'];
-                $nestedData['status'] = $row['status'];
+                $nestedData['status'] = $status_collection->where('id', $row['status'])->values()[0]['name'];
                 $nestedData['action'] = '';
                 $nestedData['action'] .='        <div class="dropdown dropdown-action">';
                 $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';
@@ -152,7 +159,10 @@ class CustomerPaymentController extends Controller
 
         $customer_payments = CustomerPayment::select('customer_payments.*')->addSelect('accounting_masters.name as account_name')->where('customer_lot_id', $id)->leftJoin('accounting_masters', 'accounting_masters.coa', '=', 'customer_payments.payment_type')->get();
 
-        return view('customer.customer_payment_detail', compact('data', 'customer_terms', 'customer_costs', 'id', 'customer_payments', 'coa'));
+        $company_logo = GeneralSetting::getCompanyLogo();
+        $company_name = GeneralSetting::getCompanyName();
+
+        return view('customer.customer_payment_detail', compact('data', 'customer_terms', 'customer_costs', 'id', 'customer_payments', 'coa', 'company_logo', 'company_name'));
     }
 
     public function get($id=null, Request $request)
@@ -173,16 +183,24 @@ class CustomerPaymentController extends Controller
     public function lotProgress(Request $request)
     {
         $params = $request->all();
-
-        $data = DevelopmentProgress::select(DB::raw('MAX(development_progress.percentage) as percentage'), 'lots.block', 'lots.unit_number', 'spk_workers.wage', 'customer_lots.id')
+        // SELECT * FROM tab ORDER BY col DESC LIMIT 1,1
+        $data = DevelopmentProgress::select(DB::raw('MAX(development_progress.percentage) as percentage'), 'lots.block', 'lots.unit_number', 'spk_workers.wage', 'customer_lots.id', 'development_progress.cluster_id', 'development_progress.lot_id')
                 ->join('customer_lots', 'customer_lots.lot_id', '=', 'development_progress.lot_id')
                 ->join('spk_workers', 'spk_workers.customer_lot_id', '=', 'customer_lots.id')
                 ->join('lots', 'lots.id', '=', 'development_progress.lot_id')
-                ->where(DB::raw('CONCAT(lots.block, "-", lots.unit_number)'), 'LIKE', '%'.$params['term'].'%')
+                // ->where(DB::raw('CONCAT(lots.block, "-", lots.unit_number)'), 'LIKE', '%'.$params['term'].'%')
                 ->where('development_progress.cluster_id', $params['cluster_id'])
                 ->groupBy('customer_lots.id')
-                ->get();
+                ->get()->toArray();
 
-        return json_decode($data);
+        foreach ($data as &$row) {
+            // $row['percentage_before_last'] = DevelopmentProgress::where('lot_id', $row['lot_id'])->where('cluster_id', $row['cluster_id'])->orderBy('date', 'DESC')->skip(1)->limit(1)->value('percentage');
+            $row['percentage_before_last'] = WageSubmissionDetail::where('customer_lot_id', $row['id'])->orderBy('id', 'DESC')->value('weekly_percentage');
+            if (!$row['percentage_before_last']) {
+                $row['percentage_before_last'] = 0;
+            }
+        }
+
+        return $data;
     }
 }

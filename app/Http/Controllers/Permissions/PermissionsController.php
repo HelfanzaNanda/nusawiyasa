@@ -21,30 +21,33 @@ class PermissionsController extends Controller
         ->leftJoin('role_has_permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')
         ->leftJoin('roles', 'role_has_permissions.role_id', '=', 'roles.id')
         ->groupBy('permissions.id')->get();
-
+        
         $roles = Role::all();
-        $headers = ['Main', 'Marketing', 'Project', 'Gudang', 'Purchasing', 'Pengaturan', 'Accounting', 'SLF'];
+        $headers = ['Main', 'Marketing', 'Project', 'Gudang', 'Purchasing', 'Pengaturan', 'Accounting', 'SLF', 'Admin Umum'];
         $attrs = [];
+
         foreach ($perms as $permission) {
             if (in_array($permission->name, ['employe', 'employe-detail'])) {
                 $attrs[$headers[0]][] = $this->showItem($permission);
-            }elseif (in_array($permission->name, ['customers', 'customer-payments', 'clusters', 'lots', 'booking-page', 'spk-project'])) {
+            } else if (in_array($permission->name, ['customers', 'customer-payments', 'clusters', 'lots', 'booking-page', 'spk-project'])) {
                 $attrs[$headers[1]][] = $this->showItem($permission);
-            }elseif (in_array($permission->name, ['customer-confirmation', 'work-agreement', 'rap', 'request-material', 'development-progress'])) {
+            } else if (in_array($permission->name, ['customer-confirmation', 'work-agreement', 'rap', 'request-material', 'development-progress', 'rab', 'request-of-other-material'])) {
                 $attrs[$headers[2]][] = $this->showItem($permission);
-            }elseif (in_array($permission->name, ['inventory', 'unit', 'supplier', 'inventory-history', 'receipt-of-goods', 
+            } else if (in_array($permission->name, ['inventory', 'unit', 'supplier', 'inventory-history', 'receipt-of-goods', 
             'receipt-of-goods-request', 'report-used-inventory', 'report-stock-opname', 'delivery-order'])) {
                 $attrs[$headers[3]][] = $this->showItem($permission);
-            }elseif (in_array($permission->name, ['purchase-order', 'report-inventory-purchase', 'report-outstanding-po'])) {
+            } else if (in_array($permission->name, ['purchase-order', 'report-inventory-purchase', 'report-outstanding-po'])) {
                 $attrs[$headers[4]][] = $this->showItem($permission);
-            }elseif (in_array($permission->name, ['user', 'user-permissions'])) {
+            } else if (in_array($permission->name, ['user', 'user-permissions', 'roles', 'customer-cost', 'customer-term', 'default-account', 'general-setting'])) {
                 $attrs[$headers[5]][] = $this->showItem($permission);
-            }elseif (in_array($permission->name, ['debt', 'accounting-master', 'accounting-general-ledger',
+            } else if (in_array($permission->name, ['debt', 'accounting-master', 'accounting-general-ledger',
              'accounting-ledger', 'accounting-balance-sheet', 'accounting-profit-loss'])) {
                 $attrs[$headers[6]][] = $this->showItem($permission);
-            }elseif ($permission->name == 'slf-template') {
+            } else if ($permission->name == 'slf-template') {
                 $attrs[$headers[7]][] = $this->showItem($permission);
-            }else{
+            } else if (in_array($permission->name, ['financial-submission', 'salary-submission', 'financial-submission-approval'])) {
+                $attrs[$headers[8]][] = $this->showItem($permission);
+            } else {
                 $attrs[explode('-',$permission->name)[0]][] = $this->showItem($permission);
             }
         }

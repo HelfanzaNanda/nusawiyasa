@@ -70,10 +70,13 @@
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -98,17 +101,21 @@
             <div class="col-md-12"> 
               <div class="form-group">
                 <label>Hak Akses</label>
-                <input class="form-control" type="text" name="role" id="role-edit">
+                <input class="form-control" type="text" name="role" id="role-edit"
+                required oninvalid="this.setCustomValidity('Harap Isikan Hak Akses.')" onchange="this.setCustomValidity('')">
                 <span class="text-danger error"></span>
                 <input type="hidden" name="id" id="id">
               </div>
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -123,6 +130,8 @@
 <script type="text/javascript">
 $(document).ready(function(){
     $("#show-add-modal").on('click',function() {
+      $('form#add-form').trigger('reset')
+            $('select').val('').trigger('change')
         $('.error').text('');
         $('#role').val('');
         $('#add-modal').modal('show');
@@ -167,7 +176,7 @@ $(document).ready(function(){
                 
             },
             success: function(res) {
-              $('.loading').html('Submit').attr('disabled', false)
+              
                 if(res.status == 'success'){
                     setTimeout(function() {
                         swal({
@@ -191,6 +200,7 @@ $(document).ready(function(){
                         html: true
                     });
                 }
+                $('.loading').html('Submit').attr('disabled', false)
             },
             error: function(jqXHR){
                 if (jqXHR.status == 422) {

@@ -33,7 +33,8 @@
                         <div class="form-group row">
                             <label class="col-form-label col-md-2">Tanggal</label>
                             <div class="col-md-10">
-                                <input class="form-control floating" type="text" id="input-date" name="date">
+                                <input class="form-control floating" type="text" id="input-date" name="date"
+                                required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onblur="this.setCustomValidity('')">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -101,11 +102,12 @@
                     </div>
                     <div class="card-footer">
                         <div class="col-auto float-right ml-auto pb-2">
+                            <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Kembali</button>
                             <button type="submit" class="btn btn-primary float-right loading" 
                             data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-                                Submit
+                              Submit
                             </button>
-                        </div>
+                          </div>
                     </div>
                 </form>
             </div>
@@ -115,6 +117,9 @@
 
 @section('additionalScriptJS')
     <script type="text/javascript">
+    $('.btn-close').on('click', function(){
+      window.location.replace('/financial-submission')
+  })
         if($('#input-date').length > 0) {
             $('#input-date').datetimepicker({
                 format: 'YYYY-MM-DD',
@@ -224,7 +229,7 @@
                 url: '{{asset('')}}'+'number/validate?prefix=FS&number='+$('#input-number').val(),
                 success: function(data){
                     if(data.status == 'error'){
-                        $('.loading').html('Submit').attr('disabled', false)
+                        
                         swal({
                             title: "Gagal",
                             text: "Maaf, Nomor surat pengajuan keuangan telah digunakan,",
@@ -246,7 +251,7 @@
                                 
                             },
                             success: function(msg) {
-                                $('.loading').html('Submit').attr('disabled', false)
+                                
                                 if(msg.status == 'success'){
                                     setTimeout(function() {
                                         swal({
@@ -270,9 +275,17 @@
                                         html: true
                                     });
                                 }
+                                $('.loading').html('Submit').attr('disabled', false)
+                            },
+                            error: function(params) {
+                                $('.loading').html('Submit').attr('disabled', false)
                             }
                         });
                     }
+                    $('.loading').html('Submit').attr('disabled', false)
+                },
+                error: function(params) {
+                    $('.loading').html('Submit').attr('disabled', false)
                 }
             })
             

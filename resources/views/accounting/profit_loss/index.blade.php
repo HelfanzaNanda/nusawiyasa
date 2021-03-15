@@ -103,12 +103,19 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="">Tanggal</label>
-                            <input type="text" name="daterange" class="form-control" id="daterange" readonly
-                                style="background: white; cursor: pointer;" />
+                            <input type="text" name="daterange" class="form-control" 
+                            id="daterange" readonly style="background: white; cursor: pointer;" 
+                            />
                         </div>
                     </div>
                     <div class="submit-section">
-                        <button class="btn btn-primary submit-btn" id="submitFilter">Filter</button>
+                      <div class="col-auto float-right ml-auto pb-2">
+                        <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary float-right loading" 
+                        data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                          Submit
+                        </button>
+                      </div>
                     </div>
                 {{-- </form> --}}
             </div>
@@ -141,6 +148,7 @@ $('#daterange').daterangepicker({
 
 $(document).on('click', '#show-filter-modal', function() {    
     $('.loading-area').hide();
+    $("#daterange").val('');
     $('#filter-modal').modal('show'); 
 });
 

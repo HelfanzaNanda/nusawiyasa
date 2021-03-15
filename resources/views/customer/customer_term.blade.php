@@ -67,47 +67,67 @@
             <div class="col-sm-6"> 
               <div class="form-group">
                 <label>Nama</label>
-                <input class="form-control" type="text" name="name">
+                <input class="form-control" type="text" name="name"
+                required oninvalid="this.setCustomValidity('Harap Isikan Nama.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Email</label>
-                <input class="form-control" type="text" name="email">
+                <input class="form-control" type="text" name="email"
+                required oninvalid="this.setCustomValidity('Harap Isikan Email.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>No. HP</label>
-                <input class="form-control" type="text" name="phone">
+                <input class="form-control" type="text" name="phone"
+                required oninvalid="this.setCustomValidity('Harap Isikan No HP.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Tempat Lahir</label>
-                <input class="form-control" type="text" name="place_of_birth">
+                <input class="form-control" type="text" name="place_of_birth"
+                required oninvalid="this.setCustomValidity('Harap Isikan Tempat Lahir.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Tanggal Lahir</label>
-                <input class="form-control" type="text" name="date_of_birth">
+                <input class="form-control" type="text" name="date_of_birth"
+                required oninvalid="this.setCustomValidity('Harap Isikan Tanggal Lahir.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Pekerjaan</label>
-                <input class="form-control" type="text" name="occupation">
+                <input class="form-control" type="text" name="occupation"
+                required oninvalid="this.setCustomValidity('Harap Isikan Pekerjaan.')" 
+                onchange="this.setCustomValidity('')">
               </div>
             </div>
             <div class="col-sm-6">  
               <div class="form-group">
                 <label>Kota</label>
-                <select id="input-city" name="city"> 
+                <select id="input-city" name="city"
+                required oninvalid="this.setCustomValidity('Harap Isikan Kota.')" 
+                onchange="this.setCustomValidity('')">
                   <option> - Pilih Kota - </option>
                 </select>
               </div>
               <div class="form-group">
                 <label>Kecamatan</label>
-                <input class="form-control" type="text" name="district">
+                <input class="form-control" type="text" name="district"
+                required oninvalid="this.setCustomValidity('Harap Isikan Kecamatan.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Kelurahan</label>
-                <input class="form-control" type="text" name="sub_district">
+                <input class="form-control" type="text" name="sub_district"
+                required oninvalid="this.setCustomValidity('Harap Isikan Kelurahan.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Alamat</label>
-                <textarea class="form-control" name="address" rows="5"></textarea>
+                <textarea class="form-control" name="address" rows="5"
+                required oninvalid="this.setCustomValidity('Harap Isikan Alamat.')" 
+                onchange="this.setCustomValidity('')"></textarea>
               </div>
             </div>
           </div>
@@ -150,6 +170,8 @@
   });
 
   $("#show-add-modal").on('click',function() {
+    $('form#add-form').trigger('reset')
+    $('#input-city').val('').trigger('change')
       $('#add-modal').modal('show');
   });
 
@@ -221,6 +243,10 @@
                 html: true
             });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     })
   });

@@ -119,8 +119,8 @@
               </div>
               <div class="form-group">
                 <label>Tipe Pembayaran</label>
-                <select class="form-control" id="input-payment-type" name="payment_type" required>
-                  <option value=""> - Pilih Tipe - </option>
+                <select class="form-control" id="input-payment-type" name="payment_type" >
+                  <option value="0"> - Pilih Tipe - </option>
                   @foreach($coa as $key => $val)
                     @if(substr($key, 0 , 1) == 1)
                     <option value="{{$key}}">{{$key}} | {{$val}}</option>
@@ -134,15 +134,18 @@
               </div>
               <div class="form-group">
                 <label>Catatan</label>
-                <textarea class="form-control" name="note" id="input-note"></textarea>
+                <textarea class="form-control" name="note" id="input-note"  ></textarea>
               </div>
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -196,10 +199,13 @@
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -309,8 +315,6 @@
         
       },
       success: function(res) {
-        $('.loading').html('Submit').attr('disabled', false)
-        console.log(res);
         if(res.status == 'success'){
             setTimeout(function() {
                 swal({
@@ -332,7 +336,11 @@
                 html: true
             });
         }
-      }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+            $('.loading').html('Submit').attr('disabled', false)
+        }
     })
   });
 

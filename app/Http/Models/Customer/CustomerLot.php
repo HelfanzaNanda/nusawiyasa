@@ -442,12 +442,17 @@ class CustomerLot extends Model
         ]);
     }
 
-    public static function datatables($start, $length, $order, $dir, $search, $filter = '', $session = [])
+    public static function datatables($start, $length, $order, $dir, $search, $filter = [], $session = [])
     {
         $totalData = self::count();
 
+        $schema = array_values(self::mapSchema());
+        $schema[] = [
+            "alias" => "users.name",
+            "type" => "string"
+        ];
         $_select = [];
-        foreach(array_values(self::mapSchema()) as $select) {
+        foreach($schema as $select) {
             $_select[] = $select['alias'];
         }
 
@@ -464,8 +469,16 @@ class CustomerLot extends Model
                 ->leftJoin('lots', 'lots.id', '=', 'customer_lots.lot_id')
                 ->leftJoin('clusters', 'clusters.id', '=', 'lots.cluster_id');
 
-        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && (isset($session['_cluster_id']) && $session['_cluster_id'] > 0)) {
             $qry->where('lots.cluster_id', $session['_cluster_id']);
+        }
+
+        if (isset($filter['cluster_id']) && $filter['cluster_id'] > 0) {
+            $qry->where('lots.cluster_id', $filter['cluster_id']);      
+        }
+
+        if (isset($filter['status_id']) && $filter['status_id'] > 0) {
+            $qry->where('lots.lot_status', $filter['status_id']);      
         }
 
         $totalFiltered = $qry->count();
@@ -482,10 +495,10 @@ class CustomerLot extends Model
             }
 
         } else {
-            foreach (array_values(self::mapSchema()) as $key => $val) {
+            foreach ($schema as $key => $val) {
                 if ($key < 1) {
                     $qry->whereRaw('('.$val['alias'].' LIKE \'%'.$search.'%\'');
-                } else if (count(array_values(self::mapSchema())) == ($key + 1)) {
+                } else if (count($schema) == ($key + 1)) {
                     $qry->orWhereRaw($val['alias'].' LIKE \'%'.$search.'%\')');
                 } else {
                     $qry->orWhereRaw($val['alias'].' LIKE \'%'.$search.'%\'');
@@ -531,7 +544,7 @@ class CustomerLot extends Model
                 ->join('customers', 'customers.id', '=', 'customer_lots.customer_id')
                 ->join('users', 'users.id', '=', 'customers.user_id');
 
-        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && (isset($session['_cluster_id']) && $session['_cluster_id'] > 0)) {
             $qry->where('lots.cluster_id', $session['_cluster_id']);
         }
 

@@ -15,20 +15,23 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">No. Bon</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-number" name="number">
+              <input class="form-control floating" type="text" id="input-number" name="number"
+              required oninvalid="this.setCustomValidity('Harap Isikan No. Bon.')" onchange="this.setCustomValidity('')" >
             </div>
           </div>
           <div class="form-group row">
             <label class="col-form-label col-md-2">Tanggal</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-date" name="date">
+              <input class="form-control floating" type="text" id="input-date" name="date"
+              required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onblur="this.setCustomValidity('')" >
             </div>
           </div>
           <div class="form-group row">
             <label class="col-form-label col-md-2">Perumahan Yang Mengajukan</label>
             <div class="col-md-10">
-              <select id="input-lot" name="lot_id"> 
-                <option value="0"> - Pilih Kapling - </option>
+              <select id="input-lot" name="lot_id"
+              required oninvalid="this.setCustomValidity('Harap Isikan Perumahan Yang Mengajukan.')" onblur="this.setCustomValidity('')">
+                <option value=""> - Pilih Kapling - </option>
                 @foreach($lots as $lot)
                   <option value="{{$lot['id']}}">{{$lot['name']}} - {{$lot['block']}} / {{$lot['unit_number']}}</option>
                 @endforeach
@@ -79,6 +82,7 @@
         </div>
         <div class="card-footer">
           <div class="col-auto float-right ml-auto pb-2">
+            <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Kembali</button>
             <button type="submit" class="btn btn-primary float-right loading" 
             data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
               Submit
@@ -93,6 +97,9 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+$('.btn-close').on('click', function(){
+      window.location.replace('receipt-of-goods-request')
+  })
   $(document).ready(function(){
     var url = '{{ asset('') }}'
     
@@ -233,44 +240,53 @@
         });
       }else{
         $.ajax({
-    type: 'post',
-    url: BASE_URL+'/receipt-of-goods-request',
-    data: form_data,
-    cache: false,
-    contentType: false,
-    processData: false,
-    dataType: 'json',
-    beforeSend: function() {
-      
-    },
-    success: function(msg) {
+          type: 'post',
+          url: BASE_URL+'/receipt-of-goods-request',
+          data: form_data,
+          cache: false,
+          contentType: false,
+          processData: false,
+          dataType: 'json',
+          beforeSend: function() {
+            
+          },
+          success: function(msg) {
+            
+            if(msg.status == 'success'){
+                setTimeout(function() {
+                    swal({
+                        title: "Sukses",
+                        text: msg.message,
+                        type:"success",
+                        html: true
+                    }, function() {
+                        // $('#main-table').DataTable().ajax.reload(null, false);
+                        $('#add-modal').modal('hide');
+                        window.location.replace("{{url('/receipt-of-goods-request')}}");
+                    });
+                }, 500);
+            } else {
+                swal({
+                    title: "Gagal",
+                    text: msg.message,
+                    showConfirmButton: true,
+                    confirmButtonColor: '#0760ef',
+                    type:"error",
+                    html: true
+                });
+            }
+            $('.loading').html('Submit').attr('disabled', false)
+          },
+            error: function(params) {
+                $('.loading').html('Submit').attr('disabled', false)
+            }
+        });
+      }
       $('.loading').html('Submit').attr('disabled', false)
-      if(msg.status == 'success'){
-          setTimeout(function() {
-              swal({
-                  title: "Sukses",
-                  text: msg.message,
-                  type:"success",
-                  html: true
-              }, function() {
-                  // $('#main-table').DataTable().ajax.reload(null, false);
-                  $('#add-modal').modal('hide');
-                  window.location.replace("{{url('/receipt-of-goods-request')}}");
-              });
-          }, 500);
-      } else {
-          swal({
-              title: "Gagal",
-              text: msg.message,
-              showConfirmButton: true,
-              confirmButtonColor: '#0760ef',
-              type:"error",
-              html: true
-          });
-      }
+    },
+    error: function(params) {
+      $('.loading').html('Submit').attr('disabled', false)
     }
-  });
-      }
     }
   })
   });

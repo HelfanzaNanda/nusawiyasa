@@ -28,13 +28,16 @@
             {{-- @foreach($customer_costs as $customer_cost) --}}
               <div class="col-md-6">
                 <label>Konfirmasi Konsumen</label>
-                <input type="file" class="dropify" data-max-file-size="10M" data-default-file="{{(is_array($records) && count($records) > 0) ? url('/').$records[0]['filepath'].'/'.$records[0]['filename'] : ''}}" name="file" />
+                <input type="file" class="dropify" data-max-file-size="10M" 
+                required oninvalid="this.setCustomValidity('Harap Isikan Konfirmasi Konsumen.')" onblur="this.setCustomValidity('')"
+                data-default-file="{{(is_array($records) && count($records) > 0) ? url('/').$records[0]['filepath'].'/'.$records[0]['filename'] : ''}}" name="file" />
               </div>
             {{-- @endforeach --}}
           </div>
         </div>
         <div class="card-footer">
           <div class="col-auto float-right ml-auto pb-2">
+            <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Kembali</button>
             <button type="submit" class="btn btn-primary float-right loading" 
             data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
               Submit
@@ -49,6 +52,9 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+  $('.btn-close').on('click', function() {
+      window.location.replace('/customer-confirmation')
+  })
   $('form#add-form').submit( function( e ) {
     e.preventDefault();
     var loading_text = $('.loading').data('loading-text');
@@ -71,7 +77,7 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
+        
         if(msg.status == 'success'){
           setTimeout(function() {
             swal({
@@ -95,6 +101,10 @@
             html: true
           });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     })
   });

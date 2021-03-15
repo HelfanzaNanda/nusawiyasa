@@ -121,7 +121,7 @@ class SpkProjects extends Model
                     ->join('lots', 'lots.id', '=', 'customer_lots.lot_id')
                     ->join('clusters', 'clusters.id', '=', 'lots.cluster_id');
 
-        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && isset($session['_cluster_id'])) {
+        if ((isset($session['_role_id']) && $session['_role_id'] > 1) && (isset($session['_cluster_id']) && $session['_cluster_id'] > 0)) {
             $qry->where('lots.cluster_id', $session['_cluster_id']);
         }
 
@@ -333,7 +333,7 @@ class SpkProjects extends Model
             'lot_number' => $spkProject->customerLot->lot->block .' - '. $spkProject->customerLot->lot->unit_number,
             'building_area' => $spkProject->customerLot->lot->building_area,
             'surface_area' => $spkProject->customerLot->lot->surface_area,
-            'note' => $spkProject->note,
+            'note' => isset($spkProject->note) && $spkProject->note ? $spkProject->note : '-',
             'status' => $spkProject->customerLot->generalStatus->note,
         ];
 

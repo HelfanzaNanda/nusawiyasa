@@ -12,24 +12,13 @@
       <form id="add-form" method="POST" action="#">
         <div class="card-body">
           {!! csrf_field() !!}
-{{--           <div class="form-group row">
-            <label class="col-form-label col-md-2">Judul</label>
-            <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-title" name="title">
-            </div>
-          </div> --}}
           <div class="form-group row">
             <label class="col-form-label col-md-2">Nomor Pengajuan</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-number" name="number">
+              <input class="form-control floating" type="text" id="input-number" name="number"
+              required oninvalid="this.setCustomValidity('Harap Isikan Nomor Pengajuan.')" onchange="this.setCustomValidity('')">
             </div>
           </div>
-{{--           <div class="form-group row">
-            <label class="col-form-label col-md-2">Perihal</label>
-            <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-subject" name="subject">
-            </div>
-          </div> --}}
           <div class="form-group row">
             <label class="col-form-label col-md-2">SPK</label>
             <div class="col-md-10">
@@ -44,8 +33,9 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Perumahan/Cluster</label>
             <div class="col-md-10">
-              <select id="input-cluster" name="cluster_id"> 
-                <option value="0"> - Pilih Perumahan/Cluster - </option>
+              <select id="input-cluster" name="cluster_id"
+              required oninvalid="this.setCustomValidity('Harap Isikan Perumahan/Cluster.')" onchange="this.setCustomValidity('')"> 
+                <option value=""> - Pilih Perumahan/Cluster - </option>
                 @foreach($clusters as $cluster)
                   <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
                 @endforeach
@@ -55,7 +45,8 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Kavling</label>
             <div class="col-md-10">
-              <select id="input-lot" name="lot_id"> 
+              <select id="input-lot" name="lot_id"
+              required oninvalid="this.setCustomValidity('Harap Isikan Kavling.')" onchange="this.setCustomValidity('')"> 
                 <option value="0"> - Pilih Kavling - </option>
               </select>
             </div>
@@ -75,18 +66,13 @@
                 Non RAP
                 </label>
               </div>
-{{--               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="type" id="disposition" value="disposition">
-                <label class="form-check-label" for="disposition">
-                Disposisi
-                </label>
-              </div> --}}
             </div>
           </div>
           <div class="form-group row">
             <label class="col-form-label col-md-2">Tanggal</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-date" name="date">
+              <input class="form-control floating" type="text" id="input-date" name="date"
+              required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onblur="this.setCustomValidity('')">
             </div>
           </div>
           <section class="review-section">
@@ -131,6 +117,7 @@
         </div>
         <div class="card-footer">
           <div class="col-auto float-right ml-auto pb-2">
+            <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Kembali</button>
             <button type="submit" class="btn btn-primary float-right loading" 
             data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
               Submit
@@ -145,6 +132,9 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+ $('.btn-close').on('click', function(){
+      window.location.replace('request-material')
+  })
   $(document).ready(function(){
     var url = '{{ asset('') }}'
     
@@ -372,7 +362,7 @@
       url: '{{asset('')}}'+'number/validate?prefix=PB&number='+$('#input-number').val(),
       success: function(data){
         if(data.status == 'error'){
-          $('.loading').html('Submit').attr('disabled', false)
+          
           swal({
             title: "Gagal",
             text: "Maaf, Nomor surat pengajuan bahan telah digunakan,",
@@ -394,7 +384,7 @@
               
             },
             success: function(msg) {
-              $('.loading').html('Submit').attr('disabled', false)
+              
               if(msg.status == 'success'){
                   setTimeout(function() {
                       swal({
@@ -418,9 +408,17 @@
                       html: true
                   });
               }
+              $('.loading').html('Submit').attr('disabled', false)
+            },
+            error: function(params) {
+                $('.loading').html('Submit').attr('disabled', false)
             }
           });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     })
   });

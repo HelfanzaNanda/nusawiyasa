@@ -72,26 +72,30 @@
               </div>
               <div class="form-group">
                 <label>Judul</label>
-                <input class="form-control" type="text" name="title" id="title">
+                <input class="form-control" type="text" name="title" id="title"
+                required oninvalid="this.setCustomValidity('Harap Isikan Konfirmasi Judul.')" onblur="this.setCustomValidity('')">
                 <span class="text-danger error"></span>
               </div>
               <div class="form-group">
                 <label>Tanggal</label>
-                <input class="form-control date" type="text" name="date" id="date">
+                <input class="form-control date" type="text" name="date" id="date"
+                required oninvalid="this.setCustomValidity('Harap Isikan Konfirmasi Tanggal.')" onblur="this.setCustomValidity('')">
                 <span class="text-danger error"></span>
               </div>
               <div class="form-group">
                 <label>File</label>
                 <div class="custom-file">  
-                  <input type="file" class="custom-file-input" id="file" name="file" accept="application/pdf" onchange="readURL(this)">
+                  <input type="file" class="custom-file-input" id="file" name="file" accept="application/pdf" onchange="readURL(this)"
+                  required oninvalid="this.setCustomValidity('Harap Isikan File.')" onblur="this.setCustomValidity('')">
                   <label class="custom-file-label" id="label-img" for="file">Choose file...</label>
                   <div class="invalid-feedback">Example invalid custom file feedback</div>
                 </div>
               </div>
               <div class="form-group">
                 <label>Kapling</label>
-                <select id="customer-lot-id" class="select" name="customer_lot_id"> 
-                  <option> - Pilih Kapling - </option>
+                <select id="customer-lot-id" class="select" name="customer_lot_id"
+                required oninvalid="this.setCustomValidity('Harap Isikan Kapling.')" onblur="this.setCustomValidity('')" >
+                  <option value=""> - Pilih Kapling - </option>
                     @foreach($lots as $lot)
                       <option value="{{$lot['id']}}">{{$lot['cluster_name']}} - {{$lot['unit_block']}} / {{$lot['unit_number']}} ({{$lot['customer_name']}})</option>
                     @endforeach
@@ -99,16 +103,20 @@
               </div>
               <div class="form-group">
                 <label>Total Perjanjian Upah</label>
-                <input class="form-control" type="text" name="wage" id="wage">
+                <input class="form-control" type="text" name="wage" id="wage"
+                required oninvalid="this.setCustomValidity('Harap Isikan Konfirmasi Total Perjanjian Upah.')" onblur="this.setCustomValidity('')">
                 <span class="text-danger error"></span>
               </div>
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -140,12 +148,14 @@
               </div>
               <div class="form-group">
                 <label>Judul</label>
-                <input class="form-control" type="text" name="title" id="title-edit">
+                <input class="form-control" type="text" name="title" id="title-edit"
+                required oninvalid="this.setCustomValidity('Harap Isikan Judul.')" onchange="this.setCustomValidity('')">
                 <span class="text-danger error"></span>
               </div>
               <div class="form-group">
                 <label>Tanggal</label>
-                <input class="form-control date" type="text" name="date" id="date-edit">
+                <input class="form-control date" type="text" name="date" id="date-edit"
+                required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onblur="this.setCustomValidity('')">
                 <span class="text-danger error"></span>
               </div>
               <div class="form-group">
@@ -153,13 +163,16 @@
                 <div class="custom-file">  
                   <input type="file" class="custom-file-input" id="file" name="file" accept="application/pdf" onchange="readURL(this)">
                   <label class="custom-file-label" id="label-img-edit" for="file">Choose file...</label>
-                  <div class="invalid-feedback">Example invalid custom file feedback</div>
+                  <div class="invalid-feedback"></div>
+                  <span id="download-spk-file"></span>
                 </div>
               </div>
               <div class="form-group">
                 <label>Kapling</label>
-                <select id="customer-lot-id-edit" class="select" name="customer_lot_id"> 
-                  <option> - Pilih Kapling - </option>
+                <select id="customer-lot-id-edit" class="select" name="customer_lot_id"
+                required oninvalid="this.setCustomValidity('Harap Isikan Kapling.')" onchange="this.setCustomValidity('')" >
+                  
+                  <option value=""> - Pilih Kapling - </option>
                     @foreach($lots as $lot)
                       <option value="{{$lot['id']}}">{{$lot['cluster_name']}} - {{$lot['unit_block']}} / {{$lot['unit_number']}} ({{$lot['customer_name']}})</option>
                     @endforeach
@@ -167,16 +180,20 @@
               </div>
               <div class="form-group">
                 <label>Total Perjanjian Upah</label>
-                <input class="form-control" type="text" name="wage" id="wage-edit">
+                <input class="form-control" type="text" name="wage" id="wage-edit"
+                required oninvalid="this.setCustomValidity('Harap Isikan Total Perjanjian Upah.')" onchange="this.setCustomValidity('')">
                 <span class="text-danger error"></span>
               </div>
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -207,6 +224,8 @@ $('.select').select2({
 
 $(document).ready(function(){
     $("#show-add-modal").on('click',function() {
+      $('form#add-form').trigger('reset')
+            $('select').val('').trigger('change')
       $('.custom-file-label').text('Choose file...')
         $('.error').text('');
         var url = '{{ asset('') }}'
@@ -261,7 +280,7 @@ $(document).ready(function(){
                 
             },
             success: function(res) {
-              $('.loading').html('Submit').attr('disabled', false)
+              
                 if(res.status == 'success'){
                     setTimeout(function() {
                         swal({
@@ -285,6 +304,7 @@ $(document).ready(function(){
                         html: true
                     });
                 }
+                $('.loading').html('Submit').attr('disabled', false)
             },
             error: function(jqXHR){
               $('.loading').html('Submit').attr('disabled', false)
@@ -314,7 +334,7 @@ $(document).ready(function(){
                 $('#date-edit').val(formatDate(data.date));
                 $('#customer-lot-id-edit').val(data.customer_lot_id).trigger('change');
                 $('#label-img-edit').text(data.filename)
-
+                $('#download-spk-file').html("<a href='{{url('/')}}"+data.filepath+"/"+data.filename+"'>Download File</a>");
             }
         })
   });

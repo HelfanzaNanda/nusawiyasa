@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers\Customer;
 
-use Illuminate\Http\Request;
-use App\Http\Models\Cluster\Lot;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Models\GeneralSetting\GeneralSetting;
+use App\Http\Models\Cluster\Cluster;
+use App\Http\Models\Cluster\Lot;
 use App\Http\Models\Customer\{Customer, CustomerCost, CustomerLot, CustomerPayment, CustomerTerm};
+use App\Http\Models\GeneralSetting\GeneralSetting;
+use App\Http\Models\Ref\RefLotStatuses;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CustomerLotController extends Controller
 {
     public function index()
     {
         return view('customer.customer_lot', [
+            'clusters' => Cluster::selectClusterBySession(),
+            'statuses' => RefLotStatuses::get(),
             'company_logo' => GeneralSetting::getCompanyLogo(),
             'company_name' => GeneralSetting::getCompanyName()
         ]);
@@ -70,11 +74,13 @@ class CustomerLotController extends Controller
 
         $search = $request->search['value'];
 
-        $filter = $request->only(['sDate', 'eDate']);
+        $filter = $request->filter;
 
         $res = CustomerLot::datatables($start, $limit, $order, $dir, $search, $filter, $session);
 
         $data = [];
+
+        $status_collection = RefLotStatuses::get();
 
         if (!empty($res['data'])) {
             foreach ($res['data'] as $row) {
@@ -85,7 +91,7 @@ class CustomerLotController extends Controller
                 $nestedData['unit_number'] = $row['unit_number'];
                 $nestedData['surface_area'] = $row['surface_area'];
                 $nestedData['building_area'] = $row['building_area'];
-                $nestedData['status'] = $row['status'];
+                $nestedData['status'] = $status_collection->where('id', $row['status'])->values()[0]['name'];
                 $nestedData['action'] = '';
                 $nestedData['action'] .='        <div class="dropdown dropdown-action">';
                 $nestedData['action'] .='            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>';

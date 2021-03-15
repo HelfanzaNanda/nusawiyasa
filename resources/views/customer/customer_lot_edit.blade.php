@@ -28,8 +28,10 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Kapling</label>
             <div class="col-md-10">
-              <select id="input-lot" name="lot_id"> 
-                <option value="0"> - Pilih Kapling - </option>
+              <select id="input-lot" name="lot_id"
+              required oninvalid="this.setCustomValidity('Harap Isikan Kapling.')" 
+                onchange="this.setCustomValidity('')"> 
+                <option value=""> - Pilih Kapling - </option>
                 @foreach($lots as $lot)
                   {{-- @if(!$lot['booking_id'])                  
                     <option value="{{$lot['id']}}" {{ $lot['id'] == $data->lot_id ? 'selected' : '' }}>{{$lot['name']}} - {{$lot['block']}} / {{$lot['unit_number']}}</option>
@@ -42,7 +44,10 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Tanggal Booking</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" value="{{ $data->booking_date }}" id="input-booking-date" name="booking_date">
+              <input class="form-control floating" type="text" value="{{ $data->booking_date }}" 
+              id="input-booking-date" name="booking_date"
+              required oninvalid="this.setCustomValidity('Harap Isikan Tanggal Booking.')" 
+                onchange="this.setCustomValidity('')">
             </div>
           </div>
           <div class="form-group row">
@@ -66,6 +71,7 @@
         </div>
         <div class="card-footer">
           <div class="col-auto float-right ml-auto pb-2">
+            <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Kembali</button>
             <button type="submit" class="btn btn-primary float-right loading" 
             data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
               Submit
@@ -80,7 +86,9 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
-
+$('.btn-close').on('click', function(){
+      window.location.replace('/booking-page')
+  })
 
 $(document).ready(function() {
     var cus_terms = {!! $customer_terms !!}
@@ -201,7 +209,6 @@ $(document).ready(function() {
         },
         success: function(msg) {
           //console.log(msg);
-          $('.loading').html('Submit').attr('disabled', false)
           
           if(msg.status == 'success'){
               setTimeout(function() {
@@ -226,6 +233,7 @@ $(document).ready(function() {
                   html: true
               });
           }
+          $('.loading').html('Submit').attr('disabled', false)
         },
         error : function(jqXHR, textStatus, errorThrown){
           $('.loading').html('Submit').attr('disabled', false)

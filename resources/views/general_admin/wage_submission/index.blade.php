@@ -72,8 +72,9 @@
 				</div><!-- form-group -->
 				<div class="form-group">
 					<label>Cluster/Perumahan</label>
-					<select id="input-cluster" name="cluster_id" required=""> 
-					  <option value="0"> - Pilih Cluster - </option>
+					<select id="input-cluster" name="cluster_id" 
+					required oninvalid="this.setCustomValidity('Harap Isikan Cluster.')" onchange="this.setCustomValidity('')"> 
+					  <option value=""> - Pilih Cluster - </option>
 					  @foreach($clusters as $cluster)
 					    <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
 					  @endforeach
@@ -81,16 +82,17 @@
 				</div>
 				<div class="form-group">
 					<label>Tanggal</label>
-					<input type="text" class="form-control" name="date" id="journal_date" value="{{date('Y-m-d')}}" autocomplete="off">
+					<input type="text" class="form-control" name="date" id="journal_date" value="{{date('Y-m-d')}}" autocomplete="off"
+					required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onblur="this.setCustomValidity('')">
 				</div>
 
 				<div class="form-group">
 					<table id="myTable" class="table display responsive nowrap">
 						<thead>
 							<tr>
-								<th width="25%">Uraian</th>
-								<th width="25%">Kapling</th>
-								<th width="25%">Upah SPK</th>
+								<th width="20%">Uraian</th>
+								<th width="10%">Kapling</th>
+								<th width="15%">Upah SPK</th>
 								<th width="10%">%</th>
 								<th width="15%">Upah Persentase</th>
 								<th width="25%">Keterangan</th>
@@ -107,10 +109,13 @@
             </div>
           </div>
 		  <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+				<button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+				<button type="submit" class="btn btn-primary float-right loading" 
+				data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+				  Submit
+				</button>
+			  </div>
           </div>
         </form>
       </div>
@@ -163,12 +168,12 @@
 		$(document).ready(function(){
     		var url = '{{ asset('') }}'
 			$.ajax({
-			type: 'GET',
-			url: url+'number/generate?prefix=PU',
-			success: function(data){
-				$('.ref-number').val(data.number)
-			}
-			})
+				type: 'GET',
+				url: url+'number/generate?prefix=PU',
+				success: function(data){
+					$('.ref-number').val(data.number)
+				}
+			});
 		})
     });
 
@@ -210,7 +215,6 @@
 			type: 'GET',
 			url: '{{asset('')}}'+'number/validate?prefix=PU&number='+$('.ref-number').val(),
 			success: function(data){
-				$('.loading').html('Submit').attr('disabled', false)
 				if (data.status == 'error' && $('#typePost').val() != 'edit') {
 					swal({
 						title: "Gagal",
@@ -260,6 +264,10 @@
 						}
 					})
 				}
+				$('.loading').html('Submit').attr('disabled', false)
+			},
+			error: function(params) {
+				$('.loading').html('Submit').attr('disabled', false)
 			}
 		});
 	});
@@ -314,7 +322,7 @@
 	$("#addrow").on("click", function () {
 		addRow()
 		searchCustomerLot(jj)
-		selectDk()
+		// selectDk()
 		jj++;
 	});
 
@@ -337,63 +345,84 @@
 	    });
 	}
 
+	$("#input-cluster").change(function () {
+		$('#journal_detail').empty();
+	});
+
+
 	function searchCustomerLot(number){
-		$("#customer_lot_"+number).select2({
-	      minimumInputLength: 2,
-	      dropdownParent: $("#main-modal .modal-content"),
-	      minimumResultsForSearch: '',
-	      ajax: {
-	        url: URL_SEARCH_CUSTOMER_LOT,
-	        dataType: "json",
-	        type: "GET",
-	        data: function (params) {
-	          var queryParameters = {
-	            term: params.term,
-	            cluster_id: $("select#input-cluster").val()
-	          }
-	          return queryParameters
-	        },
-			beforeSend : function()    {           
-        		$('#customer_lot_'+number).empty()
-    		},
-	        processResults: function (data) {
-				return {
-					results: $.map(data, function (item) {
-						return {
-							text: item.block + '-' + item.unit_number,
-							id: item.id,
-							wage: item.wage,
-							percentage: item.percentage
-						}
-					})
-				}
+		$.ajax({
+			type: 'GET',
+			url: URL_SEARCH_CUSTOMER_LOT+'?cluster_id='+$("select#input-cluster").val(),
+			success: function(data){
+				let content = '';
+				content += '<option value=""> - Pilih Kapling - </option>'
+				$.each(data, function( key, val ) {
+					content += '<option value="'+val.id+'" data-wage="'+parseFloat(val.wage)+'" data-percentage="'+parseFloat(val.percentage)+'" data-percentage_before_last="'+parseFloat(val.percentage_before_last)+'">'+val.block+'-'+val.unit_number+'</option>'
+				});
+
+				$("#customer_lot_"+number).select2().html(content);
 			}
-	      }
-	    });
+		});
+		// $("#customer_lot_"+number).select2({
+	 //      minimumInputLength: 2,
+	 //      dropdownParent: $("#main-modal .modal-content"),
+	 //      minimumResultsForSearch: '',
+	 //      ajax: {
+	 //        url: URL_SEARCH_CUSTOMER_LOT,
+	 //        dataType: "json",
+	 //        type: "GET",
+	 //        data: function (params) {
+	 //          var queryParameters = {
+	 //            term: params.term,
+	 //            cluster_id: $("select#input-cluster").val()
+	 //          }
+	 //          return queryParameters
+	 //        },
+		// 	beforeSend : function()    {           
+  //       		$('#customer_lot_'+number).empty()
+  //   		},
+	 //        processResults: function (data) {
+		// 		return {
+		// 			results: $.map(data, function (item) {
+		// 				return {
+		// 					text: item.block + '-' + item.unit_number,
+		// 					id: item.id,
+		// 					wage: item.wage,
+		// 					percentage: item.percentage
+		// 				}
+		// 			})
+		// 		}
+		// 	}
+	 //      }
+	 //    });
 
 		$("#customer_lot_"+number).on('change', function(e) {
-			console.log(parseFloat($(this).select2('data')[0]['wage']));
-		    $('#spk_cost_'+number).val(parseFloat($(this).select2('data')[0]['wage']));
-		    $('#weekly_percentage_'+number).val($(this).select2('data')[0]['percentage']);
-		    $('#weekly_cost_'+number).val(parseFloat($(this).select2('data')[0]['wage']) * ($(this).select2('data')[0]['percentage']/100));
-		    // $('#spk_cost_'+jj).val($(this).select2('data')[0]['wage']);
+			let wage = $(this).find('option:selected').data('wage');
+			let percentage = $(this).find('option:selected').data('percentage');
+			let percentageBeforeLast = $(this).find('option:selected').data('percentage_before_last');
+
+		    $('#spk_cost_'+number).val(parseFloat(wage));
+		    $('#weekly_percentage_'+number).val(percentage - percentageBeforeLast);
+		    $('#weekly_cost_'+number).val(parseFloat(wage) * ((percentage - percentageBeforeLast)/100));
+		    $('#note_'+number).val("Total Progress "+percentage+"%");
 		});
 	}
 
 	function addRow() {
 	    var newRow = $("<tr>");
 	    var cols = "";
-	    cols += '<td><input type="text" class="form-control" name="description[]" id="description_'+jj+'"></td>';
-	    cols += '<td><input type="hidden" name="wage_submission[]" id="wage_submission_'+jj+'">';
+	    cols += '<td width="30%"><input type="text" class="form-control" name="description[]" id="description_'+jj+'"></td>';
+	    cols += '<td width="10%"><input type="hidden" name="wage_submission[]" id="wage_submission_'+jj+'">';
 	    cols += '<input type="hidden" name="wage_submission_detail[]" id="wage_submission_detail_'+jj+'">';
 	    cols += '<select id="customer_lot_'+jj+'" class="form-control" name="customer_lot_id[]" style="width: 100%;">';
 	    cols += '<option value"">Pilih</option>';
 	    cols += '</select></td>';
-	    cols += '<td><input type="text" class="form-control" id="spk_cost_'+jj+'"></td>';
-	    cols += '<td><input type="text" class="form-control" name="weekly_percentage[]" id="weekly_percentage_'+jj+'"></td>';
-	    cols += '<td><input type="text" class="form-control" name="weekly_cost[]" id="weekly_cost_'+jj+'"></td>';
-	    cols += '<td><input type="text" class="form-control" name="note[]" id="note_'+jj+'"></td>';
-	    cols += '<td><button type="button" id="ibtnDel" class="btn btn-danger"><i class="fa fa-trash"></i></button></td>';
+	    cols += '<td width="10%"><input type="text" class="form-control" id="spk_cost_'+jj+'"></td>';
+	    cols += '<td width="5%"><input type="text" class="form-control" name="weekly_percentage[]" id="weekly_percentage_'+jj+'"></td>';
+	    cols += '<td width="10%"><input type="text" class="form-control" name="weekly_cost[]" id="weekly_cost_'+jj+'"></td>';
+	    cols += '<td width="30%"><input type="text" class="form-control" name="note[]" id="note_'+jj+'"></td>';
+	    cols += '<td width="5%"><button type="button" id="ibtnDel" class="btn btn-danger"><i class="fa fa-trash"></i></button></td>';
 	    newRow.append(cols);
 	    $("table#myTable").append(newRow); 
 		//selectDk()
@@ -422,7 +451,7 @@
 					$.each( data[1], function( key, detail ) {
 						addRow()
 						searchCustomerLot(jj)
-						selectDk()
+						// selectDk()
 						$('#description_'+jj).val(detail.description)
 						var newOption = new Option(detail.lot, detail.customer_lot_id, true, true);
 						$('#customer_lot_'+jj).append(newOption).change();

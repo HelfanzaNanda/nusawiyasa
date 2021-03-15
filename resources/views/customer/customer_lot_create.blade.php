@@ -15,8 +15,10 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Konsumen</label>
             <div class="col-md-10">
-              <select id="input-customer" name="customer_id"> 
-                <option> - Pilih Konsumen - </option>
+              <select id="input-customer" name="customer_id"
+              required oninvalid="this.setCustomValidity('Harap Isikan Konsumen.')" 
+                onchange="this.setCustomValidity('')"> 
+                <option value=""> - Pilih Konsumen - </option>
                 @foreach($customers as $customer)
                   <option value="{{$customer['id']}}">{{$customer['name']}}</option>
                 @endforeach
@@ -26,7 +28,9 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Kapling</label>
             <div class="col-md-10">
-              <select id="input-lot" name="lot_id"> 
+              <select id="input-lot" name="lot_id"
+              required oninvalid="this.setCustomValidity('Harap Isikan Kapling.')" 
+                onchange="this.setCustomValidity('')"> 
                 <option value="0"> - Pilih Kapling - </option>
                 @foreach($lots as $lot)
                   @if(!$lot['booking_id'])
@@ -39,14 +43,19 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Tanggal Booking</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" value="{{date('Y-m-d')}}" id="input-booking-date" name="booking_date">
+              <input class="form-control floating" type="text" value="{{date('Y-m-d')}}" 
+              id="input-booking-date" name="booking_date"
+              required oninvalid="this.setCustomValidity('Harap Isikan Tanggal Booking.')" 
+                onchange="this.setCustomValidity('')">
             </div>
           </div>
           <div class="form-group row">
             <label class="col-form-label col-md-2">Metode Pembayaran</label>
             <div class="col-md-10">
-              <select id="input-payment-type" name="payment_type"> 
-                <option value="0"> - Pilih Metode Pembayaran - </option>
+              <select id="input-payment-type" name="payment_type"
+              required oninvalid="this.setCustomValidity('Harap Isikan Metode Pembayaran.')" 
+                onchange="this.setCustomValidity('')"> 
+                <option value=""> - Pilih Metode Pembayaran - </option>
                 <option value="cash">Cash Keras</option>
                 <option value="cash_in_stages">Cash Bertahap</option>
                 <option value="credit">KPR</option>
@@ -66,6 +75,7 @@
         </div>
         <div class="card-footer">
           <div class="col-auto float-right ml-auto pb-2">
+            <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Kembali</button>
             <button type="submit" class="btn btn-primary float-right loading" 
             data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
               Submit
@@ -80,6 +90,9 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+$('.btn-close').on('click', function(){
+    window.location.replace('/booking-page')
+  })
   $('#input-customer').select2({
     width: '100%'
   });
@@ -108,8 +121,6 @@
 
   $('#input-payment-type').on('change', function() {
     var payment_type = $(this).val();
-
-    console.log(payment_type);
     if(payment_type) {
       $.ajax({
         url: BASE_URL+'/ref/term_purchasing_customers?all=true&payment_type='+payment_type+'&is_deleted=0',
@@ -201,7 +212,6 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false);
         if(msg.status == 'success'){
             setTimeout(function() {
                 swal({
@@ -225,6 +235,10 @@
                 html: true
             });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     })
   });

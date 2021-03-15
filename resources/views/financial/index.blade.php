@@ -35,7 +35,6 @@
                                     <th>Total</th>
                                     <th>Dibuat Oleh</th>
                                     <th>Disetujui Oleh</th>
-                                    <th>Diterima Oleh</th>
                                     <th class="text-right" width="10%">Aksi</th>
                                 </tr>
                             </thead>
@@ -74,17 +73,18 @@
                     {data: 'total', name: 'total', className: 'td-limit'},
                     {data: 'created_by_user_id', name: 'created_by_user_id', className: 'td-limit'},
                     {data: 'approved_by_user_id', name: 'approved_by_user_id', className: 'td-limit'},
-                    {data: 'received_by_user_id', name: 'received_by_user_id', className: 'td-limit'},
                     {data: 'action', name: 'action', className: 'text-right'},
                 ],
             })
         })
 
         $(document).on('click', '#delete', function(e){
-            event.preventDefault()
-            var id = $(this).data("id")
+            event.preventDefault();
+            
+            var id = $(this).data("id");
+
             swal({
-                    title: 'Apakah kamu yakin untuk menghapus?',
+                    title: 'Apakah anda yakin untuk menghapus?',
                     text: "Data ini tidak bisa dikembalikan lagi",
                     type: 'warning',
                     showCancelButton: true,
@@ -139,7 +139,69 @@
                     }
                     }
                 })
-                })
+            })
+        });
+
+        $(document).on('click', '#approve-data', function(e){
+            event.preventDefault();
+            
+            var id = $(this).data("id");
+
+            swal({
+                    title: 'Apakah anda yakin untuk menyetujui?',
+                    text: 'Aksi tidak bisa diulang kembali',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    cancelButtonText: 'Batal',
+                    confirmButtonText: 'Setujui'
+                }, function(){
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type: 'post',
+                    url: BASE_URL+'/financial-submission/'+id+'/toggle-approval',
+                    data: {
+                        '_token' : $('meta[name="csrf-token"]').attr('content')
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    beforeSend: function() {
+                    
+                    },
+                    success: function(msg) {
+                        if(msg.status == 'success'){
+                            setTimeout(function() {
+                                
+                                swal({
+                                    title: "sukses",
+                                    text: msg.message,
+                                    type:"success",
+                                    html: true
+                                }, function() {
+                                    $('#main-table').DataTable().ajax.reload(null, false);
+                                });
+                            }, 500);
+                        } else {
+                            swal({
+                                title: "Gagal",
+                                text: msg.message,
+                                showConfirmButton: true,
+                                confirmButtonColor: '#0760ef',
+                                type:"error",
+                                html: true
+                            });
+                        }
+                    }
+                });
+            });
         });
     </script>
 @endsection

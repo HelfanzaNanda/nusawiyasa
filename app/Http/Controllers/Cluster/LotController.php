@@ -17,7 +17,8 @@ class LotController extends Controller
     public function index()
     {   
         return view('cluster.lot', [
-            'clusters' => Cluster::get(),
+            'clusters' => Cluster::selectClusterBySession(),
+            'statuses' => RefLotStatuses::get(),
             'company_logo' => GeneralSetting::getCompanyLogo(),
             'company_name' => GeneralSetting::getCompanyName()
         ]);
@@ -76,7 +77,7 @@ class LotController extends Controller
 
         $search = $request->search['value'];
 
-        $filter = $request->only(['sDate', 'eDate']);
+        $filter = $request->filter;
 
         $res = Lot::datatables($start, $limit, $order, $dir, $search, $filter, $session);
 

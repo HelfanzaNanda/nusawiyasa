@@ -37,14 +37,16 @@
                           </div>
                           <div class="form-group">
                             <label>Judul</label>
-                            <input class="form-control" type="text" name="title" id="title">
+                            <input class="form-control" type="text" name="title" id="title"
+                            required oninvalid="this.setCustomValidity('Harap Isikan Judul.')" onchange="this.setCustomValidity('')">
                             <span class="text-danger error"></span>
                           </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Tanggal</label>
-                            <input class="form-control date" type="text" name="date" id="date">
+                            <input class="form-control date" type="text" name="date" id="date"
+                            required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onblur="this.setCustomValidity('')">
                             <span class="text-danger error"></span>
                           </div>
                           <div class="form-group">
@@ -59,10 +61,13 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <button type="submit" class="btn btn-primary float-right loading" 
-                        data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-                            Submit
-                        </button>
+                        <div class="col-auto float-right ml-auto pb-2">
+                            <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Kembali</button>
+                            <button type="submit" class="btn btn-primary float-right loading" 
+                            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                              Submit
+                            </button>
+                          </div>
                     </div>
                 </div>
               </form>
@@ -94,7 +99,9 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
-
+$('.btn-close').on('click', function() {
+      window.location.replace('/work-agreement')
+  })
     function readURL(input) {
         $('.custom-file-label').text(input.files[0].name);
     }
@@ -144,7 +151,7 @@ $(document).ready(function(){
                 
             },
             success: function(res) {
-              $('.loading').html('Submit').attr('disabled', false)
+              
                 if(res.status == 'success'){
                     setTimeout(function() {
                         swal({
@@ -168,6 +175,7 @@ $(document).ready(function(){
                         html: true
                     });
                 }
+                $('.loading').html('Submit').attr('disabled', false)
             },
             error: function(jqXHR){
               $('.loading').html('Submit').attr('disabled', false)

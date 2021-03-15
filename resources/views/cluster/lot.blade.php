@@ -21,7 +21,8 @@
       </ul>
     </div>
     <div class="col-auto float-right ml-auto">
-      <a href="#" class="btn add-btn" id="show-add-modal"><i class="fa fa-plus"></i> Tambah Kapling</a>
+      <a href="#" class="btn btn-secondary" id="show-filter-modal"><i class="fa fa-filter"></i> Filter</a>
+      <a href="#" class="btn btn-primary" id="show-add-modal"><i class="fa fa-plus"></i> Tambah Kapling</a>
     </div>
   </div>
 </div>
@@ -84,10 +85,13 @@
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -113,8 +117,10 @@
             <div class="col-sm-6"> 
               <div class="form-group">
                 <label>Cluster</label>
-                <select id="input-cluster" name="cluster_id"> 
-                  <option> - Pilih Cluster - </option>
+                <select id="input-cluster" name="cluster_id" 
+                required oninvalid="this.setCustomValidity('Harap Isikan Cluster.')" 
+                onchange="this.setCustomValidity('')"> 
+                  <option value=""> - Pilih Cluster - </option>
                   @foreach($clusters as $cluster)
                     <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
                   @endforeach
@@ -122,7 +128,9 @@
               </div>
               <div class="form-group">
                 <label>Tipe Model</label>
-                <select id="input-type" name="type">
+                <select id="input-type" name="type" 
+                required oninvalid="this.setCustomValidity('Harap Isikan Tipe Model.')" 
+                onchange="this.setCustomValidity('')">
                   <option value=""> - Pilih Tipe - </option>
                   <option value="lot">Kapling</option>
                   <option value="fasum">Fasum</option>
@@ -131,45 +139,64 @@
               </div>
               <div class="form-group" id="type-name-group">
                 <label>Nama Fasilitas</label>
-                <input class="form-control" type="text" name="type_name" id="input-type-name">
+                <input class="form-control" type="text" name="type_name" id="input-type-name"
+                required oninvalid="this.setCustomValidity('Harap Isikan Nama Fasilitas.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Blok</label>
-                <input class="form-control" type="text" name="block">
+                <input class="form-control" type="text" name="block"
+                required oninvalid="this.setCustomValidity('Harap Isikan Blok.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Nomor Unit</label>
-                <input class="form-control" type="text" name="unit_number">
+                <input class="form-control" type="text" name="unit_number" 
+                required oninvalid="this.setCustomValidity('Harap Isikan Nomor Unit.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Jumlah Lantai</label>
-                <input class="form-control" type="number" name="total_floor">
+                <input class="form-control" type="number" name="total_floor"
+                required oninvalid="this.setCustomValidity('Harap Isikan Jumlah Lantai.')" 
+                onchange="this.setCustomValidity('')">
               </div>
             </div>
             <div class="col-sm-6">
               <div class="form-group">
                 <label>Luas Tanah (m2)</label>
-                <input class="form-control" type="number" name="surface_area">
+                <input class="form-control" type="number" name="surface_area"
+                required oninvalid="this.setCustomValidity('Harap Isikan Luas Tanah (m2).')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Luas Bangunan (m2)</label>
-                <input class="form-control" type="number" name="building_area">
+                <input class="form-control" type="number" name="building_area"
+                required oninvalid="this.setCustomValidity('Harap Isikan Luas Bangunan (m2).')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Harga</label>
-                <input class="form-control" type="number" name="price">
+                <input class="form-control" type="number" name="price"
+                required oninvalid="this.setCustomValidity('Harap Isikan Harga.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Spesifikasi</label>
-                <textarea id="input-description" name="description"></textarea>
+                <textarea id="input-description" name="description"
+                required oninvalid="this.setCustomValidity('Harap Isikan Spesifikasi.')" 
+                onchange="this.setCustomValidity('')"></textarea>
               </div>
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -249,21 +276,85 @@
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
     </div>
   </div>
 </div>
+
+<div id="filter-modal" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Filter</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="filter-form" method="POST" action="#">
+                    {!! csrf_field() !!}
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Cluster/Perumahan</label>
+                            <select id="filter-cluster">
+                                <option value="0"> - Semua Cluster - </option>
+                                @foreach($clusters as $cluster)
+                                <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="filter-status">
+                                <option value="0"> - Semua Status - </option>
+                                @foreach($statuses as $status)
+                                <option value="{{$status['id']}}">{{$status['name']}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="submit-section">
+                        <div class="col-auto float-right ml-auto pb-2">
+                            <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+                            <button type="submit" class="btn btn-primary float-right loading" 
+                            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                              Submit
+                            </button>
+                          </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- /update Salary Modal -->
 @endsection
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+
+  $("#show-filter-modal").on('click',function() {
+      $('#filter-modal').modal('show');
+  });
+
+  $('#filter-cluster').select2({
+      width: '100%'
+  });
+
+  $('#filter-status').select2({
+      width: '100%'
+  });
+
   $('#type-name-group').hide();
 
   $("#main-table").DataTable({
@@ -277,7 +368,11 @@
           "dataType": "json",
           "type": "POST",
           "data":function(d) { 
-            d._token = "{{csrf_token()}}"
+            d._token = "{{csrf_token()}}",
+            d.filter = {
+              "cluster_id" : $('#filter-cluster option:selected').val(),
+              "status_id" : $('#filter-status option:selected').val()
+            }
           },
       },
       "columns": [
@@ -296,7 +391,16 @@
   });
 
   $("#show-add-modal").on('click',function() {
-      $('#add-modal').modal('show');
+    $('form#add-form').trigger('reset')
+    $('#input-type').val('').trigger('change')
+    $('#input-cluster').val('').trigger('change')
+    $('#add-modal').modal('show');
+  });
+
+  $('form#filter-form').submit( function( e ) {
+      e.preventDefault();
+      $('#main-table').DataTable().ajax.reload(null, false);
+      $('#filter-modal').modal('hide');
   });
 
   $('#input-cluster').select2({
@@ -325,7 +429,6 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
         if(msg.status == 'success'){
             setTimeout(function() {
                 swal({
@@ -349,6 +452,10 @@
                 html: true
             });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error : function(params) {
+        $('.loading').html('Submit').attr('disabled', false)
       }
     })
   });
@@ -396,7 +503,6 @@
     e.preventDefault();
     var loading_text = $('.loading').data('loading-text');
         $('.loading').html(loading_text).attr('disabled', true);
-    console.log('da');
     var form_data = new FormData( this );
 
     $.ajax({
@@ -411,7 +517,7 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
+        
         if(msg.status == 'success'){
             setTimeout(function() {
                 swal({
@@ -435,6 +541,10 @@
                 html: true
             });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     })
   });

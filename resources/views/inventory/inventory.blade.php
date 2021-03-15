@@ -70,21 +70,14 @@
             <div class="col-md-12"> 
               <div class="form-group">
                 <label>Nama Barang</label>
-                <input class="form-control" type="text" name="name" required="">
+                <input class="form-control" type="text" name="name"
+                required oninvalid="this.setCustomValidity('Harap Isikan Nama Barang.')" onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Stok</label>
-                <input class="form-control" type="text" name="stock" required="">
+                <input class="form-control" type="text" name="stock" 
+                required oninvalid="this.setCustomValidity('Harap Isikan Stok.')" onchange="this.setCustomValidity('')">
               </div>
-{{--               <div class="form-group">
-                <label>Kategori</label>
-                <select id="input-category" name="category_id"> 
-                  <option> - Pilih Kategori - </option>
-                  @foreach($categories as $category)
-                    <option value="{{$category['id']}}">{{$category['name']}}</option>
-                  @endforeach
-                </select>
-              </div> --}}
               <div class="form-group">
                 <label>Unit</label>
                 <select id="input-unit" name="unit_id" required=""> 
@@ -109,8 +102,9 @@
               </div>
               <div class="form-group">
                 <label>Tipe</label>
-                <select id="input-type" name="type" required=""> 
-                  <option> - Pilih Unit - </option>
+                <select id="input-type" name="type" 
+                required oninvalid="this.setCustomValidity('Harap Isikan Tipe.')" onchange="this.setCustomValidity('')"> 
+                  <option value=""> - Pilih Unit - </option>
                   <option value="service">Jasa</option>
                   <option value="tools">Alat</option>
                   <option value="materials">Material</option>
@@ -123,10 +117,13 @@
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -156,20 +153,13 @@
               </div>
               <div class="form-group">
                 <label>Stok</label>
-                <input class="form-control" type="text" name="stock" required="" id="stock">
+                <input class="form-control" type="text" name="stock" required="" id="stock"
+                required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onchange="this.setCustomValidity('')">
               </div>
-{{--               <div class="form-group">
-                <label>Kategori</label>
-                <select id="input-category" name="category_id"> 
-                  <option> - Pilih Kategori - </option>
-                  @foreach($categories as $category)
-                    <option value="{{$category['id']}}">{{$category['name']}}</option>
-                  @endforeach
-                </select>
-              </div> --}}
               <div class="form-group">
                 <label>Unit</label>
-                <select id="input-unit-update" name="unit_id" required=""> 
+                <select id="input-unit-update" name="unit_id" required="">
+                  required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onchange="this.setCustomValidity('')" 
                   <option> - Pilih Unit - </option>
                   @foreach($units as $unit)
                     <option value="{{$unit['id']}}">{{$unit['name']}}</option>
@@ -178,7 +168,8 @@
               </div>
               <div class="form-group">
                 <label>Cluster/Perumahan</label>
-                <select id="input-cluster-update" name="cluster_id" id="cluster-id" required=""> 
+                <select id="input-cluster-update" name="cluster_id" id="cluster-id" required="">
+                  required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onchange="this.setCustomValidity('')" 
                   <option> - Pilih Cluster - </option>
                   @foreach($clusters as $cluster)
                     <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
@@ -187,12 +178,15 @@
               </div>
               <div class="form-group">
                 <label>Harga Beli</label>
-                <input class="form-control" type="text" id="purchase-prise" name="purchase_price">
+                <input class="form-control" type="text" id="purchase-prise" name="purchase_price"
+                required oninvalid="this.setCustomValidity('Harap Isikan Beli.')" onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Tipe</label>
-                <select id="input-type-update" name="type" required=""> 
-                  <option> - Pilih Unit - </option>
+                <select id="input-type-update" name="type" 
+                required oninvalid="this.setCustomValidity('Harap Isikan Tipe.')" onchange="this.setCustomValidity('')" >
+                  
+                  <option value=""> - Pilih Unit - </option>
                   <option value="service">Jasa</option>
                   <option value="tools">Alat</option>
                   <option value="materials">Material</option>
@@ -200,15 +194,19 @@
               </div>
               <div class="form-group">
                 <label>Merk</label>
-                <input class="form-control" type="text" name="brand" id="brand">
+                <input class="form-control" type="text" name="brand" id="brand"
+                required oninvalid="this.setCustomValidity('Harap Isikan Merk.')" onchange="this.setCustomValidity('')">
               </div>
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -220,6 +218,8 @@
 @section('additionalScriptJS')
 <script type="text/javascript">
   $("#show-add-modal").on('click',function() {
+    $('form#add-form').trigger('reset')
+    $('select').val('').trigger('change')
       $('#add-modal').modal('show');
   });
   
@@ -283,7 +283,7 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
+        
         if(msg.status == 'success'){
           setTimeout(function() {
             swal({
@@ -307,6 +307,10 @@
             html: true
           });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     })
   });

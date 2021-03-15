@@ -63,7 +63,8 @@
             <div class="col-md-12"> 
               <div class="form-group">
                 <label>Nama Kategori</label>
-                <input class="form-control" type="text" name="name">
+                <input class="form-control" type="text" name="name"
+                required oninvalid="this.setCustomValidity('Harap Isikan Nama Kategori.')" onchange="this.setCustomValidity('')">
               </div>
             </div>
           </div>
@@ -141,6 +142,10 @@
             html: true
           });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     })
   });

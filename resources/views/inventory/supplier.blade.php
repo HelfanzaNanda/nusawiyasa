@@ -69,7 +69,8 @@
             <div class="col-sm-6"> 
               <div class="form-group">
                 <label>Nama Supplier</label>
-                <input class="form-control" type="text" name="name">
+                <input class="form-control" type="text" name="name"
+                required oninvalid="this.setCustomValidity('Harap Isikan Nama Supplier.')" onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Email Supplier</label>
@@ -119,10 +120,13 @@
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -152,26 +156,32 @@
               </div>
               <div class="form-group">
                 <label>Email Supplier</label>
-                <input class="form-control" type="text" name="email" id="email">
+                <input class="form-control" type="text" name="email" id="email"
+                required oninvalid="this.setCustomValidity('Harap Isikan Email Supplier.')" onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>No. HP Supplier</label>
-                <input class="form-control" type="text" name="phone" id="phone">
+                <input class="form-control" type="text" name="phone" id="phone"
+                required oninvalid="this.setCustomValidity('Harap Isikan No. HP Supplier.')" onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Nama Penanggung Jawab (PIC)</label>
-                <input class="form-control" type="text" name="pic_name" id="pic_name">
+                <input class="form-control" type="text" name="pic_name" id="pic_name"
+                required oninvalid="this.setCustomValidity('Harap Isikan Nama Penanggung Jawab (PIC).')" onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>No. Telp Penanggung Jawab</label>
-                <input class="form-control" type="text" name="pic_phone" id="pic_phone">
+                <input class="form-control" type="text" name="pic_phone" id="pic_phone"
+                required oninvalid="this.setCustomValidity('Harap Isikan No. Telp Penanggung Jawab.')" onchange="this.setCustomValidity('')">
               </div>
             </div>
             <div class="col-sm-6">  
               <div class="form-group">
                 <label>Provinsi</label>
-                <select id="input-province-update" name="province"> 
-                  <option> - Pilih Provinsi - </option>
+                <select id="input-province-update" name="province"
+                required oninvalid="this.setCustomValidity('Harap Isikan Provinsi.')" onchange="this.setCustomValidity('')" >
+                  
+                  <option value=""> - Pilih Provinsi - </option>
                   @foreach($provinces as $province)
                     <option value="{{$province['name']}}" data-province-code="{{$province['code']}}">{{$province['name']}}</option>
                   @endforeach
@@ -179,29 +189,36 @@
               </div>
               <div class="form-group">
                 <label>Kota</label>
-                <select id="input-city-update" name="city"> 
-                  <option> - Pilih Kota - </option>
+                <select id="input-city-update" name="city"
+                required oninvalid="this.setCustomValidity('Harap Isikan Kota.')" onchange="this.setCustomValidity('')" >
+                  <option value=""> - Pilih Kota - </option>
                 </select>
               </div>
               <div class="form-group">
                 <label>Kecamatan</label>
-                <input class="form-control" type="text" name="district" id="district">
+                <input class="form-control" type="text" name="district" id="district"
+                required oninvalid="this.setCustomValidity('Harap Isikan Kecamatan.')" onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Kelurahan</label>
-                <input class="form-control" type="text" name="subdistrict" id="subdistrict">
+                <input class="form-control" type="text" name="subdistrict" id="subdistrict"
+                required oninvalid="this.setCustomValidity('Harap Isikan Kelurahan.')" onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Alamat</label>
-                <textarea class="form-control" name="address" rows="5" id="address"></textarea>
+                <textarea class="form-control" name="address" rows="5" id="address"
+                required oninvalid="this.setCustomValidity('Harap Isikan Alamat.')" onchange="this.setCustomValidity('')"></textarea>
               </div>
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -238,8 +255,15 @@
   });
 
   $("#show-add-modal").on('click',function() {
+      resetForm()
       $('#add-modal').modal('show');
   });
+
+  function resetForm(){
+      $("form#add-form").trigger('reset');
+      $('#input-province').val('').trigger('change');
+      $('#input-city').val('').trigger('change');
+  }
 
   $('#input-province').select2({
     width: '100%'
@@ -288,7 +312,6 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
         if(msg.status == 'success'){
           setTimeout(function() {
             swal({
@@ -312,6 +335,10 @@
             html: true
           });
         }
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
       }
     })
   });

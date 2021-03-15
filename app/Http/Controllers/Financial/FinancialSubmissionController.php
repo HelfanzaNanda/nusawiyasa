@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Financial;
 
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use App\Http\Models\Inventory\InventoryUnits;
-use Barryvdh\DomPDF\Facade as PDF;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Financial\FinancialSubmission;
 use App\Http\Models\GeneralSetting\GeneralSetting;
+use App\Http\Models\Inventory\InventoryUnits;
+use App\Http\Models\Users;
+use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class FinancialSubmissionController extends Controller
 {
@@ -20,7 +21,10 @@ class FinancialSubmissionController extends Controller
         ]);
     }
 
-    public function datatable(Request $request){
+    public function datatable(Request $request)
+    {
+        $user = Users::find(session()->get('_id'));
+
         $_login = session()->get('_login');
         $_id = session()->get('_id');
         $_name = session()->get('_name');
@@ -71,7 +75,10 @@ class FinancialSubmissionController extends Controller
                 $nestedData['action'] .='            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(159px, 32px, 0px);">';
                 $nestedData['action'] .='                <a class="dropdown-item" href="'.route('financial.edit', $row['id']).'"><i class="fa fa-pencil m-r-5"></i> Edit</a>';
                 $nestedData['action'] .='                <a class="dropdown-item" id="delete" href="#" data-toggle="modal" data-target="#delete_approve" data-id="'.$row['id'].'"><i class="fa fa-trash-o m-r-5"></i> Delete</a>';
-                $nestedData['action'] .='                <a class="dropdown-item"href="'.route('financial.pdf', $row['id']).'"><i class="fa fa-info m-r-5"></i> Cetak</a>';
+                $nestedData['action'] .='                <a class="dropdown-item" href="'.route('financial.pdf', $row['id']).'"><i class="fa fa-info m-r-5"></i> Cetak</a>';
+                if ($user->can('financial-submission-approval') && !$nestedData['approved_by_user_id']) {
+                    $nestedData['action'] .='                <a class="dropdown-item" href="#" id="approve-data" data-id="'.$row['id'].'"><i class="fa fa-check m-r-5"></i> Setujui</a>';
+                }
                 $nestedData['action'] .='            </div>';
                 $nestedData['action'] .='        </div>';
                 $data[] = $nestedData;
@@ -139,5 +146,19 @@ class FinancialSubmissionController extends Controller
             'footer' => GeneralSetting::getPdfFooterImage()
         ]);
         return $pdf->stream($data['number'].'-'.Carbon::now().'.pdf');
+    }
+
+    public function approval($id, Request $request)
+    {
+        $_user_id = session()->get('_id');
+
+        FinancialSubmission::where('id', $id)->update([
+            'approved_by_user_id' => $_user_id
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Berhasil Menyetujui Data'
+        ]);
     }
 }

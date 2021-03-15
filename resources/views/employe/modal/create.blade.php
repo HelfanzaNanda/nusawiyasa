@@ -39,7 +39,8 @@
 
                 <div class="col-sm-6 form-group">
                     <label>Agama</label>
-                    <select name="religion" id="input-religion" class="form-control">
+                    <select name="religion" id="input-religion" class="form-control"
+                    >
                         <option value="-">Agama</option>
                         <option value="Islam">Islam</option>
                         <option value="Kristen">Kristen</option>
@@ -51,7 +52,8 @@
 
                 <div class="col-sm-6 form-group">
                     <label>Status Pernikahan</label>
-                    <select name="mariage_status" id="input-mariage" class="form-control">
+                    <select name="mariage_status" id="input-mariage" class="form-control"
+                    >
                         <option value="-">Status Pernikahan</option>
                         <option value="Menikah">Menikah</option>
                         <option value="Belum Menikah">Belum Menikah</option>
@@ -60,7 +62,8 @@
                 </div>
                 <div class="col-sm-6 form-group">
                     <label>Golongan Darah</label>
-                    <select name="blood_type" id="input-blood" class="form-control">
+                    <select name="blood_type" id="input-blood" class="form-control"
+                    >
                         <option value="-">Golongan Darah</option>
                         <option value="A">A</option>
                         <option value="AB">AB</option>
@@ -83,8 +86,9 @@
                 <h5 class="col-md-12 modal-title">Data Alamat</h5>
                 <div class=" col-md-6 form-group">
                     <label>Provinsi</label>
-                    <select id="input-province" name="current_address_province"> 
-                        <option> - Pilih Provinsi - </option>
+                    <select id="input-province" name="current_address_province">
+                        
+                        <option value=""> - Pilih Provinsi - </option>
                         @foreach($provinces as $province)
                         <option value="{{$province['name']}}" data-province-code="{{$province['code']}}">{{$province['name']}}</option>
                         @endforeach
@@ -92,8 +96,8 @@
                 </div>
                 <div class="col-md-6 form-group">
                     <label>Kota</label>
-                    <select id="input-city" name="current_address_city"> 
-                        <option> - Pilih Kota - </option>
+                    <select id="input-city" name="current_address_city">
+                        <option value=""> - Pilih Kota - </option>
                     </select>
                 </div>
                 <div class="col-sm-6 form-group">
@@ -228,10 +232,13 @@
                 </div>
             </div>
             <div class="submit-section">
-                <button type="submit" class="btn btn-primary submit-btn loading" 
-                data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-                  Submit
-                </button>
+                <div class="col-auto float-right ml-auto pb-2">
+                    <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary float-right loading" 
+                    data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                      Submit
+                    </button>
+                  </div>
             </div>
           </form>
         </div>

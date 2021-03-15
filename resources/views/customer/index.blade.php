@@ -67,15 +67,21 @@
             <div class="col-sm-6"> 
               <div class="form-group">
                 <label>Nama</label>
-                <input class="form-control" type="text" name="name">
+                <input class="form-control" type="text" name="name" required 
+                oninvalid="this.setCustomValidity('Harap Isikan Nama.')" 
+                onkeyup="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Email</label>
-                <input class="form-control" type="text" name="email">
+                <input class="form-control" type="email" name="email"
+                required oninvalid="this.setCustomValidity('Harap Isikan Email.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>No. HP</label>
-                <input class="form-control" type="text" name="phone">
+                <input class="form-control" type="text" name="phone"
+                required oninvalid="this.setCustomValidity('Harap Isikan No HP.')" 
+                onchange="this.setCustomValidity('')">
               </div>
               <div class="form-group">
                 <label>Tempat Lahir</label>
@@ -93,8 +99,7 @@
             <div class="col-sm-6">  
               <div class="form-group">
                 <label>Provinsi</label>
-                <select id="input-province" name="province"> 
-                  <option> - Pilih Provinsi - </option>
+                <select id="input-province" name="province">
                   @foreach($provinces as $province)
                     <option value="{{$province['name']}}" data-province-code="{{$province['code']}}">{{$province['name']}}</option>
                   @endforeach
@@ -102,7 +107,7 @@
               </div>
               <div class="form-group">
                 <label>Kota</label>
-                <select id="input-city" name="city"> 
+                <select id="input-city" name="city">
                   <option> - Pilih Kota - </option>
                 </select>
               </div>
@@ -121,7 +126,7 @@
               <div class="form-group">
                 <label>Customer dari Perumahan/Cluster</label>
                 <select id="input-cluster" name="cluster_id">
-                  <option value="0"> - Pilih Perumahan/Cluster - </option>
+                  <option value=""> - Pilih Perumahan/Cluster - </option>
                   @foreach($clusters as $cluster)
                     <option value="{{$cluster['id']}}">{{$cluster['name']}}</option>
                   @endforeach
@@ -130,10 +135,13 @@
             </div>
           </div>
           <div class="submit-section">
-            <button type="submit" class="btn btn-primary submit-btn loading" 
-            data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
-              Submit
-            </button>
+            <div class="col-auto float-right ml-auto pb-2">
+              <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary float-right loading" 
+              data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
+                Submit
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -302,7 +310,6 @@
             cancelButtonText: 'Batal',
             confirmButtonText: 'Hapus'
         }, function(){
-          console.log('ddd');
           $.ajax({
             type: 'get',
             url: BASE_URL+'/customers/'+id+'/delete',
@@ -396,19 +403,16 @@
               });
             }
           });
-
-          // $('#input-city-update').select2()
-          //     $('#input-city-update').val(data.city)
-          //     $('#input-city-update').select2().trigger('change');
-          //     $('#input-city-update').select2({
-          //       width: '100%'
-          //     });
         }
       })
     })
   
 
   $("#show-add-modal").on('click',function() {
+    $('form#add-form').trigger('reset')
+    $('#input-city').val('').trigger('change')
+    $('#input-cluster').val('').trigger('change')
+    $('#input-province').val('').trigger('change')
       $('#add-modal').modal('show');
   });
 
@@ -483,7 +487,7 @@
     e.preventDefault();
     var form_data = new FormData( this );
     var loading_text = $('.loading').data('loading-text');
-      $('.loading').html(loading_text).attr('disabled', true);
+    $('.loading').html(loading_text).attr('disabled', true);
     $.ajax({
       type: 'post',
       url: BASE_URL+'/customers',
@@ -496,7 +500,6 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
         if(msg.status == 'success'){
             setTimeout(function() {
               
@@ -520,8 +523,14 @@
                 html: true
             });
         }
+
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+        $('.loading').html('Submit').attr('disabled', false)
       }
-    })  
+    });  
+
   })
 
   $('form#add-form').submit(function(e){
@@ -542,10 +551,8 @@
         
       },
       success: function(msg) {
-        $('.loading').html('Submit').attr('disabled', false)
         if(msg.status == 'success'){
             setTimeout(function() {
-              
                 swal({
                     title: "Sukses",
                     text: msg.message,
@@ -566,6 +573,11 @@
                 html: true
             });
         }
+
+        $('.loading').html('Submit').attr('disabled', false)
+      },
+      error: function(params) {
+        $('.loading').html('Submit').attr('disabled', false)
       }
     })  
   })

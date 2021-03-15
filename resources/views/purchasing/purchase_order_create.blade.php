@@ -22,7 +22,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">No. Pengajuan</label>
             <div class="col-md-10">
-              <select id="input-fpp" name="fpp_number"> 
+              <select id="input-fpp" name="fpp_number">
                 <option value="0"> - Pilih No FPP - </option>
                 @foreach($request_materials as $request_material)
                   <option value="{{$request_material['id']}}">{{$request_material['number']}}</option>
@@ -52,7 +52,7 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Supplier</label>
             <div class="col-md-10">
-              <select id="input-supplier" class="select-supplier" name="item_supplier_id"> 
+              <select id="input-supplier" class="select-supplier" name="item_supplier_id">
                 <option value="0"> - Pilih Supplier - </option>
                 @foreach($suppliers as $supplier)
                   <option value="{{$supplier['id']}}">{{$supplier['name']}}</option>
@@ -63,7 +63,8 @@
           <div class="form-group row">
             <label class="col-form-label col-md-2">Tanggal</label>
             <div class="col-md-10">
-              <input class="form-control floating" type="text" id="input-date" name="date">
+              <input class="form-control floating" type="text" id="input-date" name="date"
+              required oninvalid="this.setCustomValidity('Harap Isikan Tanggal.')" onblur="this.setCustomValidity('')">
             </div>
           </div>
           
@@ -183,6 +184,7 @@
         </div>
         <div class="card-footer">
           <div class="col-auto float-right ml-auto pb-2">
+            <button type="button" class="btn btn-close mr-2 btn-secondary" data-dismiss="modal">Kembali</button>
             <button type="submit" class="btn btn-primary float-right loading" 
             data-loading-text='<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...'>
               Submit
@@ -197,6 +199,9 @@
 
 @section('additionalScriptJS')
 <script type="text/javascript">
+  $('.btn-close').on('click', function(){
+      window.location.replace('purchase-order')
+  })
   $(document).ready(function(){
     var url = '{{ asset('') }}'
     
@@ -466,7 +471,7 @@
       url: '{{asset('')}}'+'number/validate?prefix=PO&number='+$('#input-number').val(),
       success: function(data){
           if(data.status == 'error'){
-              $('.loading').html('Submit').attr('disabled', false)
+              
               swal({
                 title: "Gagal",
                 text: "Maaf, Nomor PO telah digunakan,",
@@ -488,7 +493,7 @@
                 
               },
               success: function(msg) {
-                $('.loading').html('Submit').attr('disabled', false)
+                
                 if(msg.status == 'success'){
                     setTimeout(function() {
                         swal({
@@ -512,10 +517,18 @@
                         html: true
                     });
                 }
+                $('.loading').html('Submit').attr('disabled', false)
+              },
+              error: function(params) {
+                  $('.loading').html('Submit').attr('disabled', false)
               }
             });
           }
+          $('.loading').html('Submit').attr('disabled', false)
       },
+      error: function(params) {
+          $('.loading').html('Submit').attr('disabled', false)
+      }
     })
   });
 
