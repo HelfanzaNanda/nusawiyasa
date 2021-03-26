@@ -25,7 +25,10 @@
               <select id="input-fpp" name="fpp_number">
                 <option value="0"> - Pilih No FPP - </option>
                 @foreach($request_materials as $request_material)
-                  <option value="{{$request_material['id']}}">{{$request_material['number']}}</option>
+                  <option value="{{$request_material['id']}}">
+                    {{ $request_material['number'] 
+                    .' ('. $request_material['cluster_name'] .' - '. \Carbon\Carbon::parse($request_material['date'])->translatedFormat('d M Y') .')' }}
+                  </option>
                 @endforeach
               </select>
             </div>
@@ -376,22 +379,41 @@
     const input_checkbox = $(this).parent().children('input.input-checkbox')
     const value = detectFloat(total.text())
     const subtotal = $("#input-subtotal").val();
+    const id = $(this).data('id');
+    let is_used_in_po = 0
     //calculateTotal()
     if (!$(this).is(':checked')) {
+        is_used_in_po = 0;
         $(this).parent().parent().parent().find('td > .item-calc').attr('readonly', true)
         input_checkbox.val("0")
         $("#input-subtotal").val(addSeparator((detectFloat(subtotal) - value).toFixed(2), '.', '.', ','));
         //calculateTotal();
         totalCalc()
         //calculateTotal();
-      }else{
-        $(this).parent().parent().parent().find('td > .item-calc').attr('readonly', false)
-        input_checkbox.val("1")
-        //calculateTotal()
-        $("#input-subtotal").val(addSeparator((detectFloat(subtotal) + value).toFixed(2), '.', '.', ','));
-        //calculateTotal();
-        totalCalc()
-      }
+    }else{
+      is_used_in_po = 1
+      $(this).parent().parent().parent().find('td > .item-calc').attr('readonly', false)
+      input_checkbox.val("1")
+      //calculateTotal()
+      $("#input-subtotal").val(addSeparator((detectFloat(subtotal) + value).toFixed(2), '.', '.', ','));
+      //calculateTotal();
+      totalCalc()
+    }
+    $.ajax({
+        type: 'post',
+        url: BASE_URL+'/request-material-item/'+id+'/update',
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        data:  { 'is_used_in_po' : is_used_in_po },
+        beforeSend: function() {
+          
+        },
+        success: function(res) {
+          console.log(res);
+        },
+        error: function(xhr) {
+            console.log(xhr);
+        }
+    });
       
   });
   
@@ -493,7 +515,7 @@
                 
               },
               success: function(msg) {
-                
+                console.log(msg);
                 if(msg.status == 'success'){
                     setTimeout(function() {
                         swal({
@@ -597,28 +619,19 @@
         // $('#input-other').val('');
         // $('#input-total').val('');
         let cols = '';
-        
-
         $.each(res.items, function(key, value) {
           cols += '<tr>';
           cols += '<td>';
           cols += '<div class="form-check">';
-          cols +=     '<input type="checkbox" class="form-check-input checkbox" checked value="1" id="checkbox-'+key+'">';
+          cols +=     '<input type="checkbox" data-id="'+value.id+'" class="form-check-input checkbox" '+(value.is_used_in_po ? 'checked': '')+' value="1" id="checkbox-'+key+'">';
           cols +=     '<input type="hidden" class="input-checkbox" name="checkbox[]" value="1" id="input-checkbox">';
           cols += '</div>';
           cols += '</td>';
           cols += '<td>'+value.inventory_name+'<input type="hidden" name="item_inventory_id[]" value="'+ value.inventory_id +'"></td>';
-          // cols += '<td><select class="select-supplier" name="item_supplier_id[]"> ';
-          // cols += '  <option value="0"> - Pilih Supplier - </option>';
-          // @foreach($suppliers as $supplier)
-          // cols += '    <option value="{{$supplier['id']}}">{{$supplier['name']}}</option>';
-          // @endforeach
-          // cols += '</select></td>';
           cols += '<td id="qty-'+(key+1)+'">'+value.qty+'<input type="hidden" name="item_qty[]" value="'+ value.qty +'"></td>';
           cols += '<td>'+value.inventory.unit.name+'<input type="hidden" name="item_total[]" id="input-total-'+(key+1)+'" value="'+ (value.qty * value.inventory.purchase_price) +'" class="form-control"></td>';
           cols += '<td><input type="text" class="form-control item-calc" name="item_price[]" value="'+ (value.inventory.purchase_price ? value.inventory.purchase_price : 0 ) +'" data-id="'+(key+1)+'"></td>';
           cols += '<td id="total" class="total-'+(key+1)+'">'+(value.qty * value.inventory.purchase_price)+'</td>';
-          // cols += '<td><button type="button" class="btn btn-danger" id="comments_remove"><i class="fa fa-trash-o"></i></button></td>';
           cols += '<td></td>';
           cols += '</tr>';
         });

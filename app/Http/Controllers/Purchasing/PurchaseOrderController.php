@@ -17,6 +17,7 @@ use App\Http\Models\Purchase\PurchaseOrders;
 use App\Http\Models\Project\RequestMaterials;
 use App\Http\Models\Purchase\PurchaseOrderItems;
 use App\Http\Models\GeneralSetting\GeneralSetting;
+use Carbon\Carbon;
 
 class PurchaseOrderController extends Controller
 {
@@ -33,7 +34,7 @@ class PurchaseOrderController extends Controller
         $suppliers = Suppliers::get();
         $lots = Lot::selectClusterBySession();
         $clusters = Cluster::selectClusterBySession();
-        $request_materials = RequestMaterials::selectClusterBySession();
+        $request_materials = RequestMaterials::selectClusterAndMaterialItemBySession();
         $company_logo = GeneralSetting::getCompanyLogo();
         $company_name = GeneralSetting::getCompanyName();
 
@@ -51,7 +52,7 @@ class PurchaseOrderController extends Controller
     {
         $suppliers = Suppliers::get();
         $clusters = Cluster::selectClusterBySession();
-        $request_materials = RequestMaterials::selectClusterBySession();
+        $request_materials = RequestMaterials::selectClusterAndMaterialItemBySession();
         $purchase = PurchaseOrders::whereId($id)->first();
         $lots = Lot::whereClusterId($purchase->cluster_id)->get();
         $debt = Debt::where('purchase_order_id' , $id)->first();

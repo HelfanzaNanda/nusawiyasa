@@ -231,7 +231,7 @@
     width: '100%'
   });
 
-  $('form#add-form').submit(function(e){
+  $('form#add-form').5(function(e){
     e.preventDefault();
     var loading_text = $('.loading').data('loading-text');
     $('.loading').html(loading_text).attr('disabled', true);

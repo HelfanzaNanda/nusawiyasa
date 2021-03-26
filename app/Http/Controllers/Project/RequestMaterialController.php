@@ -192,6 +192,26 @@ class RequestMaterialController extends Controller
         ]);
     }
 
+    public function updateItemIsUsedPO($id, Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            RequestMaterialItems::where('id', $id)->update([
+                'is_used_in_po' => $request->is_used_in_po == "1" ? true : false
+            ]);
+            DB::commit();
+            return json_encode([
+                'status' => true,
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return json_encode([
+                'status' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
     public function generatePdf($id)
     {
         $pdf = PDF::setOptions(['isRemoteEnabled' => true])

@@ -27,7 +27,10 @@
               <select id="input-fpp" name="fpp_number"> 
                 <option value="0"> - Pilih No FPP - </option>
                 @foreach($request_materials as $request_material)
-                  <option value="{{$request_material['id']}}" {{ ($request_material['id'] == $purchase->fpp_number) ? 'selected' : '' }}>{{$request_material['number']}}</option>
+                  <option value="{{$request_material['id']}}" {{ ($request_material['id'] == $purchase->fpp_number) ? 'selected' : '' }}>
+                    {{ $request_material['number'] 
+                    .' ('. $request_material['cluster_name'] .' - '. \Carbon\Carbon::parse($request_material['date'])->translatedFormat('d M Y') .')' }}
+                  </option>
                 @endforeach
               </select>
             </div>
