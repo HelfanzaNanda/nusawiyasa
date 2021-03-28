@@ -7,6 +7,7 @@ use App\Http\Models\Accounting\Debt;
 use App\Http\Models\Cluster\Cluster;
 use App\Http\Models\Cluster\Lot;
 use App\Http\Models\Inventory\Suppliers;
+use App\Http\Models\Project\RequestMaterialItems;
 use App\Http\Models\Purchase\PurchaseOrderItems;
 use App\Http\Models\Ref\RefGeneralStatuses;
 use Carbon\Carbon;
@@ -328,8 +329,9 @@ class PurchaseOrders extends Model
                         'tax' => 0,
                         'discount' => 0,
                         'total' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_total'][$key])),
-                        //'supplier_id' => $params['item_supplier_id'][$key]
-                        //'supplier_id' => $params['item_supplier_id']
+                    ]);
+                    RequestMaterialItems::where('id', $params['item_request_material_id'][$key])->update([
+                        'is_used_in_po' => true
                     ]);
                 }
             }
@@ -362,6 +364,9 @@ class PurchaseOrders extends Model
                         'total' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_total'][$key])),
                         //'supplier_id' => $params['item_supplier_id'][$key]
                         //'supplier_id' => $params['item_supplier_id']
+                    ]);
+                    RequestMaterialItems::where('id', $params['item_request_material_id'][$key])->update([
+                        'is_used_in_po' => true
                     ]);
                 }
             }

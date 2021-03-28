@@ -379,19 +379,11 @@
     const input_checkbox = $(this).parent().children('input.input-checkbox')
     const value = detectFloat(total.text())
     const subtotal = $("#input-subtotal").val();
-    const id = $(this).data('id');
-    let is_used_in_po = 0
-    //calculateTotal()
     if (!$(this).is(':checked')) {
-        is_used_in_po = 0;
         $(this).parent().parent().parent().find('td > .item-calc').attr('readonly', true)
         input_checkbox.val("0")
         $("#input-subtotal").val(addSeparator((detectFloat(subtotal) - value).toFixed(2), '.', '.', ','));
-        //calculateTotal();
-        totalCalc()
-        //calculateTotal();
     }else{
-      is_used_in_po = 1
       $(this).parent().parent().parent().find('td > .item-calc').attr('readonly', false)
       input_checkbox.val("1")
       //calculateTotal()
@@ -399,21 +391,6 @@
       //calculateTotal();
       totalCalc()
     }
-    $.ajax({
-        type: 'post',
-        url: BASE_URL+'/request-material-item/'+id+'/update',
-        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        data:  { 'is_used_in_po' : is_used_in_po },
-        beforeSend: function() {
-          
-        },
-        success: function(res) {
-          console.log(res);
-        },
-        error: function(xhr) {
-            console.log(xhr);
-        }
-    });
       
   });
   
@@ -602,6 +579,7 @@
         // $("select#input-lot").append('<option value="0"> - Pilih Kavling - </option>');
       },
       success: function(res) {
+        console.log(res);
         $('#input-cluster').val(res.cluster_id).trigger('change');
 
         setTimeout(function(){ 
@@ -619,11 +597,12 @@
         // $('#input-other').val('');
         // $('#input-total').val('');
         let cols = '';
-        $.each(res.items, function(key, value) {
+        $.each(res.avaliable_items, function(key, value) {
           cols += '<tr>';
           cols += '<td>';
           cols += '<div class="form-check">';
-          cols +=     '<input type="checkbox" data-id="'+value.id+'" class="form-check-input checkbox" '+(value.is_used_in_po ? 'checked': '')+' value="1" id="checkbox-'+key+'">';
+          cols +=     '<input type="hidden" value="'+value.id+'" name="item_request_material_id[]" id="request-material-item-'+key+'">';
+          cols +=     '<input type="checkbox" class="form-check-input checkbox" checked value="1" id="checkbox-'+key+'">';
           cols +=     '<input type="hidden" class="input-checkbox" name="checkbox[]" value="1" id="input-checkbox">';
           cols += '</div>';
           cols += '</td>';

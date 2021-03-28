@@ -155,8 +155,6 @@ Route::group([
 	Route::get('/update-request-material/{id}', 'Project\RequestMaterialController@edit')->name('request_material.edit');
 	Route::get('/request-material/{id}/delete', 'Project\RequestMaterialController@delete');
 
-	Route::post('request-material-item/{id}/update', 'Project\RequestMaterialController@updateItemIsUsedPO');
-
 	Route::get('/request-of-other-material', 'Project\RequestOfOtherMaterialController@index');
 	Route::get('/request-of-other-material-pdf/{id}', 'Project\RequestOfOtherMaterialController@generatePdf');
 	Route::get('/create-request-of-other-material', 'Project\RequestOfOtherMaterialController@create');

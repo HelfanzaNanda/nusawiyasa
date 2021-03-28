@@ -302,10 +302,15 @@ class RequestMaterials extends Model
     public static function getById($id, $params = null)
     {
         $data = self::where('id', $id)
-                    ->with('items.inventory.unit')
+                    ->with('avaliable_items.inventory.unit')
                     ->first();
+        return json_encode($data);
+    }
 
-        return response()->json($data);
+    public function avaliable_items()
+    {
+        return $this->hasMany(RequestMaterialItems::class, 'request_material_id')
+        ->where('is_used_in_po', false);
     }
 
     public static function getAllResult($params)

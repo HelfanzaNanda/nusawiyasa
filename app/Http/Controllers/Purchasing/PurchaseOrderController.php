@@ -44,7 +44,7 @@ class PurchaseOrderController extends Controller
     public function insertData(Request $request)
     {
         $params = $request->all();
-
+        //return json_encode($params);
         return PurchaseOrders::createOrUpdate($params, $request->method(), $request);
     }
 
