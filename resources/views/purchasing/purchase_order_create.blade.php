@@ -383,6 +383,7 @@
         $(this).parent().parent().parent().find('td > .item-calc').attr('readonly', true)
         input_checkbox.val("0")
         $("#input-subtotal").val(addSeparator((detectFloat(subtotal) - value).toFixed(2), '.', '.', ','));
+        totalCalc()
     }else{
       $(this).parent().parent().parent().find('td > .item-calc').attr('readonly', false)
       input_checkbox.val("1")

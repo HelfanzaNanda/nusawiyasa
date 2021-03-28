@@ -36,7 +36,9 @@ class RequestMaterialItems extends Model
      * @var array
      */
     protected $fillable = [
-        'request_material_id', 'inventory_id', 'inventory_name', 'brand', 'qty', 'created_at', 'updated_at'
+        'request_material_id', 'purchase_order_id', 'inventory_id', 
+        'inventory_name', 'is_used_in_po',
+        'brand', 'qty', 'created_at', 'updated_at'
     ];
 
     /**

@@ -366,6 +366,7 @@ class PurchaseOrders extends Model
                         //'supplier_id' => $params['item_supplier_id']
                     ]);
                     RequestMaterialItems::where('id', $params['item_request_material_id'][$key])->update([
+                        'purchase_order_id' => $insert->id,
                         'is_used_in_po' => true
                     ]);
                 }

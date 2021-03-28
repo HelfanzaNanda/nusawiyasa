@@ -17,6 +17,7 @@ use App\Http\Models\Purchase\PurchaseOrders;
 use App\Http\Models\Project\RequestMaterials;
 use App\Http\Models\Purchase\PurchaseOrderItems;
 use App\Http\Models\GeneralSetting\GeneralSetting;
+use App\Http\Models\Project\RequestMaterialItems;
 use Carbon\Carbon;
 
 class PurchaseOrderController extends Controller
@@ -208,6 +209,11 @@ class PurchaseOrderController extends Controller
     public function delete($id)
     {
         PurchaseOrders::destroy($id);
+        PurchaseOrderItems::where('purchase_order_id', $id)->delete();
+        RequestMaterialItems::where('purchase_order_id', $id)->update([
+            'is_used_in_po' => false,
+            'purchase_order_id' => null
+        ]);
         return response()->json([
             'message' => 'data berhasil dihapus',
             'status' => 'success'
