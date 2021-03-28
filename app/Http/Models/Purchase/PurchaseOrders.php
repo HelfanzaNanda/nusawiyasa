@@ -330,9 +330,9 @@ class PurchaseOrders extends Model
                         'discount' => 0,
                         'total' => floatval(preg_replace('/[^\d\.\-]/', '', $params['item_total'][$key])),
                     ]);
-                    RequestMaterialItems::where('id', $params['item_request_material_id'][$key])->update([
-                        'is_used_in_po' => true
-                    ]);
+                    // RequestMaterialItems::where('id', $params['item_request_material_id'][$key])->update([
+                    //     'is_used_in_po' => true
+                    // ]);
                 }
             }
             DB::commit();
